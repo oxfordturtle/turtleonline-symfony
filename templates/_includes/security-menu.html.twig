@@ -1,0 +1,23 @@
+{% if app.user %}
+  <div class="nav-menu">
+    <a class="nav-item{% if section == 'account' %} active{% endif %}" data-action="toggle-menu">
+      <span class="icon"><i class="fa fa-user"></i></span>
+      <span class="text">{{ app.user.username }}</span>
+      <span class="icon"><i class="fa fa-caret-down"></i></span>
+    </a>
+    <div class="nav-sub-menu">
+      <a href="{{ path('account_index') }}" class="nav-item{% if route == 'account_index' %} active{% endif %}">My Account</a>
+      <a href="{{ path('account_files') }}" class="nav-item{% if route == 'account_files' %} active{% endif %}">My Files</a>
+      <a href="{{ path('logout') }}" class="nav-item">Logout</a>
+    </div>
+  </div>
+{% else %}
+  <a href="{{ path('register') }}" class="nav-item{% if section == 'register' %} active{% endif %}">
+    <span class="icon"><i class="fa fa-user-plus"></i></span>
+    <span class="text">Register</span>
+  </a>
+  <a href="{{ path('login') }}" class="nav-item{% if section == 'login' %} active{% endif %}">
+    <span class="icon"><i class="fa fa-sign-in-alt"></i></span>
+    <span class="text">Sign In</span>
+  </a>
+{% endif %}

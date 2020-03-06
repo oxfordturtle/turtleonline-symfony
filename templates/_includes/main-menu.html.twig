@@ -1,0 +1,31 @@
+<a href="{{ path('home') }}" class="nav-item{% if section == 'home' %} active{% endif %}">
+  <span class="icon logo"><img></img></span>
+  <span class="text">The Turtle System</spab>
+</a>
+<a href="{{ path('online') }}" class="nav-item{% if section == 'online' %} active{% endif %}">
+  <span class="icon"><i class="fa fa-play"></i></span>
+  <span class="text">Run</span>
+</a>
+<div class="nav-menu">
+  <a class="nav-item{% if section == 'documentation' %} active{% endif %}" data-action="toggle-menu">
+    <span class="icon"><i class="fa fa-book"></i></span>
+    <span class="text">Documentation</span>
+    <span class="icon"><i class="fa fa-caret-down"></i></span>
+  </a>
+  <div class="nav-sub-menu">
+    <a href="{{ path('documentation_guides') }}" class="nav-item{% if route == 'documentation_guides' %} active{% endif %}">User Guides</a>
+    <a href="{{ path('documentation_exercises') }}" class="nav-item{% if route == 'documentation_exercises' %} active{% endif %}">Self-Teach Exercises</a>
+    <a href="{{ path('documentation_machine') }}" class="nav-item{% if route == 'documentation_machine' %} active{% endif %}">The Virtual Turtle Machine</a>
+    <a href="{{ path('documentation_languages') }}" class="nav-item{% if route == 'documentation_languages' %} active{% endif %}">The Turtle Languages</a>
+    <a href="{{ path('documentation_csac') }}" class="nav-item{% if route == 'documentation_csac' %} active{% endif %}">Computer Science Across the Curriculum</a>
+    <a href="{{ path('documentation_further') }}" class="nav-item{% if route == 'documentation_further' %} active{% endif %}">Further Reading</a>
+  </div>
+</div>
+<a href="{{ path('about') }}" class="nav-item{% if section == 'about' %} active{% endif %}">
+  <span class="icon"><i class="fa fa-info"></i></span>
+  <span class="text">About</span>
+</a>
+<a href="{{ path('contact') }}" class="nav-item{% if section == 'contact' %} active{% endif %}">
+  <span class="icon"><i class="fa fa-at"></i></span>
+  <span class="text">Contact</span>
+</a>

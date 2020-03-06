@@ -1,0 +1,11 @@
+@import "./common/constants.scss";
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: $system-font;
+  min-width: 320px;
+  min-height: 100vh;
+}

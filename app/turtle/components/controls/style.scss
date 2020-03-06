@@ -1,0 +1,30 @@
+@import "../../../common/constants.scss";
+
+.turtle-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  background: $blue;
+
+  div {
+    display: flex;
+    align-items: stretch;
+  }
+
+  button {
+    padding: .5em;
+    width: 3em;
+    text-align: center;
+    &[disabled] {
+      color: $gray !important;
+      cursor: default;
+      &:hover {
+        background: $blue !important;
+      }
+    }
+  }
+
+  select {
+    
+  }
+}

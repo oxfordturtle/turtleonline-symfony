@@ -1,0 +1,38 @@
+@import "../../../common/constants.scss";
+
+.turtle-main {
+  @media (min-width: $break2) {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr);
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .turtle-blocks {
+    display: none;
+    height: 100%;
+
+    &.turtle-active {
+      display: block;
+    }
+
+    @media (min-width: $break2) {
+      display: block;
+
+      &:first-child {
+        border-right: 1px solid $gray;
+      }
+    }
+  }
+
+  .turtle-block {
+    display: none;
+
+    &.turtle-active {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      background: #fff;
+      overflow: auto;
+    }
+  }
+}

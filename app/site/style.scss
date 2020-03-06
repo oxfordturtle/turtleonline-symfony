@@ -1,0 +1,17 @@
+@import "../common/constants.scss";
+
+.site {
+  margin: 0;
+  padding-top: 3em; // to offset the absolutely positioned nav bar at the top
+  font-size: 16px;
+  line-height: 1.5;
+  color: $darkgray;
+  overflow-y: scroll;
+
+  @media (min-width: $break1) {
+    background: url('./hertford.jpg');
+    background-repeat: no-repeat;
+    background-size: 100%;
+    background-attachment: fixed;
+  }
+}

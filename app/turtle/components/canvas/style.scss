@@ -1,0 +1,60 @@
+@import "../../../common/constants.scss";
+
+.turtle-canvas {
+  display: flex;
+  margin: 0 auto; // max-width is set dynamically, according to the size of the window
+  overflow: hidden; // hide the right-hand side border of the canvas if it's out of immediate view
+
+  .turtle-canvas-coords {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+
+    span {
+      display: block;
+      font-size: 10px;
+      padding: $padding;
+      width: $canvas-coords-width;
+      color: $green;
+      text-align: right;
+    }
+  }
+
+  .turtle-canvas-left {
+    display: flex;
+    flex-direction: column;
+
+    .turtle-canvas-coords {
+      flex-direction: column;
+      text-align: right;
+      margin-top: $padding + 10px + $padding;
+    }
+  }
+
+  .turtle-canvas-right {
+    flex: 1;
+
+    .turtle-canvas-coords {
+
+      span:nth-child(1), span:nth-child(2) {
+        text-align: left;
+      }
+
+      span:nth-child(3) {
+        text-align: center;
+      }
+    }
+
+    .turtle-canvas-wrapper {
+      border: 1px solid $gray;
+      border-bottom: 0;
+      margin-right: -1px;
+
+      canvas {
+        display: block;
+        width: 100%;
+        image-rendering: pixelated;
+      }
+    }
+  }
+}

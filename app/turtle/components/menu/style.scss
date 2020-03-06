@@ -1,0 +1,47 @@
+@import "../../../common/constants.scss";
+
+.turtle-menu {
+  position: absolute;
+  z-index: 5;
+  width: 15em;
+  height: 100%;
+  margin-left: -15em;
+  background: $lightgray;
+  opacity: .6;
+  transition: .4s ease-in-out;
+  overflow-y: auto;
+  &.active {
+    margin-left: 0;
+    box-shadow: $box-shadow;
+    opacity: 1;
+  }
+
+  h2 {
+    font-size: 1em;
+    padding: .6em 1em;
+    margin: 0;
+  }
+
+  .turtle-icon-text {
+    display: flex;
+    text-decoration: none;
+    color: $red;
+    cursor: pointer;
+    &:hover {
+      background: $red;
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .icon {
+      flex-basis: 3.5em;
+      padding: .6em 1em;
+      text-align: center;
+    }
+
+    .text {
+      flex: 1;
+      padding: .6em 1em .6em 0;
+    }
+  }
+}

@@ -1,0 +1,24 @@
+@import "../common/constants.scss";
+
+.pwa {
+  margin: 0;
+  height: 100vh;
+  font-size: 16px;
+  line-height: 1.5;
+  color: $darkgray;
+  .nav {
+    display: none;
+  }
+  .container {
+    max-width: none;
+    height: 100%;
+    margin: 0;
+    box-shadow: none;
+    .header.online {
+      display: none;
+    }
+    .main.online {
+      height: 100%;
+    }
+  }
+}

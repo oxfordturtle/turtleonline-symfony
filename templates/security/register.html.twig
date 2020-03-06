@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}
+  <h1>Register</h1>
+  <p>Creating an account on this site is free and easy. Simply fill in the form below and click ‘Register’. You will then be able to upload and share your Turtle programs with others, save your online system preferences, create and join programming courses, and access our free course materials.</p>
+{% endblock %}
+
+{% block main %}
+  <div class="form">
+    {{ form_start(registrationForm) }}
+      <div class="columns">
+        <div class="column">
+          {{ form_row(registrationForm.username) }}
+        </div>
+        <div class="column">
+          {{ form_row(registrationForm.email) }}
+        </div>
+      </div>
+      <div class="columns">
+        <div class="column">
+          {{ form_row(registrationForm.password.first) }}
+        </div>
+        <div class="column">
+          {{ form_row(registrationForm.password.second) }}
+        </div>
+      </div>
+      <div class="columns">
+        <div class="column">
+          {{ form_row(registrationForm.firstname) }}
+        </div>
+        <div class="column">
+          {{ form_row(registrationForm.surname) }}
+        </div>
+      </div>
+      <div class="columns">
+        <div class="column">
+          {{ form_row(registrationForm.schoolName) }}
+        </div>
+        <div class="column">
+          {{ form_row(registrationForm.schoolPostcode) }}
+        </div>
+      </div>
+      {{ form_row(registrationForm._token) }}
+      <div class="form-buttons">
+        <button type="submit" class="green button">Register</button>
+      </div>
+    {{ form_end(registrationForm) }}
+  </div>
+{% endblock %}

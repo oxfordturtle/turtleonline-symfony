@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}
+  <h1>Admin Area</h1>
+{% endblock %}
+
+{% block main %}
+  {% for user in users %}
+    <div style="margin-bottom:1em;border-bottom:1px solid black;padding-bottom:1em;">
+      <p>{{ user.username }}, {{ user.firstname }} {{ user.surname }}, {{ user.email }}</p>
+      <p><b>Logs:</b></p>
+      <ul>
+        {% for log in user.logs %}
+          <li>{{ log.action }} {{ log.date|date('d/m/Y') }}</li>
+        {% endfor %}
+      </ul>
+      {% if user.courses|length > 0 %}
+        <p><b>Courses:</b></p>
+        <ul>
+          {% for course in user.courses %}
+            <li>{{ course.name }}, {{ course.startDate|date('d/m/Y') }} ({{ course.students|length }} students)</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+  {% endfor %}
+</ol>
+{% endblock %}

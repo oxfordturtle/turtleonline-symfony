@@ -1,0 +1,19 @@
+@import "../../common/constants.scss";
+
+.notice {
+  color: #fff;
+  padding: 1em;
+  background: $blue;
+  &.success {
+    background: $green;
+  }
+  &.error {
+    background: $red;
+  }
+}
+
+@media (min-width: $break1) {
+  .notice {
+    padding: 1em 2em;
+  }
+}

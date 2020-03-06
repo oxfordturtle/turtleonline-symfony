@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}
+  <h1>Welcome {{ app.user.firstname }} {{ app.user.surname }}</h1>
+{% endblock %}
+
+{% block main %}
+  <p>You have not yet verified your account. Please check your inbox (or your spam folder) for a verification email from this site. Click on the link in that email to verify your account.</p>
+{% endblock %}

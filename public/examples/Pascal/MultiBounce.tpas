@@ -1,0 +1,37 @@
+PROGRAM MultiBounce;
+CONST minsize = 70;
+      maxsize = 130;
+      balls = 10;
+VAR x, y: array[1..balls] of integer;
+    xvel, yvel: array[1..balls] of integer;
+    size, colr: array[1..balls] of integer;
+    n: integer;
+BEGIN
+  for n := 1 to balls do
+    begin
+      size[n] := minsize + random(maxsize - minsize);
+      colr[n] := rgb(n);
+      x[n] := random(1000 - 2 * size[n]) + size[n];
+      y[n] := random(1000 - 2 * size[n]) + size[n];
+      xvel[n] := random(15) - 7;
+      yvel[n] := random(15) - 7
+    end;
+  repeat
+    noupdate;
+    blank(white);
+    for n := 1 to balls do
+      begin
+       x[n] := x[n] + xvel[n];
+       y[n] := y[n] + yvel[n];
+       setxy(x[n], y[n]);
+       colour(colr[n]);
+       blot(size[n]);
+       if (x[n] < size[n]) or (x[n] > 1000 - size[n]) then
+         xvel[n] := -xvel[n];
+       if (y[n] < size[n]) or (y[n] > 1000 - size[n]) then
+         yvel[n] := -yvel[n]
+      end;
+    update;
+    pause(5)
+  until 1 = 0
+END.

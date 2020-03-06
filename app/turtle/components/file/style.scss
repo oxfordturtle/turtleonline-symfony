@@ -1,0 +1,38 @@
+@import "../../../common/constants.scss";
+
+.turtle-file {
+  padding: .5em;
+  display: flex;
+  flex-direction: column;
+  &:not(:last-child) {
+    border-bottom: 1px solid $gray;
+  }
+  &:last-child {
+    flex: 1;
+  }
+
+  h2 {
+    font-size: 1em;
+    margin-bottom: .5em;
+  }
+
+  select {
+    width: 100%;
+    margin-bottom: .5em;
+  }
+
+  .turtle-buttons {
+    display: flex;
+
+    button {
+      flex: 1;
+      &:not(:last-child) {
+        margin-right: .5em;
+      }
+    }
+  }
+
+  .turtle-examples {
+    flex: 1;
+  }
+}

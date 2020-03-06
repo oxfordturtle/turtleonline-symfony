@@ -1,0 +1,16 @@
+# Triangles
+
+def triangle(size: int):
+  if (size > 1):
+    forward(size)
+    triangle(size // 2)
+    right(120)
+    forward(size)
+    triangle(size // 2)
+    right(120)
+    forward(size)
+    triangle(size // 2)
+    right(120)
+
+movexy(-100, 150)
+triangle(256)

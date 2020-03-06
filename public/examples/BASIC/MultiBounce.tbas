@@ -1,0 +1,39 @@
+REM MultiBounce
+
+CONST MINSIZE% = 70
+CONST MAXSIZE% = 130
+CONST BALLS% = 10
+DIM x%(BALLS%)
+DIM y%(BALLS%)
+DIM xvel%(BALLS%)
+DIM yvel%(BALLS%)
+DIM size%(BALLS%)
+DIM colr%(BALLS%)
+FOR n% = 1 TO BALLS%
+  size%(n%) = MINSIZE% + RND(MAXSIZE% - MINSIZE%)
+  colr%(n%) = RGB(n%)
+  x%(n%) = RND(1000 - 2 * size%(n%)) + size%(n%)
+  y%(n%) = RND(1000 - 2 * size%(n%)) + size%(n%)
+  xvel%(n%) = RND(15) - 7
+  yvel%(n%) = RND(15) - 7
+NEXT
+REPEAT
+  NOUPDATE
+  BLANK(WHITE)
+  FOR n% = 1 TO BALLS%
+    x%(n%) = x%(n%) + xvel%(n%)
+    y%(n%) = y%(n%) + yvel%(n%)
+    SETXY(x%(n%), y%(n%))
+    COLOUR(colr%(n%))
+    BLOT(size%(n%))
+    IF (x%(n%) < size%(n%)) OR (x%(n%) > 1000 - size%(n%)) THEN
+      xvel%(n%) = -xvel%(n%)
+    ENDIF
+    IF (y%(n%) < size%(n%)) OR (y%(n%) > 1000 - size%(n%)) THEN
+      yvel%(n%) = -yvel%(n%)
+    ENDIF
+  NEXT
+  UPDATE
+  PAUSE(5)
+UNTIL 1 = 0
+END

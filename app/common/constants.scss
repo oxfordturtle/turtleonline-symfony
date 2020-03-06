@@ -1,0 +1,45 @@
+// fonts
+$system-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+$monospace: consolas, monospace;
+
+// colours
+$darkgray: #424242;
+$darkgray-transparent: rgba(66, 66, 66, .9);
+$gray: #c0c0c0;
+$lightgray: #ebebeb;
+$yellow: #eed144;
+$orange: #d98436;
+$red: #a86765;
+$purple: #795a7c;
+$blue: #38618a;
+$green: #159d6b;
+
+// properties
+$content-width: 64rem;
+$box-shadow: 0px 3px 4px 2px rgba(0, 0, 0, 0.4);
+
+// break points
+$break1: 34.25rem;
+$break2: 64rem;
+
+// turtle system
+$system-default-height: 700px;
+$system-padding: 4px;
+$padding: 4px;
+$canvas-coords-width: 30px;
+
+/*
+$canvas-width: 502px;
+$system-width: 1024px;
+$system-height: 700px;
+$machine-component-width: $padding + $canvas-coords-width + $canvas-width + $padding;
+$black: #282828;
+$darkgray: lighten($black, 10%);
+$darkgray-transparent: rgba(66, 66, 66, .9);
+$gray-transparent: rgba(90, 90, 90, .7);
+$gray: darken(#ebebeb, 25%);
+$lightgray: lighten(#ebebeb, 3%);
+$green: #159d6b;
+$font-family: arial;
+$font-size: 16px;
+*/

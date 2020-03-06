@@ -1,0 +1,34 @@
+# DigitalClock
+
+hours: int = 0
+minutes: int = 0
+
+def showtime():
+  hstring: str
+  mstring: str
+  setxy(300, 430)
+  box(400, 130, white, False)
+  if hours < 10:
+    hstring = '0' + str(hours)
+  else:
+    hstring = str(hours)
+  if minutes < 10:
+    mstring = '0' + str(minutes)
+  else:
+    mstring = str(minutes)
+  print(hstring + ':' + mstring, 19, 100)
+
+blank(lightgreen)
+setxy(250, 390)
+colour(maroon)
+thickness(10)
+box(500, 210, lightbrown, True)
+colour(black)
+while hours < 12:
+  showtime()
+  pause(600)
+  minutes = minutes + 1
+  if minutes == 60:
+    hours = hours + 1
+    minutes = 0
+showtime()

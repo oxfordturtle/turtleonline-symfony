@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}
+  <h1>Sign In</h1>
+{% endblock %}
+
+{% block main %}
+  <form action="{{ path('login') }}" method="post">
+    <div class="form-group{% if error %} has-errors{% endif %}">
+      <label for="username">Username</label>
+      <input type="text" class="form-control" id="username" name="_username" required="required" autofocus{% if last_username %} value="{{ last_username }}"{% endif %}>
+      {% if error %}
+        <ul>
+          <li>{{ error.message }}</li>
+        </ul>
+      {% endif %}
+    </div>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" class="form-control" id="password" name="_password" required="required">
+    </div>
+    <div class="form-buttons">
+      <button type="submit" class="green button">Login</button>
+    </div>
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+  </form>
+{% endblock %}

@@ -1,0 +1,93 @@
+@import "../../common/constants.scss";
+
+label {
+  display: block;
+  padding: .25em .5em;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+input[type="text"], input[type="password"], input[type="email"], select {
+  border: 1px solid $gray;
+  padding: .25em .5em;
+  font: inherit;
+}
+
+button, .button {
+  padding: .25em 1em;
+  background: $blue;
+  color: #fff !important;
+  cursor: pointer;
+  font: inherit;
+  border: 0;
+  &:hover {
+    background: darken($blue, 10%);
+    text-decoration: none !important;
+  }
+  &.green {
+    background: $green;
+    &:hover {
+      background: darken($green, 10%);
+    }
+  }
+  &.red {
+    background: $red;
+    &:hover {
+      background: darken($red, 10%);
+    }
+  }
+}
+
+.form-group {
+  margin-bottom: 1em;
+  label {
+    background: $blue;
+    color: #fff;
+    font-weight: normal;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    padding: .25em .75em;
+  }
+  input[type="text"], input[type="email"], input[type="password"], select, textarea {
+    width: 100%;
+    border-top: 0;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    padding: .35em .75em;
+    &:focus {
+      border: 1px solid $blue;
+      border-top: 0;
+      outline: 0;
+    }
+  }
+  &.has-errors {
+    label {
+      background: $red;
+    }
+    input[type="text"], input[type="email"], input[type="password"], select, textarea {
+      border-bottom: 0;
+      border-radius: 0;
+      border-color: $red;
+      &:focus {
+        border-color: $red;
+      }
+    }
+    ul {
+      margin: 0;
+      padding: .25em .75em;
+      background: $red;
+      color: #fff;
+      border-bottom-left-radius: 5px;
+      border-bottom-right-radius: 5px;
+    }
+  }
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: flex-end;
+  button {
+    padding: .5em 1em;
+    border-radius: 5px;
+  }
+}
