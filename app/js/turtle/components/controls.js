@@ -8,6 +8,7 @@ import * as machine from '../state/machine.js'
 
 // language select menu
 const languageSelect = dom.createElement('select', {
+  'aria-label': 'language',
   content: languages.map(language => dom.createElement('option', {
     content: language,
     value: language
@@ -16,6 +17,7 @@ const languageSelect = dom.createElement('select', {
 
 // menu button
 const menuButton = dom.createElement('button', {
+  'aria-label': 'system menu',
   content: [dom.createElement('i', { classes: 'fa fa-bars' })]
 })
 

@@ -14,7 +14,7 @@
       padding: $padding;
       width: $canvas-coords-width;
       overflow: hidden;
-      color: $green;
+      color: darken($green, 5%);
       text-align: right;
     }
   }
