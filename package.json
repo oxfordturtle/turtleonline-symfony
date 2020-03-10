@@ -1,7 +1,11 @@
 {
   "scripts": {
-    "watch": "webpack --watch --config webpack.config.js --mode development",
-    "build": "webpack --config webpack.config.js --mode production"
+    "watch-js": "webpack --watch --config webpack.config.js --mode development",
+    "build-js": "webpack --config webpack.config.js --mode production",
+    "watch-css": "node-sass app/css/index.scss --watch --output public --output-style compressed",
+    "build-css": "node-sass app/css/index.scss --output public --output-style compressed",
+    "watch": "yarn watch-js && yarn watch-css",
+    "build": "yarn build-js && yarn build-css"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.12.0",

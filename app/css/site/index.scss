@@ -1,0 +1,19 @@
+@import "../constants.scss";
+@import "pwa.scss";
+@import "container.scss";
+@import "nav.scss";
+@import "header.scss";
+@import "notice.scss";
+@import "main.scss";
+@import "form.scss";
+@import "footer.scss";
+
+.site {
+  background: $green;
+  margin: 0;
+  padding-top: 3em; // to offset the absolutely positioned nav bar at the top
+  font-size: 16px;
+  line-height: 1.5;
+  color: $darkgray;
+  overflow-y: scroll;
+}

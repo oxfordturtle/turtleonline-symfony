@@ -1,9 +1,0 @@
-{% extends 'base.html.twig' %}
-
-{% block main %}
-  <div id="turtle" class="turtle"{% if app.request.query.get('l') is defined %} data-language="{{ app.request.query.get('l') }}"{% endif %}{% if app.request.query.get('x') is defined %} data-example="{{ app.request.query.get('x') }}"{% endif %}{% if app.request.query.get('f') is defined %} data-file="{{ app.request.query.get('f') }}"{% endif %}>
-    <div class="turtle-loading">
-      <p>Starting up... <i class="fa fa-spin fa-spinner"></i></p>
-    </div>
-  </div>
-{% endblock %}

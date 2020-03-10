@@ -1,0 +1,13 @@
+@import "constants.scss";
+@import "site/index.scss";
+@import "turtle/index.scss";
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: $system-font;
+  min-width: 320px;
+  min-height: 100vh;
+}

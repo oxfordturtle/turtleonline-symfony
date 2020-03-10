@@ -29,27 +29,15 @@ class DefaultController extends AbstractController
   }
 
   /**
-   * Route for images.
-   *
-   * @Route("/images/{filename}", name="images")
-   * @return Response
-   */
-  public function images(string $filename): Response
-  {
-    // redirect to build subdirectory
-    return $this->redirect("/build/images/$filename");
-  }
-
-  /**
    * Route for the online system page.
    *
-   * @Route("/online", name="online")
+   * @Route("/run", name="run")
    * @return Response
    */
-  public function online(): Response
+  public function run(): Response
   {
     // render and return the page
-    return $this->render('default/online.html.twig');
+    return $this->render('default/run.html.twig');
   }
 
   /**

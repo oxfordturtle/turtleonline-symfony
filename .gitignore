@@ -1,7 +1,9 @@
 files/
 node_modules/
-public/build/
-public/bundles/
+public/index.css
+public/index.js
+public/service-worker.js
+public/precache-manifest.*.js
 var/
 vendor/
 .env.local

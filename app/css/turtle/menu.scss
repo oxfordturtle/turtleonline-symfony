@@ -1,0 +1,60 @@
+@import "../constants.scss";
+
+.turtle-menu {
+  position: absolute;
+  z-index: 5;
+  margin-left: -14em;
+  height: 100%;
+  background: $blue;
+  transition: .4s ease-in-out;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  &.active {
+    margin-left: 0;
+  }
+
+  @media (min-width: $break1) {
+    width: 3em;
+    margin-left: 0;
+    &.active {
+      width: 14em;
+    }
+
+    .turtle-icon-text {
+      &.active {
+        background: $red;
+      }
+    }
+  }
+
+  h2 {
+    font-size: 1em;
+    padding: .6em 1em;
+    margin: 0;
+  }
+
+  .turtle-icon-text {
+    display: flex;
+    text-decoration: none;
+    color: #fff;
+    cursor: pointer;
+    white-space: nowrap;
+    &:hover {
+      background: $red;
+      text-decoration: none;
+    }
+
+    .icon {
+      flex-basis: 3em;
+      flex-shrink: 0;
+      padding: .6em 1em;
+      text-align: center;
+    }
+
+    .text {
+      flex: 1;
+      padding: .6em 1em .6em 0;
+    }
+  }
+}

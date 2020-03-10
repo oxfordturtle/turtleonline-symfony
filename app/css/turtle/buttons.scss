@@ -1,0 +1,11 @@
+@import "../constants.scss";
+
+.turtle-buttons {
+  display: flex;
+  justify-content: flex-end;
+  border-bottom: 1px solid $gray;
+
+  button {
+    margin: .5em;
+  }
+}

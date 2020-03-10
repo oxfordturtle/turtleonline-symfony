@@ -1,0 +1,10 @@
+@import "../constants.scss";
+
+.turtle-memory-container {
+  flex: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
+  &:not(:last-child) {
+    border-bottom: 1px solid $gray;
+  }
+}
