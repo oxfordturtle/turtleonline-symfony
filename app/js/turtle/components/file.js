@@ -6,14 +6,7 @@ import exampleGroups from '../constants/exampleGroups.js'
 import exampleNames from '../constants/exampleNames.js'
 import { on, send } from '../state/index.js'
 
-// current file select
-const currentFileSelect = dom.createElement('select')
-
 // buttons
-const closeFileButton = dom.createElement('button', {
-  content: '<i class="fa fa-times"></i>',
-  title: 'Close current file'
-})
 const saveLocalButton = dom.createElement('button', { content: 'Save on My Computer' })
 const saveRemoteButton = dom.createElement('button', { content: 'Save on turtle.ox.ac.uk' })
 const newBlankButton = dom.createElement('button', { content: 'New Blank Program' })
@@ -28,8 +21,7 @@ const fileInput = dom.createElement('input', { type: 'file' })
 export const currentFile = dom.createElement('div', {
   classes: 'turtle-file',
   content: [
-    dom.createElement('h2', { content: 'Current File' }),
-    dom.createElement('div', { classes: 'turtle-file-select', content: [currentFileSelect, closeFileButton] }),
+    dom.createElement('h2', { content: 'Save Current File' }),
     dom.createElement('div', { classes: 'turtle-buttons', content: [saveLocalButton, saveRemoteButton] })
   ]
 })
@@ -73,23 +65,7 @@ export const openExample = dom.createElement('div', {
   ]
 })
 
-// subscribe to keep in sync with the system state
-on('files-changed', ({ files, currentFileIndex }) => {
-  dom.setContent(currentFileSelect, files.map((file, index) => {
-    return dom.createElement('option', { value: index, content: `${index + 1} [${file.language}] ${file.name || '[no name]'}` })
-  }))
-  currentFileSelect.value = currentFileIndex
-})
-
 // setup event listeners on interactive elements
-currentFileSelect.addEventListener('change', () => {
-  send('set-current-file-index', currentFileSelect.value)
-})
-
-closeFileButton.addEventListener('click', () => {
-  send('close-current-file')
-})
-
 saveLocalButton.addEventListener('click', () => {
   send('save-program')
 })
@@ -125,13 +101,3 @@ fileInput.addEventListener('change', () => {
 openRemoteButton.addEventListener('click', () => {
   // TODO
 })
-
-/*
-exampleGroupMenu.addEventListener('change', () => {
-  dom.setContent(exampleMenu, examples.menu[exampleGroupMenu.value].examples.map(createExampleOption))
-})
-
-exampleMenu.addEventListener('change', () => {
-  send('set-example', exampleMenu.value)
-})
-*/

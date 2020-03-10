@@ -4,8 +4,9 @@
  * This wraps up most of the other components, specifically everything underneath the system controls.
  */
 import * as dom from './dom.js'
-import code from './code.js'
 import * as file from './file.js'
+import filename from './filename.js'
+import code from './code.js'
 import usage from './usage.js'
 import lexemes from './lexemes.js'
 import * as pcode from './pcode.js'
@@ -45,7 +46,7 @@ const pcodeBlock = dom.createElement('div', {
 
 const canvasBlock = dom.createElement('div', {
   classes: 'turtle-block turtle-active',
-  content: [turtle, canvas, console]
+  content: [canvas, console]
 })
 
 const outputBlock = dom.createElement('div', {
@@ -60,7 +61,7 @@ const memoryBlock = dom.createElement('div', {
 
 const settingsBlock = dom.createElement('div', {
   classes: 'turtle-block',
-  content: [settings.buttons, settings.showOptions, settings.drawCountMax, settings.codeCountMax, settings.smallSize, settings.stackSize]
+  content: [settings.showOptions, settings.drawCountMax, settings.codeCountMax, settings.smallSize, settings.stackSize]
 })
 
 // the left hand side blocks
@@ -74,7 +75,10 @@ const rightBlocks = dom.createElement('div', { classes: 'turtle-blocks turtle-ac
 // the main component (exported)
 export default dom.createElement('main', {
   classes: 'turtle-main',
-  content: [leftBlocks, rightBlocks]
+  content: [
+    dom.createElement('div', { classes: 'turtle-main-half turtle-active', content: [filename, leftBlocks] }),
+    dom.createElement('div', { classes: 'turtle-main-half', content: [turtle, rightBlocks] })
+  ]
 })
 
 // register to stay in sync with the system state
@@ -86,16 +90,16 @@ on('show-component', (data) => {
     case 'lexemes': // fallthrough
     case 'pcode':
       leftBlocksArray.forEach(x => { x.classList.remove('turtle-active') })
-      leftBlocks.classList.add('turtle-active')
-      rightBlocks.classList.remove('turtle-active')
+      leftBlocks.parentElement.classList.add('turtle-active')
+      rightBlocks.parentElement.classList.remove('turtle-active')
       break
     case 'canvas': // fallthrough
     case 'output': // fallthrough
     case 'memory': // fallthrough
     case 'settings':
       rightBlocksArray.forEach(x => { x.classList.remove('turtle-active') })
-      rightBlocks.classList.add('turtle-active')
-      leftBlocks.classList.remove('turtle-active')
+      rightBlocks.parentElement.classList.add('turtle-active')
+      leftBlocks.parentElement.classList.remove('turtle-active')
       break
   }
   switch (data) {

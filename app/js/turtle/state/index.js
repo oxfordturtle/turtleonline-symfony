@@ -54,20 +54,16 @@ export const send = (signal, data) => {
       case 'close-current-file':
         files = get('files')
         files.splice(get('current-file-index'), 1)
-        if (files.length === 0) {
-          set('new-current-file')
-          set('name', '')
-          set('code', '')
-          set('compiled', false)
-          set('usage', [])
-          set('lexemes', [])
-          set('pcode', [])
-        }
         set('files', files)
-        if (get('current-file-index') > files.length - 1) {
-          send('set-current-file-index', get('current-file-index') - 1)
+        if (files.length === 0) {
+          send('new-program')
         } else {
-          send('set-current-file-index', get('current-file-index'))
+          if (get('current-file-index') > files.length - 1) {
+            send('set-current-file-index', get('current-file-index') - 1)
+          } else {
+            send('set-current-file-index', get('current-file-index'))
+          }
+          reply('file-changed')
         }
         break
 
@@ -100,10 +96,11 @@ export const send = (signal, data) => {
             break
 
           case 'Python':
-            set('code', '# progname\n\nvar1: int = 100\n  colour(green)\n  blot(var1)')
+            set('code', '# progname\n\nvar1: int = 100\ncolour(green)\nblot(var1)')
             break
         }
         reply('file-changed')
+        reply('show-component', 'code')
         break
 
       case 'save-program':
@@ -157,6 +154,7 @@ export const send = (signal, data) => {
               set('lexemes', [])
               set('pcode', [])
               reply('file-changed')
+              reply('show-component', 'code')
             })
           } else {
             // reply instead of throwing an error, because the error won't be caught in this promise

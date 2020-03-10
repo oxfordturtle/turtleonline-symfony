@@ -16,16 +16,14 @@ const codeCountMaxInput = dom.createElement('input', { type: 'number', min: '0',
 const smallSizeInput = dom.createElement('input', { type: 'number', min: '0', max: '100' })
 const stackSizeInput = dom.createElement('input', { type: 'number', min: '100', max: '1000000' })
 
-// the buttons div (exported)
-export const buttons = dom.createElement('div', { classes: 'turtle-buttons', content: [resetButton] })
-
 // the options elements (exported)
 export const showOptions = dom.createElement('div', {
   classes: 'turtle-checkboxes',
   content: [
     dom.createElement('label', { content: [showCanvasInput, dom.createTextNode('Show canvas on run')] }),
     dom.createElement('label', { content: [showOutputInput, dom.createTextNode('Show output on write')] }),
-    dom.createElement('label', { content: [showMemoryInput, dom.createTextNode('Show memory on dump')] })
+    dom.createElement('label', { content: [showMemoryInput, dom.createTextNode('Show memory on dump')] }),
+    resetButton
   ]
 })
 
