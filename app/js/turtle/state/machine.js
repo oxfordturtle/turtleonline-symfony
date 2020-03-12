@@ -803,12 +803,30 @@ function execute (pcode, line, code, options) {
         case pc.case:
           b = stack.pop()
           a = getHeapString(stack.pop())
-          if (b > 0) {
-            makeHeapString(a.toUpperCase())
-          } else if (b < 0) {
-            makeHeapString(a.toLowerCase())
-          } else {
-            makeHeapString(a)
+          switch (b) {
+            case 1:
+              makeHeapString(a.toLowerCase())
+              break
+
+            case 2:
+              makeHeapString(a.toUpperCase())
+              break
+
+            case 3:
+              // TODO: init caps
+              break
+
+            case 4:
+              // TODO: title case
+              break
+
+            case 5:
+              // TODO: swap case
+              break
+
+            default:
+              makeHeapString(a)
+              break
           }
           break
 

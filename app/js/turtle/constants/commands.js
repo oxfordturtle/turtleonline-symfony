@@ -1314,7 +1314,7 @@ export default [
   },
   {
     names: { BASIC: 'RMDIR', Pascal: 'rmdir', Python: 'rmdir' },
-    code: [pc.ldin, 1, pc.diry],
+    code: [pc.ldin, 1, pc.diry, pc.ldin, 128, pc.less],
     parameters: [
       { name: 'subdirectory name', type: 'string', byref: false, length: 1 }
     ],
@@ -1325,7 +1325,7 @@ export default [
   },
   {
     names: { BASIC: 'MKDIR', Pascal: 'mkdir', Python: 'mkdir' },
-    code: [pc.ldin, 2, pc.diry],
+    code: [pc.ldin, 2, pc.diry, pc.ldin, 127, pc.more],
     parameters: [
       { name: 'subdirectory name', type: 'string', byref: false, length: 1 }
     ],
@@ -1393,7 +1393,7 @@ export default [
   },
   {
     names: { BASIC: 'DELETEFILE', Pascal: 'deletefile', Python: 'deletefile' },
-    code: [pc.ldin, 1, pc.file],
+    code: [pc.ldin, 1, pc.file, pc.ldin, 128, pc.less],
     parameters: [
       { name: 'filename', type: 'string', byref: false, length: 1 }
     ],
@@ -1462,7 +1462,7 @@ export default [
   },
   {
     names: { BASIC: 'CHECKDIR', Pascal: 'checkdir', Python: 'checkdir' },
-    code: [pc.ldin, 0, pc.diry],
+    code: [pc.ldin, 0, pc.diry, pc.ldin, 127, pc.more],
     parameters: [
       { name: 'directory name', type: 'string', byref: false, length: 1 },
       { name: 'code', type: 'integer', byref: false, length: 1 }
@@ -1474,7 +1474,7 @@ export default [
   },
   {
     names: { BASIC: 'CHECKFILE', Pascal: 'checkfile', Python: 'checkfile' },
-    code: [pc.ldin, 0, pc.file],
+    code: [pc.ldin, 0, pc.file, pc.ldin, 127, pc.more],
     parameters: [
       { name: 'filename', type: 'string', byref: false, length: 1 },
       { name: 'code', type: 'integer', byref: false, length: 1 }
@@ -1499,7 +1499,7 @@ export default [
   },
   {
     names: { BASIC: 'DIREXISTS', Pascal: 'direxists', Python: 'direxists' },
-    code: [pc.ldin, 0, pc.diry],
+    code: [pc.ldin, 0, pc.diry, pc.ldin, 127, pc.more],
     parameters: [
       { name: 'subdirectory name', type: 'string', byref: false, length: 1 }
     ],
@@ -1510,7 +1510,7 @@ export default [
   },
   {
     names: { BASIC: 'FILEEXISTS', Pascal: 'fileexists', Python: 'fileexists' },
-    code: [pc.ldin, 0, pc.file],
+    code: [pc.ldin, 0, pc.file, pc.ldin, 127, pc.more],
     parameters: [
       { name: 'filename', type: 'string', byref: false, length: 1 }
     ],
@@ -1521,7 +1521,7 @@ export default [
   },
   {
     names: { BASIC: 'FINDDIR', Pascal: 'finddir', Python: 'finddir' },
-    code: [pc.fdir],
+    code: [pc.dupl, pc.lptr, pc.rota, pc.fdir, pc.swap, pc.rota, pc.sptr],
     parameters: [
       { name: 'directory name pattern', type: 'string', byref: false, length: 1 },
       { name: 'file handle', type: 'integer', byref: false, length: 1 }
@@ -1533,7 +1533,7 @@ export default [
   },
   {
     names: { BASIC: 'FINDFIRST', Pascal: 'findfirst', Python: 'findfirst' },
-    code: [pc.ffnd],
+    code: [pc.dupl, pc.lptr, pc.rota, pc.ffnd, pc.swap, pc.rota, pc.sptr],
     parameters: [
       { name: 'filename pattern', type: 'string', byref: false, length: 1 },
       { name: 'file handle', type: 'integer', byref: false, length: 1 }

@@ -6,11 +6,11 @@ import * as find from './find.js'
 
 // machine constants
 const turtleProperties = 6
-const baseGlobals = 10 // keybuffer, turtle, and 8 files
+const baseGlobals = 10 // keybuffer, turtle, and 8 file handles
 const baseOffset = baseGlobals - 1
 
 // merge two arrays of pcode into one, without a line break in between
-export const merge = (pcode1, pcode2) => {
+export function merge (pcode1, pcode2) {
   // corner case: INPT followed by ICLR (from e.g. "reset(?key)"), INPT should be deleted
   if (pcode2[0] && pcode2[0][0] && pcode2[0][0] === pc.iclr) {
     const last1 = pcode1.length - 1
@@ -26,7 +26,7 @@ export const merge = (pcode1, pcode2) => {
 }
 
 // merge two things with an operator at the end
-export const mergeWithOperator = (sofar, next, operator, makeAbsolute = false) => {
+export function mergeWithOperator (sofar, next, operator, makeAbsolute = false) {
   const pcode2 = merge(sofar, next.pcode)
   const pcode3 = makeAbsolute
     ? merge(pcode2, [[pc[operator], pc.abs]])
@@ -35,19 +35,21 @@ export const mergeWithOperator = (sofar, next, operator, makeAbsolute = false) =
 }
 
 // pcode for loading a literal value onto the stack
-export const loadLiteralValue = (type, value) =>
-  (type === 'string')
+export function loadLiteralValue (type, value) {
+  return (type === 'string')
     ? [pc.lstr, value.length].concat(Array.from(value).map(x => x.charCodeAt(0)))
     : [pc.ldin, value]
+}
 
 // pcode for loading an input keycode onto the stack
-export const loadInputValue = (input) =>
-  (input.value < 0)
+export function loadInputValue (input) {
+  return (input.value < 0)
     ? loadLiteralValue('integer', input.value).concat(pc.inpt)
     : loadLiteralValue('integer', input.value)
+}
 
 // pcode for loading the value of a variable onto the stack
-export const loadVariableValue = (variable) => {
+export function loadVariableValue (variable) {
   // predefined turtle property
   if (variable.turtle) {
     return [pc.ldvg, variable.routine.turtleAddress + variable.turtle]
@@ -68,7 +70,7 @@ export const loadVariableValue = (variable) => {
 }
 
 // pcode for loading the address of a variable onto the stack
-export const loadVariableAddress = (variable) => {
+export function loadVariableAddress (variable) {
   // predefined turtle property
   if (variable.turtle) {
     return [pc.ldin, 0, pc.lptr, pc.ldin, variable.turtle, pc.plus]
@@ -84,7 +86,7 @@ export const loadVariableAddress = (variable) => {
 }
 
 // pcode for storing the value of a variable in memory
-export const storeVariableValue = (variable, parameter = false) => {
+export function storeVariableValue (variable, parameter = false) {
   // predefined turtle property
   if (variable.turtle) {
     return [pc.ldin, 0, pc.lptr, pc.ldin, variable.turtle, pc.plus, pc.sptr]
@@ -113,13 +115,14 @@ export const storeVariableValue = (variable, parameter = false) => {
 }
 
 // pcode for loading return value of a function onto the stack
-export const loadFunctionReturnValue = routine =>
-  routine.returns === 'string'
+export function loadFunctionReturnValue (routine) {
+  return routine.returns === 'string'
     ? [pc.ldvv, find.program(routine).resultAddress, 1, pc.ldin, 0, pc.case]
     : [pc.ldvv, find.program(routine).resultAddress, 1]
+}
 
 // pcode for an expression operator
-export const applyOperator = (type) => {
+export function applyOperator (type) {
   switch (type) {
     case 'subt':
       return [pc.neg]
@@ -133,26 +136,26 @@ export const applyOperator = (type) => {
 }
 
 // pcode for a command call (applied after any arguments have been loaded onto the stack)
-export const callCommand = (command, routine, language) => {
+export function callCommand (command, routine, language) {
   const program = find.program(routine)
 
-  switch (command.code) {
-    // oldt is a special case, because it needs to know the original turtle address
-    case pc.oldt:
-      return [pc.ldin, program.turtleAddress, pc.ldin, 0, pc.sptr]
-
-    // undefined means this is a custom command
-    case undefined:
-      return [pc.subr, command.startLine || `SUBR${command.index}`]
-
-    // anything else is a native command whose pcodes are defined in the commands module
-    default:
-      return command.code
+  // custom commands
+  if (command.code === undefined) {
+    return [pc.subr, command.startLine || `SUBR${command.index}`]
   }
+
+  // native commands
+  if (command.code[0] === pc.oldt) {
+    // this is a special case, because compilation requires knowing the original turtle address
+    return [pc.ldin, program.turtleAddress, pc.ldin, 0, pc.sptr]
+  }
+
+  // otherwise just return the pcodes defined for the command
+  return command.code
 }
 
 // pcode for a conditional structure
-export const conditional = (startLine, testCode, ifCode, elseCode = []) => {
+export function conditional (startLine, testCode, ifCode, elseCode = []) {
   const offset = (elseCode.length > 0) ? 2 : 1
   const startCode = merge(testCode, [[pc.ifno, ifCode.length + startLine + offset]])
   const middleCode = [[pc.jump, ifCode.length + elseCode.length + startLine + offset]]
@@ -163,7 +166,7 @@ export const conditional = (startLine, testCode, ifCode, elseCode = []) => {
 }
 
 // pcode for a FOR loop structure
-export const forLoop = (startLine, variable, initial, final, compare, change, innerCode) => {
+export function forLoop (startLine, variable, initial, final, compare, change, innerCode) {
   const ifnoLine = innerCode.length + startLine + 4
   const startCode = [
     initial,
@@ -178,14 +181,14 @@ export const forLoop = (startLine, variable, initial, final, compare, change, in
 }
 
 // pcode for a REPEAT loop structure
-export const repeatLoop = (startLine, testCode, innerCode) => {
+export function repeatLoop (startLine, testCode, innerCode) {
   const endCode = merge(testCode, [[pc.ifno, startLine]])
 
   return innerCode.concat(endCode)
 }
 
 // pcode for a WHILE loop structure
-export const whileLoop = (startLine, testCode, innerCode) => {
+export function whileLoop (startLine, testCode, innerCode) {
   const startCode = merge(testCode, [[pc.ifno, innerCode.length + startLine + 2]])
   const endCode = [[pc.jump, startLine]]
 
@@ -193,7 +196,7 @@ export const whileLoop = (startLine, testCode, innerCode) => {
 }
 
 // pcode for a subroutine
-export const subroutine = (routine, innerCode) => {
+export function subroutine (routine, innerCode) {
   const startCode = subroutineStartCode(routine)
   const endCode = subroutineEndCode(routine)
 
@@ -201,7 +204,7 @@ export const subroutine = (routine, innerCode) => {
 }
 
 // pcode for the start of a subroutine (exported so that the coder can determine its length)
-export const subroutineStartCode = (routine) => {
+export function subroutineStartCode (routine) {
   const firstLine = [[pc.pssr, routine.index]]
   const firstTwoLines = firstLine.concat(initialiseSubroutineMemory(routine))
 
@@ -217,7 +220,7 @@ export const subroutineStartCode = (routine) => {
 }
 
 // pcode for the main program
-export const program = (routine, subroutinesCode, innerCode) => {
+export function program (routine, subroutinesCode, innerCode) {
   const startCode = programStartCode(routine)
   const jumpLine = [[pc.jump, startCode.length + subroutinesCode.length + 2]]
   const endCode = [[pc.halt]]
@@ -226,12 +229,53 @@ export const program = (routine, subroutinesCode, innerCode) => {
     : startCode.concat(innerCode).concat(endCode)
 }
 
+// pcode for the start of the main program
+export function programStartCode (routine) {
+  const startCode = [
+    setupGlobalMemory(routine.turtleAddress, routine.memoryNeeded),
+    [
+      pc.home,
+      pc.ldin,
+      2,
+      pc.thik,
+      pc.ldin,
+      360,
+      pc.angl,
+      pc.ldin,
+      32,
+      pc.bufr,
+      pc.ldin,
+      1, // address of the keybuffer pointer
+      pc.sptr,
+      pc.hfix,
+      pc.ldin,
+      0,
+      pc.dupl,
+      pc.ldin,
+      1000,
+      pc.dupl,
+      pc.dupl,
+      pc.dupl,
+      pc.reso,
+      pc.canv
+    ]
+  ]
+
+  // maybe setup global string variables
+  if (stringVariables(routine).length > 0) {
+    return startCode.concat(stringVariables(routine).map(setupGlobalString))
+  }
+
+  return startCode
+}
+
 // get string variables from a routine
-const stringVariables = routine =>
-  routine.variables.filter(x => x.fulltype.type === 'string')
+function stringVariables (routine) {
+  return routine.variables.filter(x => x.fulltype.type === 'string')
+}
 
 // pcode for initialising a global string variable
-const setupGlobalString = (variable) => {
+function setupGlobalString (variable) {
   const index = variable.routine.turtleAddress + turtleProperties + variable.index
 
   return [
@@ -247,7 +291,7 @@ const setupGlobalString = (variable) => {
 }
 
 // pcode for initialising a local string variable
-const setupLocalString = (variable) => {
+function setupLocalString (variable) {
   const routine = variable.routine.index + baseOffset
   const index = variable.index
 
@@ -267,7 +311,7 @@ const setupLocalString = (variable) => {
 }
 
 // pcode for initialising subroutine memory
-const initialiseSubroutineMemory = (routine) => {
+function initialiseSubroutineMemory (routine) {
   const claimMemory = [pc.memc, routine.index + baseOffset, routine.memoryNeeded]
   const zeroMemory = [pc.ldav, routine.index + baseOffset, 1, pc.ldin, routine.memoryNeeded, pc.zptr]
   const claimAndZero = [claimMemory, zeroMemory]
@@ -278,7 +322,7 @@ const initialiseSubroutineMemory = (routine) => {
 }
 
 // load subroutine arguments from the stack
-const loadSubroutineArguments = (routine) => {
+function loadSubroutineArguments (routine) {
   let result = []
 
   let pars = routine.parameters.length
@@ -291,7 +335,7 @@ const loadSubroutineArguments = (routine) => {
 }
 
 // pcode for the end of a subroutine
-const subroutineEndCode = (routine) => {
+function subroutineEndCode (routine) {
   const subAddress = routine.index + baseOffset
   const resultAddress = find.program(routine).resultAddress
   const storeFunctionResult = [pc.ldvg, subAddress, pc.stvg, resultAddress]
@@ -310,8 +354,8 @@ const subroutineEndCode = (routine) => {
 }
 
 // pcode for the first line of a program (global memory setup)
-const setupGlobalMemory = (turtleAddress, memoryNeeded) =>
-  ([
+function setupGlobalMemory (turtleAddress, memoryNeeded) {
+  return [
     pc.ldin,
     turtleAddress,
     pc.dupl,
@@ -330,47 +374,5 @@ const setupGlobalMemory = (turtleAddress, memoryNeeded) =>
     pc.ldin,
     turtleAddress + memoryNeeded + turtleProperties,
     pc.stmt
-  ])
-
-// pcode for the second line of a program (program defaults)
-const setupProgramDefaults = [
-  pc.home,
-  pc.ldin,
-  2,
-  pc.thik,
-  pc.ldin,
-  360,
-  pc.angl,
-  pc.ldin,
-  32,
-  pc.bufr,
-  pc.ldin,
-  1, // address of the keybuffer pointer
-  pc.sptr,
-  pc.hfix,
-  pc.ldin,
-  0,
-  pc.dupl,
-  pc.ldin,
-  1000,
-  pc.dupl,
-  pc.dupl,
-  pc.dupl,
-  pc.reso,
-  pc.canv
-]
-
-// pcode for the start of the main program
-export const programStartCode = (routine) => {
-  const startCode = [
-    setupGlobalMemory(routine.turtleAddress, routine.memoryNeeded),
-    setupProgramDefaults
   ]
-
-  // maybe setup global string variables
-  if (stringVariables(routine).length > 0) {
-    return startCode.concat(stringVariables(routine).map(setupGlobalString))
-  }
-
-  return startCode
 }
