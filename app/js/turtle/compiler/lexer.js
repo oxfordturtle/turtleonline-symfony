@@ -1,19 +1,19 @@
 /*
-lexical analysis; program code (a string) goes in, an array of lexemes comes out
-
-the lexer first uses the tokenizer to generate an array of tokens; then it checks for lexical
-errors, strips whitespace and comments, and enriches the tokens with more information
-
-lexemes (enriched tokens) look like this: { type, content, value, line }
-
-the types are the same as for token types, except that there are no illegal lexemes, whitespace
-is handled differently, and the "binary", "octal", "hexadecimal", and "decimal" token types are
-all just "integer" lexical types
-
-the value property stores the result of evaluating literal value expressions, looking up the
-corresponding integer for predefined colours, keycodes, and input queries, or the pcode associated
-with an operator; it is null for all other lexical types
-*/
+ * lexical analysis; program code (a string) goes in, an array of lexemes comes out
+ *
+ * the lexer first uses the tokenizer to generate an array of tokens; then it checks for lexical
+ * errors, strips whitespace and comments, and enriches the tokens with more information
+ *
+ * lexemes (enriched tokens) look like this: { type, content, value, line }
+ *
+ * the types are the same as for token types, except that there are no illegal lexemes, whitespace
+ * is handled differently, and the "binary", "octal", "hexadecimal", and "decimal" token types are
+ * all just "integer" lexical types
+ *
+ * the value property stores the result of evaluating literal value expressions, looking up the
+ * corresponding integer for predefined colours, keycodes, and input queries, or the pcode associated
+ * with an operator; it is null for all other lexical types
+ */
 import error from './tools/error.js'
 import tokenizer from './tokenizer.js'
 

@@ -1,6 +1,6 @@
 /*
-Groups for the example programs.
-*/
+ * Groups for the example programs.
+ */
 export default [
   {
     index: 1,
@@ -51,7 +51,11 @@ export default [
       'StringFunctions',
       'UserStringFunctions',
       'MathFunctions',
-      'TrigGraphs'
+      'TrigGraphs',
+      'RandomSentences',
+      'FileCommands',
+      'DirectoryCommands',
+      'FileSearching'
     ]
   },
   {

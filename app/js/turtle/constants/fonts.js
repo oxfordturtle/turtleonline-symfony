@@ -1,6 +1,6 @@
 /*
-An array of fonts.
-*/
+ * An array of fonts.
+ */
 export default [
   { index: 0x0, name: 'Arial', css: 'Arial, sans-serif' },
   { index: 0x1, name: 'Arial Black', css: '"Arial Black", sans-serif' },

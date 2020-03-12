@@ -11,12 +11,12 @@ export default output
 // register to keep in sync with the turtle machine...
 
 // write text to the textual output
-on('write', function (text) {
+on('write', (text) => {
   output.innerHTML += text
 })
 
 // clear and change the colour of the textual output
-on('output', function ({ clear, colour }) {
+on('output', ({ clear, colour }) => {
   if (clear) {
     output.innerHTML = ''
   }

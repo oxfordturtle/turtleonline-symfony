@@ -1,6 +1,6 @@
 /*
-code highlighter
-*/
+ * code highlighter
+ */
 import tokenizer from './tokenizer.js'
 
 export default (code, language) =>

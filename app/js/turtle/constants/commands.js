@@ -1,68 +1,74 @@
 /*
-An array of commands. Used by the compiler, the usage analyser, and the help component.
-*/
+ * An array of commands. Used by the compiler, the usage analyser, and the help component.
+ */
 import pc from './pc.js'
 
 export default [
   // 0. Turtle: relative movement
   {
     names: { BASIC: 'FORWARD', Pascal: 'forward', Python: 'forward' },
-    code: pc.fwrd,
+    code: [pc.fwrd],
     parameters: [
       { name: 'n', type: 'integer', byref: false, length: 1 }
     ],
+    returns: null,
     category: 0,
     level: 0,
     description: 'Moves the Turtle forward <code>n</code> units, drawing as it goes (unless the pen is up).'
   },
   {
     names: { BASIC: 'BACK', Pascal: 'back', Python: 'back' },
-    code: pc.back,
+    code: [pc.back],
     parameters: [
       { name: 'n', type: 'integer', byref: false, length: 1 }
     ],
+    returns: null,
     category: 0,
     level: 0,
     description: 'Moves the Turtle back <code>n</code> units, drawing as it goes (unless the pen is up).'
   },
   {
     names: { BASIC: 'LEFT', Pascal: 'left', Python: 'left' },
-    code: pc.left,
+    code: [pc.left],
     parameters: [
       { name: 'n', type: 'integer', byref: false, length: 1 }
     ],
+    returns: null,
     category: 0,
     level: 0,
     description: 'Rotates the Turtle left by <code>n</code> degrees.'
   },
   {
     names: { BASIC: 'RIGHT', Pascal: 'right', Python: 'right' },
-    code: pc.rght,
+    code: [pc.rght],
     parameters: [
       { name: 'n', type: 'integer', byref: false, length: 1 }
     ],
+    returns: null,
     category: 0,
     level: 0,
     description: 'Rotates the Turtle right by <code>n</code> degrees.'
   },
   {
     names: { BASIC: 'DRAWXY', Pascal: 'drawxy', Python: 'drawxy' },
-    code: pc.drxy,
+    code: [pc.drxy],
     parameters: [
       { name: 'x', type: 'integer', byref: false, length: 1 },
       { name: 'y', type: 'integer', byref: false, length: 1 }
     ],
+    returns: null,
     category: 0,
     level: 1,
     description: 'Moves the Turtle in a straight line to a point <code>x</code> units away along the x-axis and <code>y</code> units away along the y-axis, drawing as it goes (unless the pen is up).'
   },
   {
     names: { BASIC: 'MOVEXY', Pascal: 'movexy', Python: 'movexy' },
-    code: pc.mvxy,
+    code: [pc.mvxy],
     parameters: [
       { name: 'x', type: 'integer', byref: false, length: 1 },
       { name: 'y', type: 'integer', byref: false, length: 1 }
     ],
+    returns: null,
     category: 0,
     level: 1,
     description: 'Moves the Turtle in a straight line to a point <code>x</code> units away along the x-axis and <code>y</code> units away along the y-axis, <em>without</em> drawing (regardless of the current pen status).'
@@ -70,60 +76,77 @@ export default [
   // 1. Turtle: absolute movement
   {
     names: { BASIC: 'HOME', Pascal: 'home', Python: 'home' },
-    code: pc.home,
+    code: [pc.home],
     parameters: [],
+    returns: null,
     category: 1,
     level: 0,
     description: 'Moves the Turtle back to its starting position in the centre of the canvas, facing north, drawing as it goes (unless the pen is up).'
   },
   {
     names: { BASIC: 'SETX', Pascal: 'setx', Python: 'setx' },
-    code: pc.setx,
+    code: [pc.setx],
     parameters: [
       { name: 'x', type: 'integer', byref: false, length: 1 }
     ],
+    returns: null,
     category: 1,
     level: 0,
     description: 'Sets the Turtle&rsquo;s <code>x</code> coordinate directly (without movement or drawing on the canvas). This can also be achieved by direct assignment of the global variable <code>turtx</code>.'
   },
   {
     names: { BASIC: 'SETY', Pascal: 'sety', Python: 'sety' },
-    code: pc.sety,
+    code: [pc.sety],
     parameters: [
       { name: 'y', type: 'integer', byref: false, length: 1 }
     ],
+    returns: null,
     category: 1,
     level: 0,
     description: 'Sets the Turtle&rsquo;s <code>y</code> coordinate directly (without movement or drawing on the canvas). This can also be achieved by direct assignment of the global variable <code>turty</code>.'
   },
   {
     names: { BASIC: 'SETXY', Pascal: 'setxy', Python: 'setxy' },
-    code: pc.toxy,
+    code: [pc.toxy],
     parameters: [
       { name: 'x', type: 'integer', byref: false, length: 1 },
       { name: 'y', type: 'integer', byref: false, length: 1 }
     ],
+    returns: null,
     category: 1,
     level: 0,
     description: 'Sets the Turtle&rsquo;s <code>x</code> and <code>y</code> coordinates directly (without movement or drawing on the canvas). This can also be achieved by direct assingment of the global variables <code>turtx</code> and <code>turty</code>.'
   },
   {
     names: { BASIC: 'DIRECTION', Pascal: 'direction', Python: 'direction' },
-    code: pc.setd,
+    code: [pc.setd],
     parameters: [
       { name: 'n', type: 'integer', byref: false, length: 1 }
     ],
+    returns: null,
     category: 1,
     level: 0,
     description: 'Sets the Turtle&rsquo;s direction to <code>n</code> degrees (0 for north, 90 for east, 180 for south, 270 for west). This can also be achieved by direct assignment of the global variable <code>turtd</code>. Note that the number of degrees in a circle (360 by default) can be changed with the <code>angles</code> command.'
   },
   {
+    names: { BASIC: 'ANGLES', Pascal: 'angles', Python: 'angles' },
+    code: [pc.angl],
+    parameters: [
+      { name: 'degrees', type: 'integer', byref: false, length: 1 }
+    ],
+    returns: null,
+    category: 1,
+    level: 1,
+    description: 'Sets the number of <code>degrees</code> in a circle (360 by default).'
+  },
+  {
     names: { BASIC: 'TURNXY', Pascal: 'turnxy', Python: 'turnxy' },
-    code: pc.turn,
+    code: [pc.turn],
     parameters: [
       { name: 'x', type: 'integer', byref: false, length: 1 },
       { name: 'y', type: 'integer', byref: false, length: 1 }
     ],
+    returns: null,
     category: 1,
     level: 1,
     description: 'Turns the Turtle to face the point <code>x</code> units away alongthe x-axis and <code>y</code> units away along the y-axis.'
@@ -131,93 +154,102 @@ export default [
   // 2. Turtle: shape drawing
   {
     names: { BASIC: 'CIRCLE', Pascal: 'circle', Python: 'circle' },
-    code: pc.circ,
+    code: [pc.circ],
     parameters: [
       { name: 'radius', type: 'integer', byref: false, length: 1 }
     ],
+    returns: null,
     category: 2,
     level: 0,
     description: 'Draws a circle outline in the Turtle&rsquo;s current colour and thickness, of the given <code>radius</code>, centred on the Turtle&rsquo;s current location.'
   },
   {
     names: { BASIC: 'BLOT', Pascal: 'blot', Python: 'blot' },
-    code: pc.blot,
+    code: [pc.blot],
     parameters: [
       { name: 'radius', type: 'integer', byref: false, length: 1 }
     ],
+    returns: null,
     category: 2,
     level: 0,
     description: 'Draws a filled circle in the Turtle&rsquo;s current colour, of the given <code>radius</code>, centred on the Turtle&rsquo;s current location.'
   },
   {
     names: { BASIC: 'ELLIPSE', Pascal: 'ellipse', Python: 'ellipse' },
-    code: pc.elps,
+    code: [pc.elps],
     parameters: [
       { name: 'Xradius', type: 'integer', byref: false, length: 1 },
       { name: 'Yradius', type: 'integer', byref: false, length: 1 }
     ],
+    returns: null,
     category: 2,
     level: 0,
     description: 'Draws an ellipse outline in the Turtle&rsquo;s current colour and thickness, of the given <code>Xradius</code> and <code>Yradius</code>, centred on the Turtle&rsquo;s current location.'
   },
   {
     names: { BASIC: 'ELLBLOT', Pascal: 'ellblot', Python: 'ellblot' },
-    code: pc.eblt,
+    code: [pc.eblt],
     parameters: [
       { name: 'Xradius', type: 'integer', byref: false, length: 1 },
       { name: 'Yradius', type: 'integer', byref: false, length: 1 }
     ],
+    returns: null,
     category: 2,
     level: 0,
     description: 'Draws a filled ellipse in the Turtle&rsquo;s current colour, of the given <code>Xradius</code> and <code>Yradius</code>, centred on the Turtle&rsquo;s current location.'
   },
   {
     names: { BASIC: 'POLYLINE', Pascal: 'polyline', Python: 'polyline' },
-    code: pc.poly,
+    code: [pc.poly],
     parameters: [
       { name: 'n', type: 'integer', byref: false, length: 1 }
     ],
+    returns: null,
     category: 2,
     level: 1,
     description: 'Draws a polygon outline in the Turtle&rsquo;s current colour and thickness, connecting the last <code>n</code> locations that the Turtle has visited.'
   },
   {
     names: { BASIC: 'POLYGON', Pascal: 'polygon', Python: 'polygon' },
-    code: pc.pfil,
+    code: [pc.pfil],
     parameters: [
       { name: 'n', type: 'integer', byref: false, length: 1 }
     ],
+    returns: null,
     category: 2,
     level: 1,
     description: 'Draws a filled polygon in the Turtle&rsquo;s current colour and thickness, connecting the last <code>n</code> locations that the Turtle has visited.'
   },
   {
     names: { BASIC: 'FORGET', Pascal: 'forget', Python: 'forget' },
-    code: pc.frgt,
+    code: [pc.frgt],
     parameters: [
       { name: 'n', type: 'integer', byref: false, length: 1 }
     ],
+    returns: null,
     category: 2,
     level: 1,
     description: 'Makes the Turtle &ldquo;forget&rdquo; the last <code>n</code> points it has visited. Used in conjunction with <code>polyline</code> and <code>polygon</code>.'
   },
   {
     names: { BASIC: 'REMEMBER', Pascal: 'remember', Python: 'remember' },
-    code: pc.rmbr,
+    code: [pc.rmbr],
     parameters: [],
+    returns: null,
     category: 2,
     level: 1,
     description: 'Makes the Turtle &ldquo;remember&rdquo; its current location. This is only necessary if its current location was set by a direct assignment of the global variables <code>turtx</code> and <code>turty</code>; when using the standard moving commands, the Turtle automatically remembers where it has been.'
   },
   {
     names: { BASIC: 'BOX', Pascal: 'box', Python: 'box' },
-    code: pc.box,
+    code: [pc.box],
     parameters: [
       { name: 'x', type: 'integer', byref: false, length: 1 },
       { name: 'y', type: 'integer', byref: false, length: 1 },
       { name: 'colour', type: 'integer', byref: false, length: 1 },
       { name: 'border', type: 'boolean', byref: false, length: 1 }
     ],
+    returns: null,
     category: 2,
     level: 1,
     description: 'Draws a box of width <code>x</code> and height <code>y</code>, with the top left corner in the Turtle&rsquo;s current location, filled with the specified <code>colour</code>. If <code>border</code> is <code>true</code>, a border is drawn around the box in the Turtle&rsquo;s current colour and and thickness. This is intended to be used with the <code>print</code> command, to provide a box for framing text.'
@@ -225,76 +257,83 @@ export default [
   // 3. Other Turtle commands
   {
     names: { BASIC: 'COLOUR', Pascal: 'colour', Python: 'colour' },
-    code: pc.colr,
+    code: [pc.colr],
     parameters: [
       { name: 'colour', type: 'integer', byref: false, length: 1 }
     ],
+    returns: null,
     category: 3,
     level: 0,
     description: 'Sets the <code>colour</code> of the Turtle&rsquo;s pen. Takes as an argument either an RGB value, or one of the Turtle System&rsquo;s fifty predefined colour constants (see the <b>Colours</b> tab). This can also be achieved by direct assignment of the global variable <code>turtc</code>.'
   },
   {
     names: { BASIC: 'RNDCOL', Pascal: 'randcol', Python: 'randcol' },
-    code: pc.rndc,
+    code: [pc.rand, pc.incr, pc.rgb, pc.colr],
     parameters: [
       { name: 'n', type: 'integer', byref: false, length: 1 }
     ],
+    returns: null,
     category: 3,
     level: 0,
     description: 'Assigns a random colour to the Turte&rsquo;s pen, between 1 and <code>n</code> (maximum 50). The colours are taken from the Turtle System&rsquo;s fifty predefined colours, which are each assigned a number between 1 and 50 (see the <b>Colours</b> tab).'
   },
   {
     names: { BASIC: 'THICKNESS', Pascal: 'thickness', Python: 'thickness' },
-    code: pc.thik,
+    code: [pc.thik],
     parameters: [
       { name: 'thickness', type: 'integer', byref: false, length: 1 }
     ],
+    returns: null,
     category: 3,
     level: 0,
     description: 'Sets the <code>thickness</code> of the Turtle&rsquo;s pen (for line drawing, and outlines of circles, ellipses, boxes, and polygons). This can also be achieved by direct assignment of the global variable <code>turtt</code>.'
   },
   {
     names: { BASIC: 'PENUP', Pascal: 'penup', Python: 'penup' },
-    code: pc.pnup,
+    code: [pc.ldin, 0, pc.pen],
     parameters: [],
+    returns: null,
     category: 3,
     level: 0,
     description: 'Lifts the Turtle&rsquo;s pen, so that subsequent movement will not draw a line on the Canvas.'
   },
   {
     names: { BASIC: 'PENDOWN', Pascal: 'pendown', Python: 'pendown' },
-    code: pc.pndn,
+    code: [pc.ldin, -1, pc.pen],
     parameters: [],
+    returns: null,
     category: 3,
     level: 0,
     description: 'Lowers the Turtle&rsquo;s pen, so that subsequent movement will draw a line on the Canvas.'
   },
   {
     names: { BASIC: 'OUTPUT', Pascal: 'output', Python: 'output' },
-    code: pc.outp,
+    code: [pc.outp],
     parameters: [
       { name: 'clear', type: 'boolean', byref: false, length: 1 },
       { name: 'colour', type: 'integer', byref: false, length: 1 },
       { name: 'tofront', type: 'boolean', byref: false, length: 1 }
     ],
+    returns: null,
     category: 3,
     level: 1,
     description: 'Modifies the textual output. If the first argument is <code>true</code>, it clears any existing text. The second argument specifies the background colour, and the third argument is for switching the display. If the third argument is <code>true</code>, it switches to the <b>Output</b> tab, while if it is <code>false</code>, it switches to the <b>Canvas and Console</b> tab.'
   },
   {
     names: { BASIC: 'CONSOLE', Pascal: 'console', Python: 'console' },
-    code: pc.cons,
+    code: [pc.cons],
     parameters: [
       { name: 'clear', type: 'boolean', byref: false, length: 1 },
       { name: 'colour', type: 'integer', byref: false, length: 1 }
     ],
+    returns: null,
     category: 3,
     level: 1,
     description: 'Modifies the Console; if the first argument is <code>true</code>, it clears any existing text, while the second argument specifies the background colour.'
   },
   {
     names: { BASIC: 'RGB', Pascal: 'rgb', Python: 'rgb' },
-    code: pc.rgb,
+    code: [pc.rgb],
     parameters: [
       { name: 'colour', type: 'integer', byref: false, length: 1 }
     ],
@@ -305,7 +344,7 @@ export default [
   },
   {
     names: { BASIC: 'MIXCOLS', Pascal: 'mixcols', Python: 'mixcols' },
-    code: pc.mixc,
+    code: [pc.mixc],
     parameters: [
       { name: 'colour1', type: 'integer', byref: false, length: 1 },
       { name: 'colour1', type: 'integer', byref: false, length: 1 },
@@ -319,18 +358,20 @@ export default [
   },
   {
     names: { BASIC: 'NEWTURTLE', Pascal: 'newturtle', Python: 'newturtle' },
-    code: pc.newt,
+    code: [pc.ldin, 0, pc.sptr],
     parameters: [
       { name: 'array', type: 'integer', byref: true, length: 5 }
     ],
+    returns: null,
     category: 3,
     level: 2,
     description: 'Points the Turtle to a custom array in memory (this must be an array of five integers, corresponding to the Turtle&rsquo;s five properties, <code>turtx</code>, <code>turty</code>, <code>turtd</code>, <code>turtt</code>, and <code>turtc</code>). Use repeatedly to simulate multiple Turtles.'
   },
   {
     names: { BASIC: 'OLDTURTLE', Pascal: 'oldturtle', Python: 'oldturtle' },
-    code: pc.oldt,
+    code: [pc.oldt],
     parameters: [],
+    returns: null,
     category: 3,
     level: 2,
     description: 'Points the Turtle back to the default (built-in) array in memory. Use in conjunction with <code>newturtle</code>.'
@@ -338,79 +379,75 @@ export default [
   // 4. Canvas operations
   {
     names: { BASIC: 'UPDATE', Pascal: 'update', Python: 'update' },
-    code: pc.udat,
+    code: [pc.ldin, -1, pc.udat],
     parameters: [],
+    returns: null,
     category: 4,
     level: 0,
     description: 'Makes the Machine update the Canvas, and continue updating with all subsequent drawing commands. Used in conjunction with <em>noupdate</em>.'
   },
   {
     names: { BASIC: 'NOUPDATE', Pascal: 'noupdate', Python: 'noupdate' },
-    code: pc.ndat,
+    code: [pc.ldin, 0, pc.udat],
     parameters: [],
+    returns: null,
     category: 4,
     level: 0,
     description: 'Makes the Machine refrain from updating the Canvas when executing all subsequent drawing commands, until <em>update</em> is called. Use this to create smooth animations, by queueing up several drawing commands to execute simultaneously.'
   },
   {
     names: { BASIC: 'BLANK', Pascal: 'blank', Python: 'blank' },
-    code: pc.blnk,
+    code: [pc.blnk],
     parameters: [
       { name: 'colour', type: 'integer', byref: false, length: 1 }
     ],
+    returns: null,
     category: 4,
     level: 0,
     description: 'Blanks the entire Canvas with the specified <code>colour</code>.'
   },
   {
     names: { BASIC: 'CANVAS', Pascal: 'canvas', Python: 'canvas' },
-    code: pc.canv,
+    code: [pc.canv],
     parameters: [
       { name: 'x1', type: 'integer', byref: false, length: 1 },
       { name: 'y1', type: 'integer', byref: false, length: 1 },
       { name: 'x2', type: 'integer', byref: false, length: 1 },
       { name: 'y2', type: 'integer', byref: false, length: 1 }
     ],
+    returns: null,
     category: 4,
     level: 1,
     description: 'Sets the top left Canvas coordinate to <code>(x1,y1)</code>, and the Canvas width and height to <code>x2</code> and <code>y2</code> respectively. Note that the width and height fix the number of virtual points on the Canvas, not the number of actual pixels.'
   },
   {
     names: { BASIC: 'RESOLUTION', Pascal: 'resolution', Python: 'resolution' },
-    code: pc.reso,
+    code: [pc.reso],
     parameters: [
       { name: 'x', type: 'integer', byref: false, length: 1 },
       { name: 'y', type: 'integer', byref: false, length: 1 }
     ],
+    returns: null,
     category: 4,
     level: 1,
     description: 'Sets the Canvas resolution, i.e. the number of actual pixels in the <code>x</code> and <code>y</code> dimensions. To be used in conjunction with the <code>canvas</code> command, typically to set the number of actual pixels equal to the number of virtual points on the Canvas.'
   },
   {
-    names: { BASIC: 'ANGLES', Pascal: 'angles', Python: 'angles' },
-    code: pc.angl,
-    parameters: [
-      { name: 'degrees', type: 'integer', byref: false, length: 1 }
-    ],
-    category: 4,
-    level: 1,
-    description: 'Sets the number of <code>degrees</code> in a circle (360 by default).'
-  },
-  {
     names: { BASIC: 'PIXSET', Pascal: 'pixset', Python: 'pixset' },
-    code: pc.pixs,
+    code: [pc.pixs],
     parameters: [
       { name: 'x', type: 'integer', byref: false, length: 1 },
       { name: 'y', type: 'integer', byref: false, length: 1 },
       { name: 'colour', type: 'integer', byref: false, length: 1 }
     ],
+    returns: null,
     category: 4,
     level: 2,
     description: 'Sets the <code>colour</code> at point <code>(x,y)</code>.'
   },
   {
     names: { BASIC: 'PIXCOL', Pascal: 'pixcol', Python: 'pixcol' },
-    code: pc.pixc,
+    code: [pc.pixc],
     parameters: [
       { name: 'x', type: 'integer', byref: false, length: 1 },
       { name: 'y', type: 'integer', byref: false, length: 1 }
@@ -422,25 +459,27 @@ export default [
   },
   {
     names: { BASIC: 'RECOLOUR', Pascal: 'recolour', Python: 'recolour' },
-    code: pc.rcol,
+    code: [pc.rcol],
     parameters: [
       { name: 'x', type: 'integer', byref: false, length: 1 },
       { name: 'y', type: 'integer', byref: false, length: 1 },
       { name: 'colour', type: 'integer', byref: false, length: 1 }
     ],
+    returns: null,
     category: 4,
     level: 2,
     description: 'Floods the Canvas with the specified <code>colour</code>, starting at point <code>(x,y)</code>, until reaching any different colour.'
   },
   {
     names: { BASIC: 'FILL', Pascal: 'fill', Python: 'fill' },
-    code: pc.fill,
+    code: [pc.fill],
     parameters: [
       { name: 'x', type: 'integer', byref: false, length: 1 },
       { name: 'y', type: 'integer', byref: false, length: 1 },
       { name: 'colour', type: 'integer', byref: false, length: 1 },
       { name: 'boundary', type: 'integer', byref: false, length: 1 }
     ],
+    returns: null,
     category: 4,
     level: 2,
     description: 'Floods the Canvas with the specified <code>colour</code>, starting at point <code>(x,y)</code>, until reaching the <code>boundary</code> colour.'
@@ -448,27 +487,29 @@ export default [
   // 5. General arithmetic functions
   {
     names: { BASIC: 'INC', Pascal: 'inc', Python: 'inc' },
-    code: pc.incr,
+    code: [pc.dupl, pc.lptr, pc.incr, pc.swap, pc.sptr],
     parameters: [
       { name: 'variable', type: 'integer', byref: true, length: 1 }
     ],
+    returns: null,
     category: 5,
     level: 0,
     description: 'Increments the specified <code>variable</code> by 1.'
   },
   {
     names: { BASIC: 'DEC', Pascal: 'dec', Python: 'dec' },
-    code: pc.decr,
+    code: [pc.dupl, pc.lptr, pc.decr, pc.swap, pc.sptr],
     parameters: [
       { name: 'variable', type: 'integer', byref: true, length: 1 }
     ],
+    returns: null,
     category: 5,
     level: 0,
     description: 'Decrements the specified <code>variable</code> by 1.'
   },
   {
     names: { BASIC: 'ABS', Pascal: 'abs', Python: 'abs' },
-    code: pc.abs,
+    code: [pc.abs],
     parameters: [
       { name: 'n', type: 'integer', byref: false, length: 1 }
     ],
@@ -479,7 +520,7 @@ export default [
   },
   {
     names: { BASIC: 'SGN', Pascal: 'sign', Python: 'sign' },
-    code: pc.sign,
+    code: [pc.sign],
     parameters: [
       { name: 'a', type: 'integer', byref: false, length: 1 }
     ],
@@ -490,7 +531,7 @@ export default [
   },
   {
     names: { BASIC: 'MAX', Pascal: 'max', Python: 'max' },
-    code: pc.maxi,
+    code: [pc.maxi],
     parameters: [
       { name: 'a', type: 'integer', byref: false, length: 1 },
       { name: 'b', type: 'integer', byref: false, length: 1 }
@@ -502,7 +543,7 @@ export default [
   },
   {
     names: { BASIC: 'MIN', Pascal: 'min', Python: 'min' },
-    code: pc.mini,
+    code: [pc.mini],
     parameters: [
       { name: 'a', type: 'integer', byref: false, length: 1 },
       { name: 'b', type: 'integer', byref: false, length: 1 }
@@ -514,7 +555,7 @@ export default [
   },
   {
     names: { BASIC: 'SQR', Pascal: 'sqrt', Python: 'sqrt' },
-    code: pc.sqrt,
+    code: [pc.sqrt],
     parameters: [
       { name: 'a', type: 'integer', byref: false, length: 1 },
       { name: 'mult', type: 'integer', byref: false, length: 1 }
@@ -526,7 +567,7 @@ export default [
   },
   {
     names: { BASIC: 'HYPOT', Pascal: 'hypot', Python: 'hypot' },
-    code: pc.hyp,
+    code: [pc.hyp],
     parameters: [
       { name: 'a', type: 'integer', byref: false, length: 1 },
       { name: 'b', type: 'integer', byref: false, length: 1 },
@@ -539,7 +580,7 @@ export default [
   },
   {
     names: { BASIC: 'RND', Pascal: null, Python: null },
-    code: pc.rand,
+    code: [pc.rand, pc.incr],
     parameters: [
       { name: 'n', type: 'integer', byref: false, length: 1 }
     ],
@@ -550,7 +591,7 @@ export default [
   },
   {
     names: { BASIC: null, Pascal: 'random', Python: null },
-    code: pc.rand,
+    code: [pc.rand],
     parameters: [
       { name: 'n', type: 'integer', byref: false, length: 1 }
     ],
@@ -561,7 +602,7 @@ export default [
   },
   {
     names: { BASIC: null, Pascal: null, Python: 'randint' },
-    code: pc.rand,
+    code: [pc.swap, pc.dupl, pc.rota, pc.incr, pc.swap, pc.subt, pc.rand, pc.plus],
     parameters: [
       { name: 'a', type: 'integer', byref: false, length: 1 },
       { name: 'b', type: 'integer', byref: false, length: 1 }
@@ -573,7 +614,7 @@ export default [
   },
   {
     names: { BASIC: 'RNDSEED', Pascal: 'randseed', Python: 'randseed' },
-    code: pc.seed,
+    code: [pc.seed],
     parameters: [
       { name: 'seed', type: 'integer', byref: false, length: 1 }
     ],
@@ -584,7 +625,7 @@ export default [
   },
   {
     names: { BASIC: 'POWER', Pascal: 'power', Python: 'power' },
-    code: pc.powr,
+    code: [pc.powr],
     parameters: [
       { name: 'a', type: 'integer', byref: false, length: 1 },
       { name: 'b', type: 'integer', byref: false, length: 1 },
@@ -598,7 +639,7 @@ export default [
   },
   {
     names: { BASIC: 'ROOT', Pascal: 'root', Python: 'root' },
-    code: pc.root,
+    code: [pc.root],
     parameters: [
       { name: 'a', type: 'integer', byref: false, length: 1 },
       { name: 'b', type: 'integer', byref: false, length: 1 },
@@ -612,7 +653,7 @@ export default [
   },
   {
     names: { BASIC: 'DIVMULT', Pascal: 'divmult', Python: 'divmult' },
-    code: pc.divm,
+    code: [pc.divm],
     parameters: [
       { name: 'a', type: 'integer', byref: false, length: 1 },
       { name: 'b', type: 'integer', byref: false, length: 1 },
@@ -625,7 +666,7 @@ export default [
   },
   {
     names: { BASIC: 'MAXINT', Pascal: 'maxint', Python: 'maxint' },
-    code: pc.mxin,
+    code: [pc.mxin],
     parameters: [],
     returns: 'integer',
     category: 5,
@@ -635,7 +676,7 @@ export default [
   // 6. Trig / exp / log functions
   {
     names: { BASIC: 'SIN', Pascal: 'sin', Python: 'sin' },
-    code: pc.sin,
+    code: [pc.sin],
     parameters: [
       { name: 'a', type: 'integer', byref: false, length: 1 },
       { name: 'b', type: 'integer', byref: false, length: 1 },
@@ -648,7 +689,7 @@ export default [
   },
   {
     names: { BASIC: 'COS', Pascal: 'cos', Python: 'cos' },
-    code: pc.cos,
+    code: [pc.cos],
     parameters: [
       { name: 'a', type: 'integer', byref: false, length: 1 },
       { name: 'b', type: 'integer', byref: false, length: 1 },
@@ -661,7 +702,7 @@ export default [
   },
   {
     names: { BASIC: 'TAN', Pascal: 'tan', Python: 'tan' },
-    code: pc.tan,
+    code: [pc.tan],
     parameters: [
       { name: 'a', type: 'integer', byref: false, length: 1 },
       { name: 'b', type: 'integer', byref: false, length: 1 },
@@ -674,7 +715,7 @@ export default [
   },
   {
     names: { BASIC: 'PI', Pascal: 'pi', Python: 'pi' },
-    code: pc.pi,
+    code: [pc.pi],
     parameters: [
       { name: 'mult', type: 'integer', byref: false, length: 1 }
     ],
@@ -685,7 +726,7 @@ export default [
   },
   {
     names: { BASIC: 'EXP', Pascal: 'exp', Python: 'exp' },
-    code: pc.exp,
+    code: [pc.exp],
     parameters: [
       { name: 'a', type: 'integer', byref: false, length: 1 },
       { name: 'b', type: 'integer', byref: false, length: 1 },
@@ -698,7 +739,7 @@ export default [
   },
   {
     names: { BASIC: 'LN', Pascal: 'ln', Python: 'ln' },
-    code: pc.ln,
+    code: [pc.ln],
     parameters: [
       { name: 'a', type: 'integer', byref: false, length: 1 },
       { name: 'b', type: 'integer', byref: false, length: 1 },
@@ -711,7 +752,7 @@ export default [
   },
   {
     names: { BASIC: 'ANTILOG', Pascal: 'antilog', Python: 'antilog' },
-    code: pc.alog,
+    code: [pc.alog],
     parameters: [
       { name: 'a', type: 'integer', byref: false, length: 1 },
       { name: 'b', type: 'integer', byref: false, length: 1 },
@@ -724,7 +765,7 @@ export default [
   },
   {
     names: { BASIC: 'LOG10', Pascal: 'log10', Python: 'log10' },
-    code: pc.log,
+    code: [pc.log],
     parameters: [
       { name: 'a', type: 'integer', byref: false, length: 1 },
       { name: 'b', type: 'integer', byref: false, length: 1 },
@@ -737,7 +778,7 @@ export default [
   },
   {
     names: { BASIC: 'ASN', Pascal: 'arcsin', Python: 'asin' },
-    code: pc.asin,
+    code: [pc.asin],
     parameters: [
       { name: 'a', type: 'integer', byref: false, length: 1 },
       { name: 'b', type: 'integer', byref: false, length: 1 },
@@ -750,7 +791,7 @@ export default [
   },
   {
     names: { BASIC: 'ACS', Pascal: 'arccos', Python: 'acos' },
-    code: pc.acos,
+    code: [pc.acos],
     parameters: [
       { name: 'a', type: 'integer', byref: false, length: 1 },
       { name: 'b', type: 'integer', byref: false, length: 1 },
@@ -763,7 +804,7 @@ export default [
   },
   {
     names: { BASIC: 'ATN', Pascal: 'arctan', Python: 'atan' },
-    code: pc.atan,
+    code: [pc.atan],
     parameters: [
       { name: 'a', type: 'integer', byref: false, length: 1 },
       { name: 'b', type: 'integer', byref: false, length: 1 },
@@ -777,50 +818,42 @@ export default [
   // 7. String operations
   {
     names: { BASIC: 'WRITE', Pascal: 'write', Python: 'write' },
-    code: pc.text,
+    code: [pc.writ],
     parameters: [
       { name: 'string', type: 'string', byref: false, length: 1 }
     ],
+    returns: null,
     category: 7,
     level: 0,
     description: 'Writes the input <code>string</code> to the console and textual output area of the System.'
   },
   {
     names: { BASIC: 'WRITELN', Pascal: 'writeln', Python: 'writeline' },
-    code: pc.texl,
+    code: [pc.writ, pc.newl],
     parameters: [
       { name: 'string', type: 'string', byref: false, length: 1 }
     ],
+    returns: null,
     category: 7,
     level: 0,
     description: 'Writes the input <code>string</code> to the console and textual output area of the System, followed by a line break.'
   },
   {
     names: { BASIC: 'PRINT', Pascal: 'print', Python: 'print' },
-    code: pc.prnt,
+    code: [pc.prnt],
     parameters: [
       { name: 'string', type: 'string', byref: false, length: 1 },
       { name: 'font', type: 'integer', byref: false, length: 1 },
       { name: 'size', type: 'integer', byref: false, length: 1 }
     ],
+    returns: null,
     category: 7,
     level: 0,
     description: 'Prints the input <code>string</code> in the Turtle&rsquo;s current colour and at the Turtle&rsquo;s current location, in the specified <code>font</code> and <code>size</code>. Can be used in conjunction with the <code>box</code> drawing command. For a list of available fonts, see the <b>Constants</b> tab.'
   },
   {
-    names: { BASIC: 'UCASE$', Pascal: 'uppercase', Python: 'upper' },
-    code: pc.uppc,
-    parameters: [
-      { name: 'string', type: 'string', byref: false, length: 1 }
-    ],
-    returns: 'string',
-    category: 7,
-    level: 1,
-    description: 'Returns the input <code>string</code> as all uppercase.'
-  },
-  {
     names: { BASIC: 'LCASE$', Pascal: 'lowercase', Python: 'lower' },
-    code: pc.lowc,
+    code: [pc.ldin, 1, pc.case],
     parameters: [
       { name: 'string', type: 'string', byref: false, length: 1 }
     ],
@@ -830,8 +863,52 @@ export default [
     description: 'Returns the input <code>string</code> as all lowercase.'
   },
   {
+    names: { BASIC: 'UCASE$', Pascal: 'uppercase', Python: 'upper' },
+    code: [pc.ldin, 2, pc.case],
+    parameters: [
+      { name: 'string', type: 'string', byref: false, length: 1 }
+    ],
+    returns: 'string',
+    category: 7,
+    level: 1,
+    description: 'Returns the input <code>string</code> as all uppercase.'
+  },
+  {
+    names: { BASIC: null, Pascal: 'initcap', Python: 'capitalize' },
+    code: [pc.ldin, 3, pc.case],
+    parameters: [
+      { name: 'string', type: 'string', byref: false, length: 1 }
+    ],
+    returns: 'string',
+    category: 7,
+    level: 1,
+    description: 'Returns the input <code>string</code> with the first letter capitalized.'
+  },
+  {
+    names: { BASIC: null, Pascal: 'titlecase', Python: 'titlecase' },
+    code: [pc.ldin, 4, pc.case],
+    parameters: [
+      { name: 'string', type: 'string', byref: false, length: 1 }
+    ],
+    returns: 'string',
+    category: 7,
+    level: 1,
+    description: 'Returns the input <code>string</code> in title case (i.e. the first letter of each word capitalized).'
+  },
+  {
+    names: { BASIC: null, Pascal: 'swapcase', Python: 'swapcase' },
+    code: [pc.ldin, 5, pc.case],
+    parameters: [
+      { name: 'string', type: 'string', byref: false, length: 1 }
+    ],
+    returns: 'string',
+    category: 7,
+    level: 1,
+    description: 'Returns the input <code>string</code> with all the cases swapped.'
+  },
+  {
     names: { BASIC: 'LEN', Pascal: 'length', Python: 'len' },
-    code: pc.slen,
+    code: [pc.slen],
     parameters: [
       { name: 'string', type: 'string', byref: false, length: 1 }
     ],
@@ -842,7 +919,7 @@ export default [
   },
   {
     names: { BASIC: 'DEL$', Pascal: 'delete', Python: null },
-    code: pc.dels,
+    code: [pc.dels],
     parameters: [
       { name: 'string', type: 'string', byref: false, length: 1 },
       { name: 'index', type: 'integer', byref: false, length: 1 },
@@ -855,7 +932,7 @@ export default [
   },
   {
     names: { BASIC: 'LEFT$', Pascal: null, Python: null },
-    code: pc.lefs,
+    code: [pc.ldin, 1, pc.swap, pc.copy],
     parameters: [
       { name: 'string', type: 'string', byref: false, length: 1 },
       { name: 'length', type: 'integer', byref: false, length: 1 }
@@ -867,7 +944,7 @@ export default [
   },
   {
     names: { BASIC: 'MID$', Pascal: 'copy', Python: 'copy' },
-    code: pc.copy,
+    code: [pc.copy],
     parameters: [
       { name: 'string', type: 'string', byref: false, length: 1 },
       { name: 'index', type: 'integer', byref: false, length: 1 },
@@ -880,7 +957,7 @@ export default [
   },
   {
     names: { BASIC: 'RIGHT$', Pascal: null, Python: null },
-    code: pc.rgts,
+    code: [pc.swap, pc.dupl, pc.slen, pc.incr, pc.rota, pc.subt, pc.mxin, pc.copy],
     parameters: [
       { name: 'string', type: 'string', byref: false, length: 1 },
       { name: 'length', type: 'integer', byref: false, length: 1 }
@@ -892,7 +969,7 @@ export default [
   },
   {
     names: { BASIC: 'INS$', Pascal: null, Python: 'insert' },
-    code: pc.inss,
+    code: [pc.rota, pc.rota, pc.inss],
     parameters: [
       { name: 'string', type: 'string', byref: false, length: 1 },
       { name: 'index', type: 'integer', byref: false, length: 1 },
@@ -905,7 +982,7 @@ export default [
   },
   {
     names: { BASIC: null, Pascal: 'insert', Python: null },
-    code: pc.inss,
+    code: [pc.inss],
     parameters: [
       { name: 'substr', type: 'string', byref: false, length: 1 },
       { name: 'string', type: 'string', byref: false, length: 1 },
@@ -918,7 +995,7 @@ export default [
   },
   {
     names: { BASIC: 'PAD$', Pascal: 'pad', Python: 'pad' },
-    code: pc.spad,
+    code: [pc.spad],
     parameters: [
       { name: 'string', type: 'string', byref: false, length: 1 },
       { name: 'padding', type: 'string', byref: false, length: 1 },
@@ -931,7 +1008,7 @@ export default [
   },
   {
     names: { BASIC: 'REPLACE$', Pascal: 'replace', Python: 'replace' },
-    code: pc.repl,
+    code: [pc.repl],
     parameters: [
       { name: 'string', type: 'string', byref: false, length: 1 },
       { name: 'substr', type: 'string', byref: false, length: 1 },
@@ -945,7 +1022,7 @@ export default [
   },
   {
     names: { BASIC: 'INSTR', Pascal: null, Python: 'find' },
-    code: pc.poss,
+    code: [pc.swap, pc.poss],
     parameters: [
       { name: 'string', type: 'string', byref: false, length: 1 },
       { name: 'substr', type: 'string', byref: false, length: 1 }
@@ -957,7 +1034,7 @@ export default [
   },
   {
     names: { BASIC: null, Pascal: 'pos', Python: null },
-    code: pc.poss,
+    code: [pc.poss],
     parameters: [
       { name: 'substr', type: 'string', byref: false, length: 1 },
       { name: 'string', type: 'string', byref: false, length: 1 }
@@ -970,7 +1047,7 @@ export default [
   // 8. Type conversion routines
   {
     names: { BASIC: 'STR$', Pascal: 'str', Python: 'str' },
-    code: pc.itos,
+    code: [pc.itos],
     parameters: [
       { name: 'n', type: 'integer', byref: false, length: 1 }
     ],
@@ -981,7 +1058,7 @@ export default [
   },
   {
     names: { BASIC: 'VAL', Pascal: 'val', Python: 'int' },
-    code: pc.svd0,
+    code: [pc.ldin, 0, pc.sval],
     parameters: [
       { name: 'string', type: 'string', byref: false, length: 1 }
     ],
@@ -992,7 +1069,7 @@ export default [
   },
   {
     names: { BASIC: 'VALDEF', Pascal: 'valdef', Python: 'intdef' },
-    code: pc.sval,
+    code: [pc.sval],
     parameters: [
       { name: 'string', type: 'string', byref: false, length: 1 },
       { name: 'default', type: 'integer', byref: false, length: 1 }
@@ -1004,7 +1081,7 @@ export default [
   },
   {
     names: { BASIC: 'QSTR$', Pascal: 'qstr', Python: 'qstr' },
-    code: pc.qtos,
+    code: [pc.qtos],
     parameters: [
       { name: 'a', type: 'integer', byref: false, length: 1 },
       { name: 'b', type: 'integer', byref: false, length: 1 },
@@ -1017,7 +1094,7 @@ export default [
   },
   {
     names: { BASIC: 'QVAL', Pascal: 'qval', Python: 'qval' },
-    code: pc.qval,
+    code: [pc.qval],
     parameters: [
       { name: 'string', type: 'string', byref: false, length: 1 },
       { name: 'mult', type: 'integer', byref: false, length: 1 },
@@ -1028,20 +1105,9 @@ export default [
     level: 1,
     description: 'Returns the input decimal <code>string</code> as an integer, multiplied by <code>mult</code> and rounded to the nearest integer, e.g. <code>qval(\'1.5\',10)=15</code>. Returns the specified <code>default</code> value if the string cannot be converted (i.e. if it is not a decimal string).'
   },
-  /* {
-    names: { BASIC: null, Pascal: 'chr', Python: null },
-    code: pc.null,
-    parameters: [
-      { name: 'n', type: 'integer', byref: false, length: 1 }
-    ],
-    returns: 'char',
-    category: 8,
-    level: 2,
-    description: 'Returns the character with ASCII character code <code>n</code>.'
-  }, */
   {
     names: { BASIC: 'CHR$', Pascal: 'chr', Python: 'chr' },
-    code: pc.ctos,
+    code: [pc.ctos],
     parameters: [
       { name: 'n', type: 'integer', byref: false, length: 1 }
     ],
@@ -1052,18 +1118,18 @@ export default [
   },
   {
     names: { BASIC: 'ASC', Pascal: 'ord', Python: 'ord' },
-    code: pc.sasc,
+    code: [pc.sasc],
     parameters: [
       { name: 'char', type: 'string', byref: false, length: 1 }
     ],
     returns: 'integer',
     category: 8,
     level: 2,
-    description: 'Returns the ASCII code of the input character.'
+    description: 'Returns the ASCII code of the input character, or of the first character of the input string.'
   },
   {
     names: { BASIC: 'BOOLINT', Pascal: 'boolint', Python: null },
-    code: pc.null,
+    code: [pc.null],
     parameters: [
       { name: 'boolean', type: 'boolean', byref: false, length: 1 }
     ],
@@ -1074,7 +1140,7 @@ export default [
   },
   {
     names: { BASIC: null, Pascal: null, Python: 'boolint' },
-    code: pc.bool,
+    code: [pc.abs],
     parameters: [
       { name: 'boolean', type: 'boolean', byref: false, length: 1 }
     ],
@@ -1085,11 +1151,12 @@ export default [
   },
   {
     names: { BASIC: 'HEX$', Pascal: 'hexstr', Python: 'hex' },
-    code: pc.hexs,
+    code: [pc.hexs],
     parameters: [
       { name: 'n', type: 'integer', byref: false, length: 1 },
       { name: 'minlength', type: 'integer', byref: false, length: 1 }
     ],
+    returns: 'string',
     category: 8,
     level: 2,
     description: 'Returns a string representation of integer <code>n</code> in hexadecimal format, padded with leading zeros as up to <code>minlength</code>, e.g. <code>hexstr(255,6)=\'0000FF\'</code>.'
@@ -1097,17 +1164,27 @@ export default [
   // 9. Input and timing routines
   {
     names: { BASIC: 'PAUSE', Pascal: 'pause', Python: 'pause' },
-    code: pc.wait,
+    code: [pc.wait],
     parameters: [
       { name: 'm', type: 'integer', byref: false, length: 1 }
     ],
+    returns: null,
     category: 9,
     level: 0,
     description: 'Makes the Turtle Machine wait <code>m</code> milliseconds before performing the next operation. This is useful for controlling the speed of animations.'
   },
   {
+    names: { BASIC: 'HALT', Pascal: 'halt', Python: 'halt' },
+    code: [pc.halt],
+    parameters: [],
+    returns: null,
+    category: 9,
+    level: 0,
+    description: 'Halts the program.'
+  },
+  {
     names: { BASIC: 'GETLINE$', Pascal: 'readln', Python: 'readline' },
-    code: pc.rdln,
+    code: [pc.rdln],
     parameters: [],
     returns: 'string',
     category: 9,
@@ -1116,7 +1193,7 @@ export default [
   },
   {
     names: { BASIC: 'INPUT$', Pascal: null, Python: 'input' },
-    code: pc.ilin,
+    code: [pc.writ, pc.newl, pc.rdln],
     parameters: [
       { name: 'prompt', type: 'string', byref: false, length: 1 }
     ],
@@ -1127,27 +1204,29 @@ export default [
   },
   {
     names: { BASIC: 'CURSOR', Pascal: 'cursor', Python: 'cursor' },
-    code: pc.curs,
+    code: [pc.curs],
     parameters: [
       { name: 'cursorcode', type: 'integer', byref: false, length: 1 }
     ],
+    returns: null,
     category: 9,
     level: 1,
     description: 'Sets which cursor to display (1-15) when the mouse pointer is over the canvas. 0 hides the cursor; any value outside the range 0-15 resets the default cursor. For a list of available cursors, see the <b>Cursors</b> tab.'
   },
   {
     names: { BASIC: 'KEYECHO', Pascal: 'keyecho', Python: 'keyecho' },
-    code: pc.kech,
+    code: [pc.kech],
     parameters: [
       { name: 'on', type: 'boolean', byref: false, length: 1 }
     ],
+    returns: null,
     category: 9,
     level: 1,
     description: 'Turns the keyboard echo to the console on (<code>true</code>) or off (<code>false</code>).'
   },
   {
     names: { BASIC: 'DETECT', Pascal: 'detect', Python: 'detect' },
-    code: pc.tdet,
+    code: [pc.tdet],
     parameters: [
       { name: 'keycode', type: 'integer', byref: false, length: 1 },
       { name: 'm', type: 'integer', byref: false, length: 1 }
@@ -1159,7 +1238,7 @@ export default [
   },
   {
     names: { BASIC: 'GET$', Pascal: 'read', Python: 'read' },
-    code: pc.read,
+    code: [pc.read],
     parameters: [
       { name: 'n', type: 'integer', byref: false, length: 1 }
     ],
@@ -1170,7 +1249,7 @@ export default [
   },
   {
     names: { BASIC: 'TIME', Pascal: 'time', Python: 'time' },
-    code: pc.time,
+    code: [pc.time],
     parameters: [],
     returns: 'integer',
     category: 9,
@@ -1179,27 +1258,29 @@ export default [
   },
   {
     names: { BASIC: 'TIMESET', Pascal: 'timeset', Python: 'timeset' },
-    code: pc.tset,
+    code: [pc.tset],
     parameters: [
       { name: 'm', type: 'integer', byref: false, length: 1 }
     ],
+    returns: null,
     category: 9,
     level: 1,
     description: 'Artificially sets the time since the program began to <code>m</code> milliseconds.'
   },
   {
     names: { BASIC: 'RESET', Pascal: 'reset', Python: 'reset' },
-    code: pc.iclr,
+    code: [pc.iclr],
     parameters: [
       { name: '?input', type: 'integer', byref: false, length: 1 }
     ],
+    returns: null,
     category: 9,
     level: 2,
     description: 'Resets the specified <code>?input</code> (<code>?mousex</code>, <code>?mousey</code>, <code>?click</code>, etc.) to its initial value (i.e. -1).'
   },
   {
     names: { BASIC: 'KEYSTATUS', Pascal: 'keystatus', Python: 'keystatus' },
-    code: pc.inpt,
+    code: [pc.inpt],
     parameters: [
       { name: 'keycode', type: 'integer', byref: false, length: 1 }
     ],
@@ -1210,77 +1291,376 @@ export default [
   },
   {
     names: { BASIC: 'KEYBUFFER', Pascal: 'keybuffer', Python: 'keybuffer' },
-    code: pc.bufr,
+    code: [pc.bufr, pc.ldin, 1, pc.sptr, pc.hfix],
     parameters: [
       { name: 'n', type: 'integer', byref: false, length: 1 }
     ],
+    returns: null,
     category: 9,
     level: 2,
     description: 'Creates a new custom keybuffer of length <code>n</code>. A keybuffer of length 32 is available by default; use this command if you need a larger buffer.'
   },
-  // 10. Turtle Machine monitoring
+  // 10. file processing
   {
-    names: { BASIC: 'HALT', Pascal: 'halt', Python: 'halt' },
-    code: pc.halt,
-    parameters: [],
+    names: { BASIC: 'CHDIR', Pascal: 'chdir', Python: 'chdir' },
+    code: [pc.chdr],
+    parameters: [
+      { name: 'directory name', type: 'string', byref: false, length: 1 }
+    ],
+    returns: null,
     category: 10,
-    level: 0,
-    description: 'Halts the program.'
+    level: 1,
+    description: 'Change current directory'
   },
   {
-    names: { BASIC: 'DUMP', Pascal: 'dump', Python: 'dump' },
-    code: pc.dump,
-    parameters: [],
+    names: { BASIC: 'RMDIR', Pascal: 'rmdir', Python: 'rmdir' },
+    code: [pc.ldin, 1, pc.diry],
+    parameters: [
+      { name: 'subdirectory name', type: 'string', byref: false, length: 1 }
+    ],
+    returns: 'boolean',
     category: 10,
+    level: 1,
+    description: 'Remove subdirectory'
+  },
+  {
+    names: { BASIC: 'MKDIR', Pascal: 'mkdir', Python: 'mkdir' },
+    code: [pc.ldin, 2, pc.diry],
+    parameters: [
+      { name: 'subdirectory name', type: 'string', byref: false, length: 1 }
+    ],
+    returns: 'boolean',
+    category: 10,
+    level: 1,
+    description: 'Make subdirectory of base directory'
+  },
+  {
+    names: { BASIC: null, Pascal: 'openfile', Python: 'openfile' },
+    code: [pc.open],
+    parameters: [
+      { name: 'filename', type: 'string', byref: false, length: 1 },
+      { name: 'mode', type: 'integer', byref: false, length: 1 }
+    ],
+    returns: 'integer',
+    category: 10,
+    level: 1,
+    description: 'Open file (1: read, 2:append, 3: write)'
+  },
+  {
+    names: { BASIC: 'OPENIN', Pascal: null, Python: null },
+    code: [pc.ldin, 1, pc.open],
+    parameters: [
+      { name: 'filename', type: 'string', byref: false, length: 1 }
+    ],
+    returns: 'integer',
+    category: 10,
+    level: 1,
+    description: 'Open file to read'
+  },
+  {
+    names: { BASIC: 'OPENUP', Pascal: null, Python: null },
+    code: [pc.ldin, 2, pc.open],
+    parameters: [
+      { name: 'filename', type: 'string', byref: false, length: 1 }
+    ],
+    returns: 'integer',
+    category: 10,
+    level: 1,
+    description: 'Open file to append'
+  },
+  {
+    names: { BASIC: 'OPENOUT', Pascal: null, Python: null },
+    code: [pc.ldin, 4, pc.open],
+    parameters: [
+      { name: 'filename', type: 'string', byref: false, length: 1 }
+    ],
+    returns: 'integer',
+    category: 10,
+    level: 1,
+    description: 'Open file to write'
+  },
+  {
+    names: { BASIC: 'CLOSE#', Pascal: 'closefile', Python: 'closefile' },
+    code: [pc.clos],
+    parameters: [
+      { name: 'file handle', type: 'integer', byref: false, length: 1 }
+    ],
+    parameterHints: 'file handle',
+    returns: null,
+    category: 10,
+    level: 1,
+    description: 'Close file'
+  },
+  {
+    names: { BASIC: 'DELETEFILE', Pascal: 'deletefile', Python: 'deletefile' },
+    code: [pc.ldin, 1, pc.file],
+    parameters: [
+      { name: 'filename', type: 'string', byref: false, length: 1 }
+    ],
+    returns: 'boolean',
+    category: 10,
+    level: 1,
+    description: 'Delete file'
+  },
+  {
+    names: { BASIC: 'FREAD#', Pascal: 'fread', Python: 'fread' },
+    code: [pc.frds],
+    parameters: [
+      { name: 'file handle', type: 'integer', byref: false, length: 1 },
+      { name: 'max length', type: 'integer', byref: false, length: 1 }
+    ],
+    returns: 'string',
+    category: 10,
+    level: 1,
+    description: 'Read characters from file'
+  },
+  {
+    names: { BASIC: 'FREADLN#', Pascal: 'freadln', Python: 'freadln' },
+    code: [pc.frln],
+    parameters: [
+      { name: 'file handle', type: 'integer', byref: false, length: 1 }
+    ],
+    returns: 'string',
+    category: 10,
+    level: 1,
+    description: 'Read line from file'
+  },
+  {
+    names: { BASIC: 'PRINT#', Pascal: 'fwrite', Python: 'fwrite' },
+    code: [pc.fwrs],
+    parameters: [
+      { name: 'file handle', type: 'integer', byref: false, length: 1 },
+      { name: 'string', type: 'string', byref: false, length: 1 }
+    ],
+    returns: null,
+    category: 10,
+    level: 1,
+    description: 'Write string to file'
+  },
+  {
+    names: { BASIC: 'PRINTLN#', Pascal: 'fwriteln', Python: 'fwriteln' },
+    code: [pc.fwln],
+    parameters: [
+      { name: 'file handle', type: 'integer', byref: false, length: 1 },
+      { name: 'string', type: 'string', byref: false, length: 1 }
+    ],
+    returns: null,
+    category: 10,
+    level: 1,
+    description: 'Write line to file'
+  },
+  {
+    names: { BASIC: 'EOF#', Pascal: 'eof', Python: 'eof' },
+    code: [pc.eof],
+    parameters: [
+      { name: 'file handle', type: 'integer', byref: false, length: 1 }
+    ],
+    returns: 'boolean',
+    category: 10,
+    level: 1,
+    description: 'Test for end of file'
+  },
+  {
+    names: { BASIC: 'CHECKDIR', Pascal: 'checkdir', Python: 'checkdir' },
+    code: [pc.ldin, 0, pc.diry],
+    parameters: [
+      { name: 'directory name', type: 'string', byref: false, length: 1 },
+      { name: 'code', type: 'integer', byref: false, length: 1 }
+    ],
+    returns: 'integer',
+    category: 10,
+    level: 2,
+    description: 'Create/delete/check directory'
+  },
+  {
+    names: { BASIC: 'CHECKFILE', Pascal: 'checkfile', Python: 'checkfile' },
+    code: [pc.ldin, 0, pc.file],
+    parameters: [
+      { name: 'filename', type: 'string', byref: false, length: 1 },
+      { name: 'code', type: 'integer', byref: false, length: 1 }
+    ],
+    parameterHints: 'filename,code',
+    returns: 'integer',
+    category: 10,
+    level: 2,
+    description: 'Create/delete/check file'
+  },
+  {
+    names: { BASIC: 'COPYFILE', Pascal: 'copyfile', Python: 'copyfile' },
+    code: [pc.ldin, 3, pc.fmov],
+    parameters: [
+      { name: 'old name', type: 'string', byref: false, length: 1 },
+      { name: 'new name', type: 'string', byref: false, length: 1 }
+    ],
+    returns: 'boolean',
+    category: 10,
+    level: 2,
+    description: 'Copy file'
+  },
+  {
+    names: { BASIC: 'DIREXISTS', Pascal: 'direxists', Python: 'direxists' },
+    code: [pc.ldin, 0, pc.diry],
+    parameters: [
+      { name: 'subdirectory name', type: 'string', byref: false, length: 1 }
+    ],
+    returns: 'boolean',
+    category: 10,
+    level: 2,
+    description: 'Check whether subdirectory exists'
+  },
+  {
+    names: { BASIC: 'FILEEXISTS', Pascal: 'fileexists', Python: 'fileexists' },
+    code: [pc.ldin, 0, pc.file],
+    parameters: [
+      { name: 'filename', type: 'string', byref: false, length: 1 }
+    ],
+    returns: 'boolean',
+    category: 10,
+    level: 2,
+    description: 'Check whether file exists'
+  },
+  {
+    names: { BASIC: 'FINDDIR', Pascal: 'finddir', Python: 'finddir' },
+    code: [pc.fdir],
+    parameters: [
+      { name: 'directory name pattern', type: 'string', byref: false, length: 1 },
+      { name: 'file handle', type: 'integer', byref: false, length: 1 }
+    ],
+    returns: 'string',
+    category: 10,
+    level: 2,
+    description: 'Find first directory matching pattern'
+  },
+  {
+    names: { BASIC: 'FINDFIRST', Pascal: 'findfirst', Python: 'findfirst' },
+    code: [pc.ffnd],
+    parameters: [
+      { name: 'filename pattern', type: 'string', byref: false, length: 1 },
+      { name: 'file handle', type: 'integer', byref: false, length: 1 }
+    ],
+    returns: 'string',
+    category: 10,
+    level: 2,
+    description: 'Find first file matching pattern'
+  },
+  {
+    names: { BASIC: 'FINDNEXT', Pascal: 'findnext', Python: 'findnext' },
+    code: [pc.fnxt],
+    parameters: [
+      { name: 'file handle', type: 'integer', byref: false, length: 1 }
+    ],
+    returns: 'string',
+    category: 10,
+    level: 2,
+    description: 'Find next file/directory matching pattern'
+  },
+  {
+    names: { BASIC: 'RENAMEFILE', Pascal: 'renamefile', Python: 'renamefile' },
+    code: [pc.ldin, 1, pc.fmov],
+    parameters: [
+      { name: 'old filename', type: 'string', byref: false, length: 1 },
+      { name: 'new filename', type: 'string', byref: false, length: 1 }
+    ],
+    returns: 'boolean',
+    category: 10,
+    level: 2,
+    description: 'Rename file'
+  },
+  {
+    names: { BASIC: 'MOVEFILE', Pascal: 'movefile', Python: 'movefile' },
+    code: [pc.ldin, 2, pc.fmov],
+    parameters: [
+      { name: 'old filename', type: 'string', byref: false, length: 1 },
+      { name: 'new filename', type: 'string', byref: false, length: 1 }
+    ],
+    returns: 'boolean',
+    category: 10,
+    level: 2,
+    description: 'Move file'
+  },
+  {
+    names: { BASIC: 'RESTARTFILE', Pascal: 'restartfile', Python: 'restartfile' },
+    code: [pc.fbeg],
+    parameters: [
+      { name: 'file handle', type: 'integer', byref: false, length: 1 }
+    ],
+    returns: null,
+    category: 10,
+    level: 2,
+    description: 'Restart file'
+  },
+  {
+    names: { BASIC: 'EOLN#', Pascal: 'eoln', Python: 'eoln' },
+    code: [pc.eoln],
+    parameters: [
+      { name: 'file handle', type: 'integer', byref: false, length: 1 }
+    ],
+    returns: 'boolean',
+    category: 10,
+    level: 2,
+    description: 'Test for end of line in file'
+  },
+  // 11. Turtle Machine monitoring
+  {
+    names: { BASIC: 'DUMP', Pascal: 'dump', Python: 'dump' },
+    code: [pc.dump],
+    parameters: [],
+    returns: null,
+    category: 11,
     level: 2,
     description: '&ldquo;Dumps&rdquo; the current memory state into the display in the memory tab.'
   },
   {
     names: { BASIC: 'HEAPRESET', Pascal: 'heapreset', Python: 'heapreset' },
-    code: pc.hrst,
+    code: [pc.hrst],
     parameters: [],
-    category: 10,
+    returns: null,
+    category: 11,
     level: 2,
     description: 'Resets the memory heap to the initial global value.'
   },
   {
     names: { BASIC: 'PEEK', Pascal: 'peek', Python: 'peek' },
-    code: pc.peek,
+    code: [pc.peek],
     parameters: [
       { name: 'address', type: 'integer', byref: false, length: 1 }
     ],
-    category: 10,
+    returns: null,
+    category: 11,
     level: 2,
     description: 'Peek at the value of the memory at the given <code>address</code>.'
   },
   {
     names: { BASIC: 'POKE', Pascal: 'poke', Python: 'poke' },
-    code: pc.poke,
+    code: [pc.poke],
     parameters: [
       { name: 'address', type: 'integer', byref: false, length: 1 },
       { name: 'value', type: 'integer', byref: false, length: 1 }
     ],
-    category: 10,
+    returns: null,
+    category: 11,
     level: 2,
     description: 'Poke the <code>value</code> into the memory at the given <code>address</code>.'
   },
   {
     names: { BASIC: 'TRACE', Pascal: 'trace', Python: 'trace' },
-    code: pc.trac,
+    code: [pc.trac],
     parameters: [
       { name: 'on', type: 'boolean', byref: false, length: 1 }
     ],
-    category: 10,
+    returns: null,
+    category: 11,
     level: 2,
     description: 'Turns the PCode trace facility on (<code>true</code>) or off (<code>false</code>).'
   },
   {
     names: { BASIC: 'WATCH', Pascal: 'watch', Python: 'watch' },
-    code: pc.memw,
+    code: [pc.memw],
     parameters: [
       { name: 'address', type: 'integer', byref: false, length: 1 }
     ],
-    category: 10,
+    returns: null,
+    category: 11,
     level: 2,
     description: 'Sets an <code>address</code> in memory for the trace facility to watch.'
   }

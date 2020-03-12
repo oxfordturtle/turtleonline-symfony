@@ -1,7 +1,7 @@
 /*
-An array of expression categories (i.e. command categories plus a few other things). Used by the
-usage analyser).
-*/
+ * An array of expression categories (i.e. command categories plus a few other things). Used by
+ * the usage analyser).
+ */
 import categories from './categories.js'
 
 export default categories.concat(

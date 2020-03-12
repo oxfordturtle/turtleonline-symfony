@@ -9,6 +9,7 @@
   }
   &:last-child {
     flex: 1;
+    overflow-y: auto;
   }
 
   h2 {
@@ -41,5 +42,26 @@
 
   .turtle-examples {
     flex: 1;
+
+    h3 {
+      font-size: 1em;
+      font-weight: bold;
+      margin-bottom: .5em;
+    }
+
+    ol {
+      list-style-type: none;
+      padding: 0;
+      margin: 0 0 1em;
+    }
+
+    li {
+      padding: .125em .5em;
+      cursor: pointer;
+      &:hover {
+        background: $green;
+        color: #fff;
+      }
+    }
   }
 }

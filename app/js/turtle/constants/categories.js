@@ -1,6 +1,6 @@
 /*
-An array of command categories. Used by the help component.
-*/
+ * An array of command categories. Used by the help component.
+ */
 import commands from './commands.js'
 
 export default [
@@ -56,7 +56,12 @@ export default [
   },
   {
     index: 10,
-    title: 'Turtle Machine monitoring',
+    title: 'File processing',
     expressions: commands.filter(x => x.category === 10)
+  },
+  {
+    index: 11,
+    title: 'Turtle Machine monitoring',
+    expressions: commands.filter(x => x.category === 11)
   }
 ]

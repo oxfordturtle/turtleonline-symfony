@@ -1,16 +1,16 @@
 /*
-System State
-
-This module exports a "send" function for moving the application state forward, and an "on" function
-for registering callbacks to execute after the state has changed. This module is thus the central
-hub of the application; other modules can "send" it incoming signals to trigger a state change, and
-register things to do "on" the sending of outgoing messages.
-
-For clarity, "signals" are incoming, "messages" are outgoing. Conceptually, signals are requests
-sent to this module, asking to change the state (which may result in an error being thrown rather
-than a state change); messages are things sent by this module indicating a successful state change,
-including also the new values of any relevant state variables.
-*/
+ * System State
+ *
+ * This module exports a "send" function for moving the application state forward, and an "on" function
+ * for registering callbacks to execute after the state has changed. This module is thus the central
+ * hub of the application; other modules can "send" it incoming signals to trigger a state change, and
+ * register things to do "on" the sending of outgoing messages.
+ *
+ * For clarity, "signals" are incoming, "messages" are outgoing. Conceptually, signals are requests
+ * sent to this module, asking to change the state (which may result in an error being thrown rather
+ * than a state change); messages are things sent by this module indicating a successful state change,
+ * including also the new values of any relevant state variables.
+ */
 import exampleNames from '../constants/exampleNames.js'
 import extensions from '../constants/extensions.js'
 import languages from '../constants/languages.js'
@@ -20,7 +20,7 @@ import { get, set } from './variables.js'
 import * as machine from './machine.js'
 
 // function for "sending" signals to this module, asking it to update the state
-export const send = (signal, data) => {
+export function send (signal, data) {
   const a = document.createElement('a') // a element for downloading files
   let files, bits, blob, date, ext, filename, json // things needed in the switch below
 
@@ -417,7 +417,7 @@ function reply (message, data) {
 }
 
 // compile the current program (if it isn't already compiled)
-const maybeCompile = () => {
+function maybeCompile () {
   const files = get('files')
   if (!get('compiled')) {
     const result = compile(get('code'), get('language'))
@@ -435,7 +435,7 @@ const maybeCompile = () => {
 }
 
 // validate file input as TGX
-const validateTGX = (data) => {
+function validateTGX (data) {
   try {
     const json = JSON.parse(data)
     if (json.language && json.name && json.code && json.usage && json.pcode) {
@@ -448,7 +448,7 @@ const validateTGX = (data) => {
 }
 
 // create an error object
-const error = (message) => {
+function error (message) {
   const err = new Error(message)
   err.type = 'System'
   return err

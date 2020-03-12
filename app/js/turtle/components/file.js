@@ -4,7 +4,7 @@
 import * as dom from './dom.js'
 import exampleGroups from '../constants/exampleGroups.js'
 import exampleNames from '../constants/exampleNames.js'
-import { on, send } from '../state/index.js'
+import { send } from '../state/index.js'
 
 // buttons
 const saveLocalButton = dom.createElement('button', { content: 'Save on My Computer' })
@@ -42,25 +42,28 @@ export const openFile = dom.createElement('div', {
   ]
 })
 
+function exampleGroupList (group, index) {
+  return dom.createFragment([
+    dom.createElement('h3', { content: `${index + 1}. ${group.title}` }),
+    dom.createElement('ol', { content: group.examples.map(exampleGroupListItem) })
+  ])
+}
+
+function exampleGroupListItem (example, index) {
+  const li = dom.createElement('li', { content: `${index + 1}. ${exampleNames[example]}` })
+  li.addEventListener('click', () => {
+    send('set-example', example)
+  })
+  return li
+}
+
 export const openExample = dom.createElement('div', {
   classes: 'turtle-file',
   content: [
     dom.createElement('h2', { content: 'Open Example' }),
     dom.createElement('div', {
       classes: 'turtle-examples',
-      content: exampleGroups.map(group => {
-        return dom.createElement('ul', {
-          content: group.examples.map(example => {
-            const li = dom.createElement('li', {
-              content: exampleNames[example]
-            })
-            li.addEventListener('click', () => {
-              send('set-example', example)
-            })
-            return li
-          })
-        })
-      })
+      content: exampleGroups.map(exampleGroupList)
     })
   ]
 })

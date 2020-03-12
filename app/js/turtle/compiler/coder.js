@@ -1,14 +1,14 @@
 /*
-coder: array of routines goes in, pcode comes out
-
-this second pass over the lexemes generates the compiled pcode, using the language-independent
-pcoder module (the only one that outputs pcode directly), and the appropriate language-specific
-module
-
-the language-specific modules are responsible for running through the lexemes that make up the
-commands of the individual routines; this module pieces those results together, and wraps them up
-in the appropriate routine start and end code
-*/
+ * coder: array of routines goes in, pcode comes out
+ *
+ * this second pass over the lexemes generates the compiled pcode, using the language-independent
+ * pcoder module (the only one that outputs pcode directly), and the appropriate language-specific
+ * module
+ *
+ * the language-specific modules are responsible for running through the lexemes that make up the
+ * commands of the individual routines; this module pieces those results together, and wraps them up
+ * in the appropriate routine start and end code
+ */
 import * as pcoder from './tools/pcoder.js'
 import BASIC from './coders/basic.js'
 import Pascal from './coders/pascal.js'

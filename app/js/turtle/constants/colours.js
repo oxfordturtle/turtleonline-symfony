@@ -1,6 +1,6 @@
 /*
-An array of colours.
-*/
+ * An array of colours.
+ */
 export default [
   {
     index: 1,

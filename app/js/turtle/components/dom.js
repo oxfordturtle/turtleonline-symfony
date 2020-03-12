@@ -28,11 +28,12 @@ export function createElement (type, options = {}) {
 }
 
 // create a text node
-export const createTextNode = (text) =>
-  document.createTextNode(text)
+export function createTextNode (text) {
+  return document.createTextNode(text)
+}
 
 // create a document fragment
-export const createFragment = (content = null) => {
+export function createFragment (content = null) {
   const fragment = document.createDocumentFragment()
   if (content) {
     setContent(fragment, content)
@@ -56,6 +57,7 @@ export function setContent (element, content) {
 export function createIconWithText (type, options) {
   return createElement(type, {
     classes: options.active ? 'turtle-icon-text active' : 'turtle-icon-text',
+    title: options.text,
     content: [
       createElement('span', {
         classes: 'icon',

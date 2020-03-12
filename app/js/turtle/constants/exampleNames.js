@@ -1,6 +1,6 @@
 /*
-Full names for the example programs.
-*/
+ * Full names for the example programs.
+ */
 export default {
   // examples 1
   DrawPause: 'Simple drawing with pauses',
@@ -15,9 +15,9 @@ export default {
   RandomEllipses: 'Random ellipses pattern',
   ColourSpiral: 'Spiral of colours (simple PCODE)',
   // examples 2
-  SimpleProc: 'Simple procedure',
+  SimpleProc: 'Simple procedure (using REPEAT)',
   ParameterProc: 'Procedure with parameter',
-  ResizableFace: 'Resizable face (hierarchical procedures)',
+  ResizableFace: 'Resizable face (nested procedures)',
   Polygons: 'Polygons (two parameters)',
   Stars: 'Stars (using ANGLES and FORGET)',
   PolygonRings: 'Polygon rings (three parameters)',
@@ -39,6 +39,10 @@ export default {
   UserStringFunctions: 'User-defined string functions',
   MathFunctions: 'Mathematical functions',
   TrigGraphs: 'Trigonometric graphs',
+  RandomSentences: 'Random sentences (using files)',
+  FileCommands: 'File commands',
+  DirectoryCommands: 'Directory commands',
+  FileSearching: 'File searching',
   // examples 4
   MovingBall: 'Moving ball (using variables)',
   BouncingBall: 'Bouncing ball (using variables)',

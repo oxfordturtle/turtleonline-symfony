@@ -1,6 +1,6 @@
 /*
-An object for looking up machine codes.
-*/
+ * An object for looking up machine codes.
+ */
 import pcodes from './pcodes.js'
 
 export default pcodes.filter(x => x !== undefined).reduce((sofar, pcode) => {

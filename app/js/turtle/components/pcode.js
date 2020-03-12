@@ -76,6 +76,7 @@ function assemble (line, index, decimal) {
   if (hit) {
     if (hit.args < 0) {
       const length = line[index + 1]
+      pcode.push(cell(length, decimal))
       args += 1
       while (args <= length) {
         args += 1

@@ -1,7 +1,5 @@
 /*
  * The main component.
- *
- * This wraps up most of the other components, specifically everything underneath the system controls.
  */
 import * as dom from './dom.js'
 import * as file from './file.js'

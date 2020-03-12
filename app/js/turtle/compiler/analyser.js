@@ -1,6 +1,6 @@
 /*
-usage data generator - arrays of lexemes and subroutines go in, usage data comes out
-*/
+ * usage data generator - arrays of lexemes and subroutines go in, usage data comes out
+ */
 import expressions from '../constants/expressions.js'
 
 // the analyser function

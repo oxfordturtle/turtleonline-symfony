@@ -1,6 +1,6 @@
 /*
-The Virtual Turtle Machine.
-*/
+ * The Virtual Turtle Machine.
+ */
 import colours from '../constants/colours.js'
 import pc from '../constants/pc.js'
 
@@ -188,7 +188,7 @@ const vcanvas = {}
 const runtime = {}
 
 // window event listeners
-const storeKey = (event) => {
+function storeKey (event) {
   const pressedKey = event.keyCode || event.charCode
   // backspace
   if (pressedKey === 8) {
@@ -226,7 +226,7 @@ const storeKey = (event) => {
   keys[pressedKey] = query[10]
 }
 
-const releaseKey = (event) => {
+function releaseKey (event) {
   const pressedKey = event.keyCode || event.charCode
   // keyup should set positive value to negative; use Math.abs to ensure the result is negative,
   // in case two keydown events fire close together, before the first keyup event fires
@@ -235,7 +235,7 @@ const releaseKey = (event) => {
   keys[pressedKey] = -Math.abs(keys[pressedKey])
 }
 
-const putInBuffer = (event) => {
+function putInBuffer (event) {
   const pressedKey = event.keyCode || event.charCode
   const buffer = memory[1]
   if (buffer > 0) { // there is a keybuffer
@@ -263,7 +263,7 @@ const putInBuffer = (event) => {
 }
 
 // store mouse coordinates in virtual memory
-const storeMouseXY = (event) => {
+function storeMouseXY (event) {
   switch (event.type) {
     case 'mousemove':
       query[7] = virtx(event.clientX)
@@ -279,7 +279,7 @@ const storeMouseXY = (event) => {
 }
 
 // store mouse click coordinates in virtual memory
-const storeClickXY = (event) => {
+function storeClickXY (event) {
   const now = Date.now()
   query[4] = 128
   if (event.shiftKey) query[4] += 8
@@ -328,7 +328,7 @@ const storeClickXY = (event) => {
 }
 
 // store mouse release coordinates in virtual memory
-const releaseClickXY = (event) => {
+function releaseClickXY (event) {
   query[4] = -query[4]
   switch (event.type) {
     case 'mouseup':
@@ -354,12 +354,12 @@ const releaseClickXY = (event) => {
 }
 
 // prevent default (for blocking context menus on right click)
-const preventDefault = (event) => {
+function preventDefault (event) {
   event.preventDefault()
 }
 
 // execute a block of code
-const execute = (pcode, line, code, options) => {
+function execute (pcode, line, code, options) {
   // don't do anything if we're not running
   if (!status.running) return
 
@@ -381,7 +381,10 @@ const execute = (pcode, line, code, options) => {
   try {
     while (drawCount < options.drawCountMax && (codeCount <= options.codeCountMax)) {
       switch (pcode[line][code]) {
-        // 0x0 - basic stack operations, boolean operators
+        // 0x0 - basic stack operations, conversion operators
+        case pc.null:
+          break
+
         case pc.dupl:
           a = stack.pop()
           stack.push(a, a)
@@ -410,6 +413,75 @@ const execute = (pcode, line, code, options) => {
           stack.push(a - 1)
           break
 
+        case pc.shft:
+          halt()
+          throw error('SHFT is not yet implemented.')
+
+        case pc.mxin:
+          stack.push(Math.pow(2, 31) - 1)
+          break
+
+        case pc.hstr:
+          // TODO
+          break
+
+        case pc.ctos:
+          a = stack.pop()
+          makeHeapString(String.fromCharCode(a))
+          break
+
+        case pc.sasc:
+          a = getHeapString(stack.pop())
+          if (a.length === 0) {
+            stack.push(0)
+          } else {
+            stack.push(a.charCodeAt(0))
+          }
+          break
+
+        case pc.itos:
+          a = stack.pop()
+          makeHeapString(a.toString())
+          break
+
+        case pc.hexs:
+          b = stack.pop()
+          a = stack.pop().toString(16).toUpperCase()
+          while (a.length < b) {
+            a = '0' + a
+          }
+          makeHeapString(a)
+          break
+
+        case pc.sval:
+          c = stack.pop()
+          b = stack.pop()
+          a = getHeapString(b)
+          if (a[0] === '#') {
+            d = isNaN(parseInt(a.slice(1), 16)) ? c : parseInt(a.slice(1), 16)
+          } else {
+            d = isNaN(parseInt(a, 10)) ? c : parseInt(a, 10)
+          }
+          stack.push(d)
+          break
+
+        case pc.qtos:
+          d = stack.pop()
+          c = stack.pop()
+          b = stack.pop()
+          a = (b / c)
+          makeHeapString(a.toFixed(d))
+          break
+
+        case pc.qval:
+          c = stack.pop()
+          b = stack.pop()
+          a = getHeapString(stack.pop())
+          d = isNaN(parseFloat(a)) ? c : parseFloat(a)
+          stack.push(Math.round(d * b))
+          break
+
+        // 0x10s - Boolean operators, integer operators
         case pc.not:
           a = stack.pop()
           stack.push(~a)
@@ -445,7 +517,6 @@ const execute = (pcode, line, code, options) => {
           stack.push(a || b)
           break
 
-        // 0x1 - integer operators
         case pc.neg:
           a = stack.pop()
           stack.push(-a)
@@ -459,21 +530,6 @@ const execute = (pcode, line, code, options) => {
         case pc.sign:
           a = stack.pop()
           stack.push(Math.sign(a))
-          break
-
-        case pc.rand:
-          a = stack.pop()
-          stack.push(Math.floor(Math.random() * Math.abs(a)))
-          break
-
-        case pc.seed:
-          a = stack.pop()
-          if (a === 0) {
-            // TODO: ask Peter what his "randomize" procedure does
-            stack.push(runtime.randseed)
-          } else {
-            runtime.randseed = a
-          }
           break
 
         case pc.plus:
@@ -512,7 +568,109 @@ const execute = (pcode, line, code, options) => {
           stack.push(a % b)
           break
 
-        // 0x2 - pseudo-real operators
+        case pc.rand:
+          a = stack.pop()
+          stack.push(Math.floor(Math.random() * Math.abs(a)))
+          break
+
+        // 0x20s - comparison operators
+        case pc.eqal:
+          b = stack.pop()
+          a = stack.pop()
+          stack.push(a === b ? -1 : 0)
+          break
+
+        case pc.noeq:
+          b = stack.pop()
+          a = stack.pop()
+          stack.push(a !== b ? -1 : 0)
+          break
+
+        case pc.less:
+          b = stack.pop()
+          a = stack.pop()
+          stack.push(a < b ? -1 : 0)
+          break
+
+        case pc.more:
+          b = stack.pop()
+          a = stack.pop()
+          stack.push(a > b ? -1 : 0)
+          break
+
+        case pc.lseq:
+          b = stack.pop()
+          a = stack.pop()
+          stack.push(a <= b ? -1 : 0)
+          break
+
+        case pc.mreq:
+          b = stack.pop()
+          a = stack.pop()
+          stack.push(a >= b ? -1 : 0)
+          break
+
+        case pc.maxi:
+          b = stack.pop()
+          a = stack.pop()
+          stack.push(Math.max(a, b))
+          break
+
+        case pc.mini:
+          b = stack.pop()
+          a = stack.pop()
+          stack.push(Math.min(a, b))
+          break
+
+        case pc.seql:
+          b = getHeapString(stack.pop())
+          a = getHeapString(stack.pop())
+          stack.push(a === b ? -1 : 0)
+          break
+
+        case pc.sneq:
+          b = getHeapString(stack.pop())
+          a = getHeapString(stack.pop())
+          stack.push(a !== b ? -1 : 0)
+          break
+
+        case pc.sles:
+          b = getHeapString(stack.pop())
+          a = getHeapString(stack.pop())
+          stack.push(a < b ? -1 : 0)
+          break
+
+        case pc.smor:
+          b = getHeapString(stack.pop())
+          a = getHeapString(stack.pop())
+          stack.push(a > b ? -1 : 0)
+          break
+
+        case pc.sleq:
+          b = getHeapString(stack.pop())
+          a = getHeapString(stack.pop())
+          stack.push(a <= b ? -1 : 0)
+          break
+
+        case pc.smeq:
+          b = getHeapString(stack.pop())
+          a = getHeapString(stack.pop())
+          stack.push(a >= b ? -1 : 0)
+          break
+
+        case pc.smax:
+          b = getHeapString(stack.pop())
+          a = getHeapString(stack.pop())
+          makeHeapString(Math.max(a, b))
+          break
+
+        case pc.smin:
+          b = getHeapString(stack.pop())
+          a = getHeapString(stack.pop())
+          makeHeapString(Math.min(a, b))
+          break
+
+        // 0x30s - pseudo-real operators
         case pc.divm:
           c = stack.pop()
           b = stack.pop()
@@ -630,54 +788,7 @@ const execute = (pcode, line, code, options) => {
           stack.push(Math.round(Math.PI * a))
           break
 
-        // 0x3 - string operators
-        case pc.ctos:
-          a = stack.pop()
-          makeHeapString(String.fromCharCode(a))
-          break
-
-        case pc.itos:
-          a = stack.pop()
-          makeHeapString(a.toString())
-          break
-
-        case pc.hexs:
-          b = stack.pop()
-          a = stack.pop().toString(16).toUpperCase()
-          while (a.length < b) {
-            a = '0' + a
-          }
-          makeHeapString(a)
-          break
-
-        case pc.sval:
-          c = stack.pop()
-          b = stack.pop()
-          a = getHeapString(b)
-          if (a[0] === '#') {
-            d = isNaN(parseInt(a.slice(1), 16)) ? c : parseInt(a.slice(1), 16)
-          } else {
-            d = isNaN(parseInt(a, 10)) ? c : parseInt(a, 10)
-          }
-          stack.push(d)
-          break
-
-        case pc.qtos:
-          d = stack.pop()
-          c = stack.pop()
-          b = stack.pop()
-          a = (b / c)
-          makeHeapString(a.toFixed(d))
-          break
-
-        case pc.qval:
-          c = stack.pop()
-          b = stack.pop()
-          a = getHeapString(stack.pop())
-          d = isNaN(parseFloat(a)) ? c : parseFloat(a)
-          stack.push(Math.round(d * b))
-          break
-
+        // 0x40s - string operators
         case pc.scat:
           b = getHeapString(stack.pop())
           a = getHeapString(stack.pop())
@@ -746,15 +857,6 @@ const execute = (pcode, line, code, options) => {
           }
           break
 
-        case pc.sasc:
-          a = getHeapString(stack.pop())
-          if (a.length === 0) {
-            stack.push(0)
-          } else {
-            stack.push(a.charCodeAt(0))
-          }
-          break
-
         case pc.spad:
           d = stack.pop()
           c = Math.abs(d)
@@ -770,647 +872,7 @@ const execute = (pcode, line, code, options) => {
           makeHeapString(a)
           break
 
-        // 0x4 - comparison operators (push -1 for true, 0 for false)
-        case pc.eqal:
-          b = stack.pop()
-          a = stack.pop()
-          stack.push(a === b ? -1 : 0)
-          break
-
-        case pc.noeq:
-          b = stack.pop()
-          a = stack.pop()
-          stack.push(a !== b ? -1 : 0)
-          break
-
-        case pc.less:
-          b = stack.pop()
-          a = stack.pop()
-          stack.push(a < b ? -1 : 0)
-          break
-
-        case pc.more:
-          b = stack.pop()
-          a = stack.pop()
-          stack.push(a > b ? -1 : 0)
-          break
-
-        case pc.lseq:
-          b = stack.pop()
-          a = stack.pop()
-          stack.push(a <= b ? -1 : 0)
-          break
-
-        case pc.mreq:
-          b = stack.pop()
-          a = stack.pop()
-          stack.push(a >= b ? -1 : 0)
-          break
-
-        case pc.maxi:
-          b = stack.pop()
-          a = stack.pop()
-          stack.push(Math.max(a, b))
-          break
-
-        case pc.mini:
-          b = stack.pop()
-          a = stack.pop()
-          stack.push(Math.min(a, b))
-          break
-
-        case pc.seql:
-          b = getHeapString(stack.pop())
-          a = getHeapString(stack.pop())
-          stack.push(a === b ? -1 : 0)
-          break
-
-        case pc.sneq:
-          b = getHeapString(stack.pop())
-          a = getHeapString(stack.pop())
-          stack.push(a !== b ? -1 : 0)
-          break
-
-        case pc.sles:
-          b = getHeapString(stack.pop())
-          a = getHeapString(stack.pop())
-          stack.push(a < b ? -1 : 0)
-          break
-
-        case pc.smor:
-          b = getHeapString(stack.pop())
-          a = getHeapString(stack.pop())
-          stack.push(a > b ? -1 : 0)
-          break
-
-        case pc.sleq:
-          b = getHeapString(stack.pop())
-          a = getHeapString(stack.pop())
-          stack.push(a <= b ? -1 : 0)
-          break
-
-        case pc.smeq:
-          b = getHeapString(stack.pop())
-          a = getHeapString(stack.pop())
-          stack.push(a >= b ? -1 : 0)
-          break
-
-        case pc.smax:
-          b = getHeapString(stack.pop())
-          a = getHeapString(stack.pop())
-          makeHeapString(Math.max(a, b))
-          break
-
-        case pc.smin:
-          b = getHeapString(stack.pop())
-          a = getHeapString(stack.pop())
-          makeHeapString(Math.min(a, b))
-          break
-
-        // 0x5 - loading stack
-        case pc.ldin:
-          a = pcode[line][code + 1]
-          stack.push(a)
-          code += 1
-          break
-
-        case pc.ldvg:
-          a = pcode[line][code + 1]
-          stack.push(memory[a])
-          code += 1
-          break
-
-        case pc.ldvv:
-          a = pcode[line][code + 1]
-          b = pcode[line][code + 2]
-          stack.push(memory[memory[a] + b])
-          code += 2
-          break
-
-        case pc.ldvr:
-          a = pcode[line][code + 1]
-          b = pcode[line][code + 2]
-          stack.push(memory[memory[memory[a] + b]])
-          code += 2
-          break
-
-        case pc.ldag:
-          a = pcode[line][code + 1]
-          stack.push(a)
-          code += 1
-          break
-
-        case pc.ldav:
-          a = pcode[line][code + 1]
-          b = pcode[line][code + 2]
-          stack.push(memory[a] + b)
-          code += 2
-          break
-
-        case pc.lstr:
-          code += 1
-          a = pcode[line][code] // length of the string
-          b = code + a // end of the string
-          c = ''
-          while (code < b) {
-            code += 1
-            c += String.fromCharCode(pcode[line][code])
-          }
-          makeHeapString(c)
-          break
-
-        case pc.ldmt:
-          stack.push(memoryStack.length - 1)
-          break
-
-        case pc.peek:
-          a = stack.pop()
-          stack.push(memory[a])
-          break
-
-        case pc.poke:
-          b = stack.pop()
-          a = stack.pop()
-          memory[a] = b
-          break
-
-        // 0x6 - storing from stack
-        case pc.zero:
-          a = pcode[line][code + 1]
-          b = pcode[line][code + 2]
-          memory[memory[a] + b] = 0
-          code += 2
-          break
-
-        case pc.stvg:
-          a = stack.pop()
-          memory[pcode[line][code + 1]] = a
-          code += 1
-          break
-
-        case pc.stvv:
-          a = pcode[line][code + 1]
-          b = pcode[line][code + 2]
-          c = stack.pop()
-          memory[memory[a] + b] = c
-          code += 2
-          break
-
-        case pc.stvr:
-          a = pcode[line][code + 1]
-          b = pcode[line][code + 2]
-          c = stack.pop()
-          memory[memory[memory[a] + b]] = c
-          code += 2
-          break
-
-        case pc.stmt:
-          a = stack.pop()
-          memoryStack.push(a)
-          markers.stackTop = Math.max(a, markers.stackTop)
-          break
-
-        // 0x7 - pointer handling
-        case pc.lptr:
-          a = stack.pop()
-          stack.push(memory[a])
-          break
-
-        case pc.sptr:
-          b = stack.pop()
-          a = stack.pop()
-          memory[b] = a
-          break
-
-        case pc.cptr:
-          c = stack.pop() // length
-          b = stack.pop() // target
-          a = stack.pop() // source
-          copy(a, b, c)
-          break
-
-        case pc.zptr:
-          b = stack.pop()
-          a = stack.pop()
-          zero(a, b)
-          break
-
-        case pc.test:
-          // not yet implemented
-          break
-
-        case pc.cstr:
-          b = stack.pop() // target
-          a = stack.pop() // source
-          d = memory[b - 1] // maximum length of target
-          c = memory[a] // length of source
-          copy(a, b, Math.min(c, d) + 1)
-          break
-
-        // 0x8 - flow control
-        case pc.jump:
-          line = pcode[line][code + 1] - 1
-          code = -1
-          break
-
-        case pc.ifno:
-          if (stack.pop() === 0) {
-            line = pcode[line][code + 1] - 1
-            code = -1
-          } else {
-            code += 1
-          }
-          break
-
-        case pc.halt:
-          halt()
-          return
-
-        case pc.subr:
-          if (markers.heapGlobal === -1) {
-            markers.heapGlobal = markers.heapPerm
-          }
-          returnStack.push(line + 1)
-          line = pcode[line][code + 1] - 1
-          code = -1
-          break
-
-        case pc.retn:
-          line = returnStack.pop()
-          code = -1
-          break
-
-        case pc.pssr:
-          subroutineStack.push(pcode[line][code + 1])
-          code += 1
-          break
-
-        case pc.plsr:
-          subroutineStack.pop()
-          break
-
-        case pc.psrj:
-          stack.push(line + 1)
-          break
-
-        case pc.plrj:
-          returnStack.pop()
-          line = (stack.pop() - 1)
-          code = -1
-          break
-
-        // 0x9 - memory control
-        case pc.memc:
-          a = pcode[line][code + 1]
-          b = pcode[line][code + 2]
-          c = memoryStack.pop()
-          // heap overflow check
-          if (c + b > options.stackSize) {
-            halt()
-            throw error('Memory stack has overflowed into memory heap. Probable cause is unterminated recursion.')
-          }
-          memoryStack.push(memory[a])
-          markers.stackTop = Math.max(memory[a], markers.stackTop)
-          memory[a] = c
-          memoryStack.push(c + b)
-          markers.stackTop = Math.max(c + b, markers.stackTop)
-          code += 2
-          break
-
-        case pc.memr:
-          memoryStack.pop()
-          a = pcode[line][code + 1]
-          b = memoryStack.pop()
-          memoryStack.push(memory[a])
-          markers.stackTop = Math.max(memory[a], markers.stackTop)
-          memory[a] = b
-          code += 2
-          break
-
-        case pc.hfix:
-          markers.heapPerm = markers.heapTemp
-          break
-
-        case pc.hclr:
-          markers.heapTemp = markers.heapPerm
-          break
-
-        case pc.hrst:
-          if (markers.heapGlobal > -1) {
-            markers.heapTemp = markers.heapGlobal
-            markers.heapPerm = markers.heapGlobal
-          }
-          break
-
-        // 0xA - runtime flags, text output, debugging
-        case pc.pnup:
-          runtime.pendown = false
-          break
-
-        case pc.pndn:
-          runtime.pendown = true
-          break
-
-        case pc.udat:
-          runtime.update = true
-          drawCount = options.drawCountMax // force runtime.update
-          break
-
-        case pc.ndat:
-          runtime.update = false
-          break
-
-        case pc.kech:
-          a = (stack.pop() !== 0)
-          runtime.keyecho = a
-          break
-
-        case pc.outp:
-          c = (stack.pop() !== 0)
-          b = stack.pop()
-          a = (stack.pop() !== 0)
-          reply('output', { clear: a, colour: hex(b) })
-          if (c) {
-            reply('show-output')
-          } else {
-            reply('show-canvas')
-          }
-          break
-
-        case pc.cons:
-          b = stack.pop()
-          a = (stack.pop() !== 0)
-          reply('console', { clear: a, colour: hex(b) })
-          break
-
-        case pc.trac:
-          // not implemented -
-          // just pop the top off the stack
-          stack.pop()
-          break
-
-        case pc.memw:
-          // not implemented -
-          // just pop the top off the stack
-          stack.pop()
-          break
-
-        case pc.dump:
-          reply('memory-dumped', dump())
-          if (options.showMemory) {
-            reply('show-memory')
-          }
-          break
-
-        // 0xB - timing, runtime.input, text output
-        case pc.time:
-          a = Date.now()
-          a = a - runtime.startTime
-          stack.push(a)
-          break
-
-        case pc.tset:
-          a = Date.now()
-          b = stack.pop()
-          runtime.startTime = a - b
-          break
-
-        case pc.wait:
-          a = stack.pop()
-          code += 1
-          if (code === pcode[line].length) {
-            line += 1
-            code = 0
-          }
-          setTimeout(execute, a, pcode, line, code, options)
-          return
-
-        case pc.tdet:
-          b = stack.pop()
-          a = stack.pop()
-          stack.push(0)
-          code += 1
-          if (code === pcode[line].length) {
-            line += 1
-            code = 0
-          }
-          c = setTimeout(execute, a, pcode, line, code, options)
-          runtime.detect = detectProto.bind(null, b, c, pcode, line, code, options)
-          window.addEventListener('keyup', runtime.detect)
-          return
-
-        case pc.inpt:
-          a = stack.pop()
-          if (a < 0) {
-            stack.push(query[-a])
-          } else {
-            stack.push(keys[a])
-          }
-          break
-
-        case pc.iclr:
-          a = stack.pop()
-          if (a < 0) {
-            // reset query value
-            query[-a] = -1
-          } else if (a === 0) {
-            // reset keybuffer
-            memory[memory[1] + 1] = memory[1] + 3
-            memory[memory[1] + 2] = memory[1] + 3
-          } else {
-            // reset key value
-            keys[a] = -1
-          }
-          break
-
-        case pc.bufr:
-          a = stack.pop()
-          if (a > 0) {
-            b = markers.heapTemp + 4
-            stack.push(markers.heapTemp + 1)
-            memory[markers.heapTemp + 1] = b + a
-            memory[markers.heapTemp + 2] = b
-            memory[markers.heapTemp + 3] = b
-            memory.fill(0, b, b + a)
-            markers.heapTemp = b + a
-            markers.heapMax = Math.max(markers.heapTemp, markers.heapMax)
-          }
-          break
-
-        case pc.read:
-          a = stack.pop() // maximum number of characters to read
-          b = memory[1] // the address of the buffer
-          c = memory[memory[1]] // the address of the end of the buffer
-          d = '' // the string read from the buffer
-          e = memory[b + 1]
-          f = memory[b + 2]
-          if (a === 0) {
-            while (e !== f) {
-              d += String.fromCharCode(memory[e])
-              e = (e < c)
-                ? e + 1
-                : c + 3 // loop back to the start
-            }
-          } else {
-            while (e !== f && d.length <= a) {
-              d += String.fromCharCode(memory[e])
-              if (e < c) {
-                e += 1
-              } else {
-                e = c + 3 // loop back to the start
-              }
-            }
-            memory[b + 1] = e
-          }
-          makeHeapString(d)
-          break
-
-        case pc.rdln:
-          a = Math.pow(2, 31) - 1 // as long as possible
-          code += 1
-          if (code === pcode[line].length) {
-            line += 1
-            code = 0
-          }
-          b = setTimeout(execute, a, pcode, line, code, options)
-          runtime.readline = readlineProto.bind(null, b, pcode, line, code, options)
-          window.addEventListener('keydown', runtime.readline)
-          return
-
-        case pc.prnt:
-          c = stack.pop()
-          b = stack.pop()
-          a = getHeapString(stack.pop())
-          reply('print', { turtle: turtle(), string: a, font: b, size: c })
-          break
-
-        case pc.text:
-          a = getHeapString(stack.pop())
-          reply('write', a)
-          reply('log', a)
-          if (options.showOutput) {
-            reply('show-output')
-          }
-          break
-
-        case pc.newl:
-          reply('write', '\n')
-          reply('log', '\n')
-          break
-
-        // 0xC - file handling, dummy codes
-        case pc.fdir:
-          // not yet implemented
-          break
-
-        case pc.open:
-          // not yet implemented
-          break
-
-        case pc.clos:
-          // not yet implemented
-          break
-
-        case pc.fptr:
-          // not yet implemented
-          break
-
-        case pc.fbeg:
-          // not yet implemented
-          break
-
-        case pc.eof:
-          // not yet implemented
-          break
-
-        case pc.frds:
-          // not yet implemented
-          break
-
-        case pc.frln:
-          // not yet implemented
-          break
-
-        case pc.fwrs:
-          // not yet implemented
-          break
-
-        case pc.fwnl:
-          // not yet implemented
-          break
-
-        // 0xD - canvas, turtle settings
-        case pc.canv:
-          vcanvas.sizey = stack.pop()
-          vcanvas.sizex = stack.pop()
-          vcanvas.starty = stack.pop()
-          vcanvas.startx = stack.pop()
-          reply('canvas', vcanvas)
-          memory[memory[0] + turtxIndex] = Math.round(vcanvas.startx + (vcanvas.sizex / 2))
-          memory[memory[0] + turtyIndex] = Math.round(vcanvas.starty + (vcanvas.sizey / 2))
-          memory[memory[0] + turtdIndex] = 0
-          reply('turtx-changed', memory[memory[0] + turtxIndex])
-          reply('turty-changed', memory[memory[0] + turtyIndex])
-          reply('turtd-changed', memory[memory[0] + turtdIndex])
-          coords.push([memory[memory[0] + turtxIndex], memory[memory[0] + turtyIndex]])
-          drawCount = options.drawCountMax // force runtime.update
-          break
-
-        case pc.reso:
-          b = stack.pop()
-          a = stack.pop()
-          if (Math.min(a, b) <= options.smallSize) {
-            a = a * 2
-            b = b * 2
-            vcanvas.doubled = true
-          }
-          vcanvas.width = a
-          vcanvas.height = b
-          reply('resolution', { width: a, height: b })
-          reply('blank', '#FFFFFF')
-          drawCount = options.drawCountMax // force runtime.update
-          break
-
-        case pc.pixc:
-          c = stack.pop()
-          b = stack.pop()
-          a = context.getImageData(turtx(b), turty(c), 1, 1)
-          stack.push((a.data[0] * 65536) + (a.data[1] * 256) + a.data[2])
-          break
-
-        case pc.pixs:
-          c = stack.pop()
-          b = stack.pop()
-          a = stack.pop()
-          reply('pixset', { x: turtx(a), y: turty(b), c, doubled: vcanvas.doubled })
-          if (runtime.update) {
-            drawCount += 1
-          }
-          break
-
-        case pc.angl:
-          a = stack.pop()
-          if (memory[memory[0] + turtaIndex] === 0) {
-            // this should only happen at the start of the program before angles is set for the first time
-            memory[memory[0] + turtaIndex] = a
-          }
-          if (a === 0) {
-            // never let angles be set to zero
-            halt()
-            throw error('Angles cannot be set to zero.')
-          }
-          b = Math.round(a + memory[memory[0] + turtdIndex] * a / memory[memory[0] + turtaIndex])
-          memory[memory[0] + turtdIndex] = b % a
-          memory[memory[0] + turtaIndex] = a
-          reply('turtd-changed', b % a)
-          reply('turta-changed', a)
-          break
-
-        case pc.curs:
-          a = stack.pop()
-          reply('cursor', a)
-          break
-
+        // 0x50s - turtle settings and movement
         case pc.home:
           a = vcanvas.startx + (vcanvas.sizex / 2)
           b = vcanvas.starty + (vcanvas.sizey / 2)
@@ -1443,6 +905,24 @@ const execute = (pcode, line, code, options) => {
           reply('turtd-changed', a)
           break
 
+        case pc.angl:
+          a = stack.pop()
+          if (memory[memory[0] + turtaIndex] === 0) {
+            // this should only happen at the start of the program before angles is set for the first time
+            memory[memory[0] + turtaIndex] = a
+          }
+          if (a === 0) {
+            // never let angles be set to zero
+            halt()
+            throw error('Angles cannot be set to zero.')
+          }
+          b = Math.round(a + memory[memory[0] + turtdIndex] * a / memory[memory[0] + turtaIndex])
+          memory[memory[0] + turtdIndex] = b % a
+          memory[memory[0] + turtaIndex] = a
+          reply('turtd-changed', b % a)
+          reply('turta-changed', a)
+          break
+
         case pc.thik:
           a = stack.pop()
           memory[memory[0] + turttIndex] = a
@@ -1455,26 +935,11 @@ const execute = (pcode, line, code, options) => {
           reply('turtc-changed', hex(a))
           break
 
-        case pc.rgb:
-          a = stack.pop()
-          a = a % 50
-          if (a <= 0) a += 50
-          a = colours[a - 1].value
-          stack.push(a)
+        case pc.pen:
+          a = (stack.pop() !== 0)
+          runtime.pendown = a
           break
 
-        case pc.mixc:
-          d = stack.pop() // second proportion
-          c = stack.pop() // first proportion
-          b = stack.pop() // second colour
-          a = stack.pop() // first colour
-          e = mixBytes(Math.floor(a / 0x10000), Math.floor(b / 0x10000), c, d) // red byte
-          f = mixBytes(Math.floor((a & 0xFF00) / 0x100), Math.floor((b & 0xFF00) / 0x100), c, d) // green byte
-          g = mixBytes(a & 0xFF, b & 0xFF, c, d) // blue byte
-          stack.push((e * 0x10000) + (f * 0x100) + g)
-          break
-
-        // 0xE - turtle movement
         case pc.toxy:
           b = stack.pop()
           a = stack.pop()
@@ -1597,6 +1062,72 @@ const execute = (pcode, line, code, options) => {
           reply('turtd-changed', a)
           break
 
+        // 0x60s - colour operators, shapes and fills
+        case pc.blnk:
+          a = stack.pop()
+          reply('blank', hex(a))
+          if (runtime.update) {
+            drawCount += 1
+          }
+          break
+
+        case pc.rcol:
+          c = stack.pop()
+          b = stack.pop()
+          a = stack.pop()
+          reply('flood', { x: a, y: b, c1: c, c2: 0, boundary: false })
+          if (runtime.update) {
+            drawCount += 1
+          }
+          break
+
+        case pc.fill:
+          d = stack.pop()
+          c = stack.pop()
+          b = stack.pop()
+          a = stack.pop()
+          reply('flood', { x: a, y: b, c1: c, c2: d, boundayr: true })
+          if (runtime.update) {
+            drawCount += 1
+          }
+          break
+
+        case pc.pixc:
+          c = stack.pop()
+          b = stack.pop()
+          a = context.getImageData(turtx(b), turty(c), 1, 1)
+          stack.push((a.data[0] * 65536) + (a.data[1] * 256) + a.data[2])
+          break
+
+        case pc.pixs:
+          c = stack.pop()
+          b = stack.pop()
+          a = stack.pop()
+          reply('pixset', { x: turtx(a), y: turty(b), c, doubled: vcanvas.doubled })
+          if (runtime.update) {
+            drawCount += 1
+          }
+          break
+
+        case pc.rgb:
+          a = stack.pop()
+          a = a % 50
+          if (a <= 0) a += 50
+          a = colours[a - 1].value
+          stack.push(a)
+          break
+
+        case pc.mixc:
+          d = stack.pop() // second proportion
+          c = stack.pop() // first proportion
+          b = stack.pop() // second colour
+          a = stack.pop() // first colour
+          e = mixBytes(Math.floor(a / 0x10000), Math.floor(b / 0x10000), c, d) // red byte
+          f = mixBytes(Math.floor((a & 0xFF00) / 0x100), Math.floor((b & 0xFF00) / 0x100), c, d) // green byte
+          g = mixBytes(a & 0xFF, b & 0xFF, c, d) // blue byte
+          stack.push((e * 0x10000) + (f * 0x100) + g)
+          break
+
         case pc.rmbr:
           coords.push([memory[memory[0] + turtxIndex], memory[memory[0] + turtyIndex]])
           break
@@ -1605,7 +1136,6 @@ const execute = (pcode, line, code, options) => {
           coords.length -= stack.pop()
           break
 
-        // 0xF - shapes and fills, maximum integer
         case pc.poly:
           c = stack.pop()
           b = coords.length
@@ -1671,38 +1201,549 @@ const execute = (pcode, line, code, options) => {
           }
           break
 
-        case pc.blnk:
-          a = stack.pop()
-          reply('blank', hex(a))
-          if (runtime.update) {
-            drawCount += 1
-          }
+        // 0x70s - loading from stack, storing from stack, pointer and array operations
+        case pc.ldin:
+          a = pcode[line][code + 1]
+          stack.push(a)
+          code += 1
           break
 
-        case pc.rcol:
+        case pc.ldvg:
+          a = pcode[line][code + 1]
+          stack.push(memory[a])
+          code += 1
+          break
+
+        case pc.ldvv:
+          a = pcode[line][code + 1]
+          b = pcode[line][code + 2]
+          stack.push(memory[memory[a] + b])
+          code += 2
+          break
+
+        case pc.ldvr:
+          a = pcode[line][code + 1]
+          b = pcode[line][code + 2]
+          stack.push(memory[memory[memory[a] + b]])
+          code += 2
+          break
+
+        case pc.ldag:
+          a = pcode[line][code + 1]
+          stack.push(a)
+          code += 1
+          break
+
+        case pc.ldav:
+          a = pcode[line][code + 1]
+          b = pcode[line][code + 2]
+          stack.push(memory[a] + b)
+          code += 2
+          break
+
+        case pc.lstr:
+          code += 1
+          a = pcode[line][code] // length of the string
+          b = code + a // end of the string
+          c = ''
+          while (code < b) {
+            code += 1
+            c += String.fromCharCode(pcode[line][code])
+          }
+          makeHeapString(c)
+          break
+
+        case pc.stvg:
+          a = stack.pop()
+          memory[pcode[line][code + 1]] = a
+          code += 1
+          break
+
+        case pc.stvv:
+          a = pcode[line][code + 1]
+          b = pcode[line][code + 2]
           c = stack.pop()
+          memory[memory[a] + b] = c
+          code += 2
+          break
+
+        case pc.stvr:
+          a = pcode[line][code + 1]
+          b = pcode[line][code + 2]
+          c = stack.pop()
+          memory[memory[memory[a] + b]] = c
+          code += 2
+          break
+
+        case pc.lptr:
+          a = stack.pop()
+          stack.push(memory[a])
+          break
+
+        case pc.sptr:
           b = stack.pop()
           a = stack.pop()
-          reply('flood', { x: a, y: b, c1: c, c2: 0, boundary: false })
-          if (runtime.update) {
-            drawCount += 1
-          }
+          memory[b] = a
           break
 
-        case pc.fill:
-          d = stack.pop()
-          c = stack.pop()
+        case pc.zptr:
           b = stack.pop()
           a = stack.pop()
-          reply('flood', { x: a, y: b, c1: c, c2: d, boundayr: true })
-          if (runtime.update) {
-            drawCount += 1
+          zero(a, b)
+          break
+
+        case pc.cptr:
+          c = stack.pop() // length
+          b = stack.pop() // target
+          a = stack.pop() // source
+          copy(a, b, c)
+          break
+
+        case pc.cstr:
+          b = stack.pop() // target
+          a = stack.pop() // source
+          d = memory[b - 1] // maximum length of target
+          c = memory[a] // length of source
+          copy(a, b, Math.min(c, d) + 1)
+          break
+
+        case pc.test:
+          halt()
+          throw error('TEST is not yet implemented.')
+
+        // 0x80s - flow control, memory control
+        case pc.jump:
+          line = pcode[line][code + 1] - 1
+          code = -1
+          break
+
+        case pc.ifno:
+          if (stack.pop() === 0) {
+            line = pcode[line][code + 1] - 1
+            code = -1
+          } else {
+            code += 1
           }
           break
 
-        case pc.mxin:
-          stack.push(Math.pow(2, 31) - 1)
+        case pc.halt:
+          halt()
+          return
+
+        case pc.subr:
+          if (markers.heapGlobal === -1) {
+            markers.heapGlobal = markers.heapPerm
+          }
+          returnStack.push(line + 1)
+          line = pcode[line][code + 1] - 1
+          code = -1
           break
+
+        case pc.retn:
+          line = returnStack.pop()
+          code = -1
+          break
+
+        case pc.pssr:
+          subroutineStack.push(pcode[line][code + 1])
+          code += 1
+          break
+
+        case pc.plsr:
+          subroutineStack.pop()
+          break
+
+        case pc.psrj:
+          stack.push(line + 1)
+          break
+
+        case pc.plrj:
+          returnStack.pop()
+          line = (stack.pop() - 1)
+          code = -1
+          break
+
+        case pc.ldmt:
+          stack.push(memoryStack.length - 1)
+          break
+
+        case pc.stmt:
+          a = stack.pop()
+          memoryStack.push(a)
+          markers.stackTop = Math.max(a, markers.stackTop)
+          break
+
+        case pc.memc:
+          a = pcode[line][code + 1]
+          b = pcode[line][code + 2]
+          c = memoryStack.pop()
+          // heap overflow check
+          if (c + b > options.stackSize) {
+            halt()
+            throw error('Memory stack has overflowed into memory heap. Probable cause is unterminated recursion.')
+          }
+          memoryStack.push(memory[a])
+          markers.stackTop = Math.max(memory[a], markers.stackTop)
+          memory[a] = c
+          memoryStack.push(c + b)
+          markers.stackTop = Math.max(c + b, markers.stackTop)
+          code += 2
+          break
+
+        case pc.memr:
+          memoryStack.pop()
+          a = pcode[line][code + 1]
+          b = memoryStack.pop()
+          memoryStack.push(memory[a])
+          markers.stackTop = Math.max(memory[a], markers.stackTop)
+          memory[a] = b
+          code += 2
+          break
+
+        case pc.hfix:
+          markers.heapPerm = markers.heapTemp
+          break
+
+        case pc.hclr:
+          markers.heapTemp = markers.heapPerm
+          break
+
+        case pc.hrst:
+          if (markers.heapGlobal > -1) {
+            markers.heapTemp = markers.heapGlobal
+            markers.heapPerm = markers.heapGlobal
+          }
+          break
+
+        // 0x90s - runtime variables, debugging
+        case pc.canv:
+          vcanvas.sizey = stack.pop()
+          vcanvas.sizex = stack.pop()
+          vcanvas.starty = stack.pop()
+          vcanvas.startx = stack.pop()
+          reply('canvas', vcanvas)
+          memory[memory[0] + turtxIndex] = Math.round(vcanvas.startx + (vcanvas.sizex / 2))
+          memory[memory[0] + turtyIndex] = Math.round(vcanvas.starty + (vcanvas.sizey / 2))
+          memory[memory[0] + turtdIndex] = 0
+          reply('turtx-changed', memory[memory[0] + turtxIndex])
+          reply('turty-changed', memory[memory[0] + turtyIndex])
+          reply('turtd-changed', memory[memory[0] + turtdIndex])
+          coords.push([memory[memory[0] + turtxIndex], memory[memory[0] + turtyIndex]])
+          drawCount = options.drawCountMax // force runtime.update
+          break
+
+        case pc.reso:
+          b = stack.pop()
+          a = stack.pop()
+          if (Math.min(a, b) <= options.smallSize) {
+            a = a * 2
+            b = b * 2
+            vcanvas.doubled = true
+          }
+          vcanvas.width = a
+          vcanvas.height = b
+          reply('resolution', { width: a, height: b })
+          reply('blank', '#FFFFFF')
+          drawCount = options.drawCountMax // force runtime.update
+          break
+
+        case pc.udat:
+          a = (stack.pop() !== 0)
+          runtime.update = a
+          if (a) {
+            drawCount = options.drawCountMax // force update
+          }
+          break
+
+        case pc.seed:
+          a = stack.pop()
+          if (a === 0) {
+            // TODO: ask Peter what his "randomize" procedure does
+            stack.push(runtime.randseed)
+          } else {
+            runtime.randseed = a
+          }
+          break
+
+        case pc.trac:
+          // not implemented -
+          // just pop the top off the stack
+          stack.pop()
+          break
+
+        case pc.memw:
+          // not implemented -
+          // just pop the top off the stack
+          stack.pop()
+          break
+
+        case pc.dump:
+          reply('memory-dumped', dump())
+          if (options.showMemory) {
+            reply('show-memory')
+          }
+          break
+
+        case pc.peek:
+          a = stack.pop()
+          stack.push(memory[a])
+          break
+
+        case pc.poke:
+          b = stack.pop()
+          a = stack.pop()
+          memory[a] = b
+          break
+
+        // 0xA0s - text output, timing
+        case pc.inpt:
+          a = stack.pop()
+          if (a < 0) {
+            stack.push(query[-a])
+          } else {
+            stack.push(keys[a])
+          }
+          break
+
+        case pc.iclr:
+          a = stack.pop()
+          if (a < 0) {
+            // reset query value
+            query[-a] = -1
+          } else if (a === 0) {
+            // reset keybuffer
+            memory[memory[1] + 1] = memory[1] + 3
+            memory[memory[1] + 2] = memory[1] + 3
+          } else {
+            // reset key value
+            keys[a] = -1
+          }
+          break
+
+        case pc.bufr:
+          a = stack.pop()
+          if (a > 0) {
+            b = markers.heapTemp + 4
+            stack.push(markers.heapTemp + 1)
+            memory[markers.heapTemp + 1] = b + a
+            memory[markers.heapTemp + 2] = b
+            memory[markers.heapTemp + 3] = b
+            memory.fill(0, b, b + a)
+            markers.heapTemp = b + a
+            markers.heapMax = Math.max(markers.heapTemp, markers.heapMax)
+          }
+          break
+
+        case pc.read:
+          a = stack.pop() // maximum number of characters to read
+          b = memory[1] // the address of the buffer
+          c = memory[memory[1]] // the address of the end of the buffer
+          d = '' // the string read from the buffer
+          e = memory[b + 1]
+          f = memory[b + 2]
+          if (a === 0) {
+            while (e !== f) {
+              d += String.fromCharCode(memory[e])
+              e = (e < c)
+                ? e + 1
+                : c + 3 // loop back to the start
+            }
+          } else {
+            while (e !== f && d.length <= a) {
+              d += String.fromCharCode(memory[e])
+              if (e < c) {
+                e += 1
+              } else {
+                e = c + 3 // loop back to the start
+              }
+            }
+            memory[b + 1] = e
+          }
+          makeHeapString(d)
+          break
+
+        case pc.rdln:
+          a = Math.pow(2, 31) - 1 // as long as possible
+          code += 1
+          if (code === pcode[line].length) {
+            line += 1
+            code = 0
+          }
+          b = setTimeout(execute, a, pcode, line, code, options)
+          runtime.readline = readlineProto.bind(null, b, pcode, line, code, options)
+          window.addEventListener('keydown', runtime.readline)
+          return
+
+        case pc.kech:
+          a = (stack.pop() !== 0)
+          runtime.keyecho = a
+          break
+
+        case pc.outp:
+          c = (stack.pop() !== 0)
+          b = stack.pop()
+          a = (stack.pop() !== 0)
+          reply('output', { clear: a, colour: hex(b) })
+          if (c) {
+            reply('show-output')
+          } else {
+            reply('show-canvas')
+          }
+          break
+
+        case pc.cons:
+          b = stack.pop()
+          a = (stack.pop() !== 0)
+          reply('console', { clear: a, colour: hex(b) })
+          break
+
+        case pc.prnt:
+          c = stack.pop()
+          b = stack.pop()
+          a = getHeapString(stack.pop())
+          reply('print', { turtle: turtle(), string: a, font: b, size: c })
+          break
+
+        case pc.writ:
+          a = getHeapString(stack.pop())
+          reply('write', a)
+          reply('log', a)
+          if (options.showOutput) {
+            reply('show-output')
+          }
+          break
+
+        case pc.newl:
+          reply('write', '\n')
+          reply('log', '\n')
+          break
+
+        case pc.curs:
+          a = stack.pop()
+          reply('cursor', a)
+          break
+
+        case pc.time:
+          a = Date.now()
+          a = a - runtime.startTime
+          stack.push(a)
+          break
+
+        case pc.tset:
+          a = Date.now()
+          b = stack.pop()
+          runtime.startTime = a - b
+          break
+
+        case pc.wait:
+          a = stack.pop()
+          code += 1
+          if (code === pcode[line].length) {
+            line += 1
+            code = 0
+          }
+          setTimeout(execute, a, pcode, line, code, options)
+          return
+
+        case pc.tdet:
+          b = stack.pop()
+          a = stack.pop()
+          stack.push(0)
+          code += 1
+          if (code === pcode[line].length) {
+            line += 1
+            code = 0
+          }
+          c = setTimeout(execute, a, pcode, line, code, options)
+          runtime.detect = detectProto.bind(null, b, c, pcode, line, code, options)
+          window.addEventListener('keyup', runtime.detect)
+          return
+
+        // 0xB0s - file processing
+        case pc.chdr:
+          // not yet implemented
+          halt()
+          throw error('File processing has not yet been implemented.')
+
+        case pc.file:
+          // not yet implemented
+          halt()
+          throw error('File processing has not yet been implemented.')
+
+        case pc.diry:
+          // not yet implemented
+          halt()
+          throw error('File processing has not yet been implemented.')
+
+        case pc.open:
+          // not yet implemented
+          halt()
+          throw error('File processing has not yet been implemented.')
+
+        case pc.clos:
+          // not yet implemented
+          halt()
+          throw error('File processing has not yet been implemented.')
+
+        case pc.fbeg:
+          // not yet implemented
+          halt()
+          throw error('File processing has not yet been implemented.')
+
+        case pc.eof:
+          // not yet implemented
+          halt()
+          throw error('File processing has not yet been implemented.')
+
+        case pc.eoln:
+          // not yet implemented
+          halt()
+          throw error('File processing has not yet been implemented.')
+
+        case pc.frds:
+          // not yet implemented
+          halt()
+          throw error('File processing has not yet been implemented.')
+
+        case pc.frln:
+          // not yet implemented
+          halt()
+          throw error('File processing has not yet been implemented.')
+
+        case pc.fwrs:
+          // not yet implemented
+          halt()
+          throw error('File processing has not yet been implemented.')
+
+        case pc.fwnl:
+          // not yet implemented
+          halt()
+          throw error('File processing has not yet been implemented.')
+
+        case pc.ffnd:
+          // not yet implemented
+          halt()
+          throw error('File processing has not yet been implemented.')
+
+        case pc.fdir:
+          // not yet implemented
+          halt()
+          throw error('File processing has not yet been implemented.')
+
+        case pc.fnxt:
+          // not yet implemented
+          halt()
+          throw error('File processing has not yet been implemented.')
+
+        case pc.fmov:
+          // not yet implemented
+          halt()
+          throw error('File processing has not yet been implemented.')
+
+        // anything else is an error
+        default:
+          halt()
+          throw error(`Unknown PCode 0x${pcode[line][code].toString(16)}.`)
       }
       codeCount += 1
       code += 1
@@ -1724,14 +1765,14 @@ const execute = (pcode, line, code, options) => {
 }
 
 // create a machine runtime error
-const error = (message) => {
+function error (message) {
   const err = new Error(message)
   err.type = 'Machine'
   return err
 }
 
 // make a string on the heap
-const makeHeapString = (string) => {
+function makeHeapString (string) {
   const stringArray = Array.from(string).map(c => c.charCodeAt(0))
   stack.push(markers.heapTemp + 1)
   markers.heapTemp += 1
@@ -1744,7 +1785,7 @@ const makeHeapString = (string) => {
 }
 
 // get a string from the heap
-const getHeapString = (address) => {
+function getHeapString (address) {
   const length = memory[address]
   const start = address + 1
   const charArray = memory.slice(start, start + length)
@@ -1756,7 +1797,7 @@ const getHeapString = (address) => {
 }
 
 // fill a chunk of main memory with zeros
-const zero = (start, length) => {
+function zero (start, length) {
   if (length > 0) {
     memory[start] = 0
     zero(start + 1, length - 1)
@@ -1764,15 +1805,15 @@ const zero = (start, length) => {
 }
 
 // copy one chunk of memory into another
-const copy = (source, target, length) => {
+function copy (source, target, length) {
   if (length > 0) {
     memory[target] = memory[source]
     copy(source + 1, target + 1, length - 1)
   }
 }
 
-// prototype key runtime.detection function
-const detectProto = (keyCode, timeoutID, pcode, line, code, options, event) => {
+// prototype key detection function
+function detectProto (keyCode, timeoutID, pcode, line, code, options, event) {
   const pressedKey = event.keyCode || event.charCode
   if (pressedKey === keyCode) {
     stack.pop()
@@ -1783,7 +1824,7 @@ const detectProto = (keyCode, timeoutID, pcode, line, code, options, event) => {
 }
 
 // prototype line reading function
-const readlineProto = (timeoutID, pcode, line, code, options, event) => {
+function readlineProto (timeoutID, pcode, line, code, options, event) {
   const pressedKey = event.keyCode || event.charCode
   if (pressedKey === 13) {
     // get heap string from the buffer, up to the first ENTER
@@ -1811,57 +1852,64 @@ const readlineProto = (timeoutID, pcode, line, code, options, event) => {
 }
 
 // get current turtle properties
-const turtle = () => ({
-  x: turtx(memory[memory[0] + turtxIndex]),
-  y: turty(memory[memory[0] + turtyIndex]),
-  d: memory[memory[0] + turtdIndex],
-  a: memory[memory[0] + turtaIndex],
-  t: turtt(memory[memory[0] + turttIndex]),
-  c: hex(memory[memory[0] + turtcIndex])
-})
+function turtle () {
+  return ({
+    x: turtx(memory[memory[0] + turtxIndex]),
+    y: turty(memory[memory[0] + turtyIndex]),
+    d: memory[memory[0] + turtdIndex],
+    a: memory[memory[0] + turtaIndex],
+    t: turtt(memory[memory[0] + turttIndex]),
+    c: hex(memory[memory[0] + turtcIndex])
+  })
+}
 
 // convert turtx to virtual canvas coordinate
-const turtx = (x) => {
+function turtx (x) {
   const exact = ((x - vcanvas.startx) * vcanvas.width) / vcanvas.sizex
   return vcanvas.doubled ? Math.round(exact) + 1 : Math.round(exact)
 }
 
 // convert turty to virtual canvas coordinate
-const turty = (y) => {
+function turty (y) {
   const exact = ((y - vcanvas.starty) * vcanvas.height) / vcanvas.sizey
   return vcanvas.doubled ? Math.round(exact) + 1 : Math.round(exact)
 }
 
 // convert turtt to virtual canvas thickness
-const turtt = t =>
-  vcanvas.doubled ? t * 2 : t
+function turtt (t) {
+  return vcanvas.doubled ? t * 2 : t
+}
 
 // map turtle coordinates to virtual turtle coordinates
-const vcoords = ([x, y]) =>
-  [turtx(x), turty(y)]
+function vcoords ([x, y]) {
+  return [turtx(x), turty(y)]
+}
 
 // convert x to virtual canvas coordinate
-const virtx = (x) => {
+function virtx (x) {
   const { left, width } = canvas.getBoundingClientRect()
   const exact = (((x - left) * vcanvas.sizex) / width) + vcanvas.startx
   return Math.round(exact)
 }
 
 // convert y to virtual canvas coordinate
-const virty = (y) => {
+function virty (y) {
   const { height, top } = canvas.getBoundingClientRect()
   const exact = (((y - top) * vcanvas.sizey) / height) + vcanvas.starty
   return Math.round(exact)
 }
 
 // convert a number to css colour #000000 format
-const hex = colour =>
-  `#${padded(colour.toString(16))}`
+function hex (colour) {
+  return `#${padded(colour.toString(16))}`
+}
 
 // mix two colours
-const mixBytes = (byte1, byte2, proportion1, proportion2) =>
-  Math.round(((byte1 * proportion1) + (byte2 * proportion2)) / (proportion1 + proportion2))
+function mixBytes (byte1, byte2, proportion1, proportion2) {
+  return Math.round(((byte1 * proportion1) + (byte2 * proportion2)) / (proportion1 + proportion2))
+}
 
 // padd a string with leading zeros
-const padded = string =>
-  ((string.length < 6) ? padded(`0${string}`) : string)
+function padded (string) {
+  return ((string.length < 6) ? padded(`0${string}`) : string)
+}

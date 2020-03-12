@@ -21,9 +21,9 @@ export const showOptions = dom.createElement('div', {
   classes: 'turtle-checkboxes',
   content: [
     dom.createElement('label', { content: [showCanvasInput, dom.createTextNode('Show canvas on run')] }),
+    dom.createElement('span', { content: [resetButton] }),
     dom.createElement('label', { content: [showOutputInput, dom.createTextNode('Show output on write')] }),
-    dom.createElement('label', { content: [showMemoryInput, dom.createTextNode('Show memory on dump')] }),
-    resetButton
+    dom.createElement('label', { content: [showMemoryInput, dom.createTextNode('Show memory on dump')] })
   ]
 })
 

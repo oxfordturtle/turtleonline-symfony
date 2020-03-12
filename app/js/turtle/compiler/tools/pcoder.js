@@ -137,88 +137,17 @@ export const callCommand = (command, routine, language) => {
   const program = find.program(routine)
 
   switch (command.code) {
-    case pc.newt:
-      return [pc.ldin, 0, pc.sptr]
-
+    // oldt is a special case, because it needs to know the original turtle address
     case pc.oldt:
       return [pc.ldin, program.turtleAddress, pc.ldin, 0, pc.sptr]
-
-    case pc.incr: // fallthrough
-    case pc.decr:
-      return [pc.dupl, pc.lptr, command.code, pc.swap, pc.sptr]
-
-    case pc.rndc:
-      return [pc.rand, pc.incr, pc.rgb, pc.colr]
-
-    case pc.rand:
-      switch (language) {
-        case 'BASIC':
-          return [pc.rand, pc.incr]
-
-        case 'Pascal':
-          return [pc.rand]
-
-        case 'Python':
-          return [pc.swap, pc.dupl, pc.rota, pc.incr, pc.swap, pc.subt, pc.rand, pc.plus]
-      }
-      break
-
-    case pc.texl:
-      return [pc.text, pc.newl]
-
-    case pc.uppc:
-      return [pc.ldin, 1, pc.case]
-
-    case pc.lowc:
-      return [pc.ldin, -1, pc.case]
-
-    case pc.lefs:
-      return [pc.ldin, 1, pc.swap, pc.copy]
-
-    case pc.rgts:
-      return [pc.swap, pc.dupl, pc.slen, pc.incr, pc.rota, pc.subt, pc.mxin, pc.copy]
-
-    case pc.inss:
-      switch (language) {
-        case 'BASIC': // fallthrough
-        case 'Python':
-          return [pc.rota, pc.rota, pc.inss]
-
-        case 'Pascal':
-          return [pc.inss]
-      }
-      break
-
-    case pc.poss:
-      switch (language) {
-        case 'BASIC': // fallthrough
-        case 'Python':
-          return [pc.swap, pc.poss]
-
-        case 'Pascal':
-          return [pc.poss]
-      }
-      break
-
-    case pc.svd0:
-      return [pc.ldin, 0, pc.sval]
-
-    case pc.bool: // Python only - covert -1 to 1
-      return [pc.abs]
-
-    case pc.ilin:
-      return [pc.text, pc.newl, pc.rdln]
-
-    case pc.bufr:
-      return [pc.bufr, pc.ldin, 1, pc.sptr, pc.hfix]
 
     // undefined means this is a custom command
     case undefined:
       return [pc.subr, command.startLine || `SUBR${command.index}`]
 
-    // anything else is a native command that just corresponds to a direct machine code
+    // anything else is a native command whose pcodes are defined in the commands module
     default:
-      return [command.code]
+      return command.code
   }
 }
 

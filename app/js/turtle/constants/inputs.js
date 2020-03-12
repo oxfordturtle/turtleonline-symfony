@@ -1,6 +1,6 @@
 /*
-An array of input codes.
-*/
+ * An array of input codes.
+ */
 export default [
   {
     names: { BASIC: '?KSHIFT', Pascal: '?kshift', Python: '?kshift' },

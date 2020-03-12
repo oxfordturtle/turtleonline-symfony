@@ -1,6 +1,6 @@
 /*
-An array of cursors.
-*/
+ * An array of cursors.
+ */
 export default [
   { index: 0x0, name: 'None', css: 'none' },
   { index: 0x1, name: 'Default', css: 'default' },

@@ -15,19 +15,26 @@ const outputLink = dom.createIconWithText('a', { icon: 'fa fa-align-left', text:
 const memoryLink = dom.createIconWithText('a', { icon: 'fa fa-memory', text: 'Machine Memory' })
 const optionsLink = dom.createIconWithText('a', { icon: 'fa fa-cogs', text: 'Runtime Options' })
 
+// group them
+const programLinks = [fileLink, codeLink, usageLink, lexemesLink, pcodeLink]
+const machineLinks = [canvasLink, outputLink, memoryLink, optionsLink]
+
+// create the headers
+const programHeader = dom.createIconWithText('span', { icon: 'fa fa-laptop-code', text: 'Program' })
+const machineHeader = dom.createIconWithText('span', { icon: 'fa fa-hdd', text: 'Machine' })
+
 // create the menu
 const menu = dom.createElement('nav', {
   classes: 'turtle-menu',
   content: [
-    fileLink,
-    codeLink,
-    usageLink,
-    lexemesLink,
-    pcodeLink,
-    canvasLink,
-    outputLink,
-    memoryLink,
-    optionsLink
+    dom.createElement('div', {
+      classes: 'turtle-sub-menu turtle-active',
+      content: [programHeader].concat(programLinks)
+    }),
+    dom.createElement('div', {
+      classes: 'turtle-sub-menu turtle-active',
+      content: [machineHeader].concat(machineLinks)
+    })
   ]
 })
 

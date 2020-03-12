@@ -1,11 +1,11 @@
 /*
-Getter and setter for system state variables.
-
-The system state is a load of variables, representing the current state of the system (not including
-the virtual machine, which for clarity has its own module). Getters and setters for these state
-variables are defined here. This module also initializes the variables and saves them to local
-storage, so that the state is maintained between sessions.
-*/
+ * Getter and setter for system state variables.
+ *
+ * The system state is a load of variables, representing the current state of the system (not including
+ * the virtual machine, which for clarity has its own module). Getters and setters for these state
+ * variables are defined here. This module also initializes the variables and saves them to local
+ * storage, so that the state is maintained between sessions.
+ */
 export function set (item, value) {
   const files = get('files')
   switch (item) {
