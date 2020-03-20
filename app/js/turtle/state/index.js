@@ -14,8 +14,8 @@
 import exampleNames from '../constants/exampleNames.js'
 import extensions from '../constants/extensions.js'
 import languages from '../constants/languages.js'
-import compile from '../compiler/compile.js'
-import lexer from '../compiler/lexer.js'
+import compile from '../compile/index.js'
+import lexer from '../compile/lexer/index.js'
 import { get, set } from './variables.js'
 import * as machine from './machine.js'
 

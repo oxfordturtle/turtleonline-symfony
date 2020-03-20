@@ -2,7 +2,7 @@
  * The program usage component.
  */
 import * as dom from './dom.js'
-import highlight from '../compiler/highlight.js'
+import highlight from '../compile/highlight.js'
 import { on } from '../state/index.js'
 
 // the usage table body

@@ -8,10 +8,10 @@
  * subroutines (with their variables and parameters) - lexemes for the program (and any subroutine)
  * code themselves are just stored for subsequent handling by the pcoder
 */
-import error from './tools/error.js'
-import BASIC from './parsers/basic.js'
-import Pascal from './parsers/pascal.js'
-import Python from './parsers/python.js'
+import error from '../tools/error.js'
+import BASIC from './basic.js'
+import Pascal from './pascal.js'
+import Python from './python.js'
 
 export default (lexemes, language) => {
   const parsers = { BASIC, Pascal, Python }

@@ -1,13 +1,11 @@
 /*
-tokenizer for Turtle Python
-
-splits code into lexemes and whitespace used by the code highlighting module and by the lexer
-*/
-
+ * tokenizer for Turtle Python
+ */
 import colours from '../../constants/colours.js'
 import commands from '../../constants/commands.js'
+import { Token } from './token.js'
 
-export default (code) => {
+export default function (code: string): Token[] {
   const tokens = []
   while (code.length > 0) {
     const token = linebreak(code) ||
@@ -36,37 +34,37 @@ export default (code) => {
 }
 
 // whitespace
-const linebreak = (code) => {
+function linebreak (code: string): Token|false {
   const test = (code[0] === '\n')
   return test ? { type: 'linebreak', content: '\n' } : false
 }
 
-const spaces = (code) => {
+function spaces (code: string): Token|false {
   const test = code.match(/^( +)/)
   return test ? { type: 'spaces', content: test[0] } : false
 }
 
 // comments
-const comment = (code) => {
+function comment (code: string): Token|false {
   const start = code.match(/^#/)
   if (start) return { type: 'comment', content: code.split('\n')[0] }
   return false
 }
 
 // punctuation
-const delimiter = (code) => {
+function delimiter (code: string): Token|false {
   const test = code.match(/^(\(|\)|,|;|:|->)/)
   return test ? { type: 'delimiter', content: test[0] } : false
 }
 
 // operators
-const operator = (code) => {
+function operator (code: string): Token|false {
   const test = code.match(/^(\+|-|\*|\/\/|\/|%|==|!=|<=|>=|=|<|>|~|&|\||\^|not\b|and\b|or\b)/)
   return test ? { type: 'operator', content: test[0] } : false
 }
 
 // string literals
-const string = (code) => {
+function string (code: string): Token|false {
   const start1 = code[0] === '\''
   const start2 = code[0] === '"'
   const end1 = code.match(/[^\\](')/)
@@ -79,13 +77,13 @@ const string = (code) => {
 }
 
 // boolean literals
-const boolean = (code) => {
+function boolean (code: string): Token|false {
   const test = code.match(/^(True|False)\b/)
   return test ? { type: 'boolean', content: test[0] } : false
 }
 
 // integer literals
-const binary = (code) => {
+function binary (code: string): Token|false {
   const good = code.match(/^(0b[01]+)\b/)
   const bad = code.match(/^(%[01]+)\b/)
   if (good) return { type: 'binary', content: good[0] }
@@ -93,7 +91,7 @@ const binary = (code) => {
   return false
 }
 
-const octal = (code) => {
+function octal (code: string): Token|false {
   const good = code.match(/^(0o[0-7]+)\b/)
   const bad = code.match(/^(&[0-7]+)\b/)
   if (good) return { type: 'octal', content: good[0] }
@@ -101,7 +99,7 @@ const octal = (code) => {
   return false
 }
 
-const hexadecimal = (code) => {
+function hexadecimal (code: string): Token|false {
   const good = code.match(/^(0x[A-Fa-f0-9]+)\b/)
   const bad = code.match(/^((&|#|\$)[A-Fa-f0-9]+)\b/)
   if (good) return { type: 'hexadecimal', content: good[0] }
@@ -109,7 +107,7 @@ const hexadecimal = (code) => {
   return false
 }
 
-const decimal = (code) => {
+function decimal (code: string): Token|false {
   const bad = code.match(/^(\d+\.\d+)/)
   const good = code.match(/^(\d+)\b/)
   if (bad) return { type: 'bad-decimal', content: bad[0] }
@@ -118,13 +116,13 @@ const decimal = (code) => {
 }
 
 // keywords
-const keyword = (code) => {
+function keyword (code: string): Token|false {
   const test = code.match(/^(def|elif|else|for|global|if|in|nonlocal|pass|return|while)\b/)
   return test ? { type: 'keyword', content: test[0] } : false
 }
 
 // native turtle commands
-const command = (code) => {
+function command (code: string): Token|false {
   const names = commands
     .reduce((x, y) => y.names.Python ? `${x}|${y.names.Python}` : x, '')
     .slice(1)
@@ -135,13 +133,13 @@ const command = (code) => {
 }
 
 // built-in turtle property variables
-const turtle = (code) => {
+function turtle (code: string): Token|false {
   const test = code.match(/^(turt[xydatc])\b/)
   return test ? { type: 'turtle', content: test[0] } : false
 }
 
 // native colour constants
-const colour = (code) => {
+function colour (code: string): Token|false {
   const names = colours
     .reduce((x, y) => `${x}|${y.names.Python}`, '')
     .slice(1)
@@ -151,23 +149,24 @@ const colour = (code) => {
 }
 
 // native keycode constants
-const keycode = (code) => {
+function keycode (code: string): Token|false {
   const test = code.match(/^(\\[#a-z0-9]+)/)
   return test ? { type: 'keycode', content: test[0] } : false
 }
 
 // native query codes
-const query = (code) => {
+function query (code: string): Token|false {
   const test = code.match(/^(\?[a-z]+)\b/)
   return test ? { type: 'query', content: test[0] } : false
 }
 
 // identifiers (i.e. variable, or subroutine names)
-const identifier = (code) => {
+function identifier (code: string): Token|false {
   const test = code.match(/^([_a-zA-Z][_a-zA-Z0-9]*)\b/)
   return test ? { type: 'identifier', content: test[0] } : false
 }
 
 // illegal (anything that isn't one of the above)
-const illegal = (code) =>
-  ({ type: 'illegal', content: code.split(/\b/)[0] })
+function illegal (code: string): Token {
+  return { type: 'illegal', content: code.split(/\b/)[0] }
+}

@@ -3,6 +3,24 @@ const WorkboxPlugin = require('workbox-webpack-plugin')
 
 module.exports = {
   entry: './app/js/index.js',
+  module: {
+    rules: [
+      {
+        test: /\.ts(x?)$/,
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: 'ts-loader'
+          }
+        ]
+      },
+      {
+        enforce: 'pre',
+        test: /\.js$/,
+        loader: 'source-map-loader'
+      }
+    ]
+  },
   output: {
     filename: 'index.js',
     path: path.resolve(__dirname, 'public')

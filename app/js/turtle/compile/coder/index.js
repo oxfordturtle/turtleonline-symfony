@@ -9,10 +9,10 @@
  * commands of the individual routines; this module pieces those results together, and wraps them up
  * in the appropriate routine start and end code
  */
-import * as pcoder from './tools/pcoder.js'
-import BASIC from './coders/basic.js'
-import Pascal from './coders/pascal.js'
-import Python from './coders/python.js'
+import * as pcoder from '../tools/pcoder.js'
+import BASIC from './basic.js'
+import Pascal from './pascal.js'
+import Python from './python.js'
 
 // the coder function - generates pcode from the array of routines
 export default (routines, language) => {

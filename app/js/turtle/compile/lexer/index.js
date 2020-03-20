@@ -14,8 +14,8 @@
  * corresponding integer for predefined colours, keycodes, and input queries, or the pcode associated
  * with an operator; it is null for all other lexical types
  */
-import error from './tools/error.js'
-import tokenizer from './tokenizer.js'
+import error from '../tools/error.js'
+import tokenizer from '../tokenizer/index.ts'
 
 export default (code, language) => {
   // run the tokenizer on the code, then setup some constants

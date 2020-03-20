@@ -10,10 +10,10 @@
  *
  * the compiler also generates command and structure usage data from the lexemes and subroutines
  */
-import analyser from './analyser.js'
-import lexer from './lexer.js'
-import parser from './parser.js'
-import coder from './coder.js'
+import analyser from './analyser/index.js'
+import lexer from './lexer/index.js'
+import parser from './parser/index.js'
+import coder from './coder/index.js'
 
 export default (code, language) => {
   // get lexemes from the code
