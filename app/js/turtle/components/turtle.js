@@ -9,7 +9,7 @@ const turtX = dom.createElement('span', { classes: 'turtle-value', content: '500
 const turtY = dom.createElement('span', { classes: 'turtle-value', content: '500' })
 const turtD = dom.createElement('span', { classes: 'turtle-value turtle-direction', content: '0' })
 const turtA = dom.createElement('span', { classes: 'turtle-value turtle-direction', content: '360' })
-const turtT = dom.createElement('span', { classes: 'turtle-value turtle-thickness', content: '2' })
+const turtP = dom.createElement('span', { classes: 'turtle-value turtle-pen', content: '2' })
 const turtC = dom.createElement('span', { classes: 'turtle-value turtle-colour', content: '0' })
 
 // the main display component (exported)
@@ -43,7 +43,7 @@ export default dom.createElement('div', {
       classes: 'turtle-property',
       content: [
         dom.createElement('span', { classes: 'turtle-label', content: '<i class="fa fa-pen"></i>' }),
-        turtT
+        turtP
       ]
     }),
     dom.createElement('div', {
@@ -73,8 +73,10 @@ on('turta-changed', function (a) {
   turtA.innerHTML = a.toString(10)
 })
 
-on('turtt-changed', function (t) {
-  turtT.innerHTML = t.toString(10)
+on('turtp-changed', function (p) {
+  const penup = (p < 0)
+  const thickness = Math.abs(p)
+  turtP.innerHTML = penup ? `(${thickness.toString(10)})` : thickness.toString(10)
 })
 
 on('turtc-changed', function (c) {

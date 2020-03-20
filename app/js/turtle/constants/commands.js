@@ -286,7 +286,7 @@ export default [
     returns: null,
     category: 3,
     level: 0,
-    description: 'Sets the <code>thickness</code> of the Turtle&rsquo;s pen (for line drawing, and outlines of circles, ellipses, boxes, and polygons). This can also be achieved by direct assignment of the global variable <code>turtt</code>.'
+    description: 'Sets the <code>thickness</code> of the Turtle&rsquo;s pen (for line drawing, and outlines of circles, ellipses, boxes, and polygons). This can also be achieved by direct assignment of the global variable <code>turtp</code>.'
   },
   {
     names: { BASIC: 'PENUP', Pascal: 'penup', Python: 'penup' },
@@ -365,7 +365,7 @@ export default [
     returns: null,
     category: 3,
     level: 2,
-    description: 'Points the Turtle to a custom array in memory (this must be an array of five integers, corresponding to the Turtle&rsquo;s five properties, <code>turtx</code>, <code>turty</code>, <code>turtd</code>, <code>turtt</code>, and <code>turtc</code>). Use repeatedly to simulate multiple Turtles.'
+    description: 'Points the Turtle to a custom array in memory (this must be an array of five integers, corresponding to the Turtle&rsquo;s five properties, <code>turtx</code>, <code>turty</code>, <code>turtd</code>, <code>turtp</code>, and <code>turtc</code>). Use repeatedly to simulate multiple Turtles.'
   },
   {
     names: { BASIC: 'OLDTURTLE', Pascal: 'oldturtle', Python: 'oldturtle' },

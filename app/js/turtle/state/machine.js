@@ -9,7 +9,7 @@ const turtxIndex = 1
 const turtyIndex = 2
 const turtdIndex = 3
 const turtaIndex = 4
-const turttIndex = 5
+const turtpIndex = 5
 const turtcIndex = 6
 
 // the canvas and its 2d drawing context
@@ -90,12 +90,11 @@ export function run (pcode, options) {
   reply('canvas', { startx: 0, starty: 0, sizex: 1000, sizey: 1000 })
   // setup runtime variables (global to this module)
   runtime.startTime = Date.now()
-  runtime.pendown = true
   runtime.update = true
   runtime.keyecho = true
   runtime.detect = null
   runtime.readline = null
-  runtime.randseed = null
+  runtime.seed = Date.now()
   // setup the machine status
   status.running = true
   status.paused = false
@@ -361,7 +360,9 @@ function preventDefault (event) {
 // execute a block of code
 function execute (pcode, line, code, options) {
   // don't do anything if we're not running
-  if (!status.running) return
+  if (!status.running) {
+    return
+  }
 
   // try again in 1 millisecond if the machine is paused
   if (status.paused) {
@@ -413,16 +414,18 @@ function execute (pcode, line, code, options) {
           stack.push(a - 1)
           break
 
-        case pc.shft:
-          halt()
-          throw error('SHFT is not yet implemented.')
-
         case pc.mxin:
           stack.push(Math.pow(2, 31) - 1)
           break
 
+        case pc.rand:
+          a = stack.pop()
+          stack.push(Math.floor(random() * Math.abs(a)))
+          break
+
         case pc.hstr:
-          // TODO
+          a = getHeapString(stack.pop())
+          makeHeapString(a)
           break
 
         case pc.ctos:
@@ -505,16 +508,26 @@ function execute (pcode, line, code, options) {
           stack.push(a ^ b)
           break
 
-        case pc.band:
+        case pc.andl:
           b = stack.pop()
           a = stack.pop()
           stack.push(a && b)
           break
 
-        case pc.bor:
+        case pc.orl:
           b = stack.pop()
           a = stack.pop()
           stack.push(a || b)
+          break
+
+        case pc.shft:
+          b = stack.pop()
+          a = stack.pop()
+          if (b < 0) {
+            stack.push(a << -b)
+          } else {
+            stack.push(a >> b)
+          }
           break
 
         case pc.neg:
@@ -566,11 +579,6 @@ function execute (pcode, line, code, options) {
           b = stack.pop()
           a = stack.pop()
           stack.push(a % b)
-          break
-
-        case pc.rand:
-          a = stack.pop()
-          stack.push(Math.floor(Math.random() * Math.abs(a)))
           break
 
         // 0x20s - comparison operators
@@ -805,26 +813,38 @@ function execute (pcode, line, code, options) {
           a = getHeapString(stack.pop())
           switch (b) {
             case 1:
+              // lowercase
               makeHeapString(a.toLowerCase())
               break
 
             case 2:
+              // uppercase
               makeHeapString(a.toUpperCase())
               break
 
             case 3:
-              // TODO: init caps
+              // capitalise first letter
+              if (a.length > 0) {
+                makeHeapString(a[0].toUpperCase() + a.slice(0))
+              } else {
+                makeHeapString(a)
+              }
               break
 
             case 4:
-              // TODO: title case
+              // capitalise first letter of each word
+              a = a.split(' ').map(x => x[0].toUpperCase() + x.slice(0)).join(' ')
+              makeHeapString(a)
               break
 
             case 5:
               // TODO: swap case
+              a = a.split('').map(x => (x === x.toLowerCase()) ? x.toUpperCase() : x.toLowerCase()).join('')
+              makeHeapString(a)
               break
 
             default:
+              // this should be impossible
               makeHeapString(a)
               break
           }
@@ -890,6 +910,11 @@ function execute (pcode, line, code, options) {
           makeHeapString(a)
           break
 
+        case pc.trim:
+          a = getHeapString(stack.pop())
+          makeHeapString(a.trim())
+          break
+
         // 0x50s - turtle settings and movement
         case pc.home:
           a = vcanvas.startx + (vcanvas.sizex / 2)
@@ -943,8 +968,12 @@ function execute (pcode, line, code, options) {
 
         case pc.thik:
           a = stack.pop()
-          memory[memory[0] + turttIndex] = a
-          reply('turtt-changed', a)
+          if ((a < 0) && (memory[memory[0] + turtpIndex] < 0)) {
+            // negative value reverses pen status
+            a = -a
+          }
+          memory[memory[0] + turtpIndex] = a
+          reply('turtp-changed', a)
           break
 
         case pc.colr:
@@ -954,8 +983,11 @@ function execute (pcode, line, code, options) {
           break
 
         case pc.pen:
-          a = (stack.pop() !== 0)
-          runtime.pendown = a
+          a = (stack.pop() !== 0) // pen up or down
+          b = Math.abs(memory[memory[0] + turtpIndex]) // current thickness
+          c = a ? b : -b // positive or negative depending on whether pen is down or up
+          memory[memory[0] + turtpIndex] = c
+          reply('turtp-changed', c)
           break
 
         case pc.toxy:
@@ -981,7 +1013,7 @@ function execute (pcode, line, code, options) {
         case pc.drxy:
           b = stack.pop() + memory[memory[0] + turtyIndex]
           a = stack.pop() + memory[memory[0] + turtxIndex]
-          if (runtime.pendown) {
+          if (memory[memory[0] + turtpIndex] > 0) {
             reply('line', { turtle: turtle(), x: turtx(a), y: turty(b) })
             if (runtime.update) {
               drawCount += 1
@@ -1005,7 +1037,7 @@ function execute (pcode, line, code, options) {
           a = Math.sin(d * Math.PI / (memory[memory[0] + turtaIndex] / 2))
           a = Math.round(a * c)
           a += memory[memory[0] + turtxIndex]
-          if (runtime.pendown) {
+          if (memory[memory[0] + turtpIndex] > 0) {
             reply('line', { turtle: turtle(), x: turtx(a), y: turty(b) })
             if (runtime.update) {
               drawCount += 1
@@ -1029,7 +1061,7 @@ function execute (pcode, line, code, options) {
           a = Math.sin(d * Math.PI / (memory[memory[0] + turtaIndex] / 2))
           a = -Math.round(a * c)
           a += memory[memory[0] + turtxIndex]
-          if (runtime.pendown) {
+          if (memory[memory[0] + turtpIndex] > 0) {
             reply('line', { turtle: turtle(), x: turtx(a), y: turty(b) })
             if (runtime.update) {
               drawCount += 1
@@ -1326,8 +1358,14 @@ function execute (pcode, line, code, options) {
           break
 
         case pc.test:
-          halt()
-          throw error('TEST is not yet implemented.')
+          b = stack[stack.length - 1] // leave the stack unchanged
+          a = stack[stack.length - 2]
+          if ((a < 0) || (a >= memory[b])) {
+            // TODO: make range check a runtime option
+            halt()
+            throw error('Array index out of range.')
+          }
+          break
 
         // 0x80s - flow control, memory control
         case pc.jump:
@@ -1476,10 +1514,10 @@ function execute (pcode, line, code, options) {
         case pc.seed:
           a = stack.pop()
           if (a === 0) {
-            // TODO: ask Peter what his "randomize" procedure does
-            stack.push(runtime.randseed)
+            stack.push(runtime.seed)
           } else {
-            runtime.randseed = a
+            runtime.seed = a
+            stack.push(a)
           }
           break
 
@@ -1876,7 +1914,7 @@ function turtle () {
     y: turty(memory[memory[0] + turtyIndex]),
     d: memory[memory[0] + turtdIndex],
     a: memory[memory[0] + turtaIndex],
-    t: turtt(memory[memory[0] + turttIndex]),
+    p: turtp(memory[memory[0] + turtpIndex]),
     c: hex(memory[memory[0] + turtcIndex])
   })
 }
@@ -1893,9 +1931,9 @@ function turty (y) {
   return vcanvas.doubled ? Math.round(exact) + 1 : Math.round(exact)
 }
 
-// convert turtt to virtual canvas thickness
-function turtt (t) {
-  return vcanvas.doubled ? t * 2 : t
+// convert turtp to virtual canvas thickness
+function turtp (p) {
+  return vcanvas.doubled ? p * 2 : p
 }
 
 // map turtle coordinates to virtual turtle coordinates
@@ -1930,4 +1968,10 @@ function mixBytes (byte1, byte2, proportion1, proportion2) {
 // padd a string with leading zeros
 function padded (string) {
   return ((string.length < 6) ? padded(`0${string}`) : string)
+}
+
+// generate a pseudo-random number
+function random () {
+  const x = Math.sin(runtime.seed++) * 10000
+  return x - Math.floor(x)
 }

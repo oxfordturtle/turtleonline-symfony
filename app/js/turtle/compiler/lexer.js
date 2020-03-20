@@ -272,7 +272,7 @@ const value = (type, content, language) => {
       return parseInt(content)
 
     case 'turtle':
-      return ['x', 'y', 'd', 't', 'c'].indexOf(content[4].toLowerCase()) + 1
+      return ['x', 'y', 'd', 'p', 'c'].indexOf(content[4].toLowerCase()) + 1
 
     default:
       return null

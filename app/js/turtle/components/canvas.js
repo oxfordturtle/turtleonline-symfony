@@ -119,7 +119,7 @@ on('line', function ({ turtle, x, y }) {
   context.moveTo(turtle.x, turtle.y)
   context.lineTo(x, y)
   context.lineCap = 'round'
-  context.lineWidth = turtle.t
+  context.lineWidth = Math.abs(turtle.p)
   context.strokeStyle = turtle.c
   context.stroke()
 })
@@ -140,7 +140,7 @@ on('poly', function ({ turtle, coords, fill }) {
     context.fill()
   } else {
     context.lineCap = 'round'
-    context.lineWidth = turtle.t
+    context.lineWidth = Math.abs(turtle.p)
     context.strokeStyle = turtle.c
     context.stroke()
   }
@@ -162,7 +162,7 @@ on('arc', function ({ turtle, x, y, fill }) {
     context.fillStyle = turtle.c
     context.fill()
   } else {
-    context.lineWidth = turtle.t
+    context.lineWidth = Math.abs(turtle.p)
     context.strokeStyle = turtle.c
     context.stroke()
   }
@@ -180,7 +180,7 @@ on('box', function ({ turtle, x, y, fill, border }) {
   context.fill()
   if (border) {
     context.lineCap = 'round'
-    context.lineWidth = turtle.t
+    context.lineWidth = Math.abs(turtle.p)
     context.strokeStyle = turtle.c
     context.stroke()
   }
