@@ -2,7 +2,7 @@
  * The program pcode component.
  */
 import * as dom from './dom.js'
-import pcodes from '../constants/pcodes.js'
+import { PCode, pcodeArgs } from '../definitions/pcodes.ts'
 import { send, on } from '../state/index.js'
 
 // radio options
@@ -70,11 +70,11 @@ function pcodeListItem (assembler, decimal, line) {
 
 // function to create an array of divs for assembler code from a line of PCode
 function assemble (line, index, decimal) {
-  const hit = pcodes[line[index]]
-  const pcode = hit ? [cell(hit.str)] : [cell(line[index], decimal)]
+  const hit = PCode[line[index]]
+  const pcode = hit ? [cell(hit.toUpperCase())] : [cell(line[index], decimal)]
   let args = 0
   if (hit) {
-    if (hit.args < 0) {
+    if (pcodeArgs(line[index]) < 0) {
       const length = line[index + 1]
       pcode.push(cell(length, decimal))
       args += 1
@@ -83,7 +83,7 @@ function assemble (line, index, decimal) {
         pcode.push(cell(String.fromCharCode(line[index + args])))
       }
     } else {
-      while (args < hit.args) {
+      while (args < pcodeArgs(line[index])) {
         args += 1
         pcode.push(cell(line[index + args], decimal))
       }

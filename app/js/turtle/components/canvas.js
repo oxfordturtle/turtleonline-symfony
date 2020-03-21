@@ -2,8 +2,8 @@
  * The machine canvas component.
  */
 import * as dom from './dom.js'
-import cursors from '../constants/cursors.js'
-import fonts from '../constants/fonts.js'
+import { cursors } from '../definitions/cursors.ts'
+import { fonts } from '../definitions/fonts.ts'
 import { send, on } from '../state/machine.js'
 
 // the canvas element and its 2d drawing context

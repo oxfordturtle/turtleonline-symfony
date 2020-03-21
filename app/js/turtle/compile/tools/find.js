@@ -1,9 +1,9 @@
 /*
 functions to find various things
 */
-import colours from '../../constants/colours.js'
-import inputs from '../../constants/inputs.js'
-import commands from '../../constants/commands.js'
+import { colours } from '../../definitions/colours.ts'
+import { inputs } from '../../definitions/inputs.ts'
+import { commands } from '../../definitions/commands.ts'
 
 // get the main program from a routine
 export const program = (routine) =>

@@ -2,7 +2,7 @@
 evaluate a sequence of lexemes (to get the value of a constant)
 */
 import error from './error.js'
-import colours from '../../constants/colours.js'
+import { colours } from '../../definitions/colours.ts'
 
 export default (identifier, lexemes, program) => {
   try {

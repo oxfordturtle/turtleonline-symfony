@@ -11,9 +11,9 @@
  * than a state change); messages are things sent by this module indicating a successful state change,
  * including also the new values of any relevant state variables.
  */
-import exampleNames from '../constants/exampleNames.js'
-import extensions from '../constants/extensions.js'
-import languages from '../constants/languages.js'
+import exampleNames from '../definitions/exampleNames.js'
+import extensions from '../definitions/extensions.js'
+import { languages } from '../definitions/languages.ts'
 import compile from '../compile/index.js'
 import lexer from '../compile/lexer/index.js'
 import { get, set } from './variables.js'

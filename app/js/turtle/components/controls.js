@@ -2,7 +2,7 @@
  * The system control bar.
  */
 import * as dom from './dom.js'
-import languages from '../constants/languages.js'
+import { languages } from '../definitions/languages.ts'
 import { send, on } from '../state/index.js'
 import * as machine from '../state/machine.js'
 

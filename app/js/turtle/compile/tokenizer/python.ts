@@ -1,8 +1,8 @@
 /*
  * tokenizer for Turtle Python
  */
-import colours from '../../constants/colours.js'
-import commands from '../../constants/commands.js'
+import { colours } from '../../definitions/colours.ts'
+import { commands } from '../../definitions/commands.ts'
 import { Token } from './token.js'
 
 export default function (code: string): Token[] {

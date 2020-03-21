@@ -1,8 +1,8 @@
 /*
  * The Virtual Turtle Machine.
  */
-import colours from '../constants/colours.js'
-import pc from '../constants/pc.js'
+import { colours } from '../definitions/colours.ts'
+import { PCode } from '../definitions/pcodes.ts'
 
 // machine constants
 const turtxIndex = 1
@@ -383,57 +383,57 @@ function execute (pcode, line, code, options) {
     while (drawCount < options.drawCountMax && (codeCount <= options.codeCountMax)) {
       switch (pcode[line][code]) {
         // 0x0 - basic stack operations, conversion operators
-        case pc.null:
+        case PCode.null:
           break
 
-        case pc.dupl:
+        case PCode.dupl:
           a = stack.pop()
           stack.push(a, a)
           break
 
-        case pc.swap:
+        case PCode.swap:
           b = stack.pop()
           a = stack.pop()
           stack.push(b, a)
           break
 
-        case pc.rota:
+        case PCode.rota:
           c = stack.pop()
           b = stack.pop()
           a = stack.pop()
           stack.push(b, c, a)
           break
 
-        case pc.incr:
+        case PCode.incr:
           a = stack.pop()
           stack.push(a + 1)
           break
 
-        case pc.decr:
+        case PCode.decr:
           a = stack.pop()
           stack.push(a - 1)
           break
 
-        case pc.mxin:
+        case PCode.mxin:
           stack.push(Math.pow(2, 31) - 1)
           break
 
-        case pc.rand:
+        case PCode.rand:
           a = stack.pop()
           stack.push(Math.floor(random() * Math.abs(a)))
           break
 
-        case pc.hstr:
+        case PCode.hstr:
           a = getHeapString(stack.pop())
           makeHeapString(a)
           break
 
-        case pc.ctos:
+        case PCode.ctos:
           a = stack.pop()
           makeHeapString(String.fromCharCode(a))
           break
 
-        case pc.sasc:
+        case PCode.sasc:
           a = getHeapString(stack.pop())
           if (a.length === 0) {
             stack.push(0)
@@ -442,12 +442,12 @@ function execute (pcode, line, code, options) {
           }
           break
 
-        case pc.itos:
+        case PCode.itos:
           a = stack.pop()
           makeHeapString(a.toString())
           break
 
-        case pc.hexs:
+        case PCode.hexs:
           b = stack.pop()
           a = stack.pop().toString(16).toUpperCase()
           while (a.length < b) {
@@ -456,7 +456,7 @@ function execute (pcode, line, code, options) {
           makeHeapString(a)
           break
 
-        case pc.sval:
+        case PCode.sval:
           c = stack.pop()
           b = stack.pop()
           a = getHeapString(b)
@@ -468,7 +468,7 @@ function execute (pcode, line, code, options) {
           stack.push(d)
           break
 
-        case pc.qtos:
+        case PCode.qtos:
           d = stack.pop()
           c = stack.pop()
           b = stack.pop()
@@ -476,7 +476,7 @@ function execute (pcode, line, code, options) {
           makeHeapString(a.toFixed(d))
           break
 
-        case pc.qval:
+        case PCode.qval:
           c = stack.pop()
           b = stack.pop()
           a = getHeapString(stack.pop())
@@ -485,42 +485,42 @@ function execute (pcode, line, code, options) {
           break
 
         // 0x10s - Boolean operators, integer operators
-        case pc.not:
+        case PCode.not:
           a = stack.pop()
           stack.push(~a)
           break
 
-        case pc.and:
+        case PCode.and:
           b = stack.pop()
           a = stack.pop()
           stack.push(a & b)
           break
 
-        case pc.or:
+        case PCode.or:
           b = stack.pop()
           a = stack.pop()
           stack.push(a | b)
           break
 
-        case pc.xor:
+        case PCode.xor:
           b = stack.pop()
           a = stack.pop()
           stack.push(a ^ b)
           break
 
-        case pc.andl:
+        case PCode.andl:
           b = stack.pop()
           a = stack.pop()
           stack.push(a && b)
           break
 
-        case pc.orl:
+        case PCode.orl:
           b = stack.pop()
           a = stack.pop()
           stack.push(a || b)
           break
 
-        case pc.shft:
+        case PCode.shft:
           b = stack.pop()
           a = stack.pop()
           if (b < 0) {
@@ -530,176 +530,176 @@ function execute (pcode, line, code, options) {
           }
           break
 
-        case pc.neg:
+        case PCode.neg:
           a = stack.pop()
           stack.push(-a)
           break
 
-        case pc.abs:
+        case PCode.abs:
           a = stack.pop()
           stack.push(Math.abs(a))
           break
 
-        case pc.sign:
+        case PCode.sign:
           a = stack.pop()
           stack.push(Math.sign(a))
           break
 
-        case pc.plus:
+        case PCode.plus:
           b = stack.pop()
           a = stack.pop()
           stack.push(a + b)
           break
 
-        case pc.subt:
+        case PCode.subt:
           b = stack.pop()
           a = stack.pop()
           stack.push(a - b)
           break
 
-        case pc.mult:
+        case PCode.mult:
           b = stack.pop()
           a = stack.pop()
           stack.push(a * b)
           break
 
-        case pc.divr:
+        case PCode.divr:
           b = stack.pop()
           a = stack.pop()
           stack.push(Math.round(a / b))
           break
 
-        case pc.div:
+        case PCode.div:
           b = stack.pop()
           a = stack.pop()
           stack.push(Math.floor(a / b))
           break
 
-        case pc.mod:
+        case PCode.mod:
           b = stack.pop()
           a = stack.pop()
           stack.push(a % b)
           break
 
         // 0x20s - comparison operators
-        case pc.eqal:
+        case PCode.eqal:
           b = stack.pop()
           a = stack.pop()
           stack.push(a === b ? -1 : 0)
           break
 
-        case pc.noeq:
+        case PCode.noeq:
           b = stack.pop()
           a = stack.pop()
           stack.push(a !== b ? -1 : 0)
           break
 
-        case pc.less:
+        case PCode.less:
           b = stack.pop()
           a = stack.pop()
           stack.push(a < b ? -1 : 0)
           break
 
-        case pc.more:
+        case PCode.more:
           b = stack.pop()
           a = stack.pop()
           stack.push(a > b ? -1 : 0)
           break
 
-        case pc.lseq:
+        case PCode.lseq:
           b = stack.pop()
           a = stack.pop()
           stack.push(a <= b ? -1 : 0)
           break
 
-        case pc.mreq:
+        case PCode.mreq:
           b = stack.pop()
           a = stack.pop()
           stack.push(a >= b ? -1 : 0)
           break
 
-        case pc.maxi:
+        case PCode.maxi:
           b = stack.pop()
           a = stack.pop()
           stack.push(Math.max(a, b))
           break
 
-        case pc.mini:
+        case PCode.mini:
           b = stack.pop()
           a = stack.pop()
           stack.push(Math.min(a, b))
           break
 
-        case pc.seql:
+        case PCode.seql:
           b = getHeapString(stack.pop())
           a = getHeapString(stack.pop())
           stack.push(a === b ? -1 : 0)
           break
 
-        case pc.sneq:
+        case PCode.sneq:
           b = getHeapString(stack.pop())
           a = getHeapString(stack.pop())
           stack.push(a !== b ? -1 : 0)
           break
 
-        case pc.sles:
+        case PCode.sles:
           b = getHeapString(stack.pop())
           a = getHeapString(stack.pop())
           stack.push(a < b ? -1 : 0)
           break
 
-        case pc.smor:
+        case PCode.smor:
           b = getHeapString(stack.pop())
           a = getHeapString(stack.pop())
           stack.push(a > b ? -1 : 0)
           break
 
-        case pc.sleq:
+        case PCode.sleq:
           b = getHeapString(stack.pop())
           a = getHeapString(stack.pop())
           stack.push(a <= b ? -1 : 0)
           break
 
-        case pc.smeq:
+        case PCode.smeq:
           b = getHeapString(stack.pop())
           a = getHeapString(stack.pop())
           stack.push(a >= b ? -1 : 0)
           break
 
-        case pc.smax:
+        case PCode.smax:
           b = getHeapString(stack.pop())
           a = getHeapString(stack.pop())
           makeHeapString(Math.max(a, b))
           break
 
-        case pc.smin:
+        case PCode.smin:
           b = getHeapString(stack.pop())
           a = getHeapString(stack.pop())
           makeHeapString(Math.min(a, b))
           break
 
         // 0x30s - pseudo-real operators
-        case pc.divm:
+        case PCode.divm:
           c = stack.pop()
           b = stack.pop()
           a = stack.pop()
           stack.push(Math.round((a / b) * c))
           break
 
-        case pc.sqrt:
+        case PCode.sqrt:
           b = stack.pop()
           a = stack.pop()
           stack.push(Math.round(Math.sqrt(a) * b))
           break
 
-        case pc.hyp:
+        case PCode.hyp:
           c = stack.pop()
           b = stack.pop()
           a = stack.pop()
           stack.push(Math.round(Math.sqrt((a * a) + (b * b)) * c))
           break
 
-        case pc.root:
+        case PCode.root:
           d = stack.pop()
           c = stack.pop()
           b = stack.pop()
@@ -707,7 +707,7 @@ function execute (pcode, line, code, options) {
           stack.push(Math.round(Math.pow(a / b, 1 / c) * d))
           break
 
-        case pc.powr:
+        case PCode.powr:
           d = stack.pop()
           c = stack.pop()
           b = stack.pop()
@@ -715,35 +715,35 @@ function execute (pcode, line, code, options) {
           stack.push(Math.round(Math.pow(a / b, c) * d))
           break
 
-        case pc.log:
+        case PCode.log:
           c = stack.pop()
           b = stack.pop()
           a = stack.pop()
           stack.push(Math.round((Math.log(a / b) / Math.LN10) * c))
           break
 
-        case pc.alog:
+        case PCode.alog:
           c = stack.pop()
           b = stack.pop()
           a = stack.pop()
           stack.push(Math.round(Math.pow(10, a / b) * c))
           break
 
-        case pc.ln:
+        case PCode.ln:
           c = stack.pop()
           b = stack.pop()
           a = stack.pop()
           stack.push(Math.round(Math.log(a / b) * c))
           break
 
-        case pc.exp:
+        case PCode.exp:
           c = stack.pop()
           b = stack.pop()
           a = stack.pop()
           stack.push(Math.round(Math.exp(a / b) * c))
           break
 
-        case pc.sin:
+        case PCode.sin:
           d = stack.pop()
           c = stack.pop()
           b = stack.pop()
@@ -751,7 +751,7 @@ function execute (pcode, line, code, options) {
           stack.push(Math.round(Math.sin(a) * d))
           break
 
-        case pc.cos:
+        case PCode.cos:
           d = stack.pop()
           c = stack.pop()
           b = stack.pop()
@@ -759,7 +759,7 @@ function execute (pcode, line, code, options) {
           stack.push(Math.round(Math.cos(a) * d))
           break
 
-        case pc.tan:
+        case PCode.tan:
           d = stack.pop()
           c = stack.pop()
           b = stack.pop()
@@ -767,7 +767,7 @@ function execute (pcode, line, code, options) {
           stack.push(Math.round(Math.tan(a) * d))
           break
 
-        case pc.asin:
+        case PCode.asin:
           d = stack.pop()
           c = stack.pop()
           b = stack.pop()
@@ -775,7 +775,7 @@ function execute (pcode, line, code, options) {
           stack.push(Math.round(Math.asin(b / c) * d * a))
           break
 
-        case pc.acos:
+        case PCode.acos:
           d = stack.pop()
           c = stack.pop()
           b = stack.pop()
@@ -783,7 +783,7 @@ function execute (pcode, line, code, options) {
           stack.push(Math.round(Math.acos(b / c) * d * a))
           break
 
-        case pc.atan:
+        case PCode.atan:
           d = stack.pop()
           c = stack.pop()
           b = stack.pop()
@@ -791,24 +791,24 @@ function execute (pcode, line, code, options) {
           stack.push(Math.round(Math.atan2(b, c) * d * a))
           break
 
-        case pc.pi:
+        case PCode.pi:
           a = stack.pop()
           stack.push(Math.round(Math.PI * a))
           break
 
         // 0x40s - string operators
-        case pc.scat:
+        case PCode.scat:
           b = getHeapString(stack.pop())
           a = getHeapString(stack.pop())
           makeHeapString(a + b)
           break
 
-        case pc.slen:
+        case PCode.slen:
           a = getHeapString(stack.pop())
           stack.push(a.length)
           break
 
-        case pc.case:
+        case PCode.case:
           b = stack.pop()
           a = getHeapString(stack.pop())
           switch (b) {
@@ -850,14 +850,14 @@ function execute (pcode, line, code, options) {
           }
           break
 
-        case pc.copy:
+        case PCode.copy:
           c = stack.pop()
           b = stack.pop()
           a = getHeapString(stack.pop())
           makeHeapString(a.substr(b - 1, c))
           break
 
-        case pc.dels:
+        case PCode.dels:
           d = stack.pop()
           c = stack.pop()
           b = getHeapString(stack.pop())
@@ -865,7 +865,7 @@ function execute (pcode, line, code, options) {
           makeHeapString(a)
           break
 
-        case pc.inss:
+        case PCode.inss:
           d = stack.pop()
           c = getHeapString(stack.pop())
           b = getHeapString(stack.pop())
@@ -873,13 +873,13 @@ function execute (pcode, line, code, options) {
           makeHeapString(a)
           break
 
-        case pc.poss:
+        case PCode.poss:
           b = getHeapString(stack.pop())
           a = getHeapString(stack.pop())
           stack.push(b.indexOf(a) + 1)
           break
 
-        case pc.repl:
+        case PCode.repl:
           d = stack.pop()
           c = getHeapString(stack.pop())
           b = getHeapString(stack.pop())
@@ -895,7 +895,7 @@ function execute (pcode, line, code, options) {
           }
           break
 
-        case pc.spad:
+        case PCode.spad:
           d = stack.pop()
           c = Math.abs(d)
           b = getHeapString(stack.pop())
@@ -910,13 +910,13 @@ function execute (pcode, line, code, options) {
           makeHeapString(a)
           break
 
-        case pc.trim:
+        case PCode.trim:
           a = getHeapString(stack.pop())
           makeHeapString(a.trim())
           break
 
         // 0x50s - turtle settings and movement
-        case pc.home:
+        case PCode.home:
           a = vcanvas.startx + (vcanvas.sizex / 2)
           b = vcanvas.starty + (vcanvas.sizey / 2)
           memory[memory[0] + turtxIndex] = Math.round(a)
@@ -928,27 +928,27 @@ function execute (pcode, line, code, options) {
           coords.push([memory[memory[0] + turtxIndex], memory[memory[0] + turtyIndex]])
           break
 
-        case pc.setx:
+        case PCode.setx:
           a = stack.pop()
           memory[memory[0] + turtxIndex] = a
           reply('turtx-changed', a)
           coords.push([memory[memory[0] + turtxIndex], memory[memory[0] + turtyIndex]])
           break
 
-        case pc.sety:
+        case PCode.sety:
           a = stack.pop()
           memory[memory[0] + turtyIndex] = a
           reply('turty-changed', a)
           coords.push([memory[memory[0] + turtxIndex], memory[memory[0] + turtyIndex]])
           break
 
-        case pc.setd:
+        case PCode.setd:
           a = stack.pop() % memory[memory[0] + turtaIndex]
           memory[memory[0] + turtdIndex] = a
           reply('turtd-changed', a)
           break
 
-        case pc.angl:
+        case PCode.angl:
           a = stack.pop()
           if (memory[memory[0] + turtaIndex] === 0) {
             // this should only happen at the start of the program before angles is set for the first time
@@ -966,7 +966,7 @@ function execute (pcode, line, code, options) {
           reply('turta-changed', a)
           break
 
-        case pc.thik:
+        case PCode.thik:
           a = stack.pop()
           if ((a < 0) && (memory[memory[0] + turtpIndex] < 0)) {
             // negative value reverses pen status
@@ -976,13 +976,13 @@ function execute (pcode, line, code, options) {
           reply('turtp-changed', a)
           break
 
-        case pc.colr:
+        case PCode.colr:
           a = stack.pop()
           memory[memory[0] + turtcIndex] = a
           reply('turtc-changed', hex(a))
           break
 
-        case pc.pen:
+        case PCode.pen:
           a = (stack.pop() !== 0) // pen up or down
           b = Math.abs(memory[memory[0] + turtpIndex]) // current thickness
           c = a ? b : -b // positive or negative depending on whether pen is down or up
@@ -990,7 +990,7 @@ function execute (pcode, line, code, options) {
           reply('turtp-changed', c)
           break
 
-        case pc.toxy:
+        case PCode.toxy:
           b = stack.pop()
           a = stack.pop()
           memory[memory[0] + turtxIndex] = a
@@ -1000,7 +1000,7 @@ function execute (pcode, line, code, options) {
           coords.push([a, b])
           break
 
-        case pc.mvxy:
+        case PCode.mvxy:
           b = stack.pop() + memory[memory[0] + turtyIndex]
           a = stack.pop() + memory[memory[0] + turtxIndex]
           memory[memory[0] + turtxIndex] = a
@@ -1010,7 +1010,7 @@ function execute (pcode, line, code, options) {
           coords.push([a, b])
           break
 
-        case pc.drxy:
+        case PCode.drxy:
           b = stack.pop() + memory[memory[0] + turtyIndex]
           a = stack.pop() + memory[memory[0] + turtxIndex]
           if (memory[memory[0] + turtpIndex] > 0) {
@@ -1026,7 +1026,7 @@ function execute (pcode, line, code, options) {
           coords.push([a, b])
           break
 
-        case pc.fwrd:
+        case PCode.fwrd:
           c = stack.pop() // distance
           d = memory[memory[0] + turtdIndex] // turtle direction
           // work out final y coordinate
@@ -1050,7 +1050,7 @@ function execute (pcode, line, code, options) {
           coords.push([a, b])
           break
 
-        case pc.back:
+        case PCode.back:
           c = stack.pop() // distance
           d = memory[memory[0] + turtdIndex] // turtle direction
           // work out final y coordinate
@@ -1074,19 +1074,19 @@ function execute (pcode, line, code, options) {
           coords.push([a, b])
           break
 
-        case pc.left:
+        case PCode.left:
           a = (memory[memory[0] + turtdIndex] - stack.pop()) % memory[memory[0] + turtaIndex]
           memory[memory[0] + turtdIndex] = a
           reply('turtd-changed', a)
           break
 
-        case pc.rght:
+        case PCode.rght:
           a = (memory[memory[0] + turtdIndex] + stack.pop()) % memory[memory[0] + turtaIndex]
           memory[memory[0] + turtdIndex] = a
           reply('turtd-changed', a)
           break
 
-        case pc.turn:
+        case PCode.turn:
           b = stack.pop()
           a = stack.pop()
           if (Math.abs(b) >= Math.abs(a)) {
@@ -1113,7 +1113,7 @@ function execute (pcode, line, code, options) {
           break
 
         // 0x60s - colour operators, shapes and fills
-        case pc.blnk:
+        case PCode.blnk:
           a = stack.pop()
           reply('blank', hex(a))
           if (runtime.update) {
@@ -1121,7 +1121,7 @@ function execute (pcode, line, code, options) {
           }
           break
 
-        case pc.rcol:
+        case PCode.rcol:
           c = stack.pop()
           b = stack.pop()
           a = stack.pop()
@@ -1131,7 +1131,7 @@ function execute (pcode, line, code, options) {
           }
           break
 
-        case pc.fill:
+        case PCode.fill:
           d = stack.pop()
           c = stack.pop()
           b = stack.pop()
@@ -1142,14 +1142,14 @@ function execute (pcode, line, code, options) {
           }
           break
 
-        case pc.pixc:
+        case PCode.pixc:
           c = stack.pop()
           b = stack.pop()
           a = context.getImageData(turtx(b), turty(c), 1, 1)
           stack.push((a.data[0] * 65536) + (a.data[1] * 256) + a.data[2])
           break
 
-        case pc.pixs:
+        case PCode.pixs:
           c = stack.pop()
           b = stack.pop()
           a = stack.pop()
@@ -1159,7 +1159,7 @@ function execute (pcode, line, code, options) {
           }
           break
 
-        case pc.rgb:
+        case PCode.rgb:
           a = stack.pop()
           a = a % 50
           if (a <= 0) a += 50
@@ -1167,7 +1167,7 @@ function execute (pcode, line, code, options) {
           stack.push(a)
           break
 
-        case pc.mixc:
+        case PCode.mixc:
           d = stack.pop() // second proportion
           c = stack.pop() // first proportion
           b = stack.pop() // second colour
@@ -1178,15 +1178,15 @@ function execute (pcode, line, code, options) {
           stack.push((e * 0x10000) + (f * 0x100) + g)
           break
 
-        case pc.rmbr:
+        case PCode.rmbr:
           coords.push([memory[memory[0] + turtxIndex], memory[memory[0] + turtyIndex]])
           break
 
-        case pc.frgt:
+        case PCode.frgt:
           coords.length -= stack.pop()
           break
 
-        case pc.poly:
+        case PCode.poly:
           c = stack.pop()
           b = coords.length
           a = (c > b) ? 0 : b - c
@@ -1196,7 +1196,7 @@ function execute (pcode, line, code, options) {
           }
           break
 
-        case pc.pfil:
+        case PCode.pfil:
           c = stack.pop()
           b = coords.length
           a = (c > b) ? 0 : b - c
@@ -1206,7 +1206,7 @@ function execute (pcode, line, code, options) {
           }
           break
 
-        case pc.circ:
+        case PCode.circ:
           a = stack.pop()
           reply('arc', { turtle: turtle(), x: turtx(a + vcanvas.startx), y: turty(a + vcanvas.starty), fill: false })
           if (runtime.update) {
@@ -1214,7 +1214,7 @@ function execute (pcode, line, code, options) {
           }
           break
 
-        case pc.blot:
+        case PCode.blot:
           a = stack.pop()
           reply('arc', { turtle: turtle(), x: turtx(a + vcanvas.startx), y: turty(a + vcanvas.starty), fill: true })
           if (runtime.update) {
@@ -1222,7 +1222,7 @@ function execute (pcode, line, code, options) {
           }
           break
 
-        case pc.elps:
+        case PCode.elps:
           b = stack.pop()
           a = stack.pop()
           reply('arc', { turtle: turtle(), x: turtx(a + vcanvas.startx), y: turty(b + vcanvas.starty), fill: false })
@@ -1231,7 +1231,7 @@ function execute (pcode, line, code, options) {
           }
           break
 
-        case pc.eblt:
+        case PCode.eblt:
           b = stack.pop()
           a = stack.pop()
           reply('arc', { turtle: turtle(), x: turtx(a + vcanvas.startx), y: turty(b + vcanvas.starty), fill: true })
@@ -1240,7 +1240,7 @@ function execute (pcode, line, code, options) {
           }
           break
 
-        case pc.box:
+        case PCode.box:
           d = (stack.pop() !== 0) // border
           c = stack.pop() // fill colour
           b = memory[memory[0] + turtyIndex] + stack.pop() // end y coordinate
@@ -1252,46 +1252,46 @@ function execute (pcode, line, code, options) {
           break
 
         // 0x70s - loading from stack, storing from stack, pointer and array operations
-        case pc.ldin:
+        case PCode.ldin:
           a = pcode[line][code + 1]
           stack.push(a)
           code += 1
           break
 
-        case pc.ldvg:
+        case PCode.ldvg:
           a = pcode[line][code + 1]
           stack.push(memory[a])
           code += 1
           break
 
-        case pc.ldvv:
+        case PCode.ldvv:
           a = pcode[line][code + 1]
           b = pcode[line][code + 2]
           stack.push(memory[memory[a] + b])
           code += 2
           break
 
-        case pc.ldvr:
+        case PCode.ldvr:
           a = pcode[line][code + 1]
           b = pcode[line][code + 2]
           stack.push(memory[memory[memory[a] + b]])
           code += 2
           break
 
-        case pc.ldag:
+        case PCode.ldag:
           a = pcode[line][code + 1]
           stack.push(a)
           code += 1
           break
 
-        case pc.ldav:
+        case PCode.ldav:
           a = pcode[line][code + 1]
           b = pcode[line][code + 2]
           stack.push(memory[a] + b)
           code += 2
           break
 
-        case pc.lstr:
+        case PCode.lstr:
           code += 1
           a = pcode[line][code] // length of the string
           b = code + a // end of the string
@@ -1303,13 +1303,13 @@ function execute (pcode, line, code, options) {
           makeHeapString(c)
           break
 
-        case pc.stvg:
+        case PCode.stvg:
           a = stack.pop()
           memory[pcode[line][code + 1]] = a
           code += 1
           break
 
-        case pc.stvv:
+        case PCode.stvv:
           a = pcode[line][code + 1]
           b = pcode[line][code + 2]
           c = stack.pop()
@@ -1317,7 +1317,7 @@ function execute (pcode, line, code, options) {
           code += 2
           break
 
-        case pc.stvr:
+        case PCode.stvr:
           a = pcode[line][code + 1]
           b = pcode[line][code + 2]
           c = stack.pop()
@@ -1325,31 +1325,31 @@ function execute (pcode, line, code, options) {
           code += 2
           break
 
-        case pc.lptr:
+        case PCode.lptr:
           a = stack.pop()
           stack.push(memory[a])
           break
 
-        case pc.sptr:
+        case PCode.sptr:
           b = stack.pop()
           a = stack.pop()
           memory[b] = a
           break
 
-        case pc.zptr:
+        case PCode.zptr:
           b = stack.pop()
           a = stack.pop()
           zero(a, b)
           break
 
-        case pc.cptr:
+        case PCode.cptr:
           c = stack.pop() // length
           b = stack.pop() // target
           a = stack.pop() // source
           copy(a, b, c)
           break
 
-        case pc.cstr:
+        case PCode.cstr:
           b = stack.pop() // target
           a = stack.pop() // source
           d = memory[b - 1] // maximum length of target
@@ -1357,7 +1357,7 @@ function execute (pcode, line, code, options) {
           copy(a, b, Math.min(c, d) + 1)
           break
 
-        case pc.test:
+        case PCode.test:
           b = stack[stack.length - 1] // leave the stack unchanged
           a = stack[stack.length - 2]
           if ((a < 0) || (a >= memory[b])) {
@@ -1368,12 +1368,12 @@ function execute (pcode, line, code, options) {
           break
 
         // 0x80s - flow control, memory control
-        case pc.jump:
+        case PCode.jump:
           line = pcode[line][code + 1] - 1
           code = -1
           break
 
-        case pc.ifno:
+        case PCode.ifno:
           if (stack.pop() === 0) {
             line = pcode[line][code + 1] - 1
             code = -1
@@ -1382,11 +1382,11 @@ function execute (pcode, line, code, options) {
           }
           break
 
-        case pc.halt:
+        case PCode.halt:
           halt()
           return
 
-        case pc.subr:
+        case PCode.subr:
           if (markers.heapGlobal === -1) {
             markers.heapGlobal = markers.heapPerm
           }
@@ -1395,41 +1395,41 @@ function execute (pcode, line, code, options) {
           code = -1
           break
 
-        case pc.retn:
+        case PCode.retn:
           line = returnStack.pop()
           code = -1
           break
 
-        case pc.pssr:
+        case PCode.pssr:
           subroutineStack.push(pcode[line][code + 1])
           code += 1
           break
 
-        case pc.plsr:
+        case PCode.plsr:
           subroutineStack.pop()
           break
 
-        case pc.psrj:
+        case PCode.psrj:
           stack.push(line + 1)
           break
 
-        case pc.plrj:
+        case PCode.plrj:
           returnStack.pop()
           line = (stack.pop() - 1)
           code = -1
           break
 
-        case pc.ldmt:
+        case PCode.ldmt:
           stack.push(memoryStack.length - 1)
           break
 
-        case pc.stmt:
+        case PCode.stmt:
           a = stack.pop()
           memoryStack.push(a)
           markers.stackTop = Math.max(a, markers.stackTop)
           break
 
-        case pc.memc:
+        case PCode.memc:
           a = pcode[line][code + 1]
           b = pcode[line][code + 2]
           c = memoryStack.pop()
@@ -1446,7 +1446,7 @@ function execute (pcode, line, code, options) {
           code += 2
           break
 
-        case pc.memr:
+        case PCode.memr:
           memoryStack.pop()
           a = pcode[line][code + 1]
           b = memoryStack.pop()
@@ -1456,15 +1456,15 @@ function execute (pcode, line, code, options) {
           code += 2
           break
 
-        case pc.hfix:
+        case PCode.hfix:
           markers.heapPerm = markers.heapTemp
           break
 
-        case pc.hclr:
+        case PCode.hclr:
           markers.heapTemp = markers.heapPerm
           break
 
-        case pc.hrst:
+        case PCode.hrst:
           if (markers.heapGlobal > -1) {
             markers.heapTemp = markers.heapGlobal
             markers.heapPerm = markers.heapGlobal
@@ -1472,7 +1472,7 @@ function execute (pcode, line, code, options) {
           break
 
         // 0x90s - runtime variables, debugging
-        case pc.canv:
+        case PCode.canv:
           vcanvas.sizey = stack.pop()
           vcanvas.sizex = stack.pop()
           vcanvas.starty = stack.pop()
@@ -1488,7 +1488,7 @@ function execute (pcode, line, code, options) {
           drawCount = options.drawCountMax // force runtime.update
           break
 
-        case pc.reso:
+        case PCode.reso:
           b = stack.pop()
           a = stack.pop()
           if (Math.min(a, b) <= options.smallSize) {
@@ -1503,7 +1503,7 @@ function execute (pcode, line, code, options) {
           drawCount = options.drawCountMax // force runtime.update
           break
 
-        case pc.udat:
+        case PCode.udat:
           a = (stack.pop() !== 0)
           runtime.update = a
           if (a) {
@@ -1511,7 +1511,7 @@ function execute (pcode, line, code, options) {
           }
           break
 
-        case pc.seed:
+        case PCode.seed:
           a = stack.pop()
           if (a === 0) {
             stack.push(runtime.seed)
@@ -1521,38 +1521,38 @@ function execute (pcode, line, code, options) {
           }
           break
 
-        case pc.trac:
+        case PCode.trac:
           // not implemented -
           // just pop the top off the stack
           stack.pop()
           break
 
-        case pc.memw:
+        case PCode.memw:
           // not implemented -
           // just pop the top off the stack
           stack.pop()
           break
 
-        case pc.dump:
+        case PCode.dump:
           reply('memory-dumped', dump())
           if (options.showMemory) {
             reply('show-memory')
           }
           break
 
-        case pc.peek:
+        case PCode.peek:
           a = stack.pop()
           stack.push(memory[a])
           break
 
-        case pc.poke:
+        case PCode.poke:
           b = stack.pop()
           a = stack.pop()
           memory[a] = b
           break
 
         // 0xA0s - text output, timing
-        case pc.inpt:
+        case PCode.inpt:
           a = stack.pop()
           if (a < 0) {
             stack.push(query[-a])
@@ -1561,7 +1561,7 @@ function execute (pcode, line, code, options) {
           }
           break
 
-        case pc.iclr:
+        case PCode.iclr:
           a = stack.pop()
           if (a < 0) {
             // reset query value
@@ -1576,7 +1576,7 @@ function execute (pcode, line, code, options) {
           }
           break
 
-        case pc.bufr:
+        case PCode.bufr:
           a = stack.pop()
           if (a > 0) {
             b = markers.heapTemp + 4
@@ -1590,7 +1590,7 @@ function execute (pcode, line, code, options) {
           }
           break
 
-        case pc.read:
+        case PCode.read:
           a = stack.pop() // maximum number of characters to read
           b = memory[1] // the address of the buffer
           c = memory[memory[1]] // the address of the end of the buffer
@@ -1618,7 +1618,7 @@ function execute (pcode, line, code, options) {
           makeHeapString(d)
           break
 
-        case pc.rdln:
+        case PCode.rdln:
           a = Math.pow(2, 31) - 1 // as long as possible
           code += 1
           if (code === pcode[line].length) {
@@ -1630,12 +1630,12 @@ function execute (pcode, line, code, options) {
           window.addEventListener('keydown', runtime.readline)
           return
 
-        case pc.kech:
+        case PCode.kech:
           a = (stack.pop() !== 0)
           runtime.keyecho = a
           break
 
-        case pc.outp:
+        case PCode.outp:
           c = (stack.pop() !== 0)
           b = stack.pop()
           a = (stack.pop() !== 0)
@@ -1647,20 +1647,20 @@ function execute (pcode, line, code, options) {
           }
           break
 
-        case pc.cons:
+        case PCode.cons:
           b = stack.pop()
           a = (stack.pop() !== 0)
           reply('console', { clear: a, colour: hex(b) })
           break
 
-        case pc.prnt:
+        case PCode.prnt:
           c = stack.pop()
           b = stack.pop()
           a = getHeapString(stack.pop())
           reply('print', { turtle: turtle(), string: a, font: b, size: c })
           break
 
-        case pc.writ:
+        case PCode.writ:
           a = getHeapString(stack.pop())
           reply('write', a)
           reply('log', a)
@@ -1669,29 +1669,29 @@ function execute (pcode, line, code, options) {
           }
           break
 
-        case pc.newl:
+        case PCode.newl:
           reply('write', '\n')
           reply('log', '\n')
           break
 
-        case pc.curs:
+        case PCode.curs:
           a = stack.pop()
           reply('cursor', a)
           break
 
-        case pc.time:
+        case PCode.time:
           a = Date.now()
           a = a - runtime.startTime
           stack.push(a)
           break
 
-        case pc.tset:
+        case PCode.tset:
           a = Date.now()
           b = stack.pop()
           runtime.startTime = a - b
           break
 
-        case pc.wait:
+        case PCode.wait:
           a = stack.pop()
           code += 1
           if (code === pcode[line].length) {
@@ -1701,7 +1701,7 @@ function execute (pcode, line, code, options) {
           setTimeout(execute, a, pcode, line, code, options)
           return
 
-        case pc.tdet:
+        case PCode.tdet:
           b = stack.pop()
           a = stack.pop()
           stack.push(0)
@@ -1716,82 +1716,82 @@ function execute (pcode, line, code, options) {
           return
 
         // 0xB0s - file processing
-        case pc.chdr:
+        case PCode.chdr:
           // not yet implemented
           halt()
           throw error('File processing has not yet been implemented.')
 
-        case pc.file:
+        case PCode.file:
           // not yet implemented
           halt()
           throw error('File processing has not yet been implemented.')
 
-        case pc.diry:
+        case PCode.diry:
           // not yet implemented
           halt()
           throw error('File processing has not yet been implemented.')
 
-        case pc.open:
+        case PCode.open:
           // not yet implemented
           halt()
           throw error('File processing has not yet been implemented.')
 
-        case pc.clos:
+        case PCode.clos:
           // not yet implemented
           halt()
           throw error('File processing has not yet been implemented.')
 
-        case pc.fbeg:
+        case PCode.fbeg:
           // not yet implemented
           halt()
           throw error('File processing has not yet been implemented.')
 
-        case pc.eof:
+        case PCode.eof:
           // not yet implemented
           halt()
           throw error('File processing has not yet been implemented.')
 
-        case pc.eoln:
+        case PCode.eoln:
           // not yet implemented
           halt()
           throw error('File processing has not yet been implemented.')
 
-        case pc.frds:
+        case PCode.frds:
           // not yet implemented
           halt()
           throw error('File processing has not yet been implemented.')
 
-        case pc.frln:
+        case PCode.frln:
           // not yet implemented
           halt()
           throw error('File processing has not yet been implemented.')
 
-        case pc.fwrs:
+        case PCode.fwrs:
           // not yet implemented
           halt()
           throw error('File processing has not yet been implemented.')
 
-        case pc.fwnl:
+        case PCode.fwnl:
           // not yet implemented
           halt()
           throw error('File processing has not yet been implemented.')
 
-        case pc.ffnd:
+        case PCode.ffnd:
           // not yet implemented
           halt()
           throw error('File processing has not yet been implemented.')
 
-        case pc.fdir:
+        case PCode.fdir:
           // not yet implemented
           halt()
           throw error('File processing has not yet been implemented.')
 
-        case pc.fnxt:
+        case PCode.fnxt:
           // not yet implemented
           halt()
           throw error('File processing has not yet been implemented.')
 
-        case pc.fmov:
+        case PCode.fmov:
           // not yet implemented
           halt()
           throw error('File processing has not yet been implemented.')

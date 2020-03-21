@@ -1,7 +1,7 @@
 /*
  * definition of a token
  */
-export interface Token {
+export type Token = {
   type: TokenType,
   content: string
 }

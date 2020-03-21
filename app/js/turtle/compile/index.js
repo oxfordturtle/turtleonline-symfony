@@ -15,7 +15,7 @@ import lexer from './lexer/index.js'
 import parser from './parser/index.js'
 import coder from './coder/index.js'
 
-export default (code, language) => {
+export default function (code, language) {
   // get lexemes from the code
   const lexemes = lexer(code, language)
   console.log(lexemes)

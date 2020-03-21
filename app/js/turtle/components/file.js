@@ -2,8 +2,8 @@
  * The program file component.
  */
 import * as dom from './dom.js'
-import exampleGroups from '../constants/exampleGroups.js'
-import exampleNames from '../constants/exampleNames.js'
+import exampleGroups from '../definitions/exampleGroups.js'
+import exampleNames from '../definitions/exampleNames.js'
 import { send } from '../state/index.js'
 
 // buttons
