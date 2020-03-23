@@ -5,5 +5,10 @@
 {% endblock %}
 
 {% block main %}
-  <p>Welcome to your account area on our site. Use the form below to update your personal details.</p>
+  <p>Welcome to your account area on our site. Click on the links below to manage your account.</p>
+  <ul>
+    <li><a href="{{ path('account_details') }}">Edit your personal details</a></li>
+    <li><a href="{{ path('account_password') }}">Change your password</a></li>
+    <li><a href="{{ path('account_files') }}">Manage your files</a></li>
+  </ul>
 {% endblock %}

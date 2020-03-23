@@ -58,31 +58,15 @@
     }
   }
 
-  .downloads {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 2em 0;
-
-    th, td {
-      border: 1px solid $gray;
-      padding: .25em .5em;
-      text-align: center;
-    }
+  .download {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
 
     .button {
-      background: $blue;
-      color: #fff;
       display: inline-block;
-      padding: .25em .5em;
-      margin: .25em;
+      padding: .5em 1em;
       white-space: nowrap;
-      &:hover {
-        background: darken($blue, 10%);
-        text-decoration: none;
-      }
-      &:not(:last-child) {
-        margin-right: .5em;
-      }
 
       .icon {
         padding-right: .25em;

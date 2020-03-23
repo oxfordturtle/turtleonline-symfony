@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use App\Entity\File;
 use App\Form\FileCreateType;
+use App\Form\UserDetailsType;
 use App\Service\FileManager;
+use App\Service\UserManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,11 +46,55 @@ class AccountController extends AbstractController
       return $this->redirectToRoute('account_verify');
     }
 
+    // render and return the page
+    return $this->render('account/index.html.twig');
+  }
+
+  /**
+   * Route for the account details page.
+   *
+   * @Route("/details", name="details")
+   * @return Response
+   */
+  public function details(Request $request, UserManager $userManager): Response
+  {
+    // redirect if the user is not verified
+    if (!$this->getUser()->isVerified()) {
+      return $this->redirectToRoute('account_verify');
+    }
+
     // create and handle the user details form
+    $userDetailsForm = $this->createForm(UserDetailsType::class, $this->getUser());
+    $userDetailsForm->handleRequest($request);
+    if ($userDetailsForm->isSubmitted() && $userDetailsForm->isValid()) {
+      $userManager->saveUser($this->getUser());
+      $this->addFlash('success', 'Your details have been updated.');
+    }
+
+    // render and return the page
+    return $this->render('account/details.html.twig', [
+      'userDetailsForm' => $userDetailsForm->createView()
+    ]);
+  }
+
+  /**
+   * Route for the change password page.
+   *
+   * @Route("/password", name="password")
+   * @return Response
+   */
+  public function password(): Response
+  {
+    // redirect if the user is not verified
+    if (!$this->getUser()->isVerified()) {
+      return $this->redirectToRoute('account_verify');
+    }
+
+    // create and handle the change password form
     // $userForm = $this->createForm()
 
     // render and return the page
-    return $this->render('account/index.html.twig');
+    return $this->render('account/password.html.twig');
   }
 
   /**

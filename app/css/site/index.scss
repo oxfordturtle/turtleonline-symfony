@@ -9,7 +9,11 @@
 @import "footer.scss";
 
 .site {
-  background: $green;
+  // background: $green;
+  background-image: url('https://i.guim.co.uk/img/media/1882e39d31e3d262114fc5ed7482826ad9688404/53_0_7283_4372/master/7283.jpg?width=1920&quality=85&auto=format&fit=max&s=ce2cadd8b0fc4fe45f0938402ca3e1f4');
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
   margin: 0;
   padding-top: 3em; // to offset the absolutely positioned nav bar at the top
   font-size: 16px;

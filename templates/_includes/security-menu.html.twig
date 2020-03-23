@@ -7,6 +7,8 @@
     </a>
     <div class="nav-sub-menu">
       <a href="{{ path('account_index') }}" class="nav-item{% if route == 'account_index' %} active{% endif %}">My Account</a>
+      <a href="{{ path('account_details') }}" class="nav-item{% if route == 'account_details' %} active{% endif %}">Edit Details</a>
+      <a href="{{ path('account_password') }}" class="nav-item{% if route == 'account_password' %} active{% endif %}">Change Password</a>
       <a href="{{ path('account_files') }}" class="nav-item{% if route == 'account_files' %} active{% endif %}">My Files</a>
       <a href="{{ path('logout') }}" class="nav-item">Logout</a>
     </div>
