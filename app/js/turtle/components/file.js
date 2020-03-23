@@ -70,11 +70,11 @@ export const openExample = dom.createElement('div', {
 
 // setup event listeners on interactive elements
 saveLocalButton.addEventListener('click', () => {
-  send('save-program')
+  send('save-local')
 })
 
 saveRemoteButton.addEventListener('click', () => {
-  // TODO
+  send('save-remote')
 })
 
 newBlankButton.addEventListener('click', () => {
@@ -102,5 +102,5 @@ fileInput.addEventListener('change', () => {
 })
 
 openRemoteButton.addEventListener('click', () => {
-  // TODO
+  send('open-remote')
 })

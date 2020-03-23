@@ -103,12 +103,18 @@ export function send (signal, data) {
         reply('show-component', 'code')
         break
 
-      case 'save-program':
+      case 'save-local':
         blob = new window.Blob([get('code')], { type: 'text/plain;charset=utf-8' })
         a.setAttribute('href', URL.createObjectURL(blob))
         a.setAttribute('download', `${get('name') || 'filename'}.${extensions[get('language')]}`)
         a.click()
         break
+
+      case 'save-remote':
+        throw error('Feature not yet available.')
+
+      case 'open-remote':
+        throw error('Feature not yet available.')
 
       case 'save-tgx-program':
         maybeCompile()

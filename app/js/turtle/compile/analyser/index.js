@@ -1,11 +1,14 @@
 /*
  * usage data generator - arrays of lexemes and subroutines go in, usage data comes out
  */
-import expressions from '../../definitions/expressions.js'
+import { categories } from '../../definitions/categories.ts'
+import { groups } from '../../definitions/groups.ts'
 
 // the analyser function
 export default function (lexemes, subroutines, language) {
-  return expressions.concat({ title: 'Subroutine calls', expressions: subroutines })
+  return categories
+    .concat(groups)
+    .concat({ title: 'Subroutine calls', expressions: subroutines })
     .map(usageCategory.bind(null, language, lexemes))
     .filter(category => category.expressions.length > 0)
 }

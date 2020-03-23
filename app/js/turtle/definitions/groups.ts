@@ -3,9 +3,10 @@
  * the usage analyser).
  */
 import { categories } from './categories.ts'
+import { Names } from './languages.ts'
 
 export class Group {
-  readonly title: string,
+  readonly title: string
   readonly expressions: Keyword[]
   constructor (title: string, expressions: Keyword[]) {
     this.title = title
@@ -14,7 +15,7 @@ export class Group {
 }
 
 export class Keyword {
-  readonly names: Names,
+  readonly names: Names
   readonly level: number
   constructor (names: Names, level: number) {
     this.names = names
