@@ -3,7 +3,9 @@ node_modules/
 public/index.css
 public/index.js
 public/service-worker.js
-public/precache-manifest.*.js
+public/service-worker.js.map
+public/workbox-*.js
+public/workbox-*.js.map
 var/
 vendor/
 .env.local

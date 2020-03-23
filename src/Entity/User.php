@@ -57,6 +57,14 @@ class User implements UserInterface
   private $email;
 
   /**
+   * Whether the user has admin privileges.
+   *
+   * @var bool
+   * @ORM\Column(type="boolean")
+   */
+  private $admin;
+
+  /**
    * Whether the user has verified their email address.
    *
    * @var bool
@@ -164,6 +172,7 @@ class User implements UserInterface
     $this->id = null;
     $this->username = null;
     $this->email = null;
+    $this->admin = false;
     $this->verified = false;
     $this->password = null;
     $this->lastLoginDate = null;
@@ -495,7 +504,14 @@ class User implements UserInterface
    */
   public function getRoles(): array
   {
-    return $this->verified ? ['ROLE_USER', 'ROLE_VERIFIED'] : ['ROLE_USER'];
+    $roles = ['ROLE_USER'];
+    if ($this->admin) {
+      $roles[] = 'ROLE_ADMIN';
+    }
+    if ($this->verified) {
+      $roles[] = 'ROLE_VERIFIED';
+    }
+    return $roles;
   }
 
   /**

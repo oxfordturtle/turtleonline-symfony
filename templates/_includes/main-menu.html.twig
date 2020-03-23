@@ -29,3 +29,9 @@
   <span class="icon"><i class="fa fa-at"></i></span>
   <span class="text">Contact</span>
 </a>
+{% if is_granted('ROLE_ADMIN') %}
+  <a href="{{ path('admin_index') }}" class="nav-item{% if section == 'admin' %} active{% endif %}">
+    <span class="icon"><i class="fa fa-cogs"></i></span>
+    <span class="text">Admin</span>
+  </a>
+{% endif %}

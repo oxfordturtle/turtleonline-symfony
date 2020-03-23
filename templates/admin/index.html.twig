@@ -5,24 +5,24 @@
 {% endblock %}
 
 {% block main %}
-  {% for user in users %}
-    <div style="margin-bottom:1em;border-bottom:1px solid black;padding-bottom:1em;">
-      <p>{{ user.username }}, {{ user.firstname }} {{ user.surname }}, {{ user.email }}</p>
-      <p><b>Logs:</b></p>
-      <ul>
-        {% for log in user.logs %}
-          <li>{{ log.action }} {{ log.date|date('d/m/Y') }}</li>
-        {% endfor %}
-      </ul>
-      {% if user.courses|length > 0 %}
-        <p><b>Courses:</b></p>
-        <ul>
-          {% for course in user.courses %}
-            <li>{{ course.name }}, {{ course.startDate|date('d/m/Y') }} ({{ course.students|length }} students)</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-    </div>
-  {% endfor %}
-</ol>
+  <table>
+    <thead>
+      <tr>
+        <th>username</th>
+        <th>Firstname</th>
+        <th>Surname</th>
+        <th>Email</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+        <tr>
+          <td>{{ user.username }}</td>
+          <td>{{ user.firstname }}</td>
+          <td>{{ user.surname }}</td>
+          <td>{{ user.email }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 {% endblock %}

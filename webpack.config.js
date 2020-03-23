@@ -30,19 +30,19 @@ module.exports = {
       clientsClaim: true,
       skipWaiting: true,
       runtimeCaching: [
-        { urlPattern: new RegExp('https://kit.fontawesome.com/03273b8e38.js'), handler: 'StaleWhileRevalidate' },
-        { urlPattern: new RegExp('/'), handler: 'StaleWhileRevalidate' },
-        { urlPattern: new RegExp('/index.css'), handler: 'StaleWhileRevalidate' },
-        { urlPattern: new RegExp('/index.js'), handler: 'StaleWhileRevalidate' },
-        { urlPattern: new RegExp('/images/*.(png|jpg)'), handler: 'StaleWhileRevalidate' },
-        { urlPattern: new RegExp('/favicon.ico'), handler: 'StaleWhileRevalidate' },
-        { urlPattern: new RegExp('/icons/*.png'), handler: 'StaleWhileRevalidate' },
-        { urlPattern: new RegExp('/examples/*'), handler: 'StaleWhileRevalidate' },
-        { urlPattern: new RegExp('/run'), handler: 'StaleWhileRevalidate' },
-        { urlPattern: new RegExp('/documentation'), handler: 'StaleWhileRevalidate' },
-        { urlPattern: new RegExp('/documentation/*'), handler: 'StaleWhileRevalidate' },
-        { urlPattern: new RegExp('/about'), handler: 'StaleWhileRevalidate' },
-        { urlPattern: new RegExp('/contact'), handler: 'StaleWhileRevalidate' }
+        { urlPattern: 'https://kit.fontawesome.com/03273b8e38.js', handler: 'StaleWhileRevalidate' },
+        { urlPattern: 'https://kit-free.fontawesome.com/releases/latest/css/free.min.css', handler: 'StaleWhileRevalidate' },
+        { urlPattern: '/', handler: 'StaleWhileRevalidate' },
+        { urlPattern: '/index.css', handler: 'StaleWhileRevalidate' },
+        { urlPattern: '/index.js', handler: 'StaleWhileRevalidate' },
+        { urlPattern: /\/images\/\.*\.(png|jpe?g)$/, handler: 'StaleWhileRevalidate' },
+        { urlPattern: '/favicon.ico', handler: 'StaleWhileRevalidate' },
+        { urlPattern: /\/icons\/\.*\.png$/, handler: 'StaleWhileRevalidate' },
+        { urlPattern: /\/examples\/.*/, handler: 'StaleWhileRevalidate' },
+        { urlPattern: '/run', handler: 'StaleWhileRevalidate' },
+        { urlPattern: /\/documentation*/, handler: 'StaleWhileRevalidate' },
+        { urlPattern: '/about', handler: 'StaleWhileRevalidate' },
+        { urlPattern: '/contact', handler: 'StaleWhileRevalidate' }
       ]
     })
   ]
