@@ -11,7 +11,7 @@
       <input type="text" class="form-control" id="username" name="_username" required="required" autofocus{% if last_username %} value="{{ last_username }}"{% endif %}>
       {% if error %}
         <ul>
-          <li>{{ error.message }}</li>
+          <li>Incorrect username or password.</li>
         </ul>
       {% endif %}
     </div>

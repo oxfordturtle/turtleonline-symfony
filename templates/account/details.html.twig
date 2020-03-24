@@ -5,36 +5,37 @@
 {% endblock %}
 
 {% block main %}
-<div class="form">
-  {{ form_start(userDetailsForm) }}
-    <div class="columns">
-      <div class="column">
-        {{ form_row(userDetailsForm.username) }}
+  {% include '_includes/back-button.html.twig' %}
+  <div class="form">
+    {{ form_start(userDetailsForm) }}
+      <div class="columns">
+        <div class="column">
+          {{ form_row(userDetailsForm.username) }}
+        </div>
+        <div class="column">
+          {{ form_row(userDetailsForm.email) }}
+        </div>
       </div>
-      <div class="column">
-        {{ form_row(userDetailsForm.email) }}
+      <div class="columns">
+        <div class="column">
+          {{ form_row(userDetailsForm.firstname) }}
+        </div>
+        <div class="column">
+          {{ form_row(userDetailsForm.surname) }}
+        </div>
       </div>
-    </div>
-    <div class="columns">
-      <div class="column">
-        {{ form_row(userDetailsForm.firstname) }}
+      <div class="columns">
+        <div class="column">
+          {{ form_row(userDetailsForm.schoolName) }}
+        </div>
+        <div class="column">
+          {{ form_row(userDetailsForm.schoolPostcode) }}
+        </div>
       </div>
-      <div class="column">
-        {{ form_row(userDetailsForm.surname) }}
+      {{ form_row(userDetailsForm._token) }}
+      <div class="form-buttons">
+        <button type="submit" class="green button">Update</button>
       </div>
-    </div>
-    <div class="columns">
-      <div class="column">
-        {{ form_row(userDetailsForm.schoolName) }}
-      </div>
-      <div class="column">
-        {{ form_row(userDetailsForm.schoolPostcode) }}
-      </div>
-    </div>
-    {{ form_row(userDetailsForm._token) }}
-    <div class="form-buttons">
-      <button type="submit" class="green button">Update</button>
-    </div>
-  {{ form_end(userDetailsForm) }}
-</div>
+    {{ form_end(userDetailsForm) }}
+  </div>
 {% endblock %}

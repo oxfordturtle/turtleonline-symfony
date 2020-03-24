@@ -5,10 +5,19 @@
 {% endblock %}
 
 {% block main %}
-  <p>Welcome to your account area on our site. Click on the links below to manage your account.</p>
-  <ul>
-    <li><a href="{{ path('account_details') }}">Edit your personal details</a></li>
-    <li><a href="{{ path('account_password') }}">Change your password</a></li>
-    <li><a href="{{ path('account_files') }}">Manage your files</a></li>
+  <p>Welcome to your account area on our site. Click on the buttons below to manage your account.</p>
+  <div class="dashboard-buttons">
+    <a href="{{ path('account_details') }}" class="button green">
+      <span class="icon"><i class="fa fa-user"></i></span>
+      <span class="text">Edit your personal details</span>
+    </a>
+    <a href="{{ path('account_password') }}" class="button green">
+      <span class="icon"><i class="fa fa-lock"></i></span>
+      <span class="text">Change your password</span>
+    </a>
+    <a href="{{ path('account_files') }}" class="button green">
+      <span class="icon"><i class="fa fa-folder-open"></i></span>
+      <span class="text">Manage your files</span>
+    </a>
   </ul>
 {% endblock %}

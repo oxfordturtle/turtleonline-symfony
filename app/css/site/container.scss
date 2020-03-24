@@ -25,12 +25,6 @@
       max-width: $break2;
     }
   }
-  @media (min-width: $break1) {
-    // max-width: $break1;
-    // margin-top: 3em;
-    // margin-bottom: 2em;
-    // box-shadow: $box-shadow;
-  }
 
   @media (min-width: $break2) {
     max-width: $break2;

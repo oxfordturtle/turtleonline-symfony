@@ -6,6 +6,7 @@ use App\Entity\User;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
+
 /**
  * The mailer.
  *
@@ -35,14 +36,19 @@ class Mailer
    * @param string $subject
    * @return TemplatedEmail
    */
-  private function createEmail(User $user, string $template, string $subject): TemplatedEmail
+  private function createEmail(
+    User $user,
+    string $template,
+    string $subject,
+    string $content = null
+  ): TemplatedEmail
   {
     return (new TemplatedEmail())
       ->from(new Address('turtleoxford@gmail.com', 'Turtle System Oxford'))
       ->to(new Address($user->getEmail(), $user->getFirstname().' '.$user->getSurname()))
       ->subject('Turtle System: '.$subject)
       ->htmlTemplate('email/'.$template.'.html.twig')
-      ->context(['user' => $user]);
+      ->context(['user' => $user, 'content' => $content]);
   }
 
   /**
@@ -71,5 +77,34 @@ class Mailer
 
     // send the email
     $this->mailer->send($email);
+  }
+
+  /**
+   * Send a custom email to the given user.
+   *
+   * @param User $user
+   * @param string $subject
+   * @param string $content
+   */
+  public function sendCustomEmail(User $user, string $subject, string $content)
+  {
+    // create the email
+    $email = $this->createEmail($user, 'custom', $subject, $content);
+
+    // send the email
+    $this->mailer->send($email);
+  }
+
+  /**
+   * Send a custom email to every user.
+   *
+   * @param string $subject
+   * @param string $content
+   */
+  public function sendBulkCustomEmail(string $subject, string $content)
+  {
+    foreach ($this->userManager->getUsers() as $user) {
+      $this->sendCustomEmail($user, $subject, $content);
+    }
   }
 }

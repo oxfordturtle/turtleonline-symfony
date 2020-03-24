@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}
+  <h1>Admin Area</h1>
+{% endblock %}
+
+{% block main %}
+  {% include '_includes/back-button.html.twig' %}
+  <table>
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Firstname</th>
+        <th>Surname</th>
+        <th>Email</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+        <tr>
+          <td><a href="{{ path('admin_user', { user: user.id }) }}">{{ user.username }}</a></td>
+          <td>{{ user.firstname }}</td>
+          <td>{{ user.surname }}</td>
+          <td>{{ user.email }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

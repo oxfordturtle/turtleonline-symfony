@@ -1,0 +1,30 @@
+.dashboard-buttons {
+  display: flex;
+  justify-content: space-between;
+
+  .button {
+    flex: 1;
+    margin: .5em;
+    border-radius: 5px;
+    padding: 1em;
+
+    .icon, .text {
+      display: block;
+      text-align: center;
+    }
+  }
+}
+
+.dashboard-back-button {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1em;
+
+  .button {
+    border-radius: 5px;
+
+    .icon {
+      margin-right: .5em;
+    }
+  }
+}

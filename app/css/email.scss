@@ -1,0 +1,29 @@
+@import "constants.scss";
+
+body {
+  font-family: $system-font;
+  color: $darkgray;
+  margin: 0;
+}
+
+header {
+  background: $blue;
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 1em;
+
+  img {
+    display: block;
+    padding: 1em;
+  }
+
+  h1 {
+    font-size: 1.25em;
+    color: #fff;
+    margin: 0;
+  }
+}
+
+p {
+  margin: 0 0 1em;
+}

@@ -1,6 +1,5 @@
 {% extends 'email.html.twig' %}
 
 {% block content %}
-  <p>Dear {{ user.firstname }} {{ user.surname }},</p>
-  <p>...</p>
+  {{ content|raw }}
 {% endblock %}

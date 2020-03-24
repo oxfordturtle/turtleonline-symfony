@@ -1,13 +1,18 @@
 {
   "scripts": {
-    "watch-js": "webpack --watch --config webpack.config.js --mode development",
     "build-js": "webpack --config webpack.config.js --mode production",
-    "watch-css": "node-sass app/css/index.scss --watch --output public --output-style compressed",
-    "build-css": "node-sass app/css/index.scss --output public --output-style compressed",
-    "watch": "yarn watch-js && yarn watch-css",
-    "build": "yarn build-js && yarn build-css"
+    "watch-js": "webpack --watch --config webpack.config.js --mode development",
+    "build-css-site": "node-sass app/css/index.scss --output public/css --output-style compressed",
+    "build-css-email": "node-sass app/css/email.scss --output public/css --output-style compressed",
+    "build-css": "yarn build-css-site && yarn build-css-email",
+    "watch-css-site": "node-sass app/css/index.scss --watch --output public/css --output-style compressed",
+    "watch-css-email": "node-sass app/css/index.scss --watch --output public/css --output-style compressed",
+    "watch-css": "concurrently \"yarn watch-css-site\" \"yarn watch-css-email\"",
+    "build": "yarn build-js && yarn build-css",
+    "watch": "concurrently \"yarn watch-js\" \"yarn watch-css-site\" \"yarn watch-css-email\""
   },
   "devDependencies": {
+    "concurrently": "^5.1.0",
     "node-sass": "^4.13.0",
     "source-map-loader": "^0.2.4",
     "ts-loader": "^6.2.1",

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\File;
+use App\Form\ChangePasswordType;
 use App\Form\FileCreateType;
 use App\Form\UserDetailsType;
 use App\Service\FileManager;
@@ -83,7 +84,7 @@ class AccountController extends AbstractController
    * @Route("/password", name="password")
    * @return Response
    */
-  public function password(): Response
+  public function password(Request $request, UserManager $userManager): Response
   {
     // redirect if the user is not verified
     if (!$this->getUser()->isVerified()) {
@@ -91,10 +92,18 @@ class AccountController extends AbstractController
     }
 
     // create and handle the change password form
-    // $userForm = $this->createForm()
+    $changePasswordForm = $this->createForm(ChangePasswordType::class);
+    $changePasswordForm->handleRequest($request);
+    if ($changePasswordForm->isSubmitted() && $changePasswordForm->isValid()) {
+      $userManager->setEncodedPassword($this->getUser(), $changePasswordForm->getData()->getNewPassword());
+      $userManager->saveUser($this->getUser());
+      $this->addFlash('success', 'Your password has been changed.');
+    }
 
     // render and return the page
-    return $this->render('account/password.html.twig');
+    return $this->render('account/password.html.twig', [
+      'changePasswordForm' => $changePasswordForm->createView()
+    ]);
   }
 
   /**

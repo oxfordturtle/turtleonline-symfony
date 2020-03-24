@@ -1,8 +1,6 @@
-<html>
-  <head></head>
-  <body>
-    <img src="{{ email.image('@images/oxford-logo.jpg') }}" alt="Logo">
-    <p>Dear {{ user.firstname }} {{ user.surname }},</p>
-    <p>Please verify your account: <a href="https://www.turtle.ox.ac.uk/verify/{{ user.id }}/{{ user.token }}">link</a>.</p>
-  </body>
-</html>
+{% extends 'email.html.twig' %}
+
+{% block content %}
+  <p>Dear {{ user.firstname }} {{ user.surname }},</p>
+  <p>Please verify your account: <a href="https://www.turtle.ox.ac.uk/verify/{{ user.id }}/{{ user.token }}">link</a>.</p>
+{% endblock %}

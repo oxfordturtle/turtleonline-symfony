@@ -5,24 +5,14 @@
 {% endblock %}
 
 {% block main %}
-  <table>
-    <thead>
-      <tr>
-        <th>username</th>
-        <th>Firstname</th>
-        <th>Surname</th>
-        <th>Email</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for user in users %}
-        <tr>
-          <td>{{ user.username }}</td>
-          <td>{{ user.firstname }}</td>
-          <td>{{ user.surname }}</td>
-          <td>{{ user.email }}</td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+  <div class="dashboard-buttons">
+    <a href="{{ path('admin_users') }}" class="button green">
+      <span class="icon"><i class="fa fa-users"></i></span>
+      <span class="text">View all users</span>
+    </a>
+    <a href="{{ path('admin_email') }}" class="button green">
+      <span class="icon"><i class="fa fa-envelope"></i></span>
+      <span class="text">Send batch email</span>
+    </a>
+  </div>
 {% endblock %}
