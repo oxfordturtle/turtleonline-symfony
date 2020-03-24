@@ -20,7 +20,6 @@
       <input type="password" class="form-control" id="password" name="_password" required="required">
     </div>
     <div class="form-buttons">
-      <a href="{{ path('forgot') }}">Forgot Credentials?</a>
       <button type="submit" class="green button">Login</button>
     </div>
     <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">

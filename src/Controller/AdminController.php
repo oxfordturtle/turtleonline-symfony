@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Model\BulkEmail;
+use App\Form\BulkEmailType;
 use App\Service\Mailer;
 use App\Service\UserManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -75,12 +77,20 @@ class AdminController extends AbstractController
    * @param Mailer $mailer
    * @return Response
    */
-  public function email(Mailer $mailer): Response
+  public function email(Request $request, Mailer $mailer): Response
   {
-    // initialise the twig variables
-    $twigs = [];
+    // create and handle the email form
+    $bulkEmail = new BulkEmail();
+    $bulkEmailForm = $this->createForm(BulkEmailType::class, $bulkEmail);
+    $bulkEmailForm->handleRequest($request);
+    if ($bulkEmailForm->isSubmitted() && $bulkEmailForm->isValid()) {
+      $mailer->sendBulkEmail($bulkEmail);
+      $this->addFlash('success', 'Email has been sent to all users.');
+    }
 
     // render and return the page
-    return $this->render('admin/email.html.twig', $twigs);
+    return $this->render('admin/email.html.twig', [
+      'bulkEmailForm' => $bulkEmailForm->createView()
+    ]);
   }
 }

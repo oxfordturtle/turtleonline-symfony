@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\User;
+use App\Model\BulkEmail;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
@@ -24,8 +25,9 @@ class Mailer
    *
    * @param MailerInterface $mailer
    */
-  public function __construct(MailerInterface $mailer) {
+  public function __construct(MailerInterface $mailer, UserManager $userManager) {
     $this->mailer = $mailer;
+    $this->userManager = $userManager;
   }
 
   /**
@@ -101,10 +103,10 @@ class Mailer
    * @param string $subject
    * @param string $content
    */
-  public function sendBulkCustomEmail(string $subject, string $content)
+  public function sendBulkEmail(BulkEmail $bulkEmail)
   {
     foreach ($this->userManager->getUsers() as $user) {
-      $this->sendCustomEmail($user, $subject, $content);
+      $this->sendCustomEmail($user, $bulkEmail->getSubject(), $bulkEmail->getContent());
     }
   }
 }

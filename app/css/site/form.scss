@@ -13,6 +13,11 @@ input[type="text"], input[type="password"], input[type="email"], select {
   font: inherit;
 }
 
+textarea {
+  height: 20em;
+  font: inherit;
+}
+
 button, .button {
   padding: .25em 1em;
   background: $blue;
@@ -85,7 +90,13 @@ button, .button {
 
 .form-buttons {
   display: flex;
+  align-items: baseline;
   justify-content: flex-end;
+
+  a {
+    padding: 0 1em;
+  }
+
   button {
     padding: .5em 1em;
     border-radius: 5px;

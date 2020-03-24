@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}
+  <h1>Forgot Credentials</h1>
+{% endblock %}
+
+{% block main %}
+  <p>If you have forgotten your login credentials, enter your email address into the form below and click &lsquo;Send Credentials&rsquo;. You will receive an email with your username, and a link to reset your password.</p>
+  <div class="form">
+    {{ form_start(emailCredentialsForm) }}
+      {{ form_row(emailCredentialsForm.email) }}
+      {{ form_row(emailCredentialsForm._token) }}
+      <div class="form-buttons">
+        <button type="submit" class="green button">Send Credentials</button>
+      </div>
+    {{ form_end(emailCredentialsForm) }}
+  </div>
+{% endblock %}

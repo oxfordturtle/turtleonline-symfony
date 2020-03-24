@@ -12,6 +12,7 @@ use App\Security\LoginFormAuthenticator;
 use App\Service\Mailer;
 use App\Service\UserManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -147,7 +148,7 @@ class SecurityController extends AbstractController
    * @param UserManager $userManager
    * @return Response
    */
-  public function forgot(Request $request, UserManager $userManager): Response
+  public function forgot(Request $request, Mailer $mailer, UserManager $userManager): Response
   {
     // create the email credentials form
     $emailCredentials = new EmailCredentials();
@@ -156,11 +157,12 @@ class SecurityController extends AbstractController
     // handle the email credentials form
     $emailCredentialsForm->handleRequest($request);
     if ($emailCredentialsForm->isSubmitted() && $emailCredentialsForm->isValid()) {
-      $user = $this->userManager->getUserByEmail($emailCredentials->getEmail());
+      $email = $emailCredentials->getEmail();
+      $user = $userManager->getUserByEmail($email);
       if ($user) {
         $userManager->setRandomToken($user);
         $mailer->sendCredentialsEmail($user);
-        $this->addFlash('success', 'An email has been sent to your address with further instructions.');
+        $this->addFlash('success', "An email has been sent to $email with further instructions.");
       } else {
         $emailCredentialsForm->get('email')->addError(new FormError('Email address not found'));
       }

@@ -24,6 +24,27 @@ header {
   }
 }
 
+main {
+  padding: 1em;
+}
+
 p {
   margin: 0 0 1em;
+}
+
+.button {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1em;
+
+  a {
+    background: $blue;
+    color: #fff;
+    text-decoration: none;
+    padding: .5em 1em;
+    border-radius: 5px;
+    &:hover {
+      background: darken($blue, 10%);
+    }
+  }
 }
