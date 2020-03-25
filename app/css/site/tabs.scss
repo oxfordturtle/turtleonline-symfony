@@ -1,0 +1,21 @@
+.tabs {
+  display: flex;
+  justify-content: flex-end;
+
+  .tab {
+    padding: .5em 1em;
+    cursor: pointer;
+    &.active {
+      text-decoration: underline;
+    }
+  }
+}
+
+.tab-panes {
+  .tab-pane {
+    display: none;
+    &.active {
+      display: block;
+    }
+  }
+}

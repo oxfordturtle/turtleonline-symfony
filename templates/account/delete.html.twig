@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}
+  <h1>{{ app.user.firstname }} {{ app.user.surname }}: Delete your Account</h1>
+{% endblock %}
+
+{% block main %}
+  {% include '_includes/back-button.html.twig' %}
+  <p>Are you sure you want to delete your account? All of your details and files on our server will be deleted, and this action cannot be undone. You can sign up again for a new account at any time.</p>
+  <div class="form">
+    {{ form_start(deleteUserForm) }}
+      {{ form_row(deleteUserForm._token) }}
+      <div class="form-buttons">
+        <button type="submit" class="red button">Delete Account</button>
+      </div>
+    {{ form_end(deleteUserForm) }}
+  </div>
+{% endblock %}

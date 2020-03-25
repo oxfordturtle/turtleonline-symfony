@@ -156,6 +156,14 @@ class User implements UserInterface
   private $guardianFullname;
 
   /**
+   * Whether the user wishes to receive emails.
+   *
+   * @var bool
+   * @ORM\Column(type="boolean")
+   */
+  private $receivingEmails;
+
+  /**
    * The user's activity logs.
    *
    * @var ActivityLog[]
@@ -182,8 +190,9 @@ class User implements UserInterface
     $this->surname = null;
     $this->schoolName = null;
     $this->schoolPostcode = null;
-    $this->over13 = false;
+    $this->over13 = true;
     $this->guardianFullname = null;
+    $this->receivingEmails = true;
     $this->logs = new ArrayCollection();
   }
 
@@ -451,12 +460,34 @@ class User implements UserInterface
   /**
    * Set whether the user is over 13.
    *
-   * @param bool $verified
+   * @param bool $over13
    * @return self
    */
   public function setOver13(bool $over13): self
   {
     $this->over13 = $over13;
+    return $this;
+  }
+
+  /**
+   * Get whether the user wants to receive emails.
+   *
+   * @return bool
+   */
+  public function isReceivingEmails(): bool
+  {
+    return $this->receivingEmails;
+  }
+
+  /**
+   * Set whether the user wants to receive emails.
+   *
+   * @param bool $receivingEmails
+   * @return self
+   */
+  public function setReceivingEmails(bool $receivingEmails): self
+  {
+    $this->receivingEmails = $receivingEmails;
     return $this;
   }
 

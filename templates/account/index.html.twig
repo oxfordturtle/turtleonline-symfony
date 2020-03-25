@@ -1,23 +1,27 @@
 {% extends 'base.html.twig' %}
 
 {% block header %}
-  <h1>Welcome {{ app.user.firstname }} {{ app.user.surname }}</h1>
+  <h1>{{ app.user.firstname }} {{ app.user.surname }}: Welcome!</h1>
 {% endblock %}
 
 {% block main %}
   <p>Welcome to your account area on our site. Click on the buttons below to manage your account.</p>
   <div class="dashboard-buttons">
-    <a href="{{ path('account_details') }}" class="button green">
+    <a href="{{ path('account_details') }}" class="green button">
       <span class="icon"><i class="fa fa-user"></i></span>
       <span class="text">Edit your personal details</span>
     </a>
-    <a href="{{ path('account_password') }}" class="button green">
+    <a href="{{ path('account_email') }}" class="green button">
+      <span class="icon"><i class="fa fa-envelope"></i></span>
+      <span class="text">Change your email settings</span>
+    </a>
+    <a href="{{ path('account_password') }}" class="green button">
       <span class="icon"><i class="fa fa-lock"></i></span>
       <span class="text">Change your password</span>
     </a>
-    <a href="{{ path('account_files') }}" class="button green">
-      <span class="icon"><i class="fa fa-folder-open"></i></span>
-      <span class="text">Manage your files</span>
+    <a href="{{ path('account_delete') }}" class="red button">
+      <span class="icon"><i class="fa fa-exclamation-triangle"></i></span>
+      <span class="text">Delete your account</span>
     </a>
   </ul>
 {% endblock %}

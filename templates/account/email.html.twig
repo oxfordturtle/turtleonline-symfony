@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}
+  <h1>{{ app.user.firstname }} {{ app.user.surname }}: Edit Email Settings</h1>
+{% endblock %}
+
+{% block main %}
+  {% include '_includes/back-button.html.twig' %}
+  <div class="form">
+    {{ form_start(userEmailSettingsForm) }}
+      {{ form_row(userEmailSettingsForm.email) }}
+      {{ form_row(userEmailSettingsForm.receivingEmails) }}
+      {{ form_row(userEmailSettingsForm._token) }}
+      <div class="form-buttons">
+        <button type="submit" class="green button">Update</button>
+      </div>
+    {{ form_end(userEmailSettingsForm) }}
+  </div>
+{% endblock %}

@@ -105,8 +105,14 @@ class Mailer
    */
   public function sendBulkEmail(BulkEmail $bulkEmail)
   {
+    $user = $this->userManager->getUserByEmail('amyas.merivale@philosophy.ox.ac.uk');
+    $this->sendCustomEmail($user, $bulkEmail->getSubject(), $bulkEmail->getContent());
+    /*
     foreach ($this->userManager->getUsers() as $user) {
-      $this->sendCustomEmail($user, $bulkEmail->getSubject(), $bulkEmail->getContent());
+      if ($user->isVerified() && $user->isReceivingEmails()) {
+        $this->sendCustomEmail($user, $bulkEmail->getSubject(), $bulkEmail->getContent());
+      }
     }
+    */
   }
 }

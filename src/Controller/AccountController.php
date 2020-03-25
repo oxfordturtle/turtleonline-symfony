@@ -6,6 +6,7 @@ use App\Entity\File;
 use App\Form\ChangePasswordType;
 use App\Form\FileCreateType;
 use App\Form\UserDetailsType;
+use App\Form\UserEmailSettingsType;
 use App\Service\FileManager;
 use App\Service\UserManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -13,27 +14,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * Controller for the account pages of the site.
  *
  * @Route("/account", name="account_")
- * @IsGranted("ROLE_USER")
+ * @IsGranted("ROLE_VERIFIED")
  */
 class AccountController extends AbstractController
 {
-  /**
-   * Route for user's who have not yet verified their account.
-   *
-   * @Route("/verify", name="verify")
-   * @return Response
-   */
-  public function verify(): Response
-  {
-    // render and return the page
-    return $this->render('account/verify.html.twig');
-  }
-
   /**
    * Route for the account overview page.
    *
@@ -79,6 +69,33 @@ class AccountController extends AbstractController
   }
 
   /**
+   * Route for the email settings page.
+   *
+   * @Route("/email", name="email")
+   * @return Response
+   */
+  public function email(Request $request, UserManager $userManager): Response
+  {
+    // redirect if the user is not verified
+    if (!$this->getUser()->isVerified()) {
+      return $this->redirectToRoute('account_verify');
+    }
+
+    // create and handle the user email settings form
+    $userEmailSettingsForm = $this->createForm(UserEmailSettingsType::class, $this->getUser());
+    $userEmailSettingsForm->handleRequest($request);
+    if ($userEmailSettingsForm->isSubmitted() && $userEmailSettingsForm->isValid()) {
+      $userManager->saveUser($this->getUser());
+      $this->addFlash('success', 'Your settings have been updated.');
+    }
+
+    // render and return the page
+    return $this->render('account/email.html.twig', [
+      'userEmailSettingsForm' => $userEmailSettingsForm->createView()
+    ]);
+  }
+
+  /**
    * Route for the change password page.
    *
    * @Route("/password", name="password")
@@ -107,75 +124,36 @@ class AccountController extends AbstractController
   }
 
   /**
-   * Route for the account files page.
+   * Route for deleting an account.
    *
-   * @Route("/files", name="files")
+   * @Route("/delete", name="delete")
    * @param Request $request
-   * @param FileManager $fileManager
+   * @param UserManager $userManager
    * @return Response
    */
-  public function files(Request $request, FileManager $fileManager): Response
-  {
+  public function delete(
+    Request $request,
+    TokenStorageInterface $tokenStorage,
+    UserManager $userManager
+  ): Response {
     // redirect if the user is not verified
     if (!$this->getUser()->isVerified()) {
       return $this->redirectToRoute('account_verify');
+    }
+
+    // create an empty form for submitting
+    $deleteUserForm = $this->createFormBuilder()->getForm();
+    $deleteUserForm->handleRequest($request);
+    if ($deleteUserForm->isSubmitted() && $deleteUserForm->isValid()) {
+      $userManager->deleteUser($this->getUser());
+      $tokenStorage->setToken(null);
+      $this->addFlash('success', 'Your account has been deleted.');
+      return $this->redirectToRoute('home');
     }
 
     // render and return the page
-    return $this->render('account/files.html.twig');
-  }
-
-  /**
-   * Route for fetching a user's file data as JSON.
-   *
-   * @Route("/files/json", name="files_json")
-   * @param Request $request
-   * @param FileManager $fileManager
-   * @return Response
-   */
-  public function filesJson(Request $request, FileManager $fileManager): Response
-  {
-    // redirect if the user is not verified
-    if (!$this->getUser()->isVerified()) {
-      return $this->redirectToRoute('account_verify');
-    }
-
-    // render and return the JSON data
-    return $this->json($fileManager->getUserFileData($this->getUser()));
-  }
-
-  /**
-   * Route for uploading a new file.
-   *
-   * @Route("/files/upload", name="upload_file")
-   * @param Request $request
-   * @param FileManager $fileManager
-   * @return Response
-   */
-  public function newFile(Request $request, FileManager $fileManager, $path = null): Response
-  {
-    // redirect if the user is not verified
-    if (!$this->getUser()->isVerified()) {
-      return $this->redirectToRoute('account_verify');
-    }
-
-    // create the new file form
-    $file = new File($this->getUser(), 'txt');
-    $fileForm = $this->createForm(FileCreateType::class, $file);
-
-    // handle the new file form
-    $fileForm->handleRequest($request);
-    if ($fileForm->isSubmitted() && $fileForm->isValid()) {
-      $fileManager->create($file, $this->getUser());
-      $this->addFlash('success', 'File has been uploaded.');
-    }
-
-    // set the twig variables
-    $twigs = [
-      'fileForm' => $fileForm->createView()
-    ];
-
-    // render and return the page
-    return $this->render('account/upload-file.html.twig', $twigs);
+    return $this->render('account/delete.html.twig', [
+      'deleteUserForm' => $deleteUserForm->createView()
+    ]);
   }
 }

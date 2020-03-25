@@ -159,6 +159,11 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     $user->setLastLoginDate(new \DateTime('now'));
     $this->entityManager->persist($user);
 
+    // maybe redirect to verification page
+    if (!$user->isVerified()) {
+      return new RedirectResponse($this->router->generate('unverified'));
+    }
+
     // maybe redirect to secure referring page
     if ($targetPath = $this->getTargetPath($request->getSession(), $providerKey)) {
       return new RedirectResponse($targetPath);

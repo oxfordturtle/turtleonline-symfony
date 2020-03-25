@@ -105,6 +105,18 @@ class SecurityController extends AbstractController
   }
 
   /**
+   * Route for user's who have not yet verified their account.
+   *
+   * @Route("/unverified", name="unverified")
+   * @return Response
+   */
+  public function notVerified(): Response
+  {
+    // render and return the page
+    return $this->render('security/unverified.html.twig');
+  }
+
+  /**
    * Route for verifying an email address.
    *
    * @Route("/verify/{user}/{token}", name="verify")

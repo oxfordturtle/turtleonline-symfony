@@ -6,7 +6,7 @@ body {
   margin: 0;
 }
 
-header {
+.header {
   background: $blue;
   display: flex;
   align-items: baseline;
@@ -15,6 +15,7 @@ header {
   img {
     display: block;
     padding: 1em;
+    height: 2em;
   }
 
   h1 {
@@ -24,7 +25,7 @@ header {
   }
 }
 
-main {
+.main {
   padding: 1em;
 }
 
@@ -33,11 +34,11 @@ p {
 }
 
 .button {
-  display: flex;
-  justify-content: center;
+  text-align: center;
   margin-bottom: 1em;
 
   a {
+    display: inline-block;
     background: $blue;
     color: #fff;
     text-decoration: none;

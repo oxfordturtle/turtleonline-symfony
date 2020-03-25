@@ -9,7 +9,21 @@
   <div class="form">
     {{ form_start(bulkEmailForm) }}
       {{ form_row(bulkEmailForm.subject) }}
-      {{ form_row(bulkEmailForm.content) }}
+      <div class="tabs">
+        <a class="tab active" data-tab="edit">Edit</a>
+        <a class="tab" data-tab="preview">Preview</a>
+      </div>
+      <div class="tab-panes">
+        <div class="tab-pane active" id="edit">
+          {{ form_row(bulkEmailForm.content) }}
+        </div>
+        <div class="tab-pane" id="preview">
+          <div class="form-group">
+            <label>Content (preview)</label>
+            <div class="email-preview" data-preview="bulk_email_content"></div>
+          </div>
+        </div>
+      </div>
       {{ form_row(bulkEmailForm._token) }}
       <div class="form-buttons">
         <button type="submit" class="green button">Send Email</button>

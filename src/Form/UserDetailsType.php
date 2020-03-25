@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -21,12 +22,30 @@ class UserDetailsType extends AbstractType
   public function buildForm(FormBuilderInterface $builder, array $options)
   {
     $builder
-      ->add('username', null, ['label' => 'Username (choose any)'])
-      ->add('email', null, ['label' => 'Email Address'])
+      ->add('username', null, [
+        'label' => 'Username (choose any)'
+      ])
       ->add('firstname')
       ->add('surname')
-      ->add('schoolName', null, ['label' => 'School Name (optional)', 'required' => false])
-      ->add('schoolPostcode', null, ['label' => 'School Postcode (optional)', 'required' => false]);
+      ->add('over13', ChoiceType::class, [
+        'label' => 'Account Type',
+        'choices' => [
+          'This account is for me, and I am at least 13 years old' => true,
+          'This account is for a child under 13, and I am their legal guardian' => false
+        ]
+      ])
+      ->add('guardianFullname', null, [
+        'label' => 'Full name of parent/guardian',
+        'required' => false
+      ])
+      ->add('schoolName', null, [
+        'label' => 'School Name (optional)',
+        'required' => false
+      ])
+      ->add('schoolPostcode', null, [
+        'label' => 'School Postcode (optional)',
+        'required' => false
+      ]);
   }
 
   /**

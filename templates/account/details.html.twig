@@ -1,21 +1,14 @@
 {% extends 'base.html.twig' %}
 
 {% block header %}
-  <h1>Edit Details</h1>
+  <h1>{{ app.user.firstname }} {{ app.user.surname }}: Edit Details</h1>
 {% endblock %}
 
 {% block main %}
   {% include '_includes/back-button.html.twig' %}
   <div class="form">
     {{ form_start(userDetailsForm) }}
-      <div class="columns">
-        <div class="column">
-          {{ form_row(userDetailsForm.username) }}
-        </div>
-        <div class="column">
-          {{ form_row(userDetailsForm.email) }}
-        </div>
-      </div>
+      {{ form_row(userDetailsForm.username) }}
       <div class="columns">
         <div class="column">
           {{ form_row(userDetailsForm.firstname) }}
@@ -24,6 +17,8 @@
           {{ form_row(userDetailsForm.surname) }}
         </div>
       </div>
+      {{ form_row(userDetailsForm.over13) }}
+      {{ form_row(userDetailsForm.guardianFullname) }}
       <div class="columns">
         <div class="column">
           {{ form_row(userDetailsForm.schoolName) }}

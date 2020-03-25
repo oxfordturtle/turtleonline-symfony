@@ -55,3 +55,10 @@
     }
   }
 }
+
+.email-preview {
+  height: 20em;
+  border: 1px solid $gray;
+  padding: .25em .5em;
+  overflow: auto; 
+}
