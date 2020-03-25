@@ -8,19 +8,18 @@ body {
 
 .header {
   background: $blue;
-  display: flex;
-  align-items: baseline;
-  margin-bottom: 1em;
 
   img {
     display: block;
-    padding: 1em;
-    height: 2em;
+    float: left;
+    margin: .85em;
+    height: 2.5em;
   }
 
   h1 {
     font-size: 1.25em;
     color: #fff;
+    padding: 1em;
     margin: 0;
   }
 }
