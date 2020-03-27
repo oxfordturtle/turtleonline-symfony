@@ -2,7 +2,7 @@
  * The machine console component.
  */
 import * as dom from './dom.js'
-import { on } from '../state/machine.js'
+import { on } from '../machine/index.js'
 
 // the console element
 const console = dom.createElement('pre', { classes: 'turtle-console' })

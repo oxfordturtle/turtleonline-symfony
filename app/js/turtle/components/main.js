@@ -14,7 +14,7 @@ import console from './console.js'
 import output from './output.js'
 import * as memory from './memory.js'
 import * as settings from './settings.js'
-import { on } from '../state/index.js'
+import state from '../state/index.ts'
 
 // the various blocks
 const fileBlock = dom.createElement('div', {
@@ -80,7 +80,7 @@ export default dom.createElement('main', {
 })
 
 // register to stay in sync with the system state
-on('show-component', (data) => {
+state.on('show-component', (data) => {
   switch (data) {
     case 'file': // fallthrough
     case 'code': // fallthrough
@@ -131,7 +131,7 @@ on('show-component', (data) => {
   }
 })
 
-on('file-changed', () => {
+state.on('file-changed', () => {
   code.scrollTop = 0
   code.scrollLeft = 0
 })

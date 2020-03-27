@@ -3,7 +3,7 @@
  */
 import * as dom from './dom.js'
 import { PCode, pcodeArgs } from '../definitions/pcodes.ts'
-import { send, on } from '../state/index.js'
+import state from '../state/index.ts'
 
 // radio options
 const assemblerInput = dom.createElement('input', { type: 'radio', name: 'pcodeOptions1' })
@@ -27,23 +27,23 @@ export const list = dom.createElement('ol', { classes: 'turtle-pcode' })
 
 // setup event listeners on interactive elements
 assemblerInput.addEventListener('change', () => {
-  send('toggle-assembler')
+  state.assembler = !state.assembler
 })
 
 machineInput.addEventListener('change', () => {
-  send('toggle-assembler')
+  state.assembler = !state.assembler
 })
 
 decimalInput.addEventListener('change', () => {
-  send('toggle-decimal')
+  state.decimal = !state.decimal
 })
 
 hexadecimalInput.addEventListener('change', () => {
-  send('toggle-decimal')
+  state.decimal = !state.decimal
 })
 
 // register to keep in sync with the application state
-on('pcode-changed', ({ pcode, assembler, decimal }) => {
+state.on('pcode-changed', ({ pcode, assembler, decimal }) => {
   if (assembler) {
     assemblerInput.setAttribute('checked', 'checked')
   } else {

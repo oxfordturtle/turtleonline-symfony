@@ -2,7 +2,7 @@
  * The machine output component.
  */
 import * as dom from './dom.js'
-import { on } from '../state/machine.js'
+import { on } from '../machine/index.js'
 
 // the output element (exported)
 const output = dom.createElement('pre', { classes: 'turtle-output' })

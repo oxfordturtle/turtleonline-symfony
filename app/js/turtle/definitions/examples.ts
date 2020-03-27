@@ -1,7 +1,138 @@
 /*
- * Full names for the example programs.
+ * Details of example programs.
  */
-export default {
+let index = 1
+
+export class Group {
+  readonly index: number
+  readonly title: string
+  readonly examples: string[]
+  constructor (title: string, examples: string[]) {
+    this.index = index++
+    this.title = title
+    this.examples = examples
+  }
+}
+
+export const groups = [
+  new Group('drawing and counting loops', [
+    'DrawPause',
+    'SmileyFace',
+    'ThePlough',
+    'OlympicRings',
+    'ForLoop',
+    'TriangleSpin',
+    'Circles',
+    'NestedLoops',
+    'RandomLines',
+    'RandomEllipses',
+    'ColourSpiral'
+  ]),
+  new Group('procedures and simple recursion', [
+    'SimpleProc',
+    'ParameterProc',
+    'ResizableFace',
+    'Polygons',
+    'Stars',
+    'PolygonRings',
+    'Triangle1',
+    'Triangle2',
+    'Triangle3',
+    'Triangles',
+    'Factorials',
+    'Fibonaccis'
+  ]),
+  new Group('further commands and structures', [
+    'YouAreHere',
+    'CycleColours',
+    'Clock',
+    'DigitalClock',
+    'Flashlights',
+    'RefParams',
+    'Balls3D',
+    'StringFunctions',
+    'UserStringFunctions',
+    'MathFunctions',
+    'TrigGraphs',
+    'RandomSentences',
+    'FileCommands',
+    'DirectoryCommands',
+    'FileSearching'
+  ]),
+  new Group('smooth movement and bouncing', [
+    'MovingBall',
+    'BouncingBall',
+    'TurtleMove',
+    'TurtleBounce',
+    'BouncingFace',
+    'MultiBounce',
+    'BouncingTriangle',
+    'BouncingShapes',
+    'GravitySteps',
+    'SolarSystem'
+  ]),
+  new Group('user input, interaction and games', [
+    'AskInput',
+    'QuickClick',
+    'TypingTest',
+    'TypingTestKeys',
+    'IterationGame',
+    'SpongeThrow',
+    'Arcade',
+    'SnakeGame',
+    'NoughtsAndCrosses',
+    'SimpleDraw',
+    'PaintApp',
+    'MultipleTurtles'
+  ]),
+  new Group('interdisciplinary models (CSAC project)', [
+    'AimCannon',
+    'AutoCannon',
+    'Launch',
+    'Disease',
+    'GameOfLife',
+    'LifeArrays',
+    'Automata',
+    'BrownianMotion',
+    'Dendrites',
+    'Cheetahs',
+    'SexRatio',
+    'Flocking',
+    'Roads',
+    'Schelling',
+    'IteratedPD',
+    'Interference',
+    'TwoSlits',
+    'WaveSuperposer'
+  ]),
+  new Group('self-similarity and chaos', [
+    'RecursionFactory',
+    'RecursiveTree',
+    'KochSnowflake',
+    'SquareKoch',
+    'Sierpinski',
+    'SierpinskiDots',
+    'IFSBackground',
+    'IFSColour',
+    'IFSDemonstrator',
+    'Logistic',
+    'LogisticSpider',
+    'MandelbrotDemo',
+    'MandelbrotSpectrumDemo',
+    'Quine'
+  ]),
+  new Group('logic and computer science', [
+    'Syllogisms',
+    'TuringMachines',
+    'Sorting',
+    'SortingStrings',
+    'NimLearn',
+    'MultiNim',
+    'KnightsTour'
+  ])
+]
+
+export const names = {
   // examples 1
   DrawPause: 'Simple drawing with pauses',
   SmileyFace: 'Smiley face (using PENUP and ELLBLOT)',

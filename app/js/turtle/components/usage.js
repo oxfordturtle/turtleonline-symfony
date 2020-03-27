@@ -3,7 +3,7 @@
  */
 import * as dom from './dom.js'
 import highlight from '../compile/highlight.js'
-import { on } from '../state/index.js'
+import state from '../state/index.ts'
 
 // the usage table body
 const tableBody = dom.createElement('tbody')
@@ -34,7 +34,7 @@ export default dom.createElement('div', {
 })
 
 // register to keep in sync with the application state
-on('usage-changed', ({ usage, language }) => {
+state.on('usage-changed', ({ usage, language }) => {
   dom.setContent(tableBody, usage.map(categoryFragment.bind(null, language)))
 })
 

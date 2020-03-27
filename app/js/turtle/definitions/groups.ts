@@ -2,7 +2,6 @@
  * An array of expression categories (i.e. command categories plus a few other things). Used by
  * the usage analyser).
  */
-import { categories } from './categories.ts'
 import { Names } from './languages.ts'
 
 export class Group {

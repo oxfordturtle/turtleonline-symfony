@@ -3,7 +3,7 @@
  */
 import * as dom from './dom.js'
 import highlight from '../compile/highlight.js'
-import { on } from '../state/index.js'
+import state from '../state/index.ts'
 
 // the lexemes table body
 const tableBody = dom.createElement('tbody')
@@ -54,6 +54,6 @@ function tableBodyRow (language, lexeme, index) {
 }
 
 // register to keep in sync with the application state
-on('lexemes-changed', ({ lexemes, language }) => {
+state.on('lexemes-changed', ({ lexemes, language }) => {
   dom.setContent(tableBody, lexemes.map(tableBodyRow.bind(null, language)))
 })

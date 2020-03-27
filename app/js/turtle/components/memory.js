@@ -2,7 +2,7 @@
  * The machine memory component.
  */
 import * as dom from './dom.js'
-import { send, on } from '../state/index.js'
+import state from '../state/index.ts'
 
 // the memory dump button
 const dumpButton = dom.createElement('button', { content: 'Show Current State' })
@@ -74,12 +74,12 @@ export const heap = dom.createElement('div', {
 
 // add event listeners to interactive elements
 dumpButton.addEventListener('click', (e) => {
-  send('dump-memory')
+  state.dumpMemory()
   dumpButton.blur()
 })
 
 // register to keep in sync with system state
-on('dump-memory', (memory) => {
+state.on('dump-memory', (memory) => {
   const stackSplit = []
   const heapSplit = []
   while (memory.stack.length > 0) {

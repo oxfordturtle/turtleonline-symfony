@@ -1,8 +1,8 @@
 /*
  * the online turtle system
  */
-import * as state from './state/index.js'
-import * as machine from './state/machine.js'
+import state from './state/index.ts'
+import * as machine from './machine/index.js'
 import * as dom from './components/dom.js'
 import controls from './components/controls.js'
 import system from './components/system.js'
@@ -18,15 +18,15 @@ if (turtle) {
 
   // maybe setup state variables based on the app's data properties
   if (turtle.dataset.language) {
-    state.send('set-language', turtle.dataset.language)
+    state.language = turtle.dataset.language
   }
 
   if (turtle.dataset.example) {
-    state.send('set-example', turtle.dataset.example)
+    state.openExampleFile(turtle.dataset.example)
   }
 
   if (turtle.dataset.file) {
-    state.send('load-remote-file', turtle.dataset.file)
+    state.loadRemoteFile(turtle.dataset.file)
   }
 
   // register to handle state and machine errors
@@ -53,6 +53,6 @@ if (turtle) {
   })
 
   // send the page ready signal (which will update the components to reflect the initial state)
-  state.send('ready')
+  state.init()
   state.send('resize-canvas')
 }

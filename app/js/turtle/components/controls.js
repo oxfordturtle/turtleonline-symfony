@@ -3,8 +3,8 @@
  */
 import * as dom from './dom.js'
 import { languages } from '../definitions/languages.ts'
-import { send, on } from '../state/index.js'
-import * as machine from '../state/machine.js'
+import state from '../state/index.ts'
+import * as machine from '../machine/index.js'
 
 // language select menu
 const languageSelect = dom.createElement('select', {
@@ -53,34 +53,34 @@ export default dom.createElement('div', {
 menuButton.addEventListener('click', (e) => {
   e.stopPropagation()
   menuButton.blur()
-  send('toggle-menu')
+  state.menu = !state.menu
 })
 
 languageSelect.addEventListener('change', (e) => {
-  send('set-language', languageSelect.value)
+  state.language = languageSelect.value
 })
 
 runButton.addEventListener('click', (e) => {
   runButton.blur()
-  send('machine-run-pause')
+  state.playPauseMachine()
 })
 
 haltButton.addEventListener('click', (e) => {
   haltButton.blur()
-  send('machine-halt')
+  state.haltMachine()
 })
 
 maxMinButton.addEventListener('click', (e) => {
   maxMinButton.blur()
-  send('toggle-fullscreen')
+  state.fullscreen = !state.fullscreen
 })
 
 // subscribe to keep in sync with system state
-on('language-changed', (language) => {
+state.on('language-changed', (language) => {
   languageSelect.value = language
 })
 
-on('fullscreen-changed', (fullscreen) => {
+state.on('fullscreen-changed', (fullscreen) => {
   if (fullscreen) {
     dom.setContent(maxMinButton, [dom.createElement('i', { classes: 'fa fa-compress' })])
     maxMinButton.setAttribute('title', 'Restore down')

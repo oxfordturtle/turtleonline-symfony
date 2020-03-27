@@ -2,7 +2,7 @@
  * The turtle properties display (shown above the canvas).
  */
 import * as dom from './dom.js'
-import { on } from '../state/machine.js'
+import { on } from '../machine/index.js'
 
 // the turtle properties display elements
 const turtX = dom.createElement('span', { classes: 'turtle-value', content: '500' })

@@ -1,17 +1,21 @@
 /*
  * toggle the main site menu (for small screens)
  */
-function getSubMenus (element) {
+function getSubMenus (element: Document|Element): Element[] {
   return Array.from(element.querySelectorAll('[data-action="toggle-menu"]'))
 }
 
-function getOppositeMenuClass (element) {
-  if (element.parentElement.classList.contains('nav-left')) return '.nav-right'
-  if (element.parentElement.classList.contains('nav-right')) return '.nav-left'
+function getOppositeMenuClass (element: Element): string {
+  if (element.parentElement.classList.contains('nav-left')) {
+    return '.nav-right'
+  }
+  if (element.parentElement.classList.contains('nav-right')) {
+    return '.nav-left'
+  }
   return getOppositeMenuClass(element.parentElement)
 }
 
-function closeMenu (a) {
+function closeMenu (a: Element): void {
   const menu = a.nextElementSibling
   const caret = a.querySelector('.icon:last-child .fa')
   a.classList.remove('open')
@@ -23,7 +27,7 @@ function closeMenu (a) {
   getSubMenus(menu).forEach(closeMenu)
 }
 
-function openMenu (a) {
+function openMenu (a: Element): void {
   const menu = a.nextElementSibling
   const caret = a.querySelector('.icon:last-child .fa')
   a.classList.add('open')
@@ -36,7 +40,7 @@ function openMenu (a) {
 }
 
 getSubMenus(document).forEach((a) => {
-  a.addEventListener('click', (e) => {
+  a.addEventListener('click', () => {
     if (a.classList.contains('open')) {
       closeMenu(a)
     } else {

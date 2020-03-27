@@ -2,9 +2,8 @@
  * The program file component.
  */
 import * as dom from './dom.js'
-import exampleGroups from '../definitions/exampleGroups.js'
-import exampleNames from '../definitions/exampleNames.js'
-import { send } from '../state/index.js'
+import { groups, names } from '../definitions/examples.ts'
+import state from '../state/index.ts'
 
 // buttons
 const saveLocalButton = dom.createElement('button', { content: 'Save on My Computer' })
@@ -50,9 +49,9 @@ function exampleGroupList (group, index) {
 }
 
 function exampleGroupListItem (example, index) {
-  const li = dom.createElement('li', { content: `${index + 1}. ${exampleNames[example]}` })
+  const li = dom.createElement('li', { content: `${index + 1}. ${names[example]}` })
   li.addEventListener('click', () => {
-    send('set-example', example)
+    state.openExampleFile(example)
   })
   return li
 }
@@ -63,26 +62,26 @@ export const openExample = dom.createElement('div', {
     dom.createElement('h2', { content: 'Open Example' }),
     dom.createElement('div', {
       classes: 'turtle-examples',
-      content: exampleGroups.map(exampleGroupList)
+      content: groups.map(exampleGroupList)
     })
   ]
 })
 
 // setup event listeners on interactive elements
 saveLocalButton.addEventListener('click', () => {
-  send('save-local')
+  state.saveLocal()
 })
 
 saveRemoteButton.addEventListener('click', () => {
-  send('save-remote')
+  state.saveRemote()
 })
 
 newBlankButton.addEventListener('click', () => {
-  send('new-program')
+  state.newProgram()
 })
 
 newSkeletonButton.addEventListener('click', () => {
-  send('new-skeleton-program')
+  state.newSkeletonProgram()
 })
 
 openLocalButton.addEventListener('click', () => {
@@ -93,7 +92,7 @@ fileInput.addEventListener('change', () => {
   const file = fileInput.files[0]
   const fr = new window.FileReader()
   fr.onload = () => {
-    send('set-file', { filename: file.name, content: fr.result })
+    state.setFile(file.name, fr.result)
     // reset the file input so that the change event definitely triggers next time
     fileInput.type = ''
     fileInput.type = 'file'
@@ -102,5 +101,5 @@ fileInput.addEventListener('change', () => {
 })
 
 openRemoteButton.addEventListener('click', () => {
-  send('open-remote')
+  state.openRemote()
 })

@@ -4,32 +4,23 @@ body {
   font-family: $system-font;
   color: $darkgray;
   margin: 0;
-}
-
-.header {
-  background: $blue;
-
-  img {
-    display: block;
-    float: left;
-    margin: .85em;
-    height: 2.5em;
-  }
-
-  h1 {
-    font-size: 1.25em;
-    color: #fff;
-    padding: 1em;
-    margin: 0;
-  }
-}
-
-.main {
   padding: 1em;
 }
 
 p {
   margin: 0 0 1em;
+}
+
+a {
+  color: $blue;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+img {
+  max-width: 100%;
 }
 
 .button {

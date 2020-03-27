@@ -2,7 +2,7 @@
  * The system menu.
  */
 import * as dom from './dom.js'
-import { send, on } from '../state/index.js'
+import state from '../state/index.ts'
 
 // create the clickable menu items
 const fileLink = dom.createIconWithText('a', { icon: 'fa fa-folder-open', text: 'File...' })
@@ -43,8 +43,8 @@ export default menu
 
 // add event listeners to send state signals
 fileLink.addEventListener('click', (e) => {
-  send('close-menu')
-  send('show-component', 'file')
+  state.menu = false
+  state.send('show-component', 'file')
   fileLink.classList.add('active')
   codeLink.classList.remove('active')
   usageLink.classList.remove('active')
@@ -53,8 +53,8 @@ fileLink.addEventListener('click', (e) => {
 })
 
 codeLink.addEventListener('click', (e) => {
-  send('close-menu')
-  send('show-component', 'code')
+  state.menu = false
+  state.send('show-component', 'code')
   fileLink.classList.remove('active')
   codeLink.classList.add('active')
   usageLink.classList.remove('active')
@@ -63,8 +63,8 @@ codeLink.addEventListener('click', (e) => {
 })
 
 usageLink.addEventListener('click', (e) => {
-  send('close-menu')
-  send('show-component', 'usage')
+  state.menu = false
+  state.send('show-component', 'usage')
   fileLink.classList.remove('active')
   codeLink.classList.remove('active')
   usageLink.classList.add('active')
@@ -73,8 +73,8 @@ usageLink.addEventListener('click', (e) => {
 })
 
 lexemesLink.addEventListener('click', (e) => {
-  send('close-menu')
-  send('show-component', 'lexemes')
+  state.menu = false
+  state.send('show-component', 'lexemes')
   fileLink.classList.remove('active')
   codeLink.classList.remove('active')
   usageLink.classList.remove('active')
@@ -83,8 +83,8 @@ lexemesLink.addEventListener('click', (e) => {
 })
 
 pcodeLink.addEventListener('click', (e) => {
-  send('close-menu')
-  send('show-component', 'pcode')
+  state.menu = false
+  state.send('show-component', 'pcode')
   fileLink.classList.remove('active')
   codeLink.classList.remove('active')
   usageLink.classList.remove('active')
@@ -93,8 +93,8 @@ pcodeLink.addEventListener('click', (e) => {
 })
 
 canvasLink.addEventListener('click', (e) => {
-  send('close-menu')
-  send('show-component', 'canvas')
+  state.menu = false
+  state.send('show-component', 'canvas')
   canvasLink.classList.add('active')
   outputLink.classList.remove('active')
   memoryLink.classList.remove('active')
@@ -102,8 +102,8 @@ canvasLink.addEventListener('click', (e) => {
 })
 
 outputLink.addEventListener('click', (e) => {
-  send('close-menu')
-  send('show-component', 'output')
+  state.menu = false
+  state.send('show-component', 'output')
   canvasLink.classList.remove('active')
   outputLink.classList.add('active')
   memoryLink.classList.remove('active')
@@ -111,8 +111,8 @@ outputLink.addEventListener('click', (e) => {
 })
 
 memoryLink.addEventListener('click', (e) => {
-  send('close-menu')
-  send('show-component', 'memory')
+  state.menu = false
+  state.send('show-component', 'memory')
   canvasLink.classList.remove('active')
   outputLink.classList.remove('active')
   memoryLink.classList.add('active')
@@ -120,8 +120,8 @@ memoryLink.addEventListener('click', (e) => {
 })
 
 optionsLink.addEventListener('click', (e) => {
-  send('close-menu')
-  send('show-component', 'settings')
+  state.menu = false
+  state.send('show-component', 'settings')
   canvasLink.classList.remove('active')
   outputLink.classList.remove('active')
   memoryLink.classList.remove('active')
@@ -129,19 +129,15 @@ optionsLink.addEventListener('click', (e) => {
 })
 
 // register to update things on state change
-on('open-menu', () => {
-  menu.classList.add('active')
+state.on('menu-changed', (menuOpen) => {
+  if (menuOpen) {
+    menu.classList.add('active')
+  } else {
+    menu.classList.remove('active')
+  }
 })
 
-on('close-menu', () => {
-  menu.classList.remove('active')
-})
-
-on('toggle-menu', () => {
-  menu.classList.toggle('active')
-})
-
-on('show-component', (component) => {
+state.on('show-component', (component) => {
   const programLinks = {
     file: fileLink,
     code: codeLink,

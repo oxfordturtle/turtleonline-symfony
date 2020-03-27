@@ -4,7 +4,7 @@
 import * as dom from './dom.js'
 import { cursors } from '../definitions/cursors.ts'
 import { fonts } from '../definitions/fonts.ts'
-import { send, on } from '../state/machine.js'
+import { send, on } from '../machine/index.js'
 
 // the canvas element and its 2d drawing context
 const canvas = dom.createElement('canvas', { width: '1000', height: '1000' })

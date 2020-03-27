@@ -1,9 +1,3 @@
 {% apply inline_css(source('@css/email.css')) %}
-  <div class="header">
-    <img src="{{ email.image('@images/turtle.png') }}" alt="Logo">
-    <h1>Oxford Turtle System</h1>
-  </div>
-  <div class="main">
-    {% block content %}{% endblock %}
-  </div>
+  {% block content %}{% endblock %}
 {% endapply %}

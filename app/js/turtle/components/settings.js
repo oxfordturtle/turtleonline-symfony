@@ -2,7 +2,7 @@
  * The machine settings component.
  */
 import * as dom from './dom.js'
-import { send, on } from '../state/index.js'
+import state from '../state/index.ts'
 
 // the reset defaults button
 const resetButton = dom.createElement('button', { content: 'Reset Defaults' })
@@ -61,43 +61,43 @@ export const stackSize = dom.createElement('div', {
 
 // add event listeners to interactive elements
 resetButton.addEventListener('click', (e) => {
-  send('reset-machine-options')
+  state.resetMachineOptions()
   e.currentTarget.blur()
 })
 
 showCanvasInput.addEventListener('change', (e) => {
-  send('toggle-show-canvas')
+  state.showCanvas = !state.showCanvas
 })
 
 showOutputInput.addEventListener('change', (e) => {
-  send('toggle-show-output')
+  state.showOutput = !state.showOutput
 })
 
 showMemoryInput.addEventListener('change', (e) => {
-  send('toggle-show-memory')
+  state.showMemory = !state.showMemory
 })
 
 drawCountMaxInput.addEventListener('change', (e) => {
-  send('set-draw-count-max', drawCountMaxInput.value)
+  state.drawCountMax = drawCountMaxInput.value
 })
 
 codeCountMaxInput.addEventListener('change', (e) => {
-  send('set-code-count-max', codeCountMaxInput.value)
+  state.codeCountMax = codeCountMaxInput.value
 })
 
 smallSizeInput.addEventListener('change', (e) => {
-  send('set-small-size', smallSizeInput.value)
+  state.smallSize = smallSizeInput.value
 })
 
 stackSizeInput.addEventListener('change', (e) => {
-  send('set-stack-size', stackSizeInput.value)
+  state.stackSize = stackSizeInput.value
 })
 
 // register to keep in sync with system state
-on('show-canvas-changed', (value) => { showCanvasInput.checked = value })
-on('show-output-changed', (value) => { showOutputInput.checked = value })
-on('show-memory-changed', (value) => { showMemoryInput.checked = value })
-on('draw-count-max-changed', (value) => { drawCountMaxInput.value = value })
-on('code-count-max-changed', (value) => { codeCountMaxInput.value = value })
-on('small-size-changed', (value) => { smallSizeInput.value = value })
-on('stack-size-changed', (value) => { stackSizeInput.value = value })
+state.on('show-canvas-changed', (value) => { showCanvasInput.checked = value })
+state.on('show-output-changed', (value) => { showOutputInput.checked = value })
+state.on('show-memory-changed', (value) => { showMemoryInput.checked = value })
+state.on('draw-count-max-changed', (value) => { drawCountMaxInput.value = value })
+state.on('code-count-max-changed', (value) => { codeCountMaxInput.value = value })
+state.on('small-size-changed', (value) => { smallSizeInput.value = value })
+state.on('stack-size-changed', (value) => { stackSizeInput.value = value })

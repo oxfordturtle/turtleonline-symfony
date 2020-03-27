@@ -3,7 +3,7 @@
  */
 import * as dom from './dom.js'
 import highlight from '../compile/highlight.js'
-import { send, on } from '../state/index.js'
+import state from '../state/index.ts'
 
 // the editor line numbers
 const lineNumbers = dom.createElement('ol', { classes: 'turtle-line-numbers' })
@@ -49,7 +49,7 @@ plainCode.addEventListener('keydown', (e) => {
     const right = plainCode.value.slice(pos)
     e.preventDefault()
     plainCode.value = [left, right].join('  ')
-    send('set-code', plainCode.value)
+    state.setFileCode(plainCode.value)
     plainCode.selectionStart = pos + 2
     plainCode.selectionEnd = pos + 2
   }
@@ -61,11 +61,11 @@ plainCode.addEventListener('keydown', (e) => {
 })
 
 plainCode.addEventListener('input', (e) => {
-  send('set-code', plainCode.value)
+  state.setFileCode(plainCode.value)
 })
 
 // register to keep in sync with the application state
-on('code-changed', ({ code, language }) => {
+state.on('code-changed', ({ code, language }) => {
   const lines = code.split('\n')
   dom.setContent(lineNumbers, lines.map((x, y) => dom.createElement('li', { content: y + 1 })))
   dom.setContent(prettyCode, highlight(code, language))

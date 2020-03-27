@@ -2,7 +2,7 @@
  * The filename component.
  */
 import * as dom from './dom.js'
-import { on, send } from '../state/index.js'
+import state from '../state/index.ts'
 
 // current file select
 const currentFileSelect = dom.createElement('select', { 'aria-label': 'Current file' })
@@ -27,26 +27,26 @@ export default dom.createElement('div', {
 })
 
 // subscribe to keep in sync with the system state
-on('files-changed', ({ files, currentFileIndex }) => {
+state.on('files-changed', ({ files, currentFileIndex }) => {
   dom.setContent(currentFileSelect, files.map((file, index) => {
     return dom.createElement('option', { value: index, content: `${index + 1} [${file.language}]` })
   }))
   currentFileSelect.value = currentFileIndex
 })
 
-on('name-changed', (name) => {
+state.on('name-changed', (name) => {
   filenameInput.value = name
 })
 
 // setup event listeners on interactive elements
 currentFileSelect.addEventListener('change', () => {
-  send('set-current-file-index', currentFileSelect.value)
+  state.currentFileIndex = currentFileSelect.value
 })
 
 filenameInput.addEventListener('keyup', () => {
-  send('set-name', filenameInput.value)
+  state.setFileName(filenameInput.value)
 })
 
 closeFileButton.addEventListener('click', () => {
-  send('close-current-file')
+  state.closeCurrentFile()
 })
