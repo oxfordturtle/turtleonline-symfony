@@ -46,7 +46,7 @@ class Mailer
   ): TemplatedEmail
   {
     return (new TemplatedEmail())
-      ->from(new Address('turtleoxford@gmail.com', 'Turtle System Oxford'))
+      ->from(new Address('turtle@cs.ox.ac.uk', 'Oxford Turtle System'))
       ->to(new Address($user->getEmail(), $user->getFirstname().' '.$user->getSurname()))
       ->subject('Turtle System: '.$subject)
       ->htmlTemplate('email/'.$template.'.html.twig')
