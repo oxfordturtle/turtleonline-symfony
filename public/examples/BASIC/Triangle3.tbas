@@ -1,9 +1,10 @@
-REM Triangle3
-
+REM move to the start (without drawing)
 MOVEXY(-100, 150)
+REM draw a triangle of size 256
 PROCtriangle(256)
 END
 
+REM draws a triangle of the given size, only if size > 1
 DEF PROCtriangle(size%)
   IF size% > 1 THEN
     FORWARD(size%)

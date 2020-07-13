@@ -1,5 +1,4 @@
-REM SimpleProc
-
+REM draw several random coloured prongs
 REPEAT
   RNDCOL(10)
   PROCprong
@@ -7,6 +6,7 @@ REPEAT
 UNTIL turtd% = 0
 END
 
+REM draws a prong
 DEF PROCprong
   FORWARD(400)
   BLOT(20)

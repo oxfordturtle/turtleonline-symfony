@@ -1,8 +1,9 @@
-REM PolygonRings
-
 PENUP
+REM draw a black blot
 BLOT(500)
+REM start with a random colour
 RNDCOL(6)
+REM draw multi-coloured annuli within the blot
 PROCannulus(410, 80, 2)
 PROCannulus(310, 80, 3)
 PROCannulus(210, 80, 5)
@@ -10,9 +11,10 @@ PROCannulus(110, 80, 7)
 PROCannulus(10, 80, 1)
 END
 
+REM draws a multi-coloured annulus (a ring shape)
 DEF PROCannulus(inner%, width%, angle%)
   LOCAL count%
-  FOR count% = 0 TO 360 DIV angle%
+  FOR count% = 0 TO (360 DIV angle%)
     FORWARD(inner% + width%)
     BACK(width%)
     BACK(inner%)
@@ -20,7 +22,7 @@ DEF PROCannulus(inner%, width%, angle%)
     RIGHT(angle%)
     FORWARD(inner%)
     FORWARD(width%)
-    COLOUR(RGB(count% MOD 20 + 1))
+    COLOUR(RGB((count% MOD 20) + 1))
     POLYGON(4)
     BACK(inner% + width%)
   NEXT

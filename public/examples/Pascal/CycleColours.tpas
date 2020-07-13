@@ -1,17 +1,19 @@
 PROGRAM CycleColours;
-VAR len: integer;
-    colinc, colcode: integer;
+VAR lineLength: integer;
+    colourInc, colourCode: integer;
 BEGIN
+  {black out the canvas and initialise variables}
   blank(black);
-  colinc := random(5);
-  colcode := random(20) + 1;
-  len := 0;
+  colourInc := random(5);
+  colourCode := random(20) + 1;
+  lineLength := 0;
   thickness(16);
+  {draw a spiral of lines of increasing length, cycling through different colours}
   repeat
-    colcode := (colcode + colinc) mod 20 + 1;
-    colour(rgb(colcode));
-    len := len + 1;
-    forward(len);
+    colourCode := ((colourCode + colourInc) mod 20) + 1;
+    colour(rgb(colourCode));
+    lineLength := lineLength + 1;
+    forward(lineLength);
     right(30)
-  until len > 250
+  until lineLength > 250
 END.

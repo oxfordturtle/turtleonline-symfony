@@ -1,12 +1,13 @@
-REM Circles
-
+REM set up the turtle
 THICKNESS(6)
 PENUP
 BLANK(BLACK)
 COLOUR(ORANGE)
 FOR count% = 1 TO 36
+  REM draw a circle 200 points from the centre of the canvas
   FORWARD(200)
   CIRCLE(200)
+  REM re-centre the turtle, and turn right 10 degrees
   BACK(200)
   RIGHT(10)
   PAUSE(25)

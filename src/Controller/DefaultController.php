@@ -49,7 +49,7 @@ class DefaultController extends AbstractController
   public function documentation(): Response
   {
     // redirect
-    return $this->redirectToRoute('documentation_guides');
+    return $this->redirectToRoute('documentation_guide');
   }
 
   /**

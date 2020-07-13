@@ -1,9 +1,10 @@
-REM Triangles
-
+REM move to the start (without drawing)
 MOVEXY(-100, 150)
+REM draw a triangle with triangles half the size at each point
 PROCtriangle(256)
 END
 
+REM draws a triangle recursively, with half-sized triangles at each point
 DEF PROCtriangle(size%)
   IF size% > 1 THEN
     FORWARD(size%)

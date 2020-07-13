@@ -16,6 +16,18 @@ use Symfony\Component\Routing\Annotation\Route;
 class DocumentationController extends AbstractController
 {
   /**
+   * Route for the user guide page.
+   *
+   * @Route("/guide/{tab}", name="guide", requirements={"tab"="getting-started|how-to-use-this-guide"})
+   * @return Response
+   */
+  public function guide(string $tab = 'getting-started'): Response
+  {
+    // render and return the page
+    return $this->render('documentation/guide.html.twig', ['tab' => $tab]);
+  }
+
+  /**
    * Route for the languages help page.
    *
    * @Route("/help", name="help")
@@ -25,18 +37,6 @@ class DocumentationController extends AbstractController
   {
     // render and return the page
     return $this->render('documentation/help.html.twig');
-  }
-
-  /**
-   * Route for the user guides page.
-   *
-   * @Route("/guides/{tab}", name="guides", requirements={"tab"="windows|online"})
-   * @return Response
-   */
-  public function guides(string $tab = 'windows'): Response
-  {
-    // render and return the page
-    return $this->render('documentation/guides.html.twig', ['tab' => $tab]);
   }
 
   /**

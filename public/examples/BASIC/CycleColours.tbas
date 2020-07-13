@@ -1,16 +1,16 @@
-REM CycleColours
-
+REM black out the canvas and initialise variables
 BLANK(BLACK)
-colinc% = RND(5) - 1
-colcode% = RND(20)
-COLOUR(RGB(colcode%))
-length% = 0
+colourInc% = RND(5) - 1
+colourCode% = RND(20)
+COLOUR(RGB(colourCode%))
+lineLength% = 0
 THICKNESS(16)
+REM draw a spiral of lines of increasing length, cycling through different colours
 REPEAT
-  colcode% = (colcode% + colinc%) MOD 20 + 1
-  COLOUR(RGB(colcode%))
-  length% = length% + 1
-  FORWARD(length%)
+  colourCode% = ((colourCode% + colourInc%) MOD 20) + 1
+  COLOUR(RGB(colourCode%))
+  lineLength% = lineLength% + 1
+  FORWARD(lineLength%)
   RIGHT(30)
-UNTIL length% > 250
+UNTIL lineLength% > 250
 END

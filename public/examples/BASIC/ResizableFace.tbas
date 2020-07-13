@@ -1,33 +1,41 @@
-REM ResizableFace
-
+REM draw a face of radius 400
 PROCface(400)
 END
 
-DEF PROCface(size%)
+REM draws a face of the given radius
+DEF PROCface(radius%)
+  REM draw head
   COLOUR(PEACH)
-  BLOT(size%)
+  BLOT(radius%)
+  REM draw mouth
   COLOUR(DARKRED)
-  BLOT(size% * 7 / 10)
-  FORWARD(size% * 3 / 20)
+  BLOT(radius% * 7 / 10)
+  FORWARD(radius% * 3 / 20)
   COLOUR(PEACH)
-  BLOT(size% * 3 / 4)
-  BACK(size% * 3 / 10)
+  BLOT(radius% * 3 / 4)
+  REM draw nose
+  BACK(radius% * 3 / 10)
   COLOUR(ROYAL)
-  BLOT(size% * 3 / 20)
+  BLOT(radius% * 3 / 20)
+  REM move to left eye position (without drawing)
   PENUP
-  FORWARD(size% * 9 / 20)
+  FORWARD(radius% * 9 / 20)
   LEFT(90)
-  FORWARD(size% * 2 / 5)
-  PROCeye(size%)
-  BACK(size% * 4 / 5)
-  PROCeye(size%)
+  FORWARD(radius% * 2 / 5)
+  REM draw left eye
+  PROCeye(radius%)
+  REM move to right eye position (without drawing)
+  BACK(radius% * 4 / 5)
+  REM draw right eye
+  PROCeye(radius%)
 ENDPROC
 
-DEF PROCeye(size%)
+REM draws an eye sized to fit the given face radius
+DEF PROCeye(faceRadius%)
   COLOUR(WHITE)
-  ELLBLOT(size% * 3 / 20, size% / 10)
+  ELLBLOT(faceRadius% * 3 / 20, faceRadius% / 10)
   COLOUR(EMERALD)
-  BLOT(size% * 9 / 100)
+  BLOT(faceRadius% * 9 / 100)
   COLOUR(BLACK)
-  BLOT(size% / 25)
+  BLOT(faceRadius% / 25)
 ENDPROC

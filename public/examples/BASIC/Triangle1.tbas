@@ -1,10 +1,12 @@
-REM Triangle1
-
+REM move to the start (without drawing)
 MOVEXY(-100, 150)
+REM draw the first side
 FORWARD(256)
 RIGHT(120)
+REM draw the second side
 FORWARD(256)
 RIGHT(120)
+REM draw the third side
 FORWARD(256)
 RIGHT(120)
 END

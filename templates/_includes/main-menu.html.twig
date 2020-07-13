@@ -13,8 +13,8 @@
     <span class="icon"><i class="fa fa-caret-down"></i></span>
   </a>
   <div class="nav-sub-menu">
+    <a href="{{ path('documentation_guide') }}" class="nav-item{% if route == 'documentation_guide' %} active{% endif %}">Turtle System User Guide</a>
     <a href="{{ path('documentation_help') }}" class="nav-item{% if route == 'documentation_help' %} active{% endif %}">Turtle Languages Help</a>
-    <a href="{{ path('documentation_guides') }}" class="nav-item{% if route == 'documentation_guides' %} active{% endif %}">Turtle System User Guides</a>
     <a href="{{ path('documentation_exercises') }}" class="nav-item{% if route == 'documentation_exercises' %} active{% endif %}">Self-Teach Exercises</a>
     <a href="{{ path('documentation_machine') }}" class="nav-item{% if route == 'documentation_machine' %} active{% endif %}">Turtle Machine Specification</a>
     <a href="{{ path('documentation_languages') }}" class="nav-item{% if route == 'documentation_languages' %} active{% endif %}">Turtle Languages Specifications</a>

@@ -13,10 +13,10 @@ BEGIN
   blank(black);
   {position the turtle}
   forward(15);
-  {set line thickness and length}
+  {set line thickness and initial length}
   thickness(27);
   lineLength := 20;
-  {repeatedly call the lineTurn procedure and increment lineLength}
+  {repeatedly call the lineTurn procedure and increase lineLength}
   repeat
     randcol(40);
     lineTurn;

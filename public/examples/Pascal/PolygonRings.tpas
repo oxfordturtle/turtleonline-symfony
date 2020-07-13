@@ -4,7 +4,7 @@ PROGRAM PolygonRings;
   Procedure annulus(inner, width, angle: integer);
   Var count: integer;
   Begin
-    for count := 0 to 360 div angle do
+    for count := 0 to (360 div angle) do
       begin
         forward(inner + width);
         back(width);

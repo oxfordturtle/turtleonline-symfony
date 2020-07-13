@@ -1,6 +1,6 @@
-REM ThePlough
-
+REM draw space
 BLANK(BLACK)
+REM draw stars
 COLOUR(LIGHTBLUE)
 SETXY(100, 200)
 BLOT(10)
@@ -17,6 +17,7 @@ BLOT(10)
 SETXY(590, 660)
 BLOT(10)
 SETXY(570, 490)
+REM join the dots
 COLOUR(SILVER)
 POLYLINE(8)
 END

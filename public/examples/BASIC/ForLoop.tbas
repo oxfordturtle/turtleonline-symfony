@@ -1,8 +1,8 @@
-REM ForLoop
-
 FOR count% = 1 TO 200
+  REM move forward and right
   FORWARD(count% DIV 3)
   RIGHT(5)
+  REM draw a red circle with a black outline
   COLOUR(RED)
   BLOT(200)
   COLOUR(BLACK)

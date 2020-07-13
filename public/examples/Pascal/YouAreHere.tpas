@@ -1,9 +1,11 @@
 PROGRAM YouAreHere;
 BEGIN
+  {draw a red blot and print a text label}
   colour(red);
   blot(20);
   colour(violet);
   print('You are here', 2, 35);
+  {draw a blue arrow pointing to the blot}
   setxy(790, 540);
   colour(blue);
   drawxy(40, 0);

@@ -17,7 +17,7 @@ BEGIN
       {pick a random point}
       x := random(1000);
       y := random(1000);
-      {if it's white, fill the shape with the next colour}
+      {if it's white, set the next colour and fill the shape with it}
       if pixcol(x, y) = white then
         begin
           nextColour := (nextColour mod 20) + 1;

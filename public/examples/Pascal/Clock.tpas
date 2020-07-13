@@ -2,15 +2,19 @@ PROGRAM Clock;
 VAR hours: integer;
     minutes: integer;
 
-  Procedure showhands;
+  {draws hour and minute hands on a clock face}
+  Procedure showHands(hours, minutes: integer);
   Begin
+    {rub out previous hands}
     colour(white);
     blot(360);
     colour(red);
+    {draw the hour hand}
     direction(hours * 30);
     thickness(10);
     forward(250);
     back(250);
+    {draw the minute hand}
     direction(minutes * 6);
     thickness(6);
     forward(350);
@@ -18,18 +22,22 @@ VAR hours: integer;
   End;
 
 BEGIN
+  {draw a circle for the clock face}
   thickness(10);
   circle(400);
+  {initialise hours and minutes to zero}
   hours := 0;
   minutes := 0;
+  {repeatedly increment hours and minutes and update the clock face}
+  {N.B. increment the minutes every second}
   repeat
     repeat
-      showhands;
+      showHands(hours, minutes);
       pause(600);
       inc(minutes)
     until minutes = 60;
     inc(hours);
     minutes := 0
   until hours = 12;
-  showhands
+  showHands(hours, minutes)
 END.

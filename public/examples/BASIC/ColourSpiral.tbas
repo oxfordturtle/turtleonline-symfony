@@ -1,17 +1,20 @@
-REM ColourSpiral
-
+REM make the canvas black
 BLANK(BLACK)
+REM position the turtle
 FORWARD(15)
+REM set line thickness and initial length
 THICKNESS(27)
-len% = 20
+lineLength% = 20
+REM repeatedly call the lineTurn procedure and increase lineLength
 REPEAT
   RNDCOL(40)
-  PROClineturn
-  len% = len% + 10
-UNTIL len% > 500
+  PROClineTurn
+  lineLength% = lineLength% + 10
+UNTIL lineLength% > 500
 END
 
-DEF PROClineturn
-  FORWARD(len%)
+REM draws a line a turns right
+DEF PROClineTurn
+  FORWARD(lineLength%)
   RIGHT(60)
 ENDPROC

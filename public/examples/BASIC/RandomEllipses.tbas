@@ -1,20 +1,19 @@
-REM RandomEllipses
-
+REM draw 10 random ellipses
 FOR count% = 1 TO 10
-  x% = RND(1500) - 250
-  y% = RND(1500) - 250
-  rx% = RND(500) + 500
-  ry% = RND(500) + 500
-  SETXY(x%, y%)
-  ELLIPSE(rx%, ry%)
+  SETXY(RND(1500) - 250, RND(1500) - 250)
+  ELLIPSE(RND(500) + 500, RND(500) + 500)
 NEXT
-nextcol% = 0
+REM initialise the colour variable
+nextColour% = 0
+REM try to fill all the ellipses with colours
 FOR count% = 1 TO 10000
+  REM pick a random point
   x% = RND(1000)
   y% = RND(1000)
+  REM if it's white, set the next colour and fill the shape with it
   IF PIXCOL(x%, y%) = WHITE THEN
-    nextcol% = nextcol% MOD 20 + 1
-    RECOLOUR(x%, y%, RGB(nextcol%))
+    nextColour% = (nextColour% MOD 20) + 1
+    RECOLOUR(x%, y%, RGB(nextColour%))
   ENDIF
 NEXT
 END

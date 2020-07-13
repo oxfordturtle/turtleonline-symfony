@@ -1,14 +1,17 @@
-REM NestedLoops
-
+THICKNESS(4)
 PENUP
-FOR countblot% = 1 TO 10
+FOR blotCount% = 1 TO 10
+  REM draw a black blot
   FORWARD(260)
   COLOUR(BLACK)
   BLOT(150)
-  COLOUR(RGB(countblot%))
-  FOR countcirc% = 1 TO 25
-    CIRCLE(countcirc% * 8)
+  REM set colour based on blotCount
+  COLOUR(RGB(blotCount%))
+  REM draw 25 circles of increasing radius
+  FOR circleCount% = 1 TO 25
+    CIRCLE(circleCount% * 8)
   NEXT
+  REM reposition the turtle for the next iteration
   BACK(260)
   RIGHT(36)
 NEXT

@@ -1,7 +1,7 @@
-REM TriangleSpin
-
+REM adjust starting position
 MOVEXY(30, 20)
 FOR i% = 1 TO 300
+  REM move forward and right by slightly more than 120 degrees
   FORWARD(i% * 3)
   RIGHT(121)
 NEXT

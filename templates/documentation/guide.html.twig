@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}
+  <h1>Turtle System User Guide</h1>
+  <p>The <i>Turtle System</i> is designed to be as easy to use and self-explanatory as possible, and consequently you should have little difficulty at least in getting started. However, there are several features&mdash;particularly those designed to help teachers&mdash;that will not be obvious unless you know to look for them. The following guides point these out to you, while going systematically through the various menus.</p>
+{% endblock %}
+
+{% block main %}
+  <div class="radio-options">
+    <label><input type="radio" name="guide" value="simple"> Simple Guide</label>
+    <label><input type="radio" name="guide" value="normal" checked> Normal Guide</label>
+    <label><input type="radio" name="guide" value="expert"> Expert Guide</label>
+    <label><input type="radio" name="guide" value="machine"> Machine Guide</label>
+  </div>
+  <div class="select-print">
+    <select data-action="select-tab">
+      <option value="getting-started"{% if tab == 'getting-started' %} selected{% endif %}>Getting Started</option>
+      <option value="how-to-use-this-guide"{% if tab == 'how-to-use-this-guide' %} selected{% endif %}>How to Use this Guide</option>
+      <option value="overview"{% if tab == '' %} selected{% endif %}>Overview</option>
+      <option value="the-language-menu"{% if tab == '' %} selected{% endif %}>The LANGUAGE Menu</option>
+      <option value="the-file-menu"{% if tab == '' %} selected{% endif %}>The File Menu</option>
+      <option value="the-edit-menu"{% if tab == '' %} selected{% endif %}>The Edit Menu</option>
+      <option value="the-view-menu"{% if tab == '' %} selected{% endif %}>The View Menu</option>
+      <option value="the-compile-menu" data-mode="expert"{% if tab == '' %} selected{% endif %}>The Compile Menu</option>
+      <option value="the-tabs-menu" data-mode="expert"{% if tab == '' %} selected{% endif %}>The Tabs Menu</option>
+      <option value="the-run-menu"{% if tab == '' %} selected{% endif %}>The Run Menu</option>
+      <option value="the-options-menu"{% if tab == '' %} selected{% endif %}>The Options Menu</option>
+      <option value="the-examples-menu"{% if tab == '' %} selected{% endif %}>The Examples Menu</option>
+    </select>
+    <button data-action="print" onclick="window.print();">Print / Save as PDF</button>
+  </div>
+  <div class="tab-panes">
+    {% include 'documentation/guide/getting-started.html.twig' %}
+    {% include 'documentation/guide/how-to-use-this-guide.html.twig' %}
+    {% include 'documentation/guide/overview.html.twig' %}
+    {% include 'documentation/guide/language-menu.html.twig' %}
+    {% include 'documentation/guide/file-menu.html.twig' %}
+    {% include 'documentation/guide/edit-menu.html.twig' %}
+    {% include 'documentation/guide/view-menu.html.twig' %}
+    {% include 'documentation/guide/compile-menu.html.twig' %}
+    {% include 'documentation/guide/tabs-menu.html.twig' %}
+    {% include 'documentation/guide/run-menu.html.twig' %}
+    {% include 'documentation/guide/options-menu.html.twig' %}
+    {% include 'documentation/guide/examples-menu.html.twig' %}
+  </div>
+{% endblock %}

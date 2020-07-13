@@ -1,24 +1,28 @@
-REM OlympicRings
-
-ringsize% = 130
+REM set ring radius and thickness
+ringRadius% = 130
 THICKNESS(20)
+REM draw black ring
 PENUP
 FORWARD(50)
-CIRCLE(ringsize%)
+CIRCLE(ringRadius%)
+REM draw blue ring
 LEFT(90)
 FORWARD(300)
 COLOUR(BLUE)
-CIRCLE(ringsize%)
+CIRCLE(ringRadius%)
+REM draw red ring
 BACK(600)
 COLOUR(RED)
-CIRCLE(ringsize%)
+CIRCLE(ringRadius%)
+REM draw green ring
 FORWARD(150)
 RIGHT(90)
 BACK(125)
 COLOUR(LIME)
-CIRCLE(ringsize%)
+CIRCLE(ringRadius%)
+REM draw yellow ring
 LEFT(90)
 FORWARD(300)
 COLOUR(YELLOW)
-CIRCLE(ringsize%)
+CIRCLE(ringRadius%)
 END

@@ -2,34 +2,34 @@ PROGRAM DigitalClock;
 VAR hours: integer;
     minutes: integer;
 
-  Procedure showtime;
-  Var hstring, mstring: string;
+  {prints the given time inside a box in the canvas}
+  Procedure showTime(hours, minutes: integer);
+  Var timeString: str
   Begin
+    {rub out the previous time}
     setxy(300, 430);
     box(400, 130, white, false);
-    if hours < 10 then
-      hstring := '0' + str(hours)
-    else
-      hstring := str(hours);
-    if minutes < 10 then
-      mstring := '0' + str(minutes)
-    else
-      mstring := str(minutes);
-    print(hstring + ':' + mstring, 19, 100)
+    {print the given time}
+    timeString := pad(str(hours), '0', 2) + ':' + pad(str(minutes), '0', 2)
+    print(timeString, 19, 100)
   End;
 
 BEGIN
+  {set up the canvas with a box for displaying the time}
   blank(lightgreen);
   setxy(250, 390);
   colour(maroon);
   thickness(10);
   box(500, 210, lightbrown, true);
   colour(black);
+  {initialise hours and minutes to zero}
   hours := 0;
   minutes := 0;
+  {repeatedly increment hours and minutes and update the clock display}
+  {N.B. increment the minutes every second}
   while hours < 12 do
     begin
-      showtime;
+      showTime(hours, minutes);
       pause(600);
       inc(minutes);
       if minutes = 60 then
@@ -38,5 +38,5 @@ BEGIN
           minutes := 0
         end
     end;
-  showtime
+  showTime(hours, minutes)
 END.

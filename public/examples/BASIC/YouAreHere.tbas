@@ -1,9 +1,9 @@
-REM YouAreHere
-
+REM draw a red blot and print a text label
 COLOUR(RED)
 BLOT(20)
 COLOUR(VIOLET)
 PRINT("You are here", 2, 35)
+REM draw a blue arrow pointing to the blot
 SETXY(790, 540)
 COLOUR(BLUE)
 DRAWXY(40, 0)

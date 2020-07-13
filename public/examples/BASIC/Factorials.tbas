@@ -1,15 +1,16 @@
-REM Factorials
-
+REM set up and show the output
 OUTPUT(TRUE, CREAM, TRUE)
+REM calculate and display n! for n = 1 to 10
 FOR count% = 1 TO 10
-  WRITELN(STR$(count%) + "! = " + STR$(FNfact(count%)))
+  WRITELN(STR$(count%) + "! = " + STR$(FNfactorial(count%)))
 NEXT
 END
 
-DEF FNfact(n%)
+REM calculates n! recursively
+DEF FNfactorial(n%)
   IF n% = 0 THEN
     result% = 1
   ELSE
-    result% = n% * FNfact(n% - 1)
+    result% = n% * FNfactorial(n% - 1)
   ENDIF
 = result%

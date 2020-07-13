@@ -1,11 +1,12 @@
-REM DrawPause
-
+REM draw green blot
 COLOUR(GREEN)
 BLOT(100)
 PAUSE(1000)
+REM draw red vertical line
 COLOUR(RED)
 FORWARD(450)
 PAUSE(1000)
+REM draw thick blue horizontal line
 RIGHT(90)
 THICKNESS(9)
 COLOUR(BLUE)

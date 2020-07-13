@@ -1,16 +1,20 @@
-REM RandomLines
-
+REM draw 30 random lines
 FOR count% = 1 TO 30
+  REM pick a random point and angle
   x% = RND(1000)
   y% = RND(1000)
   SETXY(x%, y%)
   turtd% = RND(360)
+  REM draw a black line through that point, at that angle
   FORWARD(1500)
   BACK(3000)
 NEXT
+REM try to fill all the resulting shapes
 FOR count% = 1 TO 10000
+  REM pick a random point
   x% = RND(1000)
   y% = RND(1000)
+  REM if it's white, fill the surrounding shape with a random colour
   IF PIXCOL(x%, y%) = WHITE THEN
     RECOLOUR(x%, y%, RGB(RND(20) + 1))
   ENDIF

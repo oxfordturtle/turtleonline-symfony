@@ -8,6 +8,7 @@ import examples from './examples'
 import file from './file'
 import options from './options'
 import run from './run'
+import tabs from './tabs'
 import view from './view'
 import state from '../state/index'
 

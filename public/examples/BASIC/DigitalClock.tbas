@@ -1,38 +1,33 @@
-REM DigitalClock
-
+REM set up the canvas with a box for displaying the time
 BLANK(LIGHTGREEN)
 SETXY(250, 390)
 COLOUR(MAROON)
 THICKNESS(10)
 BOX(500, 210, LIGHTBROWN, TRUE)
 COLOUR(BLACK)
-Hours% = 0
-Minutes% = 0
-WHILE Hours% < 12
-  PROCshowtime
+REM initialise hours and minutes to zero
+hours% = 0
+minutes% = 0
+REM repeatedly increment hours and minutes and update the clock display
+REM N.B. increment the minutes every second
+WHILE hours% < 12
+  PROCshowTime(hours%, minutes%)
   PAUSE(600)
-  INC(Minutes%)
-  IF Minutes% = 60 THEN
-    INC(Hours%)
-    Minutes% = 0
+  INC(minutes%)
+  IF minutes% = 60 THEN
+    INC(hours%)
+    minutes% = 0
   ENDIF
 ENDWHILE
-PROCshowtime
+PROCshowTime(hours%, minnutes%)
 END
 
-DEF PROCshowtime
-  LOCAL hstring$, mstring$
+REM prints the given time inside a box in the canvas
+DEF PROCshowTime(hours%, minutes%)
+  LOCAL timeString$
+  REM rub out the previous time
   SETXY(300, 430)
   BOX(400, 130, WHITE, FALSE)
-  IF Hours% < 10 THEN
-    hstring$ = "0" + STR$(Hours%)
-  ELSE
-    hstring$ = STR$(Hours%)
-  ENDIF
-  IF Minutes% < 10 THEN
-    mstring$ = "0" + STR$(Minutes%)
-  ELSE
-    mstring$ = STR$(Minutes%)
-  ENDIF
-  PRINT(hstring$ + ":" + mstring$, 19, 100)
+  timeString$ = PAD$(STR$(hours%), "0", 2) + ':' + PAD$(STR$(minutes%), "0", 2)
+  PRINT(timeString$, 19, 100)
 ENDPROC
