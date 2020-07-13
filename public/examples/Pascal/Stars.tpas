@@ -1,10 +1,13 @@
 PROGRAM Stars;
 VAR n: integer;
 
-  Procedure star(points, col: integer);
+  {draws a coloured star with the given number of points}
+  Procedure star(points, colr: integer);
   Var count: integer;
   Begin
+    {set angles to twice the number of points}
     angles(points * 2);
+    {trace out each point with the turtle}
     for count := 1 to points do
       begin
         forward(450);
@@ -16,12 +19,14 @@ VAR n: integer;
         forget(1);
         right(1)
       end;
-    colour(col);
+    {fill in the shape}
+    colour(colr);
     polygon(points * 2)
   End;
 
 BEGIN
   penup;
+  {draw 10 stars with increasing numbers of points}
   for n := 3 to 12 do
     begin
       star(n, rgb(n - 2));

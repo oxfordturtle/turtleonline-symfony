@@ -1,3 +1,6 @@
+/**
+ * show preview of email as HTML
+ */
 const preview = document.querySelector('[data-preview]') as HTMLElement
 
 function updatePreview (event: Event): void {

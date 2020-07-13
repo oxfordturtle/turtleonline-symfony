@@ -1,20 +1,25 @@
 PROGRAM ColourSpiral;
-VAR len: integer;
+VAR lineLength: integer;
 
-  Procedure lineturn;
+  {draws a line and turns right}
+  Procedure lineTurn;
   Begin
-    forward(len);
+    forward(lineLength);
     right(60)
   End;
 
 BEGIN
+  {make the canvas black}
   blank(black);
+  {position the turtle}
   forward(15);
+  {set line thickness and length}
   thickness(27);
-  len := 20;
+  lineLength := 20;
+  {repeatedly call the lineTurn procedure and increment lineLength}
   repeat
     randcol(40);
-    lineturn;
-    len := len + 10
-  until len > 500
+    lineTurn;
+    lineLength := lineLength + 10
+  until lineLength > 500
 END.

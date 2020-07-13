@@ -1,5 +1,6 @@
 PROGRAM SimpleProc;
 
+  {draws a prong}
   Procedure prong;
   Begin
     forward(400);
@@ -8,6 +9,7 @@ PROGRAM SimpleProc;
   End;
 
 BEGIN
+  {draw several random coloured prongs}
   repeat
     randcol(10);
     prong;

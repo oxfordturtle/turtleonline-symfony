@@ -1,14 +1,16 @@
 PROGRAM ParameterProc;
 VAR count: integer;
 
-  Procedure prong(len: integer);
+  {draws a prong of the given size}
+  Procedure prong(size: integer);
   Begin
-    forward(len);
-    blot(len / 20);
-    back(len)
+    forward(size);
+    blot(size / 20);
+    back(size)
   End;
 
 BEGIN
+  {draw 360 prongs of decreasing size}
   for count := 360 downto 1 do
     begin
       randcol(10);

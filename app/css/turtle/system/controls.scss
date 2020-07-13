@@ -1,0 +1,24 @@
+.turtle-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: $blue;
+
+  div {
+    display: flex;
+    align-items: center;
+  }
+
+  button {
+    padding: .5em;
+    width: 3em;
+    text-align: center;
+    &[disabled] {
+      color: $gray !important;
+      cursor: default;
+      &:hover {
+        background: $blue !important;
+      }
+    }
+  }
+}

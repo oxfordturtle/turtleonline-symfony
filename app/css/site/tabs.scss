@@ -1,12 +1,25 @@
 .tabs {
   display: flex;
-  justify-content: flex-end;
+  border-bottom: 1px solid $gray;
+  margin-bottom: 1em;
 
   .tab {
+    white-space: nowrap;
     padding: .5em 1em;
+    border: 1px solid transparent;
+    border-bottom-color: $gray;
+    margin: 0 .25em -1px;
     cursor: pointer;
+    &:hover {
+      background: $lightgray;
+      text-decoration: none;
+    }
     &.active {
-      text-decoration: underline;
+      border-color: $gray;
+      border-bottom-color: #fff;
+      &:hover {
+        background: transparent;
+      }
     }
   }
 }

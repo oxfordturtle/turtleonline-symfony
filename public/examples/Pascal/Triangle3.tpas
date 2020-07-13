@@ -1,5 +1,6 @@
 PROGRAM Triangle3;
 
+  {draws a triangle of the given size, only if size > 1}
   Procedure triangle(size: integer);
   Begin
     if size > 1 then
@@ -14,6 +15,8 @@ PROGRAM Triangle3;
   End;
 
 BEGIN
+  {move to the start (without drawing)}
   movexy(-100, 150);
+  {draw a triangle of size 256}
   triangle(256)
 END.

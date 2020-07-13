@@ -1,4 +1,4 @@
-import './menu.ts'
-import './tabs.ts'
-import './preview.ts'
-import './pwa.ts'
+import './menu'
+import './tabs'
+import './preview'
+import './pwa'

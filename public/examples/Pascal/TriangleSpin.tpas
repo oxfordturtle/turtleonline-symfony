@@ -1,9 +1,11 @@
 PROGRAM TriangleSpin;
 VAR i: integer;
 BEGIN
+  {adjust starting position}
   movexy(30, 20);
   for i := 1 to 300 do
     begin
+      {move forward and right by slightly more than 120 degrees}
       forward(i * 3);
       right(121)
     end

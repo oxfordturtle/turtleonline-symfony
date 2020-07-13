@@ -2,17 +2,13 @@ const path = require('path')
 const WorkboxPlugin = require('workbox-webpack-plugin')
 
 module.exports = {
-  entry: './app/js/index.js',
+  entry: './app/js/index.ts',
   module: {
     rules: [
       {
-        test: /\.ts(x?)$/,
-        exclude: /node_modules/,
-        use: [
-          {
-            loader: 'ts-loader'
-          }
-        ]
+        test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/
       },
       {
         enforce: 'pre',
@@ -20,6 +16,9 @@ module.exports = {
         loader: 'source-map-loader'
       }
     ]
+  },
+  resolve: {
+    extensions: ['.ts', '.js']
   },
   output: {
     filename: 'index.js',

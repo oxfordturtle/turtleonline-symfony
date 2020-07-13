@@ -1,14 +1,24 @@
 {% extends 'base.html.twig' %}
 
 {% block header %}
-  <h1>User Guides</h1>
+  <h1>Turtle System User Guides</h1>
   <p>The <i>Turtle System</i> is designed to be as easy to use and self-explanatory as possible, and consequently you should have little difficulty at least in getting started. However, there are several features&mdash;particularly those designed to help teachers&mdash;that will not be obvious unless you know to look for them. The following guides point these out to you, while going systematically through the various menus.</p>
 {% endblock %}
 
 {% block main %}
-  <ul>
-    <li><a href="/downloads/docs/Guide_for_Normal_Users.pdf">The Turtle System - Guide for Normal Users</a></li>
-    <li><a href="/downloads/docs/Guide_for_Power_Users.pdf">The Turtle System - Guide for Power Users</a></li>
-    <li><a href="/downloads/docs/Guide_for_Teachers.pdf">The Turtle System - Guide for Teachers</a></li>
-  </ul>
+  <div class="select-print">
+    <select data-action="select-tab">
+      <option value="windows" {% if tab == 'windows' %}selected{% endif %}>Windows System User Guide</option>
+      <option value="online" {% if tab == 'online' %}selected{% endif %}>Online System User Guide</option>
+    </select>
+    <button data-action="print" onclick="window.print();">Print / Save as PDF</button>
+  </div>
+  <div class="tab-panes">
+    <div class="tab-pane{% if tab == 'windows' %} active{% endif %}" id="windows">
+      {% include 'documentation/guides/windows.html.twig' %}
+    </div>
+    <div class="tab-pane{% if tab == 'online' %} active{% endif %}" id="online">
+      {% include 'documentation/guides/online.html.twig' %}
+    </div>
+  </div>
 {% endblock %}

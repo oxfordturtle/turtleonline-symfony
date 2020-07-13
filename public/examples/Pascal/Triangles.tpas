@@ -1,5 +1,6 @@
 PROGRAM Triangles;
 
+  {draws a triangle recusrively, with half-sized triangles at each point}
   Procedure triangle(size: integer);
   Begin
     if size > 1 then
@@ -17,6 +18,8 @@ PROGRAM Triangles;
   End;
 
 BEGIN
+  {move to the start (without drawing)}
   movexy(-100, 150);
+  {draw a triangle with triangles half the size at each point}
   triangle(256)
 END.

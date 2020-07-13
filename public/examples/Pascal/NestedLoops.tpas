@@ -1,16 +1,21 @@
 PROGRAM NestedLoops;
-VAR countblot: integer;
-    countcirc: integer;
+VAR blotCount: integer;
+    circleCount: integer; 
 BEGIN
+  thickness(4);
   penup;
-  for countblot := 1 to 10 do
+  for blotCount := 1 to 10 do
     begin
+      {draw a black blot}
       forward(260);
       colour(black);
       blot(150);
-      colour(rgb(countblot));
-      for countcirc := 1 to 25 do
-        circle(countcirc * 8);
+      {set colour based on blotCount}
+      colour(rgb(blotCount));
+      {draw 25 circles of increasing radius}
+      for circleCount := 1 to 25 do
+        circle(circleCount * 8);
+      {reposition the turtle for the next iteration}
       back(260);
       right(36)
     end

@@ -1,0 +1,85 @@
+.turtle-filename {
+  display: flex;
+  height: 2.25em;
+  background: $lightgray;
+  border-bottom: 1px solid $gray;
+
+  select, input {
+    border: 0;
+    border-right: 1px solid $gray;
+  }
+
+  input {
+    flex: 1;
+  }
+
+  button {
+    padding: .125em .5em;
+    margin: .25em;
+  }
+}
+
+.turtle-code {
+  flex: 1;
+  position: relative;
+  font-family: $monospace;
+  line-height: 1.5;
+  z-index: 4;
+  overflow: hidden;
+
+  .turtle-line-numbers {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    overflow: hidden;
+    margin: 0;
+    font: inherit;
+    list-style: none;
+    padding: 0 .5em;
+    width: 3em;
+    background: $lightgray;
+    // give a buffer to allow scrolling to stay in sync with the code
+    // this is needed in case the code wrapper has a scrollbar at the bottom
+    padding-bottom: 3em;
+
+    li {
+      text-align: right;
+    }
+  }
+
+  .turtle-code-wrapper {
+    position: absolute;
+    top: 0;
+    left: 3em;
+    width: calc(100% - 3em);
+    height: 100%;
+    overflow: auto;
+
+    textarea, pre {
+      position: absolute;
+      top: 0;
+      left: 0;
+      min-width: 100%;
+      padding: 0 .5em;
+      margin: 0;
+      font: inherit;
+    }
+  }
+
+  textarea {
+    background: transparent;
+    border: 0;
+    outline: 0;
+    resize: none;
+    opacity: .4;
+    min-height: 100%;
+    z-index: 1;
+  }
+
+  pre {
+    pointer-events: none;
+    z-index: 2;
+    min-height: 1.5em;
+  }
+}
