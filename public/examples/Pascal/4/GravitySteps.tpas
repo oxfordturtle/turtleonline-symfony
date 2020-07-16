@@ -40,6 +40,7 @@ VAR count: integer;
 BEGIN
   {draw steps}
   steps(10);
+  {set the starting point}
   setxy(950, 75);
   {throw the ball down each step}
   repeat

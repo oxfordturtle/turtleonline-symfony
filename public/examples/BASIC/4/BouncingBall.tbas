@@ -1,20 +1,23 @@
-REM BouncingBall
-
+REM set starting point and velocity
 x% = 100
 y% = 700
 xvel% = 8
 yvel% = -4
 WHILE 0 < 1
   NOUPDATE
+  REM rub out the existing ball
   COLOUR(WHITE)
   BLOT(51)
+  REM move to the next location
   x% = x% + xvel%
   y% = y% + yvel%
   SETXY(x%, y%)
+  REM draw a new ball
   COLOUR(RED)
   BLOT(50)
   UPDATE
   PAUSE(5)
+  REM "bounce" (i.e. invert velocity) at the canvas edges
   IF (x% < 50) OR (x% > 949) THEN
     xvel% = -xvel%
   ENDIF
