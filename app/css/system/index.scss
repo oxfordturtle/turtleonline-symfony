@@ -1,0 +1,10 @@
+@import "header/index.scss";
+@import "body/index.scss";
+@import "miscellaneous.scss";
+
+.system {
+  min-height: 700px;
+  height: 100%;
+  display: grid;
+  background: $darkgray-transparent;
+}

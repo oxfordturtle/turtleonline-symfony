@@ -1,0 +1,72 @@
+.system-menus {
+  position: absolute;
+  z-index: 5;
+  width: 17em;
+  margin-left: -17em;
+  height: 100%;
+  background: $blue;
+  transition: .4s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  &.active {
+    margin-left: 0;
+  }
+
+  a {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #fff;
+    white-space: nowrap;
+    padding: .25em .75em;
+
+    &:hover {
+      background: $red;
+      text-decoration: none;
+    }
+
+    i {
+      flex-basis: 1em;
+      flex-shrink: 0;
+      text-align: center;
+    }
+
+    span {
+      flex: 1;
+    }
+  }
+}
+
+.system-select-menu {
+  display: flex;
+  align-items: baseline;
+  padding: .25em .75em;
+  &:hover {
+    background: $red;
+  }
+
+  label {
+    color: #fff;
+    font-weight: normal;
+    padding: 0;
+    margin-right: .75em;
+  }
+
+  select {
+    flex: 1;
+    padding: 0;
+  }
+}
+
+.system-sub-menu {
+  display: none;
+
+  &.active {
+    display: block;
+    margin-left: .5em;
+  }
+}

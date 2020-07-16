@@ -1,0 +1,32 @@
+PROGRAM Flashlights;
+
+  {draws a circle or a blot}
+  Procedure drawit(doblot: boolean);
+  Begin
+    if doblot then
+      begin
+        {draw a randomly coloured blot}
+        randcol(10);
+        blot(25)
+      end
+    else
+      begin
+        {rub out any previous blot}
+        colour(black);
+        blot(25);
+        {draw a randomly coloured circle}
+        randcol(10);
+        circle(30)
+      end
+  End;
+
+BEGIN
+  blot(1000);
+  thickness(10);
+  {repeatedly draw circles or blots in a grid}
+  repeat
+    setx((random(8) + 1) * 111);
+    sety((random(8) + 1) * 111);
+    drawit(random(2) = 1)
+  until false
+END.

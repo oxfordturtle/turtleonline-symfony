@@ -1,0 +1,140 @@
+CONST art% = 1
+CONST adj% = 2
+CONST col% = 3
+CONST noun% = 4
+CONST verb% = 5
+CONST maxwords% = 10
+CONST subdir$ = "sentences"
+
+STRINGSIZE 64
+
+DIM handle%(5)
+DIM fileName$(5)
+DIM wordString$(5)
+DIM numwords%(5)
+DIM word$(5, maxwords%)
+ 
+OUTPUT(TRUE, CREAM, TRUE)
+IF MKDIR(subdir$) THEN
+  PROCsetup
+  PROCwritewordfiles
+  PROCreadwordfiles
+  PROCgenerate(100000)
+ELSE
+  WRITELN("Subdirectory " + subdir$ + " could not be created")
+ENDIF
+END
+
+REM sets up file names and vocabulary
+DEF PROCsetup
+  fileName$(art%) = "articles"
+  fileName$(adj%) = "adjectives"
+  fileName$(col%) = "colours"
+  fileName$(noun%) = "nouns"
+  fileName$(verb%) = "verbs"
+  wordString$(art%) = "the,a"
+  wordString$(adj%) = "hungry,quick,lazy,slow"
+  wordString$(col%) = "black,brown,grey,white"
+  wordString$(noun%) = "cat,dog,fox,monkey,rabbit"
+  wordString$(verb%) = "chases,jumps over,runs away from,watches"
+ENDPROC
+
+REM writes words in wordString arrays to files
+DEF PROCwritewordfiles
+  LOCAL i%, count%, posn%, s$
+  FOR i% = 1 TO 5
+    handle%(i%) = OPENOUT(subdir$ + "/" + fileName$(i%) + ".txt")
+    s$ = wordString$(i%)
+    count% = 1
+    posn% = INSTR(s$, ",")
+    WHILE posn% > 0
+      INC(count%)
+      PRINTLN#(i%, LEFT$(s$, posn% - 1))
+      s$ = DEL$(s$, 1, posn%)
+      posn% = INSTR(s$, ",")
+    ENDWHILE
+    PRINTLN#(i%, s$)
+    WRITELN("File """ + subdir$ + "/" + fileName$(i%) + ".txt"" has been created, with " + STR$(count%) + " lines")
+  NEXT
+  WRITELN("")
+  CLOSE#(0)
+ENDPROC
+
+REM reads words from files into word array
+DEF PROCreadwordfiles
+LOCAL i%
+  FOR i% = 1 TO 5
+    handle%(i%) = OPENIN(subdir$ + "/" + fileName$(i%) + ".txt")
+    IF handle%(i%) > 0 THEN
+      numwords%(i%) = 0
+      WHILE NOT(EOF#(handle%(i%))) AND (numwords%(i%) < maxwords%)
+        INC(numwords%(i%))
+        word$(i%, numwords%(i%)) = FREADLN#(handle%(i%))
+      ENDWHILE
+    ENDIF
+    WRITELN(STR$(numwords%(i%)) + " lines have been read from file """ + subdir$ + "/" + fileName$(i%) + ".txt""")
+  NEXT
+  WRITELN("")
+  CLOSE#(0)
+ENDPROC
+
+REM selects a random word
+DEF FNrand$(n%)
+=word$(n%, RND(numwords%(n%)))
+
+REM generates n random sentences using word array, stopping if target sentence is produced 
+DEF PROCgenerate(n%)
+  LOCAL s$, fhandle%, i%
+  WRITELN("Now up to "+STR$(n%)+" random sentences will be generated using")
+  WRITELN("these words. The generation will stop if a well-known target")
+  WRITELN("sentence is achieved before the maximum has been reached.")
+  WRITELN("")
+  fhandle% = OPENOUT(subdir$ + "/" + STR$(n%) + "_sentences.txt")
+  i% = 0
+  CURSOR(11)
+  REPEAT
+   s$ = FNrand$(art%) + " " + FNrand$(adj%) + " " + FNrand$(col%) + " " + FNrand$(noun%) + " " + FNrand$(verb%) + " " + FNrand$(art%) + " " + FNrand$(adj%) + " " + FNrand$(noun%) + "."
+   s$ = CHR$(ASC(s$) - 32) + MID$(s$, 2, MAXINT)
+   PRINTLN#(fhandle%, s$)
+   INC(i%)
+  UNTIL (i% = n%) OR (s$ = "The quick brown fox jumps over the lazy dog.")
+  CURSOR(1)
+  CLOSE#(fhandle%)
+  IF i% = n% THEN
+   WRITELN(STR$(i%) + " sentences written to """ + subdir$ + "/" + STR$(n%) + "_sentences.txt"".")
+  ELSE
+    IF RENAMEFILE(subdir$ + "/" + STR$(n%) + "_sentences.txt", subdir$ + "/" + STR$(i%) + "_sentences.txt") THEN
+      WRITELN(STR$(i%) + " sentences written to """ + subdir$ + "/" + STR$(i%) + "_sentences.txt""")
+    ELSE
+      WRITELN(STR$(i%) + " sentences written to """ + subdir$ + "/" + STR$(n%) + "_sentences.txt""")
+      WRITELN("For some reason, this file could not be renamed.")
+    ENDIF
+  ENDIF
+  IF i% < n% THEN
+    WRITELN("")
+    WRITELN("  Loop terminated early, having written:")
+    WRITELN("  ""The quick brown fox jumps over the lazy dog.""")
+  ENDIF
+  IF i% < (n% / 2) THEN
+    WRITELN("")
+    IF MOVEFILE(subdir$ + "/" + STR$(i%) + "_sentences.txt", STR$(i%) + "_sentences.txt") THEN
+      WRITELN("File moved to base directory.")
+      IF COPYFILE(STR$(i%) + "_sentences.txt", subdir$ + "/Latest_Good_Example.txt") THEN
+        WRITELN("File then copied back as ""Latest_Good_Example.txt"".")
+      ELSE
+        WRITELN("But it could not be copied back as ""Latest_Good_Example.txt"" ...")
+        IF DELETEFILE(subdir$ + "/Latest_Good_Example.txt") THEN
+          IF COPYFILE(STR$(i%) + "_sentences.txt", subdir$ + "/Latest_Good_Example.txt") THEN
+            WRITELN("... until the existing file with that name was deleted.")
+          ELSE
+            WRITELN("... for some reason unknown.")
+          ENDIF
+        ELSE
+          WRITELN("... and the existing file with that name could not be deleted.")
+        ENDIF
+      ENDIF
+    ELSE
+      WRITELN("For some reason, the file """ + subdir$ + "/" + STR$(i%) + "_sentences.txt"" could not be moved to the base directory.")
+    ENDIF
+  ENDIF
+ENDPROC

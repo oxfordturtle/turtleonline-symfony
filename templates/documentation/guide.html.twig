@@ -13,19 +13,19 @@
     <label><input type="radio" name="guide" value="machine"> Machine Guide</label>
   </div>
   <div class="select-print">
-    <select data-action="select-tab">
-      <option value="getting-started"{% if tab == 'getting-started' %} selected{% endif %}>Getting Started</option>
-      <option value="how-to-use-this-guide"{% if tab == 'how-to-use-this-guide' %} selected{% endif %}>How to Use this Guide</option>
-      <option value="overview"{% if tab == '' %} selected{% endif %}>Overview</option>
-      <option value="the-language-menu"{% if tab == '' %} selected{% endif %}>The LANGUAGE Menu</option>
-      <option value="the-file-menu"{% if tab == '' %} selected{% endif %}>The File Menu</option>
-      <option value="the-edit-menu"{% if tab == '' %} selected{% endif %}>The Edit Menu</option>
-      <option value="the-view-menu"{% if tab == '' %} selected{% endif %}>The View Menu</option>
-      <option value="the-compile-menu" data-mode="expert"{% if tab == '' %} selected{% endif %}>The Compile Menu</option>
-      <option value="the-tabs-menu" data-mode="expert"{% if tab == '' %} selected{% endif %}>The Tabs Menu</option>
-      <option value="the-run-menu"{% if tab == '' %} selected{% endif %}>The Run Menu</option>
-      <option value="the-options-menu"{% if tab == '' %} selected{% endif %}>The Options Menu</option>
-      <option value="the-examples-menu"{% if tab == '' %} selected{% endif %}>The Examples Menu</option>
+    <select data-component="guide-toc" data-select-tab>
+      <option value="getting-started"{% if tab == 'getting-started' %} selected{% endif %}>1. Getting Started</option>
+      <option value="how-to-use-this-guide"{% if tab == 'how-to-use-this-guide' %} selected{% endif %}>2. How to Use this Guide</option>
+      <option value="overview"{% if tab == 'overview' %} selected{% endif %}>3. Overview</option>
+      <option value="the-language-menu"{% if tab == 'the-language-menu' %} selected{% endif %}>4. The LANGUAGE Menu</option>
+      <option value="the-file-menu"{% if tab == 'the-file-menu' %} selected{% endif %}>5. The File Menu</option>
+      <option value="the-edit-menu"{% if tab == 'the-edit-menu' %} selected{% endif %}>6. The Edit Menu</option>
+      <option value="the-view-menu"{% if tab == 'the-view-menu' %} selected{% endif %}>7. The View Menu</option>
+      <option value="the-compile-menu"{% if tab == 'the-compile-menu' %} selected{% endif %}>8. The Compile Menu</option>
+      <option value="the-tabs-menu"{% if tab == 'the-tabs-menu' %} selected{% endif %}>9. The Tabs Menu</option>
+      <option value="the-run-menu"{% if tab == 'the-run-menu' %} selected{% endif %}>10. The Run Menu</option>
+      <option value="the-options-menu"{% if tab == 'the-options-menu' %} selected{% endif %}>11. The Options Menu</option>
+      <option value="the-examples-menu"{% if tab == 'the-examples-menu' %} selected{% endif %}>12. The Examples Menu</option>
     </select>
     <button data-action="print" onclick="window.print();">Print / Save as PDF</button>
   </div>
@@ -33,14 +33,14 @@
     {% include 'documentation/guide/getting-started.html.twig' %}
     {% include 'documentation/guide/how-to-use-this-guide.html.twig' %}
     {% include 'documentation/guide/overview.html.twig' %}
-    {% include 'documentation/guide/language-menu.html.twig' %}
-    {% include 'documentation/guide/file-menu.html.twig' %}
-    {% include 'documentation/guide/edit-menu.html.twig' %}
-    {% include 'documentation/guide/view-menu.html.twig' %}
-    {% include 'documentation/guide/compile-menu.html.twig' %}
-    {% include 'documentation/guide/tabs-menu.html.twig' %}
-    {% include 'documentation/guide/run-menu.html.twig' %}
-    {% include 'documentation/guide/options-menu.html.twig' %}
-    {% include 'documentation/guide/examples-menu.html.twig' %}
+    {% include 'documentation/guide/the-language-menu.html.twig' %}
+    {% include 'documentation/guide/the-file-menu.html.twig' %}
+    {% include 'documentation/guide/the-edit-menu.html.twig' %}
+    {% include 'documentation/guide/the-view-menu.html.twig' %}
+    {% include 'documentation/guide/the-compile-menu.html.twig' %}
+    {% include 'documentation/guide/the-tabs-menu.html.twig' %}
+    {% include 'documentation/guide/the-run-menu.html.twig' %}
+    {% include 'documentation/guide/the-options-menu.html.twig' %}
+    {% include 'documentation/guide/the-examples-menu.html.twig' %}
   </div>
 {% endblock %}

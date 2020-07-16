@@ -1,0 +1,49 @@
+.header {
+  padding: 1em;
+  background: $darkgray;
+  color: #fff;
+  @media (min-width: $break1) {
+    // margin-top: 3em;
+    // max-width: $break1;
+    padding: 1.5em 2em;
+  }
+  @media (min-width: $break2) {
+    margin-top: 3em;
+    max-width: $break2;
+    opacity: .95;
+  }
+  &.run {
+    display: none;
+  }
+
+  h1 {
+    font-size: 1.7em;
+    margin: 0;
+    color: $red;
+  }
+
+  p {
+    margin: 1rem 0 0;
+    text-align: justify;
+    font-weight: 500;
+    color: #fff;
+    font-style: italic;
+    a {
+      color: inherit;
+      text-decoration: underline;
+    }
+    @media (min-width: $break1) {
+      font-size: 1.0625em;
+    }
+    @media (min-width: ($break1 + $break2) / 2) {
+      margin-left: 2rem;
+      margin-right: 5rem;
+    }
+    @media (min-width: $break2) {
+      margin: 1.5rem 0 0;
+      font-size: 1.125em;
+      margin-left: 4rem;
+      margin-right: 8rem;
+    }
+  }
+}

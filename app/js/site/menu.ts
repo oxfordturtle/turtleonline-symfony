@@ -1,20 +1,19 @@
 /*
- * toggle the main site menu (for small screens)
+ * Interactive functionality for the main site menu.
  */
-function getSubMenus (element: Document|Element): Element[] {
-  return Array.from(element.querySelectorAll('[data-action="toggle-menu"]'))
+/*
+// add click event listeners to menu items
+for (const a of document.querySelectorAll('[data-action="toggle-menu"]')) {
+  a.addEventListener('click', () => {
+    if (a.classList.contains('open')) {
+      closeMenu(a)
+    } else {
+      openMenu(a)
+    }
+  })
 }
 
-function getOppositeMenuClass (element: Element): string {
-  if (element.parentElement.classList.contains('nav-left')) {
-    return '.nav-right'
-  }
-  if (element.parentElement.classList.contains('nav-right')) {
-    return '.nav-left'
-  }
-  return getOppositeMenuClass(element.parentElement)
-}
-
+// closes a menu
 function closeMenu (a: Element): void {
   const menu = a.nextElementSibling
   const caret = a.querySelector('.icon:last-child .fa')
@@ -24,9 +23,14 @@ function closeMenu (a: Element): void {
     caret.classList.remove('fa-caret-up')
     caret.classList.add('fa-caret-down')
   }
-  getSubMenus(menu).forEach(closeMenu)
+
+  // close submenus recursively
+  for (const subMenu of menu.querySelectorAll('[data-action="toggle-menu"]')) {
+    closeMenu(subMenu)
+  }
 }
 
+// opens a menu
 function openMenu (a: Element): void {
   const menu = a.nextElementSibling
   const caret = a.querySelector('.icon:last-child .fa')
@@ -36,15 +40,21 @@ function openMenu (a: Element): void {
     caret.classList.add('fa-caret-up')
     caret.classList.remove('fa-caret-down')
   }
-  getSubMenus(document.querySelector(getOppositeMenuClass(a))).forEach(closeMenu)
+
+  // close opposite menus
+  for (const subMenu of getOppositeMenu(menu).querySelectorAll('[data-action="toggle-menu"]')) {
+    closeMenu(subMenu)
+  }
 }
 
-getSubMenus(document).forEach((a) => {
-  a.addEventListener('click', () => {
-    if (a.classList.contains('open')) {
-      closeMenu(a)
-    } else {
-      openMenu(a)
-    }
-  })
-})
+// gets a menu's opposite
+function getOppositeMenu (element: Element): Element {
+  if (element.parentElement.classList.contains('nav-left')) {
+    return document.querySelector('.nav-right')
+  }
+  if (element.parentElement.classList.contains('nav-right')) {
+    return document.querySelector('.nav-left')
+  }
+  return getOppositeMenu(element.parentElement)
+}
+*/

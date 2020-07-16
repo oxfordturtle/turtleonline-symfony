@@ -1,0 +1,46 @@
+@import "container.scss";
+@import "miscellaneous.scss";
+@import "nav.scss";
+@import "header.scss";
+@import "notice.scss";
+@import "main/index.scss";
+@import "footer.scss";
+
+body {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.5;
+  color: $darkgray;
+
+  &.site {
+    background-image: url('../images/oxford.jpg');
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+    padding-top: 3em; // to offset the absolutely positioned nav bar at the top
+    overflow-y: scroll;
+  }
+
+  &.pwa {
+    height: 100vh;
+  
+    .nav {
+      display: none;
+    }
+  
+    .container {
+      max-width: none !important;
+      height: 100% !important;
+      margin: 0 !important;
+      box-shadow: none !important;
+  
+      .header.run {
+        display: none;
+      }
+  
+      .main.run {
+        height: 100%;
+      }
+    }
+  }
+}

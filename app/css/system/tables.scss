@@ -1,0 +1,27 @@
+.system {
+  position: relative;
+  overflow: hidden;
+
+  table {
+    border-collapse: collapse;
+    font-size: .875em;
+    width: calc(100% + 2px);
+    margin: -1px;
+  }
+  thead th {
+    background: $lightgray;
+    padding: .5em;
+  }
+  th {
+    font-weight: bold;
+  }
+  th, td {
+    vertical-align: top;
+    text-align: center;
+    border: 1px solid $gray;
+    padding: .25em .5em;
+    &.turtle-cell-wide {
+      width: 50%;
+    }
+  }
+}

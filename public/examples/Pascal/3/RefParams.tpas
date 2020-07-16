@@ -1,0 +1,40 @@
+PROGRAM RefParams;
+
+  {draws 8 lines, changing the turtle property (passed by reference) as it goes}
+  Procedure lines(var turtleProperty: integer; isColour: boolean);
+  Var count: integer;
+  Begin
+    for count := 1 to 8 do
+      begin
+        if isColour then
+          turtleProperty := rgb(count)
+        else
+          turtleProperty := count;
+        forward(50);
+        pause(100)
+      end
+  End;
+
+  {draws 8 dots, changing the turtle property (passed by reference) as it goes}
+  Procedure dots(var turtleProperty: integer);
+  Var count: integer;
+  Begin
+    for count := 1 to 8 do
+      begin
+        turtleProperty := turtleProperty + 100;
+        blot(40);
+        pause(100)
+      end
+  End;
+
+BEGIN
+  setxy(100, 900);
+  {draw lines of varying thickness}
+  lines(turtt, false);
+  {draw lines of varying colour}
+  lines(turtc, true);
+  {draw dots with different x coordinates}
+  dots(turtx);
+  {draw dots with different y coordinates}
+  dots(turty)
+END.

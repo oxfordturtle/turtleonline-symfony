@@ -1,0 +1,30 @@
+PROGRAM Balls3D;
+VAR count: integer;
+
+  {draw a 3d-style coloured ball}
+  Procedure ball3d(colr, step: integer);
+  Begin
+    colour(colr);
+    for count := 40 downto 1 do
+      begin
+        blot(count * 6);
+        forward(3);
+        turtc := turtc + step
+      end;
+  End;
+
+BEGIN
+  right(60);
+  {draw a blue ball}
+  setxy(250, 250);
+  ball3d(#00FFFF, #50000);
+  {draw an orange ball}
+  setxy(750, 250);
+  ball3d(#D2691E, #10102);
+  {draw a red ball}
+  setxy(250, 750);
+  ball3d(#A90000, #20202);
+  {draw a yellow ball}
+  setxy(750, 750);
+  ball3d(#FFA500, #101)
+END.

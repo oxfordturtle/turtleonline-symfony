@@ -1,0 +1,63 @@
+CONST DECIMALS% = 4
+CONST DENOMINATOR% = 1000000
+REM show the output and display information about the program
+OUTPUT(TRUE, WHITE, TRUE)
+WRITELN("This program selects two random numbers a and b, in the")
+WRITELN("range 100-999, and then outputs various mathematical")
+WRITELN("functions of the fraction a/b. The results are expressed")
+WRITELN("to " + STR$(DECIMALS%) + " decimal places, and a denominator of " + STR$(DENOMINATOR%) + " is")
+WRITELN("used in the calculations to provide precision, even")
+WRITELN("though the Turtle functions strictly operate only on")
+WRITELN("integers and produce integer results.")
+WRITELN("")
+REM set a and b to random values, and show their values and quotient
+a% = RND(900) + 99
+b% = RND(900) + 99
+WRITELN("a = " + STR$(a%) + "; b = " + STR$(b%))
+WRITELN("a / b = " + STR$(a%) + " / " + STR$(b%) + " = " + QSTR$(a%, b%, DECIMALS%))
+WRITELN("")
+REM show square, square root, cube, and cube root of a/b
+PROCshow("square", POWER(a%, b%, 2, DENOMINATOR%))
+PROCshow("square root", ROOT(a%, b%, 2, DENOMINATOR%))
+PROCshow("cube", POWER(a%, b%, 3, DENOMINATOR%))
+PROCshow("cube root", ROOT(a%, b%, 3, DENOMINATOR%))
+WRITELN("")
+REM show hypot of a/b
+PROCshow("hypot", HYPOT(a%, b%, DENOMINATOR%))
+PROCshow("calculated hypot", SQR(a% * a% + b% * b%, DENOMINATOR%))
+WRITELN("")
+REM show sin, cos, and tan of a/b
+PROCshow("sin", SIN(a%, b%, DENOMINATOR%))
+PROCshow("cos", COS(a%, b%, DENOMINATOR%))
+PROCshow("tan", TAN(a%, b%, DENOMINATOR%))
+WRITELN("")
+REM show ln, exp, log10, and antilog of a/b
+PROCshow("ln", LN(a%, b%, DENOMINATOR%))
+IF DIVMULT(a%, b%, 1000) + LN(DENOMINATOR%, 1, 1000) > LN(MAXINT, 1, 1000) THEN
+  WRITELN("EXP(" + STR$(a%) + " / " + STR$(b%) + ") would give numerical overflow, because")
+  WRITELN("the result * " + STR$(DENOMINATOR%) + " would be greater than " + STR$(MAXINT))
+ELSE
+  PROCshow("exp", EXP(a%, b%, DENOMINATOR%))
+ENDIF
+PROCshow("log10", LOG10(a%, b%, DENOMINATOR%))
+IF DIVMULT(a%, b%, 1000) + LOG10(DENOMINATOR%, 1, 1000) > LOG10(MAXINT, 1, 1000) THEN
+  WRITELN("ANTILOG(" + STR$(a%) + " / " + STR$(b%) + ") would give numerical overflow, because")
+  WRITELN("the result * " + STR$(DENOMINATOR%) + " would be greater than " + STR$(MAXINT))
+ELSE
+  PROCshow("antilog", ANTILOG(a%, b%, DENOMINATOR%))
+ENDIF
+WRITELN("")
+REM show arccos, arcsin, and arctan of a/b
+IF a% > b% THEN
+  WRITELN("ACS and ASN are not defined for " + STR$(a%) + " / " + STR$(b%) + " = " + QSTR$(a%, b%, DECIMALS%))
+ELSE
+  PROCshow("arccos", ACS(a%, b%, DENOMINATOR%))
+  PROCshow("arcsin", ASN(a%, b%, DENOMINATOR%))
+ENDIF
+PROCshow("arctan", ATN(a%, b%, DENOMINATOR%))
+END
+
+REM shows the value of a mathematical function of a/b
+DEF PROCshow(s$, n%)
+  WRITELN(s$ + "(" + STR$(a%) + " / " + STR$(b%) + ") = " + QSTR$(n%, DENOMINATOR%, DECIMALS%))
+ENDPROC

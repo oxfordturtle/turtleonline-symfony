@@ -1,38 +1,47 @@
-<a href="{{ path('home') }}" class="nav-item{% if section == 'home' %} active{% endif %}">
-  <span class="icon logo"><img src="{{ asset('images/turtle.png') }}" alt="turtle logo"></img></span>
-  <span class="text">The Turtle System</spab>
-</a>
-<a href="{{ path('run') }}" class="nav-item{% if section == 'run' %} active{% endif %}">
-  <span class="icon"><i class="fa fa-play"></i></span>
-  <span class="text">Run</span>
-</a>
 <div class="nav-menu">
-  <a class="nav-item{% if section == 'documentation' %} active{% endif %}" data-action="toggle-menu">
-    <span class="icon"><i class="fa fa-book"></i></span>
-    <span class="text">Documentation</span>
+  <a class="nav-item" data-action="toggle-menu" data-arg="site">
+    <span class="icon logo"><img src="{{ asset('images/turtle.png') }}" alt="turtle logo"></img></span>
+    <span class="text">The Turtle System</span>
     <span class="icon"><i class="fa fa-caret-down"></i></span>
   </a>
-  <div class="nav-sub-menu">
-    <a href="{{ path('documentation_guide') }}" class="nav-item{% if route == 'documentation_guide' %} active{% endif %}">Turtle System User Guide</a>
-    <a href="{{ path('documentation_help') }}" class="nav-item{% if route == 'documentation_help' %} active{% endif %}">Turtle Languages Help</a>
-    <a href="{{ path('documentation_exercises') }}" class="nav-item{% if route == 'documentation_exercises' %} active{% endif %}">Self-Teach Exercises</a>
-    <a href="{{ path('documentation_machine') }}" class="nav-item{% if route == 'documentation_machine' %} active{% endif %}">Turtle Machine Specification</a>
-    <a href="{{ path('documentation_languages') }}" class="nav-item{% if route == 'documentation_languages' %} active{% endif %}">Turtle Languages Specifications</a>
-    <a href="{{ path('documentation_csac') }}" class="nav-item{% if route == 'documentation_csac' %} active{% endif %}">Computer Science Across the Curriculum</a>
-    <a href="{{ path('documentation_reading') }}" class="nav-item{% if route == 'documentation_reading' %} active{% endif %}">Further Reading</a>
+  <div class="nav-sub-menu" data-menu="site">
+    <a href="{{ path('home') }}" class="nav-item{% if section == 'home' %} active{% endif %}">
+      <span class="icon logo"><img src="{{ asset('images/turtle.png') }}" alt="turtle logo"></img></span>
+      <span class="text">The Turtle System</spab>
+    </a>
+    <a href="{{ path('run') }}" class="nav-item{% if section == 'run' %} active{% endif %}">
+      <span class="icon"><i class="fa fa-play"></i></span>
+      <span class="text">Run</span>
+    </a>
+    <div class="nav-menu">
+      <a class="nav-item{% if section == 'documentation' %} active{% endif %}" data-action="toggle-menu" data-arg="documentation">
+        <span class="icon"><i class="fa fa-book"></i></span>
+        <span class="text">Documentation</span>
+        <span class="icon"><i class="fa fa-caret-down"></i></span>
+      </a>
+      <div class="nav-sub-menu" data-menu="documentation">
+        <a href="{{ path('documentation_guide') }}" class="nav-item{% if route == 'documentation_guide' %} active{% endif %}">Turtle System User Guide</a>
+        <a href="{{ path('documentation_help') }}" class="nav-item{% if route == 'documentation_help' %} active{% endif %}">Turtle Languages Help</a>
+        <a href="{{ path('documentation_exercises') }}" class="nav-item{% if route == 'documentation_exercises' %} active{% endif %}">Self-Teach Exercises</a>
+        <a href="{{ path('documentation_machine') }}" class="nav-item{% if route == 'documentation_machine' %} active{% endif %}">Turtle Machine Specification</a>
+        <a href="{{ path('documentation_languages') }}" class="nav-item{% if route == 'documentation_languages' %} active{% endif %}">Turtle Languages Specifications</a>
+        <a href="{{ path('documentation_csac') }}" class="nav-item{% if route == 'documentation_csac' %} active{% endif %}">Computer Science Across the Curriculum</a>
+        <a href="{{ path('documentation_reading') }}" class="nav-item{% if route == 'documentation_reading' %} active{% endif %}">Further Reading</a>
+      </div>
+    </div>
+    <a href="{{ path('about') }}" class="nav-item{% if section == 'about' %} active{% endif %}">
+      <span class="icon"><i class="fa fa-info"></i></span>
+      <span class="text">About</span>
+    </a>
+    <a href="{{ path('contact') }}" class="nav-item{% if section == 'contact' %} active{% endif %}">
+      <span class="icon"><i class="fa fa-at"></i></span>
+      <span class="text">Contact</span>
+    </a>
+    {% if is_granted('ROLE_ADMIN') %}
+      <a href="{{ path('admin_index') }}" class="nav-item{% if section == 'admin' %} active{% endif %}">
+        <span class="icon"><i class="fa fa-cogs"></i></span>
+        <span class="text">Admin</span>
+      </a>
+    {% endif %}
   </div>
 </div>
-<a href="{{ path('about') }}" class="nav-item{% if section == 'about' %} active{% endif %}">
-  <span class="icon"><i class="fa fa-info"></i></span>
-  <span class="text">About</span>
-</a>
-<a href="{{ path('contact') }}" class="nav-item{% if section == 'contact' %} active{% endif %}">
-  <span class="icon"><i class="fa fa-at"></i></span>
-  <span class="text">Contact</span>
-</a>
-{% if is_granted('ROLE_ADMIN') %}
-  <a href="{{ path('admin_index') }}" class="nav-item{% if section == 'admin' %} active{% endif %}">
-    <span class="icon"><i class="fa fa-cogs"></i></span>
-    <span class="text">Admin</span>
-  </a>
-{% endif %}

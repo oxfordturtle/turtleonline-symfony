@@ -1,0 +1,64 @@
+<nav class="system-menus" data-menu="system">
+  <div class="system-select-menu">
+    <label for="language-menu">LANGUAGE</label>
+    <select id="language-menu" data-binding="language"></select>
+  </div>
+  <div class="system-menu">
+    <a data-action="toggle-menu" data-arg="file">
+      <span>File</span>
+      <i class="fa fa-caret-down"></i>
+    </a>
+    <div class="system-sub-menu" data-menu="file">
+      <a data-action="new-program">New program</a>
+      <a data-action="new-skeleton-program">Skeleton program</a>
+      <a data-action="open-program">Open program</a>
+      <a data-action="save-program">Save program as ...</a>
+      <a data-action="save-export-file" data-mode="expert,machine">Save Export/Upload file</a>
+      <a data-action="close-program">Close program</a>
+      <a data-action="copy-canvas-graphic" data-mode="normal,expert,machine">Copy canvas graphic to clipboard</a>
+      <a data-action="save-canvas-graphic" data-mode="normal,expert,machine">Save canvas graphic to file</a>
+      <a data-action="print-program" data-mode="expert,machine">Print program</a>
+      <a data-action="print-output-text" data-mode="expert,machine">Print text in Output tab</a>
+      <a data-action="print-console-text" data-mode="expert,machine">Print text in Console</a>
+    </div>
+  </div>
+  <div class="system-menu">
+    <a data-action="toggle-menu" data-arg="edit">Edit</a>
+    <div class="system-sub-menu" data-menu="edit">
+      <a data-action="undo">Undo</a>
+      <a data-action="redo">Redo</a>
+      <a data-action="cut">Cut</a>
+      <a data-action="copy">Copy</a>
+      <a data-action="paste">Paste</a>
+      <a data-action="select-all" data-mode="normal,expert,machine">Select All</a>
+      <a data-action="find-and-replace">Find and replace</a>
+      <a data-action="auto-format">Auto-format program</a>
+      <a data-action"store-copy" data-mode="normal,expert,machine">Store copy of program</a>
+      <a data-action="restore-copy" data-mode="normal,expert,machine">Restore previous version</a>
+    </div>
+  </div>
+  <div class="system-menu">
+    <a data-action="toggle-menu" data-arg="view">View</a>
+    <div class="system-sub-menu" data-menu="view"></div>
+  </div>
+  <div class="system-menu" data-mode="expert,machine">
+    <a data-action="toggle-menu" data-arg="tabs">Tabs</a>
+    <div class="system-sub-menu" data-menu="tabs"></div>
+  </div>
+  <div class="system-menu" data-mode="expert,machine">
+    <a data-action="toggle-menu" data-arg="compile">Compile</a>
+    <div class="system-sub-menu" data-menu="compile"></div>
+  </div>
+  <div class="system-menu">
+    <a data-action="toggle-menu" data-arg="run">Run</a>
+    <div class="system-sub-menu" data-menu="run"></div>
+  </div>
+  <div class="system-menu">
+    <a data-action="toggle-menu" data-arg="options">Options</a>
+    <div class="system-sub-menu" data-menu="options"></div>
+  </div>
+  <div class="system-menu">
+    <a data-action="toggle-menu" data-arg="examples">Examples</a>
+    <div class="system-sub-menu" data-menu="examples"></div>
+  </div>
+</nav>

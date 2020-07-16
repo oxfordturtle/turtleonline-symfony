@@ -18,7 +18,11 @@ class DocumentationController extends AbstractController
   /**
    * Route for the user guide page.
    *
-   * @Route("/guide/{tab}", name="guide", requirements={"tab"="getting-started|how-to-use-this-guide"})
+   * @Route(
+   *   "/guide/{tab}",
+   *   name="guide",
+   *   requirements={"tab"="getting-started|how-to-use-this-guide|overview|the-(language|file|edit|view|compile|tabs|run|options|examples)-menu"}
+   * )
    * @return Response
    */
   public function guide(string $tab = 'getting-started'): Response

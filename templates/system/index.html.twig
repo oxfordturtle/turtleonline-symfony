@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+  <div id="system" class="system"{% if app.request.query.get('l') is defined %} data-language="{{ app.request.query.get('l') }}"{% endif %}{% if app.request.query.get('x') is defined %} data-example="{{ app.request.query.get('x') }}"{% endif %}{% if app.request.query.get('f') is defined %} data-file="{{ app.request.query.get('f') }}"{% endif %}{% if app.request.query.get('fullscreen') is defined %} data-fullscreen="{{ app.request.query.get('fullscreen') }}"{% endif %}>
+    <header class="system-header">
+      <button aria-label="system menu" data-action="toggle-menu" data-arg="system"><i class="fa fa-bars" aria-hidden="true"></i></button>
+      {% include 'system/controls.html.twig' %}
+    </header>
+    <div class="system-body">
+      {% include 'system/menu.html.twig' %}
+      <main class="system-main" data-action="close-menu" data-arg="system">
+        <section class="system-section left">
+          {% include 'system/filename.html.twig' %}
+          {% include 'system/editor.html.twig' %}
+        </section>
+        <section class="system-section right">
+          {% include 'system/properties.html.twig' %}
+          <div class="system-tabs">
+            {% include 'system/canvas.html.twig' %}
+            {% include 'system/output.html.twig' %}
+            {% include 'system/usage.html.twig' %}
+            {% include 'system/comments.html.twig' %}
+            {% include 'system/syntax.html.twig' %}
+            {% include 'system/variables.html.twig' %}
+            {% include 'system/pcode.html.twig' %}
+            {% include 'system/memory.html.twig' %}
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+{% endblock %}

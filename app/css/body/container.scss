@@ -1,0 +1,43 @@
+.container {
+  margin: 0 auto;
+
+  a {
+    color: $blue;
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  &.run {
+    @media (min-width: $break1) {
+      max-width: $break1;
+      margin-top: 3em;
+      box-shadow: $box-shadow;
+    }
+    @media (min-width: $break2) {
+      max-width: $break2;
+    }
+  }
+
+  @media (min-width: $break2) {
+    max-width: $break2;
+    margin-top: 3em;
+    margin-bottom: 3em;
+    box-shadow: $box-shadow;
+
+    .columns {
+      display: flex;
+      margin: 0 -0.5em;
+    }
+
+    .column {
+      flex: 1;
+      margin: 0 .5em;
+    }
+  }
+}
