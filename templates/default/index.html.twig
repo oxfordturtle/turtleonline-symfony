@@ -8,12 +8,19 @@
 {% block main %}
   <div class="download">
     <h2>Download for Windows</h2>
-    <a href="{{ path('turtle_download', { 'version': '14' }) }}" class="button">
+    <select id="version-select">
+      <option value="11">v11</option>
+      <option value="12">v12</option>
+      <option value="13">v13</option>
+      <option value="14" selected>v14</option>
+    </select>
+    <a href="{{ path('turtle_download', { 'version': '14' }) }}" class="button" id="download-link">
       <span class="icon"><i class="fa fa-download"></i></span>
       <span class="text">The Turtle System</span>
     </a>
   </div>
   <p>The <i>Turtle System</i> is available as a traditional desktop app for Windows, downloable from the button above. No installation is required; simply double-click the file to run it. The first time you run the program, Windows may warn you that it is of unknown origin, and therefore potentially unsafe. To run it, click ‘More Information’ and then ‘Run Anyway’.</p>
+  <p>For the latest features, download version 14. However, for Turtle Python language support, please download the legacy version 11. Turtle Python is currently being substantially rewritten and improved, and should be available in version 15 later this year.</p>
   <h2>Run Online and on other Platforms</h2>
   <p>The <i>Turtle System</i> is also available as a progressive web app, which can be run directly in your browser (click on <a href="{{ path('run') }}">Run</a> in the main site menu), and installed for offline use (look for the ‘+’ icon in your address bar or the ‘Add to Home Screen’ prompt on your phone’s browser). This version has fewer features than the traditional desktop app (at least for now). In particular, it does not yet support arrays or file handling. When file handling is implemented, it will enable reading and writing files to your personal space on our server, which is created for you when you register for an account on this site.</p>
   <h2>Further Information</h2>

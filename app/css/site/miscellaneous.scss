@@ -3,7 +3,14 @@
 .download {
   display: flex;
   align-items: baseline;
-  justify-content: space-between;
+
+  h2 {
+    flex: 1;
+  }
+
+  select, .button {
+    margin-left: 1em;
+  }
 
   .button {
     display: inline-block;
