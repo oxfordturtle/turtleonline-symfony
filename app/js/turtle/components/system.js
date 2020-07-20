@@ -14,12 +14,3 @@ export default dom.createElement('div', {
 main.addEventListener('click', (e) => {
   state.menu = false
 })
-
-// function for resizing the canvas component depending on the screen size
-function resizeCanvas () {
-  main.style.gridTemplateColumns = `auto ${main.offsetHeight - 130}px`
-}
-
-// resize the canvas initially, and register to resize it when the window size changes
-window.addEventListener('resize', resizeCanvas)
-state.on('resize-canvas', resizeCanvas)

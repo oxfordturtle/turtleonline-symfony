@@ -49,10 +49,8 @@ if (turtle) {
       document.body.classList.remove('pwa')
       document.body.classList.add('site')
     }
-    state.send('resize-canvas')
   })
 
   // send the page ready signal (which will update the components to reflect the initial state)
   state.init()
-  state.send('resize-canvas')
 }
