@@ -504,7 +504,9 @@ class State {
         this.compileCurrentFile()
         this.send('file-changed')
       }
-      machine.run(this.pcode, this.machineOptions)
+      if (this.file.compiled) {
+        machine.run(this.pcode, this.machineOptions)
+      }
     }
   }
 
