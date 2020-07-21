@@ -1,11 +1,12 @@
 /*
  * the online turtle system
  */
-import state from './state/index.ts'
-import * as machine from './machine/index.js'
-import * as dom from './components/dom.js'
-import controls from './components/controls.js'
-import system from './components/system.js'
+import { languages, Language } from './definitions/languages'
+import state from './state/index'
+import * as machine from './machine/index'
+import * as dom from './components/dom'
+import controls from './components/controls'
+import system from './components/system'
 
 // look for the turtle element
 const turtle = document.getElementById('turtle')
@@ -18,7 +19,9 @@ if (turtle) {
 
   // maybe setup state variables based on the app's data properties
   if (turtle.dataset.language) {
-    state.language = turtle.dataset.language
+    if (languages.includes(turtle.dataset.language as Language)) {
+      state.language = turtle.dataset.language as Language
+    }
   }
 
   if (turtle.dataset.example) {
@@ -26,7 +29,7 @@ if (turtle) {
   }
 
   if (turtle.dataset.file) {
-    state.loadRemoteFile(turtle.dataset.file)
+    state.openRemoteFile(turtle.dataset.file)
   }
 
   // register to handle state and machine errors

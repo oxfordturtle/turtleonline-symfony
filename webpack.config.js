@@ -2,7 +2,7 @@ const path = require('path')
 const WorkboxPlugin = require('workbox-webpack-plugin')
 
 module.exports = {
-  entry: './app/js/index.js',
+  entry: './app/js/index.ts',
   module: {
     rules: [
       {

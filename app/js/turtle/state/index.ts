@@ -6,15 +6,15 @@
  * variables are defined here. This module also initializes the variables and saves them to local
  * storage, so that the state is maintained between sessions.
  */
-import { SystemError } from '../definitions/errors.ts'
-import { names } from '../definitions/examples.ts'
-import { File } from '../definitions/file.ts'
-import { Language, languages, extensions } from '../definitions/languages.ts'
-import compile from '../compile/index.js'
-import lexer from '../compile/lexer/index.js'
-import * as machine from '../machine/index.js'
-import { Message, Reply } from './messages.ts'
-import { load, save } from './storage.ts'
+import { SystemError } from '../definitions/errors'
+import { names } from '../definitions/examples'
+import { File } from '../definitions/file'
+import { Language, languages, extensions } from '../definitions/languages'
+import compile from '../compile/index'
+import lexer from '../compile/lexer/index'
+import * as machine from '../machine/index'
+import { Message, Reply } from './messages'
+import { load, save } from './storage'
 
 // define the system state object
 class State {
@@ -411,7 +411,7 @@ class State {
     this.addFile(file)
   }
 
-  openRemoteFile () {
+  openRemoteFile (url: string) {
     this.send('error', new SystemError('Feature not yet available.'))
   }
 
