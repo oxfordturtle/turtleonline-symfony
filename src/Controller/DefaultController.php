@@ -37,7 +37,7 @@ class DefaultController extends AbstractController
   public function run(): Response
   {
     // render and return the page
-    return $this->render('default/run.html.twig');
+    return $this->render('system/index.html.twig');
   }
 
   /**
@@ -49,7 +49,7 @@ class DefaultController extends AbstractController
   public function documentation(): Response
   {
     // redirect
-    return $this->redirectToRoute('documentation_guides');
+    return $this->redirectToRoute('documentation_guide');
   }
 
   /**

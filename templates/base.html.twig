@@ -22,16 +22,7 @@
   <body class="site">
     {% block body %}
       <nav class="nav">
-        <div class="nav-left">
-          <div class="nav-menu">
-            <a class="nav-item" data-action="toggle-menu">
-              <span class="icon logo"><img src="{{ asset('images/turtle.png') }}" alt="turtle logo"></img></span>
-              <span class="text">The Turtle System</span>
-              <span class="icon"><i class="fa fa-caret-down"></i></span>
-            </a>
-            <div class="nav-sub-menu">{% include '_includes/main-menu.html.twig' %}</div>
-          </div>
-        </div>
+        <div class="nav-left">{% include '_includes/main-menu.html.twig' %}</div>
         <div class="nav-right">{% include '_includes/security-menu.html.twig' %}</div>
       </nav>
       <div class="container {{ section }}">

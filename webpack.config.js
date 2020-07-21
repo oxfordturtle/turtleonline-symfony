@@ -7,12 +7,8 @@ module.exports = {
     rules: [
       {
         test: /\.ts(x?)$/,
-        exclude: /node_modules/,
-        use: [
-          {
-            loader: 'ts-loader'
-          }
-        ]
+        use: 'ts-loader',
+        exclude: /node_modules/
       },
       {
         enforce: 'pre',
@@ -20,6 +16,9 @@ module.exports = {
         loader: 'source-map-loader'
       }
     ]
+  },
+  resolve: {
+    extensions: ['.ts', '.js']
   },
   output: {
     filename: 'index.js',
@@ -39,7 +38,6 @@ module.exports = {
         { urlPattern: /\/examples\/.*/, handler: 'StaleWhileRevalidate' },
         //images (load from cache, then update in the background)
         { urlPattern: '/favicon.ico', handler: 'StaleWhileRevalidate' },
-        { urlPattern: /\/icons\/\.*\.png$/, handler: 'StaleWhileRevalidate' },
         { urlPattern: /\/images\/\.*\.(png|jpe?g)$/, handler: 'StaleWhileRevalidate' },
         // pages (network first, falling back to cache)
         { urlPattern: '/', handler: 'NetworkFirst' },

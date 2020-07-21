@@ -1,27 +1,18 @@
 {% extends 'base.html.twig' %}
 
 {% block header %}
-  <h1>Sign In</h1>
+  <h1>Reset Password</h1>
 {% endblock %}
 
 {% block main %}
-  <form action="{{ path('login') }}" method="post">
-    <div class="form-group{% if error %} has-errors{% endif %}">
-      <label for="username">Username</label>
-      <input type="text" class="form-control" id="username" name="_username" required="required" autofocus{% if last_username %} value="{{ last_username }}"{% endif %}>
-      {% if error %}
-        <ul>
-          <li>Incorrect username or password.</li>
-        </ul>
-      {% endif %}
-    </div>
-    <div class="form-group">
-      <label for="password">Password</label>
-      <input type="password" class="form-control" id="password" name="_password" required="required">
-    </div>
-    <div class="form-buttons">
-      <button type="submit" class="green button">Login</button>
-    </div>
-    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-  </form>
+  <p>You can set a new password using the form below. This page will only remain available for 24 hours.</p>
+  <div class="form">
+    {{ form_start(resetPasswordForm) }}
+      {{ form_row(resetPasswordForm.password) }}
+      {{ form_row(resetPasswordForm._token) }}
+      <div class="form-buttons">
+        <button type="submit" class="green button">Reset Password</button>
+      </div>
+    {{ form_end(resetPasswordForm) }}
+  </div>
 {% endblock %}

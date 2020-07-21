@@ -16,15 +16,15 @@ use Symfony\Component\Routing\Annotation\Route;
 class DocumentationController extends AbstractController
 {
   /**
-   * Route for the user guides page.
+   * Route for the user guide page.
    *
-   * @Route("/guides", name="guides")
+   * @Route("/guide", name="guide")
    * @return Response
    */
-  public function guides(): Response
+  public function guide(): Response
   {
     // render and return the page
-    return $this->render('documentation/guides.html.twig');
+    return $this->render('documentation/guide.html.twig');
   }
 
   /**
@@ -76,14 +76,14 @@ class DocumentationController extends AbstractController
   }
 
   /**
-   * Route for the further documentation page.
+   * Route for the further reading page.
    *
-   * @Route("/further", name="further")
+   * @Route("/reading", name="reading")
    * @return Response
    */
-  public function further(): Response
+  public function reading(): Response
   {
     // render and return the page
-    return $this->render('documentation/further.html.twig');
+    return $this->render('documentation/reading.html.twig');
   }
 }

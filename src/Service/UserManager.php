@@ -70,6 +70,16 @@ class UserManager
   }
 
   /**
+   * Refresh a user.
+   * 
+   * @param User $user
+   */
+  public function refreshUser(User $user)
+  {
+    $this->entityManager->refresh($user);
+  }
+
+  /**
    * Create a new user.
    *
    * @return User

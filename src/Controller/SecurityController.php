@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Model\EmailCredentials;
-use App\Model\ResetPasword;
+use App\Model\ResetPassword;
 use App\Form\EmailCredentialsType;
 use App\Form\UserRegisterType;
 use App\Form\ResetPasswordType;
@@ -173,6 +173,7 @@ class SecurityController extends AbstractController
       $user = $userManager->getUserByEmail($email);
       if ($user) {
         $userManager->setRandomToken($user);
+        $userManager->refreshUser($user);
         $mailer->sendCredentialsEmail($user);
         $this->addFlash('success', "An email has been sent to $email with further instructions.");
       } else {
@@ -212,7 +213,8 @@ class SecurityController extends AbstractController
 
     // check the token isn't more than a day old
     $now = new \DateTime();
-    if ($now->diff($user->getTokenDate())->d > 1) {
+    $differenceInDays = (int) $now->diff($user->getTokenDate())->format('%R%a');
+    if ($differenceInDays > 1) {
       throw $this->createNotFoundException('This link has expired.');
     }
 
