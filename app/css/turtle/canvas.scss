@@ -11,7 +11,7 @@
     span {
       display: block;
       font-size: 10px;
-      padding: $padding;
+      padding: $system-padding;
       width: $canvas-coords-width;
       overflow: hidden;
       color: darken($green, 5%);
@@ -26,7 +26,7 @@
     .turtle-canvas-coords {
       flex-direction: column;
       text-align: right;
-      margin-top: $padding + 10px + $padding;
+      margin-top: $system-padding + 10px + $system-padding;
     }
   }
 

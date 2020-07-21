@@ -18,9 +18,8 @@
 @import "memory.scss";
 @import "settings.scss";
 
-
 .turtle {
-  min-height: 700px;
+  min-height: $system-default-height;
   height: 100%;
   display: grid;
   background: $darkgray-transparent;

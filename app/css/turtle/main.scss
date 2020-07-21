@@ -10,7 +10,7 @@
   @media (min-width: $break2) {
     display: grid;
     grid-template-rows: minmax(0, 1fr);
-    grid-template-columns: 6fr 7fr;
+    grid-template-columns: 1fr $tabs-width;
   }
 
   .turtle-main-half {
