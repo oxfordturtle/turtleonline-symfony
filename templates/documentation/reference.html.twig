@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}
+  <div class="title">
+    <h1>Commands &amp; Constants Reference</h1>
+    <select data-action="select-tab">
+      <option value="commands"{% if tab == 'commands' %} selected{% endif %}>Native Commands</option>
+      <option value="colours"{% if tab == 'colours' %} selected{% endif %}>Colour Constants</option>
+      <option value="fonts"{% if tab == 'fonts' %} selected{% endif %}>Fonts</option>
+      <option value="cursors"{% if tab == 'cursors' %} selected{% endif %}>Cursors</option>
+      <option value="keycodes"{% if tab == 'keycodes' %} selected{% endif %}>Input Keycodes</option>
+    </select>
+    <select data-binding="language"></select>
+  </div>
+  <div class="tab-panes">
+    <div class="tab-pane{% if tab == 'commands' %} active{% endif %}" data-tab="commands">
+      {% include 'documentation/reference/notes/commands.html.twig' %}
+    </div>
+    <div class="tab-pane{% if tab == 'colours' %} active{% endif %}" data-tab="colours">
+      {% include 'documentation/reference/notes/colours.html.twig' %}
+    </div>
+    <div class="tab-pane{% if tab == 'fonts' %} active{% endif %}" data-tab="fonts">
+      {% include 'documentation/reference/notes/fonts.html.twig' %}
+    </div>
+    <div class="tab-pane{% if tab == 'cursors' %} active{% endif %}" data-tab="cursors">
+      {% include 'documentation/reference/notes/cursors.html.twig' %}
+    </div>
+    <div class="tab-pane{% if tab == 'keycodes' %} active{% endif %}" data-tab="keycodes">
+      {% include 'documentation/reference/notes/keycodes.html.twig' %}
+    </div>
+  </div>
+{% endblock %}
+
+{% block main %}
+  <div class="tab-panes">
+    <div class="tab-pane{% if tab == 'commands' %} active{% endif %}" data-tab="commands">
+      {% include 'documentation/reference/tables/commands.html.twig' %}
+    </div>
+    <div class="tab-pane{% if tab == 'colours' %} active{% endif %}" data-tab="colours">
+      {% include 'documentation/reference/tables/colours.html.twig' %}
+    </div>
+    <div class="tab-pane{% if tab == 'fonts' %} active{% endif %}" data-tab="fonts">
+      {% include 'documentation/reference/tables/fonts.html.twig' %}
+    </div>
+    <div class="tab-pane{% if tab == 'cursors' %} active{% endif %}" data-tab="cursors">
+      {% include 'documentation/reference/tables/cursors.html.twig' %}
+    </div>
+    <div class="tab-pane{% if tab == 'keycodes' %} active{% endif %}" data-tab="keycodes">
+      {% include 'documentation/reference/tables/keycodes.html.twig' %}
+    </div>
+  </div>
+{% endblock %}

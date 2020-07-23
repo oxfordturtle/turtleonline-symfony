@@ -1,0 +1,65 @@
+.form-group {
+  margin-bottom: 1em;
+
+  label {
+    background: $blue;
+    color: #fff;
+    font-weight: normal;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    padding: .25em .75em;
+  }
+
+  input[type="text"], input[type="email"], input[type="password"], select, textarea {
+    width: 100%;
+    border-top: 0;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    padding: .35em .75em;
+    &:focus {
+      border: 1px solid $blue;
+      border-top: 0;
+      outline: 0;
+    }
+  }
+
+  &.has-errors {
+    label {
+      background: $red;
+    }
+
+    input[type="text"], input[type="email"], input[type="password"], select, textarea {
+      border-bottom: 0;
+      border-radius: 0;
+      border-color: $red;
+
+      &:focus {
+        border-color: $red;
+      }
+    }
+
+    ul {
+      margin: 0;
+      padding: .25em .75em;
+      background: $red;
+      color: #fff;
+      border-bottom-left-radius: 5px;
+      border-bottom-right-radius: 5px;
+    }
+  }
+}
+
+.form-buttons {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+
+  a {
+    padding: 0 1em;
+  }
+
+  button {
+    padding: .5em 1em;
+    border-radius: 5px;
+  }
+}

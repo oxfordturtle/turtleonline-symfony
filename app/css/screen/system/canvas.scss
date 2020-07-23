@@ -1,0 +1,57 @@
+.turtle-canvas {
+  display: flex;
+
+  .turtle-canvas-coords {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+
+    span {
+      display: block;
+      font-size: 10px;
+      padding: $system-padding;
+      width: $canvas-coords-width;
+      overflow: hidden;
+      color: darken($green, 5%);
+      text-align: right;
+    }
+  }
+
+  .turtle-canvas-left {
+    display: flex;
+    flex-direction: column;
+
+    .turtle-canvas-coords {
+      flex-direction: column;
+      text-align: right;
+      margin-top: $system-padding + 10px + $system-padding;
+    }
+  }
+
+  .turtle-canvas-right {
+    flex: 1;
+
+    .turtle-canvas-coords {
+
+      span:nth-child(1), span:nth-child(2) {
+        text-align: left;
+      }
+
+      span:nth-child(3) {
+        text-align: center;
+      }
+    }
+
+    .turtle-canvas-wrapper {
+      border: 1px solid $gray;
+      border-right: 0;
+      border-bottom: 0;
+
+      canvas {
+        display: block;
+        width: 100%;
+        image-rendering: pixelated;
+      }
+    }
+  }
+}

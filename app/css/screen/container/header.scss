@@ -1,0 +1,18 @@
+@import "header/title.scss";
+@import "header/paragraph.scss";
+
+.header {
+  padding: 1em;
+  background: $darkgray;
+  color: #fff;
+
+  @media (min-width: $break1) {
+    padding: 1.5em 2em;
+  }
+
+  @media (min-width: $break2) {
+    margin-top: 3em;
+    max-width: $break2;
+    opacity: .95;
+  }
+}

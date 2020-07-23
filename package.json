@@ -2,10 +2,10 @@
   "scripts": {
     "build-js": "webpack --config webpack.config.js --mode production",
     "watch-js": "webpack --watch --config webpack.config.js --mode development",
-    "build-css-site": "node-sass app/css/index.scss --output public/css --output-style compressed",
+    "build-css-site": "node-sass app/css/screen.scss --output public/css --output-style compressed",
     "build-css-email": "node-sass app/css/email.scss --output public/css --output-style compressed",
     "build-css": "yarn build-css-site && yarn build-css-email",
-    "watch-css-site": "node-sass app/css/index.scss --watch --output public/css --output-style compressed",
+    "watch-css-site": "node-sass app/css/screen.scss --watch --output public/css --output-style compressed",
     "watch-css-email": "node-sass app/css/index.scss --watch --output public/css --output-style compressed",
     "watch-css": "concurrently \"yarn watch-css-site\" \"yarn watch-css-email\"",
     "build": "yarn build-js && yarn build-css",

@@ -16,15 +16,39 @@ use Symfony\Component\Routing\Annotation\Route;
 class DocumentationController extends AbstractController
 {
   /**
-   * Route for the user guide page.
+   * Route for the turtle system user guide page.
    *
-   * @Route("/guide", name="guide")
+   * @Route("/system", name="system")
    * @return Response
    */
-  public function guide(): Response
+  public function system(): Response
   {
     // render and return the page
-    return $this->render('documentation/guide.html.twig');
+    return $this->render('documentation/system.html.twig');
+  }
+
+  /**
+   * Route for the turtle language guides page.
+   *
+   * @Route("/help/{tab}", name="help", requirements={"tab"="basics|structures|operators|input"})
+   * @return Response
+   */
+  public function help(string $tab = 'basics'): Response
+  {
+    // render and return the page
+    return $this->render('documentation/help.html.twig', ['tab' => $tab]);
+  }
+
+  /**
+   * Route for the commands and constants reference page.
+   *
+   * @Route("/reference/{tab}", name="reference", requirements={"tab"="commands|colours|cursors|fonts|keycodes"})
+   * @return Response
+   */
+  public function reference(string $tab = 'commands'): Response
+  {
+    // render and return the page
+    return $this->render('documentation/reference.html.twig', ['tab' => $tab]);
   }
 
   /**
@@ -40,7 +64,7 @@ class DocumentationController extends AbstractController
   }
 
   /**
-   * Route for the machine documentation page.
+   * Route for the machine specification page.
    *
    * @Route("/machine", name="machine")
    * @return Response
@@ -52,7 +76,7 @@ class DocumentationController extends AbstractController
   }
 
   /**
-   * Route for the languages documentation page.
+   * Route for the languages specifications page.
    *
    * @Route("/languages", name="languages")
    * @return Response
@@ -64,7 +88,7 @@ class DocumentationController extends AbstractController
   }
 
   /**
-   * Route for the CSAC documentation page.
+   * Route for the CSAC page.
    *
    * @Route("/csac", name="csac")
    * @return Response

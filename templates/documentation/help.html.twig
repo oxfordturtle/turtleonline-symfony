@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block header %}
+  <div class="title">
+    <h1>Turtle Languages Help</h1>
+    <select data-action="select-tab">
+      <option value="basics"{% if tab == 'basics' %} selected{% endif %}>Programs &amp; Procedures</option>
+      <option value="structures"{% if tab == 'structures' %} selected{% endif %}>Command Structures</option>
+      <option value="operators"{% if tab == 'operators' %} selected{% endif %}>Operators</option>
+      <option value="input"{% if tab == 'input' %} selected{% endif %}>User Input</option>
+    </select>
+    <select data-binding="language"></select>
+  </div>
+  <p>The <em>Turtle System</em> supports programming in several specially designed languages. These languages all mimic an existing language, but incorporate native Turtle Graphics support, and are pared down to facilitate teaching and learning in a simpler and less daunting environment (and to enable the compilers to produce much more precise and detailed error messages). The guides on this page, together with the <a href="{{ path('documentation_reference') }}">Commands &amp; Constants Reference</a>, cover the essentials for programming in the <em>Turtle System</em>. For a more complete description of the languages, see the <a href="{{ path('documentation_languages') }}">Turtle Language Specifications</a>.</p>
+{% endblock %}
+
+{% block main %}
+  <div class="tab-panes">
+    <div class="tab-pane{% if tab == 'basics' %} active{% endif %}" data-tab="basics">
+      <div data-language="BASIC">{% include 'documentation/help/BASIC/basics.html.twig' %}</div>
+      <div data-language="Pascal">{% include 'documentation/help/Pascal/basics.html.twig' %}</div>
+      <div data-language="Python">{% include 'documentation/help/Python/basics.html.twig' %}</div>
+    </div>
+    <div class="tab-pane{% if tab == 'structures' %} active{% endif %}" data-tab="structures">
+      <div data-language="BASIC">{% include 'documentation/help/BASIC/structures.html.twig' %}</div>
+      <div data-language="Pascal">{% include 'documentation/help/Pascal/structures.html.twig' %}</div>
+      <div data-language="Python">{% include 'documentation/help/Python/structures.html.twig' %}</div>
+    </div>
+    <div class="tab-pane{% if tab == 'operators' %} active{% endif %}" data-tab="operators">
+      <div data-language="BASIC">{% include 'documentation/help/BASIC/operators.html.twig' %}</div>
+      <div data-language="Pascal">{% include 'documentation/help/Pascal/operators.html.twig' %}</div>
+      <div data-language="Python">{% include 'documentation/help/Python/operators.html.twig' %}</div>
+    </div>
+    <div class="tab-pane{% if tab == 'input' %} active{% endif %}" data-tab="input">
+      <div data-language="BASIC">{% include 'documentation/help/BASIC/input.html.twig' %}</div>
+      <div data-language="Pascal">{% include 'documentation/help/Pascal/input.html.twig' %}</div>
+      <div data-language="Python">{% include 'documentation/help/Python/input.html.twig' %}</div>
+    </div>
+  </div>
+{% endblock %}

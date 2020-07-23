@@ -1,0 +1,174 @@
+* {
+  box-sizing: border-box;
+  scrollbar-width: thin;
+  scrollbar-color: $gray $lightgray;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $lightgray;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $gray;
+  }
+}
+
+html {
+  font-family: $system-font;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+body {
+  background-image: url('../images/oxford.jpg');
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+  margin: 0;
+  padding-top: 3em; // to offset the absolutely positioned nav bar at the top
+  font-size: 16px;
+  line-height: 1.5;
+  color: $darkgray;
+  overflow-y: scroll;
+}
+
+h1, h2, h3, h4 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+h1 {
+  font-size: 1.75em;
+}
+
+h2 {
+  font-size: 1.5em;
+}
+
+h3 {
+  font-size: 1.25em;
+}
+
+h4 {
+  font-size: 1.125em;
+}
+
+p, blockquote {
+  text-align: justify;
+}
+
+p {
+  margin: 0 0 1em;
+}
+
+a {
+  cursor: pointer;
+  color: $blue;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+img {
+  max-width: 100%;
+}
+
+blockquote {
+  border-left: 3px solid $gray;
+  padding-left: 1em;
+  margin-left: 2em;
+  cite {
+    display: block;
+    text-align: right;
+  }
+}
+
+pre {
+  background: $lightgray;
+  border: 1px solid $gray;
+  padding: .5em .75em;
+}
+
+pre, code {
+  font-family: $monospace;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1.5em 0;
+}
+
+tbody {
+  border-top: 1px solid $gray;
+  border-bottom: 1px solid $gray;
+}
+
+tr:not(:last-child) {
+  border-bottom: 1px solid $gray;
+}
+
+th {
+  text-align: left;
+  background: $lightgray;
+}
+
+th, td {
+  vertical-align: top;
+  padding: .25em .5em;
+}
+
+label {
+  display: block;
+  padding: .25em .5em;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+input[type="text"], input[type="password"], input[type="email"], select {
+  border: 1px solid $gray;
+  padding: .25em .5em;
+  font: inherit;
+}
+
+textarea {
+  height: 20em;
+  font: inherit;
+  display: block;
+}
+
+button, .button {
+  padding: .25em 1em;
+  background: $blue;
+  color: #fff !important;
+  cursor: pointer;
+  font: inherit;
+  border: 0;
+
+  &:hover {
+    background: darken($blue, 10%);
+    text-decoration: none !important;
+  }
+
+  &.green {
+    background: $green;
+
+    &:hover {
+      background: darken($green, 10%);
+    }
+  }
+
+  &.red {
+    background: $red;
+
+    &:hover {
+      background: darken($red, 10%);
+    }
+  }
+}

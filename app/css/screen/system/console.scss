@@ -1,0 +1,10 @@
+.turtle-console {
+  flex: 1;
+  overflow: auto;
+  border: 0;
+  border-top: 1px solid $gray;
+  margin: 0;
+  padding: $system-padding;
+  font-family: $monospace;
+  background: #fff;
+}

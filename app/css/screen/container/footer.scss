@@ -1,0 +1,33 @@
+.footer {
+  padding: 3em;
+  background: $lightgray;
+
+  @media (min-width: $break2) {
+    padding: 3em 10em;
+  }
+
+  .logos-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 1em;
+
+    a {
+      display: block;
+      margin: .5em;
+    }
+
+    img {
+      height: 4em;
+
+      @media (min-width: $break1) {
+        height: 5em;
+      }
+    }
+  }
+
+  p {
+    margin: 0;
+    font-size: .9375em;
+  }
+}

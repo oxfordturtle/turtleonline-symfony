@@ -3,6 +3,7 @@ const WorkboxPlugin = require('workbox-webpack-plugin')
 
 module.exports = {
   entry: './app/js/index.ts',
+  devtool: 'source-map',
   module: {
     rules: [
       {

@@ -1,0 +1,65 @@
+.turtle-menu {
+  position: absolute;
+  z-index: 5;
+  width: 14em;
+  margin-left: -14em;
+  height: 100%;
+  background: $blue;
+  transition: .4s ease-in-out;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  &.active {
+    margin-left: 0;
+  }
+
+  @media (min-width: $break1) {
+    width: 3em;
+    margin-left: 0;
+    &.active {
+      width: 14em;
+    }
+
+    a.turtle-icon-text {
+      &.active {
+        background: $red;
+      }
+    }
+  }
+
+  .turtle-sub-menu {
+    margin-bottom: 1.5em;
+  }
+
+  .turtle-icon-text {
+    display: flex;
+    text-decoration: none;
+    color: #fff;
+    white-space: nowrap;
+
+    .icon {
+      flex-basis: 3em;
+      flex-shrink: 0;
+      padding: .5em;
+      text-align: center;
+    }
+
+    .text {
+      flex: 1;
+      padding: .5em .5em .5em 0;
+    }
+  }
+
+  span.turtle-icon-text {
+    color: $green;
+    font-weight: bold;
+  }
+
+  a.turtle-icon-text {
+    cursor: pointer;
+    &:hover {
+      background: $red;
+      text-decoration: none;
+    }
+  }
+}

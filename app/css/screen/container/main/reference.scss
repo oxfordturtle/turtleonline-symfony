@@ -1,0 +1,22 @@
+.commands-table-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+
+  select {
+    flex: 1;
+    margin-bottom: 1em;
+  }
+
+  .checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 1em;
+  }
+
+  label:not(:last-child) {
+    margin-right: .5em;
+  }
+}

@@ -1,0 +1,17 @@
+.notice {
+  color: #fff;
+  padding: 1em;
+  background: $blue;
+
+  @media (min-width: $break1) {
+    padding: 1em 2em;
+  }
+
+  &.success {
+    background: $green;
+  }
+
+  &.error {
+    background: $red;
+  }
+}

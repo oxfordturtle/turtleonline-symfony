@@ -1,0 +1,52 @@
+.main code {
+  .comment {
+    color: gray;
+  }
+  .string {
+    color: seagreen;
+  }
+  .operator {
+    color: steelblue;
+  }
+  .punctuation {}
+  .binary,
+  .octal,
+  .decimal,
+  .hexadecimal {
+    color: peru;
+  }
+  .type {
+    color: firebrick;
+  }
+  .keyword {
+    color: firebrick;
+    font-weight: bold;
+  }
+  .command,
+  .custom {
+    color: purple;
+  }
+  .turtle,
+  .variable {
+    font-weight: bold;
+  }
+  .constant {
+    color: steelblue;
+  }
+  .keycode {
+    color: steelblue;
+  }
+  .query {
+    font-weight: bold;
+  }
+  .identifier {}
+  .unterminated-comment,
+  .unterminated-string,
+  .bad-binary,
+  .bad-octal,
+  .bad-hexadecimal,
+  .bad-decimal,
+  .illegal {
+    background: rgba(200, 0, 0, .2);
+  }
+}

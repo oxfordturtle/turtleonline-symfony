@@ -1,0 +1,21 @@
+.header {
+  h1 {
+    font-size: 1.7em;
+    margin: 0;
+    color: $red;
+  }
+
+  .title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+
+    h1 {
+      flex: 1;
+    }
+
+    select {
+      margin-left: .5em;
+    }
+  }
+}

@@ -1,8 +1,19 @@
 /*
  * Javscript entry point.
  */
-import './site/index'
-import './turtle/index'
+import './components/bindings'
+import './components/download'
+import './components/languages'
+import './components/menus'
+import './components/preview'
+import './components/tabs'
+import './components/reference/colours'
+import './components/reference/commands'
+import './components/reference/cursors'
+import './components/reference/fonts'
+import './components/reference/keycodes'
+import './components/system/controls'
+import './system'
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {

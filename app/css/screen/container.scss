@@ -1,0 +1,15 @@
+@import "container/header.scss";
+@import "container/main.scss";
+@import "container/footer.scss";
+
+.container {
+  background: #fff;
+  margin: 0 auto;
+
+  @media (min-width: $break2) {
+    max-width: $break2;
+    margin-top: 3em;
+    margin-bottom: 3em;
+    box-shadow: $box-shadow;
+  }
+}

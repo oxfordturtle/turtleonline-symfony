@@ -1,0 +1,80 @@
+@import "system/buttons.scss";
+@import "system/canvas.scss";
+@import "system/checkboxes.scss";
+@import "system/code.scss";
+@import "system/console.scss";
+@import "system/controls.scss";
+@import "system/file.scss";
+@import "system/filename.scss";
+@import "system/lexemes.scss";
+@import "system/main.scss";
+@import "system/memory.scss";
+@import "system/menu.scss";
+@import "system/output.scss";
+@import "system/pcode.scss";
+@import "system/settings.scss";
+@import "system/system.scss";
+@import "system/turtle.scss";
+@import "system/usage.scss";
+
+.run .container {
+  .header, .footer {
+    display: none;
+  }
+
+  .main {
+    background: transparent;
+    padding: 0;
+    height: $system-default-height;
+  }
+}
+
+.run.fullscreen {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  font-size: 16px;
+  line-height: 1.5;
+  color: $darkgray;
+
+  .site-nav {
+    display: none;
+  }
+
+  .container {
+    max-width: none !important;
+    height: 100% !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+
+    .main {
+      height: 100%;
+    }
+  }
+}
+
+.system {
+  min-height: $system-default-height;
+  height: 100%;
+  display: grid;
+  background: $darkgray-transparent;
+
+  &.ready {
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+}
+
+.system-loading {
+  display: grid;
+  height: 100%;
+  grid-template-rows: 1fr auto 1fr;
+  grid-template-columns: 1fr auto 1fr;
+
+  p {
+    grid-row: 2;
+    grid-column: 2;
+    color: #fff;
+    margin: 0;
+    font-size: 1.25em;
+  }
+}
