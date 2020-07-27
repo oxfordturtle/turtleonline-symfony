@@ -212,16 +212,16 @@ const value = (type, content, language) => {
           return 'not'
 
         case 'and':
-          // 'and' is bitwise conjucntion in BASIC and Pascal, but boolean in Python
-          return language === 'Python' ? 'band' : 'and'
+          // 'and' is bitwise conjucntion in BASIC and Pascal, but lazy in Python
+          return language === 'Python' ? 'andl' : 'and'
 
         case '&':
           // in Python, '&' is bitwise conjunction
           return 'and'
 
         case 'or':
-          // 'or' is bitwise disjunction in BASIC and Pascal, but boolean in Python
-          return language === 'Python' ? 'bor' : 'or'
+          // 'or' is bitwise disjunction in BASIC and Pascal, but lazy in Python
+          return language === 'Python' ? 'orl' : 'or'
 
         case '|':
           // in Python, '|' is bitwise disjunction

@@ -1,0 +1,66 @@
+{
+  "format":1,
+  "language":"Pascal",
+  "version":13,
+  "name":"Cycling colours (using MOD)",
+  "author":"Peter Millican",
+  "date":"23/07/2020",
+  "time":"11:59:01",
+  "code":"PROGRAM CycleColours;\nVAR len: integer;\n    colinc, colcode: integer;\nBEGIN\n  blank(black);\n  colinc := random(5);\n  colcode := random(20) + 1;\n  len := 0;\n  thickness(16);\n  repeat\n    colcode := (colcode + colinc) mod 20 + 1;\n    colour(rgb(colcode));\n    len := len + 1;\n    forward(len);\n    right(30)\n  until len > 250\nEND.",
+  "usage":[
+    {
+      "category": "Turtle: relative movement",
+      "expressions":[
+        {"name":"forward", "level":1, "count":1, "lines":"14"},
+        {"name":"right", "level":1, "count":1, "lines":"15"}
+      ],
+      "total":2
+    },
+    {
+      "category": "Other Turtle commands",
+      "expressions":[
+        {"name":"colour", "level":1, "count":1, "lines":"12"},
+        {"name":"thickness", "level":1, "count":1, "lines":"9"},
+        {"name":"rgb", "level":3, "count":1, "lines":"12"}
+      ],
+      "total":3
+    },
+    {
+      "category": "Canvas operations",
+      "expressions":[
+        {"name":"blank", "level":1, "count":1, "lines":"5"}
+      ],
+      "total":1
+    },
+    {
+      "category": "General arithmetic functions",
+      "expressions":[
+        {"name":"random", "level":2, "count":2, "lines":"6 7"}
+      ],
+      "total":2
+    },
+    {
+      "category": "Command structures",
+      "expressions":[
+        {"name":"repeat", "level":2, "count":1, "lines":"10"}
+      ],
+      "total":1
+    }
+  ],
+  "pcode":[
+    [112,12,1,1,112,0,123,112,6,2,123,4,112,9,124,112,21,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [112,0,96],
+    [112,5,7,119,20],
+    [112,20,7,112,1,26,119,21],
+    [112,0,119,19],
+    [112,16,85],
+    [113,21,113,20,26,112,20,31,112,1,26,119,21],
+    [113,21,101,87],
+    [113,19,112,1,26,119,19],
+    [113,19,91],
+    [112,30,94],
+    [113,19,112,250,35,129,8],
+    [130]
+  ]
+}

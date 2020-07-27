@@ -96,13 +96,13 @@ const toJsString = (lexeme) => {
         case 'not':
           return '~'
 
-        case 'band':
+        case 'andl':
           return '&&'
 
         case 'and':
           return '&'
 
-        case 'bor':
+        case 'orl':
           return '||'
 
         case 'or':

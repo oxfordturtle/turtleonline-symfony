@@ -1,0 +1,95 @@
+{
+  "format":1,
+  "language":"Pascal",
+  "version":13,
+  "name":"Polygons (uses POLYGON, POLYLINE, 2 parameters)",
+  "author":"Peter Millican",
+  "date":"23/07/2020",
+  "time":"11:59:01",
+  "code":"PROGRAM Polygons;\n\n  {draws a polygon with given sides & colour}\n  Procedure poly(sides, colr: integer);\n  Var count: integer;\n  Begin\n    {point turtle horizontally to right}\n    direction(90);\n    {trace the shape with the turtle}\n    for count := 1 to sides do\n      begin\n        {edge is shorter as sides increases}\n        forward(600 / sides);\n        {turn left by correct external angle}\n        left(360 / sides)\n      end;\n    {fill with the given colour}\n    colour(colr);\n    polygon(sides);\n    {draw a black outline}\n    colour(black);\n    polyline(sides + 1)\n  End;\n\nBEGIN\n  {do not draw as turtle moves}\n  penup;\n  {thickness is used by polyline command}\n  thickness(4);\n  {place the Turtle for the first polygon}\n  setxy(100, 400);\n  {draw a blue triangle}\n  poly(3, blue);\n  {place the Turtle for the second polygon}\n  setxy(400, 400);\n  {draw a red square}\n  poly(4, red);\n  setxy(700, 400);\n  {draw a yellow pentagon}\n  poly(5, yellow);\n  setxy(150, 750);\n  {draw a pink hexagon}\n  poly(6, pink);\n  setxy(440, 750);\n  {draw a green heptagon}\n  poly(7, green);\n  setxy(740, 750);\n  {draw a turquoise octagon}\n  poly(8, turquoise)\nEND.",
+  "usage":[
+    {
+      "category": "Turtle: relative movement",
+      "expressions":[
+        {"name":"forward", "level":1, "count":1, "lines":"13"},
+        {"name":"left", "level":1, "count":1, "lines":"15"}
+      ],
+      "total":2
+    },
+    {
+      "category": "Turtle: absolute movement",
+      "expressions":[
+        {"name":"direction", "level":1, "count":1, "lines":"8"},
+        {"name":"setxy", "level":1, "count":6, "lines":"31 35 38 41 44 47"}
+      ],
+      "total":7
+    },
+    {
+      "category": "Turtle: drawing shapes",
+      "expressions":[
+        {"name":"polygon", "level":2, "count":1, "lines":"19"},
+        {"name":"polyline", "level":2, "count":1, "lines":"22"}
+      ],
+      "total":2
+    },
+    {
+      "category": "Other Turtle commands",
+      "expressions":[
+        {"name":"colour", "level":1, "count":2, "lines":"18 21"},
+        {"name":"penup", "level":1, "count":1, "lines":"27"},
+        {"name":"thickness", "level":1, "count":1, "lines":"29"}
+      ],
+      "total":4
+    },
+    {
+      "category": "Command structures",
+      "expressions":[
+        {"name":"for", "level":1, "count":1, "lines":"10"},
+        {"name":"procedure", "level":2, "count":1, "lines":"4"}
+      ],
+      "total":2
+    },
+    {
+      "category": "Subroutine calls",
+      "expressions":[
+        {"name":"poly", "level":0, "count":6, "lines":"33 37 40 43 46 49"}
+      ],
+      "total":6
+    }
+  ],
+  "pcode":[
+    [112,13,1,1,112,0,123,112,6,2,123,4,112,6,124,112,19,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [128,19],
+    [133,1],
+    [139,12,3],
+    [117,12,1,112,3,124,120,12,2,120,12,1],
+    [112,90,83],
+    [112,1],
+    [120,12,3,114,12,1],
+    [114,12,3,37,129,14],
+    [112,600,114,12,1,29,91],
+    [112,360,114,12,1,29,93],
+    [114,12,3,4,128,9],
+    [114,12,2,87],
+    [114,12,1,106],
+    [112,0,87],
+    [114,12,1,112,1,26,105],
+    [140,12,134,132],
+    [112,0,86],
+    [112,4,85],
+    [112,100,112,400,88],
+    [112,3,112,255,131,4],
+    [112,400,112,400,88],
+    [112,4,112,16711680,131,4],
+    [112,700,112,400,88],
+    [112,5,112,16776960,131,4],
+    [112,150,112,750,88],
+    [112,6,112,15602313,131,4],
+    [112,440,112,750,88],
+    [112,7,112,2263842,131,4],
+    [112,740,112,750,88],
+    [112,8,112,48833,131,4],
+    [130]
+  ]
+}

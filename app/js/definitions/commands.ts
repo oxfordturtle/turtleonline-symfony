@@ -244,7 +244,7 @@ export const commands: Command[] = [
     [PCode.thik],
     [new Parameter('thickness', 'integer', false, 1)],
     null, 3, 0,
-    'Sets the <code>thickness</code> of the Turtle&rsquo;s pen (for line drawing, and outlines of circles, ellipses, boxes, and polygons). This can also be achieved by direct assignment of the global variable <code>turtp</code>.'
+    'Sets the <code>thickness</code> of the Turtle&rsquo;s pen (for line drawing, and outlines of circles, ellipses, boxes, and polygons). This can also be achieved by direct assignment of the global variable <code>turtt</code>.'
   ),
   new Command(
     { BASIC: 'PENUP', Pascal: 'penup', Python: 'penup' },
@@ -303,7 +303,7 @@ export const commands: Command[] = [
     [PCode.ldin, 0, PCode.sptr],
     [new Parameter('array', 'integer', true, 5)],
     null, 3, 2,
-    'Points the Turtle to a custom array in memory (this must be an array of five integers, corresponding to the Turtle&rsquo;s five properties, <code>turtx</code>, <code>turty</code>, <code>turtd</code>, <code>turtp</code>, and <code>turtc</code>). Use repeatedly to simulate multiple Turtles.'
+    'Points the Turtle to a custom array in memory (this must be an array of five integers, corresponding to the Turtle&rsquo;s five properties, <code>turtx</code>, <code>turty</code>, <code>turtd</code>, <code>turtt</code>, and <code>turtc</code>). Use repeatedly to simulate multiple Turtles.'
   ),
   new Command(
     { BASIC: 'OLDTURTLE', Pascal: 'oldturtle', Python: 'oldturtle' },

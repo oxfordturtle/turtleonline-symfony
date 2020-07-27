@@ -167,7 +167,7 @@ const fulltype = (lexemes, lex, routine, parameter, byref) => {
       }
 
     case 'array':
-      throw error('The Turtle System E does not yet support arrays. This feature will be added soon. In the meantime, please use the Turtle System D to compile your program.', lexemes[lex])
+      throw error('The online Turtle System does not yet support arrays. This feature will be added soon. In the meantime, please use the downloadable Turtle System to compile this program.', lexemes[lex])
       /* return parameter
         ? arrayParameterType(lexemes, lex + 1, routine, byref)
         : arrayVariableType(lexemes, lex + 1, routine) */

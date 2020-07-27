@@ -1,0 +1,197 @@
+{
+  "format":1,
+  "language":"Pascal",
+  "version":13,
+  "name":"Launching a rocket into orbit",
+  "author":"Peter Millican",
+  "date":"23/07/2020",
+  "time":"11:59:08",
+  "code":"PROGRAM Launch;\nCONST earthradius = 6371000;\n      earthgm = 398600442;\n      initdirection = 2000;\n      initthrust = 20000;\n      thrusttime = 500;\n      angleprecision = 1296000;\nVAR x, y, d, xvel, yvel: integer;\n    thrust, xthrust, ythrust: integer;\n    gravity, xgravity, ygravity: integer;\n    xacc, yacc: integer;\n    dist, prevdist, prevdiff, t: integer;\n    explosion: integer;\n\n  Procedure drawrocket;\n  Begin\n    noupdate;\n    blank(black);\n    colour(teal);\n    setxy(0, 0);\n    blot(earthradius / 1000);\n    setxy(x / 1000, y / 1000);\n    direction(d);\n    thickness(4);\n    colour(silver);\n    forward(200);\n    back(200);\n    if thrust > 0 then\n      begin\n        thickness(8);\n        colour(yellow);\n        back(200);\n        forward(200)\n      end;\n    update\n  End;\n\n  Procedure report;\n  Begin\n    writeln('');\n    writeln('TIME = ' + str(t));\n    writeln(' Xposition = ' + str(x) + ' metres');\n    writeln(' Yposition = ' + str(y) + ' metres');\n    writeln(' Height = ' + qstr(dist - earthradius, 1000, 2) + ' km');\n    writeln(' Direction = ' + qstr(d, 3600, 1) + ' degrees');\n    writeln(' Thrust = ' + qstr(thrust, 1000, 1) + ' newtons per kg');\n    writeln('  Xthrust = ' + qstr(xthrust, 1000, 1) + ' newtons per kg');\n    writeln('  Ythrust = ' + qstr(ythrust, 1000, 1) + ' newtons per kg');\n    writeln(' Gravity = ' + qstr(gravity, 1000, 1) + ' newtons per kg');\n    writeln('  Xgravity = ' + qstr(xgravity, 1000, 1) + ' newtons per kg');\n    writeln('  Ygravity = ' + qstr(ygravity, 1000, 1) + ' newtons per kg');\n    writeln(' Xvelocity = ' + qstr(xvel, 1000, 1) + ' metres per s');\n    writeln(' Yvelocity = ' + qstr(yvel, 1000, 1) + ' metres per s')\n  End;\n\nBEGIN\n  canvas(-20000, -20000, 40000, 40000);\n  angles(angleprecision);\n  x := 0;\n  y := -earthradius;\n  xvel := 0;\n  yvel := 0;\n  d := initdirection;\n  t := 0;\n  prevdiff := 1;\n  thrust := initthrust;\n  repeat\n    drawrocket;\n    prevdist := dist;\n    dist := hypot(x, y, 1);\n    if (dist - prevdist) * prevdiff <= 0 then\n      report;\n    prevdiff := dist - prevdist;\n    gravity := divmult(earthgm, divmult(dist, 1000000, dist), 1000);\n    xgravity := divmult(gravity, dist, -x);\n    ygravity := divmult(gravity, dist, -y);\n    xthrust := sin(d, 1, thrust);\n    ythrust := -cos(d, 1, thrust);\n    xvel := xvel + xgravity + xthrust;\n    yvel := yvel + ygravity + ythrust;\n    x := x + xvel / 1000;\n    y := y + yvel / 1000;\n    if yvel > 0 then\n      d := angleprecision / 2 - arctan(xvel, yvel, 1)\n    else\n      d := arctan(xvel, -yvel, 1);\n    inc(t);\n    if t = thrusttime then\n      thrust := 0\n  until (0 = 1) or (dist < earthradius) or (dist > 40000000);\n  if dist < earthradius then\n    begin\n      colour(yellow);\n      for explosion := 100 to 200 do\n        begin\n          blot(explosion);\n          pause(3)\n        end;\n      colour(black);\n      blot(200)\n    end\nEND.",
+  "usage":[
+    {
+      "category": "Turtle: relative movement",
+      "expressions":[
+        {"name":"back", "level":1, "count":2, "lines":"27 32"},
+        {"name":"forward", "level":1, "count":2, "lines":"26 33"}
+      ],
+      "total":4
+    },
+    {
+      "category": "Turtle: absolute movement",
+      "expressions":[
+        {"name":"direction", "level":1, "count":1, "lines":"23"},
+        {"name":"setxy", "level":1, "count":2, "lines":"20 22"},
+        {"name":"angles", "level":2, "count":1, "lines":"58"}
+      ],
+      "total":4
+    },
+    {
+      "category": "Turtle: drawing shapes",
+      "expressions":[
+        {"name":"blot", "level":1, "count":3, "lines":"21 96 100"}
+      ],
+      "total":3
+    },
+    {
+      "category": "Other Turtle commands",
+      "expressions":[
+        {"name":"colour", "level":1, "count":5, "lines":"19 25 31 93 99"},
+        {"name":"thickness", "level":1, "count":2, "lines":"24 30"}
+      ],
+      "total":7
+    },
+    {
+      "category": "Canvas operations",
+      "expressions":[
+        {"name":"blank", "level":1, "count":1, "lines":"18"},
+        {"name":"noupdate", "level":1, "count":1, "lines":"17"},
+        {"name":"update", "level":1, "count":1, "lines":"35"},
+        {"name":"canvas", "level":2, "count":1, "lines":"57"}
+      ],
+      "total":4
+    },
+    {
+      "category": "General arithmetic functions",
+      "expressions":[
+        {"name":"inc", "level":1, "count":1, "lines":"87"},
+        {"name":"hypot", "level":2, "count":1, "lines":"70"},
+        {"name":"divmult", "level":3, "count":4, "lines":"74 74 75 76"}
+      ],
+      "total":6
+    },
+    {
+      "category": "Trig / exp / log functions",
+      "expressions":[
+        {"name":"cos", "level":2, "count":1, "lines":"78"},
+        {"name":"sin", "level":2, "count":1, "lines":"77"},
+        {"name":"arctan", "level":3, "count":2, "lines":"84 86"}
+      ],
+      "total":4
+    },
+    {
+      "category": "String operations",
+      "expressions":[
+        {"name":"writeln", "level":1, "count":14, "lines":"40 41 42 43 44 45 46 47 48 49 50 51 52 53"}
+      ],
+      "total":14
+    },
+    {
+      "category": "Type conversion routines",
+      "expressions":[
+        {"name":"str", "level":1, "count":3, "lines":"41 42 43"},
+        {"name":"qstr", "level":2, "count":10, "lines":"44 45 46 47 48 49 50 51 52 53"}
+      ],
+      "total":13
+    },
+    {
+      "category": "Input and timing routines",
+      "expressions":[
+        {"name":"pause", "level":1, "count":1, "lines":"97"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Command structures",
+      "expressions":[
+        {"name":"if", "level":1, "count":5, "lines":"28 71 83 88 91"},
+        {"name":"else", "level":1, "count":1, "lines":"85"},
+        {"name":"for", "level":1, "count":1, "lines":"94"},
+        {"name":"repeat", "level":2, "count":1, "lines":"67"},
+        {"name":"procedure", "level":2, "count":2, "lines":"15 38"}
+      ],
+      "total":10
+    },
+    {
+      "category": "Subroutine calls",
+      "expressions":[
+        {"name":"drawrocket", "level":0, "count":1, "lines":"68"},
+        {"name":"report", "level":0, "count":1, "lines":"72"}
+      ],
+      "total":2
+    }
+  ],
+  "pcode":[
+    [112,14,1,1,112,0,123,112,6,2,123,4,112,24,124,112,38,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [128,39],
+    [133,1],
+    [112,0,146],
+    [112,0,96],
+    [112,32896,87],
+    [112,0,112,0,88],
+    [112,6371000,112,1000,29,108],
+    [113,21,112,1000,29,113,22,112,1000,29,88],
+    [113,23,83],
+    [112,4,85],
+    [112,12632256,87],
+    [112,200,91],
+    [112,200,92],
+    [113,26,112,0,35,129,21],
+    [112,8,85],
+    [112,16776960,87],
+    [112,200,92],
+    [112,200,91],
+    [112,-1,146],
+    [134,132],
+    [133,2],
+    [118,0,169,170,142],
+    [118,7,84,73,77,69,32,61,32,113,37,11,64,169,170,142],
+    [118,13,32,88,112,111,115,105,116,105,111,110,32,61,32,113,21,11,64,118,7,32,109,101,116,114,101,115,64,169,170,142],
+    [118,13,32,89,112,111,115,105,116,105,111,110,32,61,32,113,22,11,64,118,7,32,109,101,116,114,101,115,64,169,170,142],
+    [118,10,32,72,101,105,103,104,116,32,61,32,113,34,112,6371000,27,112,1000,112,2,14,64,118,3,32,107,109,64,169,170,142],
+    [118,13,32,68,105,114,101,99,116,105,111,110,32,61,32,113,23,112,3600,112,1,14,64,118,8,32,100,101,103,114,101,101,115,64,169,170,142],
+    [118,10,32,84,104,114,117,115,116,32,61,32,113,26,112,1000,112,1,14,64,118,15,32,110,101,119,116,111,110,115,32,112,101,114,32,107,103,64,169,170,142],
+    [118,12,32,32,88,116,104,114,117,115,116,32,61,32,113,27,112,1000,112,1,14,64,118,15,32,110,101,119,116,111,110,115,32,112,101,114,32,107,103,64,169,170,142],
+    [118,12,32,32,89,116,104,114,117,115,116,32,61,32,113,28,112,1000,112,1,14,64,118,15,32,110,101,119,116,111,110,115,32,112,101,114,32,107,103,64,169,170,142],
+    [118,11,32,71,114,97,118,105,116,121,32,61,32,113,29,112,1000,112,1,14,64,118,15,32,110,101,119,116,111,110,115,32,112,101,114,32,107,103,64,169,170,142],
+    [118,13,32,32,88,103,114,97,118,105,116,121,32,61,32,113,30,112,1000,112,1,14,64,118,15,32,110,101,119,116,111,110,115,32,112,101,114,32,107,103,64,169,170,142],
+    [118,13,32,32,89,103,114,97,118,105,116,121,32,61,32,113,31,112,1000,112,1,14,64,118,15,32,110,101,119,116,111,110,115,32,112,101,114,32,107,103,64,169,170,142],
+    [118,13,32,88,118,101,108,111,99,105,116,121,32,61,32,113,24,112,1000,112,1,14,64,118,13,32,109,101,116,114,101,115,32,112,101,114,32,115,64,169,170,142],
+    [118,13,32,89,118,101,108,111,99,105,116,121,32,61,32,113,25,112,1000,112,1,14,64,118,13,32,109,101,116,114,101,115,32,112,101,114,32,115,64,169,170,142],
+    [134,132],
+    [112,20000,23,112,20000,23,112,40000,112,40000,144],
+    [112,1296000,84],
+    [112,0,119,21],
+    [112,6371000,23,119,22],
+    [112,0,119,24],
+    [112,0,119,25],
+    [112,2000,119,23],
+    [112,0,119,37],
+    [112,1,119,36],
+    [112,20000,119,26],
+    [131,4],
+    [113,34,119,35],
+    [113,21,113,22,112,1,50,119,34],
+    [113,34,113,35,27,113,36,28,112,0,36,129,54],
+    [131,23],
+    [113,34,113,35,27,119,36],
+    [112,398600442,113,34,112,1000000,113,34,48,112,1000,48,119,29],
+    [113,29,113,34,113,21,23,48,119,30],
+    [113,29,113,34,113,22,23,48,119,31],
+    [113,23,112,1,113,26,57,119,27],
+    [113,23,112,1,113,26,58,23,119,28],
+    [113,24,113,30,26,113,27,26,119,24],
+    [113,25,113,31,26,113,28,26,119,25],
+    [113,21,113,24,112,1000,29,26,119,21],
+    [113,22,113,25,112,1000,29,26,119,22],
+    [113,25,112,0,35,129,67],
+    [112,1296000,112,2,29,113,24,113,25,112,1,62,27,119,23],
+    [128,68],
+    [113,24,113,25,23,112,1,62,119,23],
+    [116,37,1,122,4,2,123],
+    [113,37,112,500,32,129,71],
+    [112,0,119,26],
+    [112,0,112,1,32,113,34,112,6371000,34,18,113,34,112,40000000,35,18,129,49],
+    [113,34,112,6371000,34,129,82],
+    [112,16776960,87],
+    [112,100],
+    [119,38,112,200],
+    [113,38,37,129,80],
+    [113,38,108],
+    [112,3,174],
+    [113,38,4,128,75],
+    [112,0,87],
+    [112,200,108],
+    [130]
+  ]
+}

@@ -9,7 +9,7 @@ const turtxIndex = 1
 const turtyIndex = 2
 const turtdIndex = 3
 const turtaIndex = 4
-const turtpIndex = 5
+const turttIndex = 5
 const turtcIndex = 6
 
 // the canvas and its 2d drawing context
@@ -22,6 +22,8 @@ export function send (signal, data) {
     case 'canvasContextReady':
       canvas = data.canvas
       context = data.context
+      context.imageSmoothingEnabled = false
+      globalThis.context = context
       break
   }
 }
@@ -48,12 +50,23 @@ export function dump () {
   return { stack, heap, heapBase: markers.heapBase }
 }
 
-// run the machine
-export function run (pcode, options) {
-  // clear the console and output
+// reset machine components
+export function reset () {
   reply('resolution', { width: 1000, height: 1000 })
   reply('console', { clear: true, colour: '#FFFFFF' })
   reply('output', { clear: true, colour: '#FFFFFF' })
+  reply('turtxChanged', 500)
+  reply('turtyChanged', 500)
+  reply('turtdChanged', 0)
+  reply('turtaChanged', 360)
+  reply('turttChanged', 2)
+  reply('turtcChanged', '#000')
+}
+
+// run the machine
+export function run (pcode, options) {
+  // reset machine components
+  reset()
   // optionally show the canvas
   if (options.showCanvas) {
     reply('showCanvas')
@@ -112,47 +125,49 @@ export function run (pcode, options) {
   canvas.addEventListener('mouseup', releaseClickXY)
   canvas.addEventListener('touchend', releaseClickXY)
   // send the started signal (via the main state module)
-  reply('machineStarted')
+  reply('played')
   // execute the first block of code (which will in turn trigger execution of the next block)
   execute(pcode, 0, 0, options)
 }
 
 // halt the machine
 export function halt () {
-  // remove event listeners
-  window.removeEventListener('keydown', storeKey)
-  window.removeEventListener('keyup', releaseKey)
-  window.removeEventListener('keypress', putInBuffer)
-  window.removeEventListener('keyup', runtime.detect)
-  window.removeEventListener('keydown', runtime.readline)
-  canvas.removeEventListener('contextmenu', preventDefault)
-  canvas.removeEventListener('mousemove', storeMouseXY)
-  canvas.removeEventListener('touchmove', preventDefault)
-  canvas.removeEventListener('touchmove', storeMouseXY)
-  canvas.removeEventListener('mousedown', preventDefault)
-  canvas.removeEventListener('mousedown', storeClickXY)
-  canvas.removeEventListener('touchstart', storeClickXY)
-  canvas.removeEventListener('mouseup', releaseClickXY)
-  canvas.removeEventListener('touchend', releaseClickXY)
-  // reset the canvas cursor
-  reply('cursor', 1)
-  // reset the machine status
-  status.running = false
-  status.paused = false
-  // send the stopped signal (via the main state module)
-  reply('machineStopped')
+  if (status.running) {
+    // remove event listeners
+    window.removeEventListener('keydown', storeKey)
+    window.removeEventListener('keyup', releaseKey)
+    window.removeEventListener('keypress', putInBuffer)
+    window.removeEventListener('keyup', runtime.detect)
+    window.removeEventListener('keyup', runtime.readline)
+    canvas.removeEventListener('contextmenu', preventDefault)
+    canvas.removeEventListener('mousemove', storeMouseXY)
+    canvas.removeEventListener('touchmove', preventDefault)
+    canvas.removeEventListener('touchmove', storeMouseXY)
+    canvas.removeEventListener('mousedown', preventDefault)
+    canvas.removeEventListener('mousedown', storeClickXY)
+    canvas.removeEventListener('touchstart', storeClickXY)
+    canvas.removeEventListener('mouseup', releaseClickXY)
+    canvas.removeEventListener('touchend', releaseClickXY)
+    // reset the canvas cursor
+    reply('cursor', 1)
+    // reset the machine status
+    status.running = false
+    status.paused = false
+    // send the stopped signal (via the main state module)
+    reply('halted')
+  }
 }
 
 // play the machine
 export function play () {
   status.paused = false
-  reply('machineUnpaused')
+  reply('unpaused')
 }
 
 // pause the machine
 export function pause () {
   status.paused = true
-  reply('machinePaused')
+  reply('paused')
 }
 
 // record of replies (callbacks to execute when sending signals out); the main state module
@@ -373,7 +388,7 @@ function execute (pcode, line, code, options) {
   // in case of runtime.detect or runtime.readline, remove the event listeners the first time we carry on with the
   // program execution after they have been called
   window.removeEventListener('keyup', runtime.detect)
-  window.removeEventListener('keydown', runtime.readline)
+  window.removeEventListener('keyup', runtime.readline)
 
   // execute as much code as possible
   let drawCount = 0
@@ -900,11 +915,11 @@ function execute (pcode, line, code, options) {
           c = Math.abs(d)
           b = getHeapString(stack.pop())
           a = getHeapString(stack.pop())
-          while ((a.length + b.length) < d) {
+          while ((a.length + b.length) <= c) {
             if (d < 0) {
-              a = b + a
-            } else {
               a = a + b
+            } else {
+              a = b + a
             }
           }
           makeHeapString(a)
@@ -968,12 +983,15 @@ function execute (pcode, line, code, options) {
 
         case PCode.thik:
           a = stack.pop()
-          if ((a < 0) && (memory[memory[0] + turtpIndex] < 0)) {
-            // negative value reverses pen status
-            a = -a
+          b = Math.abs(a)
+          c = a < 0
+          d = memory[memory[0] + turttIndex] < 0
+          if (c) { // reverse pen status
+            memory[memory[0] + turttIndex] = d ? b : -b
+          } else { // leave pen status as it is
+            memory[memory[0] + turttIndex] = d ? -b : b
           }
-          memory[memory[0] + turtpIndex] = a
-          reply('turtpChanged', a)
+          reply('turttChanged', memory[memory[0] + turttIndex])
           break
 
         case PCode.colr:
@@ -984,10 +1002,10 @@ function execute (pcode, line, code, options) {
 
         case PCode.pen:
           a = (stack.pop() !== 0) // pen up or down
-          b = Math.abs(memory[memory[0] + turtpIndex]) // current thickness
+          b = Math.abs(memory[memory[0] + turttIndex]) // current thickness
           c = a ? b : -b // positive or negative depending on whether pen is down or up
-          memory[memory[0] + turtpIndex] = c
-          reply('turtpChanged', c)
+          memory[memory[0] + turttIndex] = c
+          reply('turttChanged', c)
           break
 
         case PCode.toxy:
@@ -1013,7 +1031,7 @@ function execute (pcode, line, code, options) {
         case PCode.drxy:
           b = stack.pop() + memory[memory[0] + turtyIndex]
           a = stack.pop() + memory[memory[0] + turtxIndex]
-          if (memory[memory[0] + turtpIndex] > 0) {
+          if (memory[memory[0] + turttIndex] > 0) {
             reply('line', { turtle: turtle(), x: turtx(a), y: turty(b) })
             if (runtime.update) {
               drawCount += 1
@@ -1037,7 +1055,7 @@ function execute (pcode, line, code, options) {
           a = Math.sin(d * Math.PI / (memory[memory[0] + turtaIndex] / 2))
           a = Math.round(a * c)
           a += memory[memory[0] + turtxIndex]
-          if (memory[memory[0] + turtpIndex] > 0) {
+          if (memory[memory[0] + turttIndex] > 0) {
             reply('line', { turtle: turtle(), x: turtx(a), y: turty(b) })
             if (runtime.update) {
               drawCount += 1
@@ -1061,7 +1079,7 @@ function execute (pcode, line, code, options) {
           a = Math.sin(d * Math.PI / (memory[memory[0] + turtaIndex] / 2))
           a = -Math.round(a * c)
           a += memory[memory[0] + turtxIndex]
-          if (memory[memory[0] + turtpIndex] > 0) {
+          if (memory[memory[0] + turttIndex] > 0) {
             reply('line', { turtle: turtle(), x: turtx(a), y: turty(b) })
             if (runtime.update) {
               drawCount += 1
@@ -1495,6 +1513,8 @@ function execute (pcode, line, code, options) {
             a = a * 2
             b = b * 2
             vcanvas.doubled = true
+          } else {
+            vcanvas.doubled = false
           }
           vcanvas.width = a
           vcanvas.height = b
@@ -1627,7 +1647,7 @@ function execute (pcode, line, code, options) {
           }
           b = setTimeout(execute, a, pcode, line, code, options)
           runtime.readline = readlineProto.bind(null, b, pcode, line, code, options)
-          window.addEventListener('keydown', runtime.readline)
+          window.addEventListener('keyup', runtime.readline)
           return
 
         case PCode.kech:
@@ -1716,89 +1736,33 @@ function execute (pcode, line, code, options) {
           return
 
         // 0xB0s - file processing
-        case PCode.chdr:
-          // not yet implemented
-          halt()
-          throw error('File processing has not yet been implemented.')
-
-        case PCode.file:
-          // not yet implemented
-          halt()
-          throw error('File processing has not yet been implemented.')
-
-        case PCode.diry:
-          // not yet implemented
-          halt()
-          throw error('File processing has not yet been implemented.')
-
-        case PCode.open:
-          // not yet implemented
-          halt()
-          throw error('File processing has not yet been implemented.')
-
-        case PCode.clos:
-          // not yet implemented
-          halt()
-          throw error('File processing has not yet been implemented.')
-
-        case PCode.fbeg:
-          // not yet implemented
-          halt()
-          throw error('File processing has not yet been implemented.')
-
-        case PCode.eof:
-          // not yet implemented
-          halt()
-          throw error('File processing has not yet been implemented.')
-
-        case PCode.eoln:
-          // not yet implemented
-          halt()
-          throw error('File processing has not yet been implemented.')
-
-        case PCode.frds:
-          // not yet implemented
-          halt()
-          throw error('File processing has not yet been implemented.')
-
-        case PCode.frln:
-          // not yet implemented
-          halt()
-          throw error('File processing has not yet been implemented.')
-
-        case PCode.fwrs:
-          // not yet implemented
-          halt()
-          throw error('File processing has not yet been implemented.')
-
-        case PCode.fwnl:
-          // not yet implemented
-          halt()
-          throw error('File processing has not yet been implemented.')
-
-        case PCode.ffnd:
-          // not yet implemented
-          halt()
-          throw error('File processing has not yet been implemented.')
-
-        case PCode.fdir:
-          // not yet implemented
-          halt()
-          throw error('File processing has not yet been implemented.')
-
-        case PCode.fnxt:
-          // not yet implemented
-          halt()
-          throw error('File processing has not yet been implemented.')
-
+        case PCode.chdr: // fallthrough
+        case PCode.file: // fallthrough
+        case PCode.diry: // fallthrough
+        case PCode.open: // fallthrough
+        case PCode.clos: // fallthrough
+        case PCode.fbeg: // fallthrough
+        case PCode.eof: // fallthrough
+        case PCode.eoln: // fallthrough
+        case PCode.frds: // fallthrough
+        case PCode.frln: // fallthrough
+        case PCode.fwrs: // fallthrough
+        case PCode.fwnl: // fallthrough
+        case PCode.ffnd: // fallthrough
+        case PCode.fdir: // fallthrough
+        case PCode.fnxt: // fallthrough
         case PCode.fmov:
           // not yet implemented
           halt()
+          console.log(line)
+          console.log(code)
           throw error('File processing has not yet been implemented.')
 
         // anything else is an error
         default:
           halt()
+          console.log(line)
+          console.log(code)
           throw error(`Unknown PCode 0x${pcode[line][code].toString(16)}.`)
       }
       codeCount += 1
@@ -1914,7 +1878,7 @@ function turtle () {
     y: turty(memory[memory[0] + turtyIndex]),
     d: memory[memory[0] + turtdIndex],
     a: memory[memory[0] + turtaIndex],
-    p: turtp(memory[memory[0] + turtpIndex]),
+    p: turtt(memory[memory[0] + turttIndex]),
     c: hex(memory[memory[0] + turtcIndex])
   })
 }
@@ -1931,9 +1895,9 @@ function turty (y) {
   return vcanvas.doubled ? Math.round(exact) + 1 : Math.round(exact)
 }
 
-// convert turtp to virtual canvas thickness
-function turtp (p) {
-  return vcanvas.doubled ? p * 2 : p
+// convert turtt to virtual canvas thickness
+function turtt (t) {
+  return vcanvas.doubled ? t * 2 : t
 }
 
 // map turtle coordinates to virtual turtle coordinates

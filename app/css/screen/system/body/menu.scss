@@ -1,0 +1,102 @@
+$menu-closed-width: 3em;
+$menu-open-width: 30.75em;
+
+.system-menu {
+  position: absolute;
+  z-index: 5;
+  width: $menu-closed-width;
+  height: 100%;
+  background: $blue;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  transition: width .4s ease-in-out;
+
+  &.open {
+    width: $menu-open-width;
+  }
+}
+
+.system-sub-menu {
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  a, label {
+    display: flex;
+    align-items: center;
+    color: #fff;
+    font-weight: normal;
+    cursor: pointer;
+    padding: 0;
+
+    &.open, &:hover {
+      background: darken($blue, 10%);
+      text-decoration: none;
+    }
+  }
+
+  label {
+    padding: 0 .5em;
+  }
+
+  i, span {
+    display: block;
+    padding: .5em;
+  }
+
+  i {
+    flex-basis: $menu-closed-width;
+    flex-shrink: 0;
+    text-align: center;
+  }
+
+  span {
+    flex: 1;
+  }
+
+  select, input[type="text"], input[type="number"] {
+    padding: .25em;
+    height: 2em;
+  }
+
+  input[type="number"] {
+    width: 6em;
+  }
+
+  hr {
+    margin: .25em 0;
+    border: 0;
+    border-top: 1px solid #fff;
+  }
+}
+
+.system-sub-menu .system-sub-menu {
+  position: absolute;
+  z-index: 6;
+  left: $menu-open-width;
+  top: 0;
+  width: $menu-open-width - $menu-closed-width;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: darken($blue, 10%);
+
+  &.open {
+    left: $menu-closed-width;
+  }
+
+  a, label {
+    &.open, &:hover {
+      background: $red;
+    }
+  }
+}
+
+.system-sub-menu .system-sub-menu .system-sub-menu {
+  z-index: 7;
+
+  &.open {
+    left: 0;
+  }
+}

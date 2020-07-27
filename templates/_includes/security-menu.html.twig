@@ -1,6 +1,6 @@
 {% if app.user %}
   <div class="site-menu">
-    <a class="{% if section == 'account' %} active{% endif %}" data-action="toggle-menu" data-arg="user">
+    <a class="{% if section == 'account' %} active{% endif %}" data-action="toggleMenu" data-arg="user">
       <span class="icon"><i class="fa fa-user"></i></span>
       <span class="text">{{ app.user.username }}</span>
       <span class="icon"><i class="fa fa-caret-down"></i></span>

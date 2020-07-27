@@ -4,16 +4,11 @@
 import { Mode } from '../definitions/modes'
 import state from '../state/index'
 
-export default init()
-
-/** initialise system mode toggling */
-function init (): void {
-  // register to keep in sync with system state
-  state.on('modeChanged', mode)
-}
+// register to keep in sync with system state
+state.on('modeChanged', mode)
 
 /** updates the page to reflect mode change */
-function mode (mode: Mode): void {
+function mode (): void {
   // get relevant elements
   const modeElements = document.querySelectorAll('[data-mode]') as NodeListOf<HTMLElement>
   const guideToc = document.querySelector('[data-component="guide-toc"]') as HTMLSelectElement
@@ -21,17 +16,20 @@ function mode (mode: Mode): void {
   // show/hide elements according to mode
   for (const element of modeElements) {
     const modes = element.dataset.mode.split(',')
-    if (modes.includes(mode)) {
+    if (modes.includes(state.mode) || element.id === 'turtle') {
       element.classList.remove('hidden')
     } else {
       element.classList.add('hidden')
+      if (element.classList.contains('system-tab-pane') && element.classList.contains('active')) {
+        state.send('selectTab', 'canvas')
+      }
     }
   }
 
   // update the user guide TOC
   if (guideToc) {
     for (const child of guideToc.children) {
-      if (mode === 'simple' || mode === 'normal') {
+      if (state.mode === 'simple' || state.mode === 'normal') {
         switch ((child as HTMLOptionElement).value) {
           case 'the-compile-menu': // fallthrough
           case 'the-tabs-menu':

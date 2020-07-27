@@ -1,0 +1,19 @@
+.filename {
+  display: flex;
+  background: $lightgray;
+  border-bottom: 1px solid $gray;
+
+  select, input {
+    border: 0;
+    border-right: 1px solid $gray;
+  }
+
+  input {
+    flex: 1;
+  }
+
+  button {
+    padding: .125em .5em;
+    margin: .25em;
+  }
+}

@@ -15,9 +15,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * Controller for security related routes (login, logout, register, forgot credentials).
@@ -235,5 +237,22 @@ class SecurityController extends AbstractController
 
     // render and return the page
     return $this->render('security/reset.html.twig', $twigs);
+  }
+
+  /**
+   * Route for returning the current user status (used by the JS app).
+   *
+   * @Route("/status", name="status")
+   * @param Request $request
+   * @param SerializerInterface $serializer
+   * @return JsonResponse
+   */
+  public function status(Request $request, SerializerInterface $serializer): Response
+  {
+    if ($this->getUser()) {
+      return new Response($serializer->serialize($this->getUser(), 'json', ['groups' => 'json']));
+    } else {
+      return new Response('null');
+    }
   }
 }

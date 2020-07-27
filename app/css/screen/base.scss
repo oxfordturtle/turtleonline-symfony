@@ -131,10 +131,15 @@ label {
   font-weight: bold;
 }
 
-input[type="text"], input[type="password"], input[type="email"], select {
+input[type="text"], input[type="password"], input[type="email"], input[type="number"], select {
   border: 1px solid $gray;
   padding: .25em .5em;
-  font: inherit;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+input[type="number"] {
+  text-align: right;
 }
 
 textarea {
@@ -169,6 +174,14 @@ button, .button {
 
     &:hover {
       background: darken($red, 10%);
+    }
+  }
+
+  &[disabled] {
+    color: $gray !important;
+    cursor: default;
+    &:hover {
+      background: $blue !important;
     }
   }
 }

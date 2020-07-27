@@ -42,7 +42,7 @@ export function element (type: string, options: any = {}): HTMLElement {
 }
 
 // set the content of an HTML element / fragment
-export function fill (element: HTMLElement|DocumentFragment, content: HTMLElement[]|string): void {
+export function fill (element: HTMLElement|DocumentFragment, content: (HTMLElement|DocumentFragment)[]|string): void {
   if (Array.isArray(content)) {
     const fragment = document.createDocumentFragment()
     for (const element of content) {
@@ -55,6 +55,13 @@ export function fill (element: HTMLElement|DocumentFragment, content: HTMLElemen
   } else {
     (element as HTMLElement).innerHTML = content
   }
+}
+
+// create a document fragment
+export function fragment (content: (HTMLElement|DocumentFragment)[]): DocumentFragment {
+  const fragment = document.createDocumentFragment()
+  fill(fragment, content)
+  return fragment
 }
 
 // shorthand for creating the main root element

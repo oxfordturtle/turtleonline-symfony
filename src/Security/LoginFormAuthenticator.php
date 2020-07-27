@@ -6,6 +6,7 @@ use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
@@ -37,6 +38,11 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
   private $router;
 
   /**
+   * Session
+   */
+  private $session;
+
+  /**
    * CsrfTokenManagerInterface
    */
   private $csrfTokenManager;
@@ -50,19 +56,22 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
    * Constructor function.
    *
    * @param EntityManagerInterface $entityManager
-   * @param Router $router
+   * @param RouterInterface $router
+   * @param SessionInterface $session
    * @param CsrfTokenManagerInterface $csrfTokenManager
    * @param UserPasswordEncoderInterface $passwordEncoder
    */
   public function __construct(
     EntityManagerInterface $entityManager,
     RouterInterface $router,
+    SessionInterface $session,
     CsrfTokenManagerInterface $csrfTokenManager,
     UserPasswordEncoderInterface $passwordEncoder,
     Security $security
   ) {
     $this->entityManager = $entityManager;
     $this->router = $router;
+    $this->session = $session;
     $this->csrfTokenManager = $csrfTokenManager;
     $this->passwordEncoder = $passwordEncoder;
     $this->security = $security;
@@ -163,6 +172,9 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     if (!$user->isVerified()) {
       return new RedirectResponse($this->router->generate('unverified'));
     }
+
+    // add loggedIn flash message (for the JS app's benefit)
+    $this->session->getFlashBag()->add('system', 'loggedIn');
 
     // maybe redirect to secure referring page
     if ($targetPath = $this->getTargetPath($request->getSession(), $providerKey)) {

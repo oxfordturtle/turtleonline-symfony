@@ -28,7 +28,7 @@ function language (language: Language): void {
 
   for (const element of languageElements) {
     // show/hide elements according to language
-    if (language === element.dataset.language) {
+    if (language === element.dataset.language || element.id === 'turtle') {
       element.classList.remove('hidden')
     } else {
       element.classList.add('hidden')

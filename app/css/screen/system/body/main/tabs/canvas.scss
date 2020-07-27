@@ -1,0 +1,69 @@
+.canvas {
+  display: flex;
+
+  .canvas-coords {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+
+    span {
+      display: block;
+      font-size: 10px;
+      padding: $system-padding;
+      width: $canvas-coords-width;
+      overflow: hidden;
+      color: darken($green, 5%);
+      text-align: right;
+    }
+  }
+
+  .canvas-left {
+    display: flex;
+    flex-direction: column;
+
+    .canvas-coords {
+      flex-direction: column;
+      text-align: right;
+      margin-top: $system-padding + 10px + $system-padding;
+    }
+  }
+
+  .canvas-right {
+    flex: 1;
+
+    .canvas-coords {
+
+      span:nth-child(1), span:nth-child(2) {
+        text-align: left;
+      }
+
+      span:nth-child(3) {
+        text-align: center;
+      }
+    }
+
+    .canvas-wrapper {
+      border: 1px solid $gray;
+      border-right: 0;
+      border-bottom: 0;
+
+      canvas {
+        display: block;
+        width: $canvas-width;
+        height: $canvas-width;
+      }
+    }
+  }
+}
+
+.console {
+  flex: 1;
+  overflow: auto;
+  border: 0;
+  border-top: 1px solid $gray;
+  margin: 0;
+  padding: $system-padding;
+  font-family: $monospace;
+  font-size: 13px;
+  background: #fff;
+}

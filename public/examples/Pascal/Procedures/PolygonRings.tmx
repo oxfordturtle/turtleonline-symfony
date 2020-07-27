@@ -1,0 +1,85 @@
+{
+  "format":1,
+  "language":"Pascal",
+  "version":13,
+  "name":"Polygon rings (uses MOD, 3 parameters)",
+  "author":"Peter Millican",
+  "date":"23/07/2020",
+  "time":"11:59:01",
+  "code":"PROGRAM PolygonRings;\n\n  {draws an annulus (ring) with a given inner}\n  {radius, width, and coloured segment angle }\n  Procedure annulus(inner, width, angle: integer);\n  Var count: integer;\n  Begin\n    {count enough segments to go full circle}\n    for count := 0 to (360 / angle) do\n      begin\n        {move from centre to outside edge}\n        forward(inner + width);\n        {move back to inside edge}\n        back(width);\n        {move back to centre}\n        back(inner);\n        {forget visit to centre}\n        forget(1);\n        {turn right by specified angle}\n        right(angle);\n        {move from centre to inside edge}\n        forward(inner);\n        {move to outside edge}\n        forward(width);\n        {rotate round 20 standard colours}\n        colour(rgb(count mod 20 + 1));\n        {draw coloured quadrilateral}\n        polygon(4);\n        {move back to the centre}\n        back(inner + width)\n      end\n  End;\n\nBEGIN\n  penup;\n  {draw a black blot for background}\n  blot(500);\n  {draw five annuli within the blot}\n  annulus(410, 80, 2);\n  annulus(310, 80, 3);\n  annulus(210, 80, 5);\n  annulus(110, 80, 7);\n  annulus(10, 80, 1)\nEND.",
+  "usage":[
+    {
+      "category": "Turtle: relative movement",
+      "expressions":[
+        {"name":"back", "level":1, "count":3, "lines":"14 16 30"},
+        {"name":"forward", "level":1, "count":3, "lines":"12 22 24"},
+        {"name":"right", "level":1, "count":1, "lines":"20"}
+      ],
+      "total":7
+    },
+    {
+      "category": "Turtle: drawing shapes",
+      "expressions":[
+        {"name":"blot", "level":1, "count":1, "lines":"37"},
+        {"name":"forget", "level":2, "count":1, "lines":"18"},
+        {"name":"polygon", "level":2, "count":1, "lines":"28"}
+      ],
+      "total":3
+    },
+    {
+      "category": "Other Turtle commands",
+      "expressions":[
+        {"name":"colour", "level":1, "count":1, "lines":"26"},
+        {"name":"penup", "level":1, "count":1, "lines":"35"},
+        {"name":"rgb", "level":3, "count":1, "lines":"26"}
+      ],
+      "total":3
+    },
+    {
+      "category": "Command structures",
+      "expressions":[
+        {"name":"for", "level":1, "count":1, "lines":"9"},
+        {"name":"procedure", "level":2, "count":1, "lines":"5"}
+      ],
+      "total":2
+    },
+    {
+      "category": "Subroutine calls",
+      "expressions":[
+        {"name":"annulus", "level":0, "count":5, "lines":"39 40 41 42 43"}
+      ],
+      "total":5
+    }
+  ],
+  "pcode":[
+    [112,13,1,1,112,0,123,112,6,2,123,4,112,6,124,112,19,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [128,22],
+    [133,1],
+    [139,12,4],
+    [117,12,1,112,4,124,120,12,3,120,12,2,120,12,1],
+    [112,0],
+    [120,12,4,112,360,114,12,3,29],
+    [114,12,4,37,129,21],
+    [114,12,1,114,12,2,26,91],
+    [114,12,2,92],
+    [114,12,1,92],
+    [112,1,104],
+    [114,12,3,94],
+    [114,12,1,91],
+    [114,12,2,91],
+    [114,12,4,112,20,31,112,1,26,101,87],
+    [112,4,106],
+    [114,12,1,114,12,2,26,92],
+    [114,12,4,4,128,8],
+    [140,12,134,132],
+    [112,0,86],
+    [112,500,108],
+    [112,410,112,80,112,2,131,4],
+    [112,310,112,80,112,3,131,4],
+    [112,210,112,80,112,5,131,4],
+    [112,110,112,80,112,7,131,4],
+    [112,10,112,80,112,1,131,4],
+    [130]
+  ]
+}

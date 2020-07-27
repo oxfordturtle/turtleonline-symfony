@@ -1,0 +1,77 @@
+{
+  "format":1,
+  "language":"Pascal",
+  "version":13,
+  "name":"Random ellipses pattern",
+  "author":"Peter Millican",
+  "date":"23/07/2020",
+  "time":"11:59:01",
+  "code":"PROGRAM RandomEllipses;\nVAR count: integer;\n    x, y: integer;\n    nextColour: integer;\nBEGIN\n  {draw 10 ellipses, choosing a random centre}\n  for count := 1 to 10 do\n    begin\n      {with x and y both between -250 and 1249}\n      setxy(random(1500) - 250, random(1500) - 250);\n      {and ellipse radii between 500 and 999}\n      ellipse(random(500) + 500, random(500) + 500)\n    end;\n  {initialise the colour variable}\n  nextColour := 0;\n  {try to fill all the ellipses with colours}\n  for count := 1 to 10000 do\n    begin\n      {pick a random point}\n      x := random(1000);\n      y := random(1000);\n      {if the pixel is in a white region}\n      if pixcol(x, y) = white then\n        begin\n          {choose the next colour in the sequence}\n          nextColour := (nextColour mod 20) + 1;\n          {recolour the region in that colour}\n          recolour(x, y, rgb(nextColour))\n        end\n    end\nEND.",
+  "usage":[
+    {
+      "category": "Turtle: absolute movement",
+      "expressions":[
+        {"name":"setxy", "level":1, "count":1, "lines":"10"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Turtle: drawing shapes",
+      "expressions":[
+        {"name":"ellipse", "level":1, "count":1, "lines":"12"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Other Turtle commands",
+      "expressions":[
+        {"name":"rgb", "level":3, "count":1, "lines":"28"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Canvas operations",
+      "expressions":[
+        {"name":"pixcol", "level":3, "count":1, "lines":"23"},
+        {"name":"recolour", "level":3, "count":1, "lines":"28"}
+      ],
+      "total":2
+    },
+    {
+      "category": "General arithmetic functions",
+      "expressions":[
+        {"name":"random", "level":2, "count":6, "lines":"10 10 12 12 20 21"}
+      ],
+      "total":6
+    },
+    {
+      "category": "Command structures",
+      "expressions":[
+        {"name":"if", "level":1, "count":1, "lines":"23"},
+        {"name":"for", "level":1, "count":2, "lines":"7 17"}
+      ],
+      "total":3
+    }
+  ],
+  "pcode":[
+    [112,12,1,1,112,0,123,112,6,2,123,4,112,10,124,112,22,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [112,1],
+    [119,19,112,10],
+    [113,19,37,129,9],
+    [112,1500,7,112,250,27,112,1500,7,112,250,27,88],
+    [112,500,7,112,500,26,112,500,7,112,500,26,109],
+    [113,19,4,128,4],
+    [112,0,119,22],
+    [112,1],
+    [119,19,112,10000],
+    [113,19,37,129,19],
+    [112,1000,7,119,20],
+    [112,1000,7,119,21],
+    [113,20,113,21,99,112,16777215,32,129,18],
+    [113,22,112,20,31,112,1,26,119,22],
+    [113,20,113,21,113,22,101,97],
+    [113,19,4,128,11],
+    [130]
+  ]
+}

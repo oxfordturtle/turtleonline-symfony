@@ -1,0 +1,190 @@
+{
+  "format":1,
+  "language":"Pascal",
+  "version":13,
+  "name":"Brownian motion",
+  "author":"Peter Millican",
+  "date":"23/07/2020",
+  "time":"11:59:09",
+  "code":"PROGRAM BrownianMotion;\nCONST polradius = 80;\n      molradius = 10;\n      hitradius = 90;\n      molecules = 400;\n      slowspeed = 30;\n      highspeed = 50;\n      speedratio = 10;\n      polcolour = blue;\n      molcolour = red;\n      halocolour = #FFFFFE;\n      delay = 50;\nVAR px, py: integer;\n    pxvel, pyvel: integer;\n    mx, my, ms, md: array[1..molecules] of integer;\n    n: integer;\n\n  Procedure setup;\n  Var n: integer;\n  Begin\n    penup;\n    px := 500;\n    py := 500;\n    pxvel := 0;\n    pyvel := 0;\n    setxy(px, py);\n    colour(halocolour);\n    blot(hitradius);\n    for n := 1 to molecules do\n      begin\n        repeat\n          mx[n] := random(1000 - 2 * molradius) + molradius;\n          my[n] := random(1000 - 2 * molradius) + molradius\n        until pixcol(mx[n], my[n]) = white;\n        ms[n] := random(highspeed - slowspeed + 1) + slowspeed;\n        md[n] := random(360);\n        setxy(mx[n], my[n]);\n        blot(2 * molradius)\n      end\n  End;\n\n  Procedure draw(positive: boolean);\n  Var n: integer;\n  Begin\n    if positive then\n      colour(molcolour)\n    else\n      colour(white);\n    for n := 1 to molecules do\n      begin\n        setxy(mx[n], my[n]);\n        blot(molradius)\n      end;\n    if positive then\n      colour(polcolour);\n    setxy(px, py);\n    blot(polradius)\n  End;\n\n  Procedure move(m: integer);\n  Var degturn: integer;\n      impact: integer;\n  Begin\n    setxy(mx[m], my[m]);\n    direction(md[m]);\n    forward(ms[m]);\n    if hypot(turtx - px, turty - py, 1) <= hitradius then\n      begin\n        while hypot(turtx - px, turty - py, 1) < hitradius do\n          back(1);\n        turnxy(px - turtx, py - turty);\n        degturn := turtd - md[m];\n        md[m] := (180 + (turtd + degturn)) mod 360;\n        impact := cos(degturn, 1, ms[m]);\n        pxvel := pxvel + sin(turtd, 1, impact);\n        pyvel := pyvel - cos(turtd, 1, impact)\n      end;\n    mx[m] := (turtx + 1000) mod 1000;\n    my[m] := (turty + 1000) mod 1000\n  End;\n\nBEGIN\n  noupdate;\n  setup;\n  blank(white);\n  draw(true);\n  repeat\n    noupdate;\n    draw(false);\n    for n := 1 to molecules do\n      move(n);\n    px := px + pxvel / speedratio;\n    py := py + pyvel / speedratio;\n    draw(true);\n    update;\n    pause(delay)\n  until (abs(px - 500) > 490) or (abs(py - 500) > 480)\nEND.",
+  "usage":[
+    {
+      "category": "Turtle: relative movement",
+      "expressions":[
+        {"name":"back", "level":1, "count":1, "lines":"70"},
+        {"name":"forward", "level":1, "count":1, "lines":"66"}
+      ],
+      "total":2
+    },
+    {
+      "category": "Turtle: absolute movement",
+      "expressions":[
+        {"name":"direction", "level":1, "count":1, "lines":"65"},
+        {"name":"setxy", "level":1, "count":5, "lines":"26 37 51 56 64"},
+        {"name":"turnxy", "level":2, "count":1, "lines":"71"}
+      ],
+      "total":7
+    },
+    {
+      "category": "Turtle: drawing shapes",
+      "expressions":[
+        {"name":"blot", "level":1, "count":4, "lines":"28 38 52 57"}
+      ],
+      "total":4
+    },
+    {
+      "category": "Other Turtle commands",
+      "expressions":[
+        {"name":"colour", "level":1, "count":4, "lines":"27 46 48 55"},
+        {"name":"penup", "level":1, "count":1, "lines":"21"}
+      ],
+      "total":5
+    },
+    {
+      "category": "Canvas operations",
+      "expressions":[
+        {"name":"blank", "level":1, "count":1, "lines":"85"},
+        {"name":"noupdate", "level":1, "count":2, "lines":"83 88"},
+        {"name":"update", "level":1, "count":1, "lines":"95"},
+        {"name":"pixcol", "level":3, "count":1, "lines":"34"}
+      ],
+      "total":5
+    },
+    {
+      "category": "General arithmetic functions",
+      "expressions":[
+        {"name":"abs", "level":1, "count":2, "lines":"97 97"},
+        {"name":"hypot", "level":2, "count":2, "lines":"67 69"},
+        {"name":"random", "level":2, "count":4, "lines":"32 33 35 36"}
+      ],
+      "total":8
+    },
+    {
+      "category": "Trig / exp / log functions",
+      "expressions":[
+        {"name":"cos", "level":2, "count":2, "lines":"74 76"},
+        {"name":"sin", "level":2, "count":1, "lines":"75"}
+      ],
+      "total":3
+    },
+    {
+      "category": "Input and timing routines",
+      "expressions":[
+        {"name":"pause", "level":1, "count":1, "lines":"96"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Command structures",
+      "expressions":[
+        {"name":"if", "level":1, "count":3, "lines":"45 54 67"},
+        {"name":"else", "level":1, "count":1, "lines":"47"},
+        {"name":"for", "level":1, "count":3, "lines":"29 49 90"},
+        {"name":"repeat", "level":2, "count":2, "lines":"31 87"},
+        {"name":"while", "level":2, "count":1, "lines":"69"},
+        {"name":"procedure", "level":2, "count":3, "lines":"18 42 60"}
+      ],
+      "total":13
+    },
+    {
+      "category": "Subroutine calls",
+      "expressions":[
+        {"name":"setup", "level":0, "count":1, "lines":"84"},
+        {"name":"draw", "level":0, "count":3, "lines":"86 89 94"},
+        {"name":"move", "level":0, "count":1, "lines":"91"}
+      ],
+      "total":5
+    }
+  ],
+  "pcode":[
+    [112,15,1,1,112,0,123,112,6,2,123,4,112,1619,124,112,1634,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [116,27,119,26],
+    [112,400,119,27],
+    [116,429,119,428],
+    [112,400,119,429],
+    [116,831,119,830],
+    [112,400,119,831],
+    [116,1233,119,1232],
+    [112,400,119,1233],
+    [128,72],
+    [133,1],
+    [139,12,1],
+    [117,12,1,112,1,124],
+    [112,0,86],
+    [112,500,119,22],
+    [112,500,119,23],
+    [112,0,119,24],
+    [112,0,119,25],
+    [113,22,113,23,88],
+    [112,16777214,87],
+    [112,90,108],
+    [112,1],
+    [120,12,1,112,400],
+    [114,12,1,37,129,34],
+    [113,26,114,12,1,112,1,27,2,127,26,4,112,1000,112,2,112,10,28,27,7,112,10,26,2,123],
+    [113,428,114,12,1,112,1,27,2,127,26,4,112,1000,112,2,112,10,28,27,7,112,10,26,2,123],
+    [113,26,114,12,1,112,1,27,2,127,26,4,122,113,428,114,12,1,112,1,27,2,127,26,4,122,99,112,16777215,32,129,26],
+    [113,830,114,12,1,112,1,27,2,127,26,4,112,50,112,30,27,112,1,26,7,112,30,26,2,123],
+    [113,1232,114,12,1,112,1,27,2,127,26,4,112,360,7,2,123],
+    [113,26,114,12,1,112,1,27,2,127,26,4,122,113,428,114,12,1,112,1,27,2,127,26,4,122,88],
+    [112,2,112,10,28,108],
+    [114,12,1,4,128,24],
+    [140,12,134,132],
+    [133,2],
+    [139,13,2],
+    [117,13,1,112,2,124,120,13,1],
+    [114,13,1,129,41],
+    [112,16711680,87],
+    [128,42],
+    [112,16777215,87],
+    [112,1],
+    [120,13,2,112,400],
+    [114,13,2,37,129,48],
+    [113,26,114,13,2,112,1,27,2,127,26,4,122,113,428,114,13,2,112,1,27,2,127,26,4,122,88],
+    [112,10,108],
+    [114,13,2,4,128,43],
+    [114,13,1,129,50],
+    [112,255,87],
+    [113,22,113,23,88],
+    [112,80,108],
+    [140,13,134,132],
+    [133,3],
+    [139,14,3],
+    [117,14,1,112,3,124,120,14,1],
+    [113,26,114,14,1,112,1,27,2,127,26,4,122,113,428,114,14,1,112,1,27,2,127,26,4,122,88],
+    [113,1232,114,14,1,112,1,27,2,127,26,4,122,83],
+    [113,830,114,14,1,112,1,27,2,127,26,4,122,91],
+    [113,16,113,22,27,113,17,113,23,27,112,1,50,112,90,36,129,69],
+    [113,16,113,22,27,113,17,113,23,27,112,1,50,112,90,34,129,63],
+    [112,1,92],
+    [128,60],
+    [113,22,113,16,27,113,23,113,17,27,95],
+    [113,18,113,1232,114,14,1,112,1,27,2,127,26,4,122,27,120,14,2],
+    [113,1232,114,14,1,112,1,27,2,127,26,4,112,180,113,18,114,14,2,26,26,112,360,31,2,123],
+    [114,14,2,112,1,113,830,114,14,1,112,1,27,2,127,26,4,122,58,120,14,3],
+    [113,24,113,18,112,1,114,14,3,57,26,119,24],
+    [113,25,113,18,112,1,114,14,3,58,27,119,25],
+    [113,26,114,14,1,112,1,27,2,127,26,4,113,16,112,1000,26,112,1000,31,2,123],
+    [113,428,114,14,1,112,1,27,2,127,26,4,113,17,112,1000,26,112,1000,31,2,123],
+    [140,14,134,132],
+    [112,0,146],
+    [131,12],
+    [112,16777215,96],
+    [112,-1,131,35],
+    [112,0,146],
+    [112,0,131,35],
+    [112,1],
+    [119,1634,112,400],
+    [113,1634,37,129,83],
+    [113,1634,131,53],
+    [113,1634,4,128,79],
+    [113,22,113,24,112,10,29,26,119,22],
+    [113,23,113,25,112,10,29,26,119,23],
+    [112,-1,131,35],
+    [112,-1,146],
+    [112,50,174],
+    [113,22,112,500,27,24,112,490,35,113,23,112,500,27,24,112,480,35,18,129,76],
+    [130]
+  ]
+}

@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * A user registered on the site.
@@ -43,6 +44,7 @@ class User implements UserInterface
    * @ORM\Column(type="string", length=255, unique=true)
    * @Assert\NotBlank(message="Username cannot be blank.")
    * @Assert\NotIdenticalTo(value="admin", message="This username is already taken.")
+   * @Groups("json")
    */
   private $username;
 
@@ -53,6 +55,7 @@ class User implements UserInterface
    * @ORM\Column(type="string", length=255, unique=true)
    * @Assert\NotBlank(message="Email address cannot be blank.")
    * @Assert\Email(message="This is not a valid email address.")
+   * @Groups("json")
    */
   private $email;
 
@@ -61,6 +64,7 @@ class User implements UserInterface
    *
    * @var bool
    * @ORM\Column(type="boolean")
+   * @Groups("json")
    */
   private $admin;
 
@@ -69,6 +73,7 @@ class User implements UserInterface
    *
    * @var bool
    * @ORM\Column(type="boolean")
+   * @Groups("json")
    */
   private $verified;
 
@@ -86,6 +91,7 @@ class User implements UserInterface
    *
    * @var \DateTimeInterface|null
    * @ORM\Column(type="date", nullable=true)
+   * @Groups("json")
    */
   private $lastLoginDate;
 
@@ -111,6 +117,7 @@ class User implements UserInterface
    * @var string
    * @ORM\Column(type="string", length=255)
    * @Assert\NotBlank(message="First name cannot be blank.")
+   * @Groups("json")
    */
   private $firstname;
 
@@ -120,6 +127,7 @@ class User implements UserInterface
    * @var string
    * @ORM\Column(type="string", length=255)
    * @Assert\NotBlank(message="Surname cannot be blank.")
+   * @Groups("json")
    */
   private $surname;
 
@@ -128,6 +136,7 @@ class User implements UserInterface
    *
    * @var string|null
    * @ORM\Column(type="string", length=255, nullable=true)
+   * @Groups("json")
    */
   private $schoolName;
 
@@ -136,6 +145,7 @@ class User implements UserInterface
    *
    * @var string|null
    * @ORM\Column(type="string", length=255, nullable=true)
+   * @Groups("json")
    */
   private $schoolPostcode;
 
@@ -144,6 +154,7 @@ class User implements UserInterface
    *
    * @var bool
    * @ORM\Column(type="boolean")
+   * @Groups("json")
    */
   private $over13;
 
@@ -152,6 +163,7 @@ class User implements UserInterface
    *
    * @var string|null
    * @ORM\Column(type="string", length=255, nullable=true)
+   * @Groups("json")
    */
   private $guardianFullname;
 
@@ -160,6 +172,7 @@ class User implements UserInterface
    *
    * @var bool
    * @ORM\Column(type="boolean")
+   * @Groups("json")
    */
   private $receivingEmails;
 
@@ -247,6 +260,28 @@ class User implements UserInterface
   public function setEmail(string $email): self
   {
     $this->email = $email;
+    return $this;
+  }
+
+  /**
+   * Get whether the user is an admin user.
+   *
+   * @return bool
+   */
+  public function isAdmin(): bool
+  {
+    return $this->admin;
+  }
+
+  /**
+   * Set whether the user is an admin user.
+   *
+   * @param bool $admin
+   * @return self
+   */
+  public function setAdmin(bool $admin): self
+  {
+    $this->admin = $admin;
     return $this;
   }
 

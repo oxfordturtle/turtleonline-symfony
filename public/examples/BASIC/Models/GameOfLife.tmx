@@ -1,0 +1,91 @@
+{
+  "format":1,
+  "language":"BASIC",
+  "version":13,
+  "name":"Conway's Game of Life",
+  "author":"Peter Millican",
+  "date":"23/07/2020",
+  "time":"12:00:29",
+  "code":"REM GameOfLife\n\nCONST WIDTH% = 32\nCONST HEIGHT% = 32\nCANVAS(0, 0, WIDTH%, HEIGHT%)\nRESOLUTION(WIDTH%, HEIGHT%)\nFOR x% = 0 TO WIDTH% - 1\n  FOR y% = 0 TO HEIGHT% - 1\n    IF RND(7) = 1 THEN PIXSET(x%, y%, BLACK)\n  NEXT\nNEXT\nWHILE ?KEY <> \\ESCAPE\n  NOUPDATE\n  FOR x% = 0 TO WIDTH% - 1\n    FOR y% = 0 TO HEIGHT% - 1\n      dn% = 0\n      FOR i% = -1 TO 1\n        FOR j% = -1 TO 1\n          dn% = dn% + PIXCOL((x% + i% + WIDTH%) MOD WIDTH%, (y% + j% + HEIGHT%) MOD HEIGHT%) AND 1\n        NEXT\n      NEXT\n      IF ((PIXCOL(x%, y%) AND 1 = 0) AND ((dn% < 5) OR (dn% > 6))) OR ((PIXCOL(x%, y%) AND 1 = 1) AND (dn% = 6)) THEN\n        PIXSET(x%, y%, PIXCOL(x%, y%) EOR 2)\n      ENDIF\n    NEXT\n  NEXT\n  FOR x% = 0 TO WIDTH% - 1\n    FOR y% = 0 TO HEIGHT% - 1\n      IF (PIXCOL(x%, y%) AND 3) MOD 3 <> 0 THEN\n        PIXSET(x%, y%, PIXCOL(x%, y%) EOR &FFFFFD)\n      ENDIF\n    NEXT\n  NEXT\n  UPDATE\nENDWHILE\nEND",
+  "usage":[
+    {
+      "category": "Canvas operations",
+      "expressions":[
+        {"name":"NOUPDATE", "level":1, "count":1, "lines":"13"},
+        {"name":"UPDATE", "level":1, "count":1, "lines":"34"},
+        {"name":"CANVAS", "level":2, "count":1, "lines":"5"},
+        {"name":"RESOLUTION", "level":2, "count":1, "lines":"6"},
+        {"name":"PIXCOL", "level":3, "count":6, "lines":"19 22 22 23 29 30"},
+        {"name":"PIXSET", "level":3, "count":3, "lines":"9 23 30"}
+      ],
+      "total":13
+    },
+    {
+      "category": "General arithmetic functions",
+      "expressions":[
+        {"name":"RND", "level":2, "count":1, "lines":"9"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Command structures",
+      "expressions":[
+        {"name":"IF", "level":1, "count":3, "lines":"9 22 29"},
+        {"name":"FOR", "level":1, "count":8, "lines":"7 8 14 15 17 18 27 28"},
+        {"name":"WHILE", "level":2, "count":1, "lines":"12"}
+      ],
+      "total":12
+    }
+  ],
+  "pcode":[
+    [112,12,1,1,112,0,123,112,6,2,123,4,112,11,124,112,23,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [112,0,112,0,112,32,112,32,144],
+    [112,32,112,32,145],
+    [112,0],
+    [119,19,112,32,112,1,27],
+    [113,19,37,129,15],
+    [112,0],
+    [119,20,112,32,112,1,27],
+    [113,20,37,129,14],
+    [112,7,7,4,112,1,32,129,13],
+    [113,19,113,20,112,0,100],
+    [113,20,4,128,9],
+    [113,19,4,128,6],
+    [112,-9,160,112,27,33,129,49],
+    [112,0,146],
+    [112,0],
+    [119,19,112,32,112,1,27],
+    [113,19,37,129,37],
+    [112,0],
+    [119,20,112,32,112,1,27],
+    [113,20,37,129,36],
+    [112,0,119,21],
+    [112,1,23],
+    [119,22,112,1],
+    [113,22,37,129,33],
+    [112,1,23],
+    [119,23,112,1],
+    [113,23,37,129,32],
+    [113,21,113,19,113,22,26,112,32,26,112,32,31,113,20,113,23,26,112,32,26,112,32,31,99,112,1,17,26,119,21],
+    [113,23,4,128,28],
+    [113,22,4,128,25],
+    [113,19,113,20,99,112,1,17,112,0,32,113,21,112,5,34,113,21,112,6,35,18,17,113,19,113,20,99,112,1,17,112,1,32,113,21,112,6,32,17,18,129,35],
+    [113,19,113,20,113,19,113,20,99,112,2,19,100],
+    [113,20,4,128,21],
+    [113,19,4,128,18],
+    [112,0],
+    [119,19,112,32,112,1,27],
+    [113,19,37,129,47],
+    [112,0],
+    [119,20,112,32,112,1,27],
+    [113,20,37,129,46],
+    [113,19,113,20,99,112,3,17,112,3,31,112,0,33,129,45],
+    [113,19,113,20,113,19,113,20,99,112,16777213,19,100],
+    [113,20,4,128,41],
+    [113,19,4,128,38],
+    [112,-1,146],
+    [128,15],
+    [130]
+  ]
+}

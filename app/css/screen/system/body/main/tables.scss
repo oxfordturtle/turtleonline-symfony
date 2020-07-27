@@ -1,0 +1,26 @@
+.system-body {
+  table {
+    border-collapse: collapse;
+    font-size: .875em;
+    width: calc(100% + 2px);
+    margin: -1px;
+  }
+
+  thead th {
+    background: $lightgray;
+  }
+
+  th {
+    font-weight: bold;
+  }
+
+  th, td {
+    vertical-align: top;
+    text-align: center;
+    border: 1px solid $gray;
+    padding: .25em .5em;
+    &.wide {
+      width: 50%;
+    }
+  }
+}

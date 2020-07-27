@@ -78,7 +78,7 @@ const unambiguousOperator = (operator, type) => {
 
 // handle a simple
 const simple = (routine, lex, type, needed, language) => {
-  const simpleTypes = ['plus', 'subt', 'or', 'bor', 'xor']
+  const simpleTypes = ['plus', 'subt', 'or', 'orl', 'xor']
 
   // evaluate the first bit
   let result = term(routine, lex, type, needed, language)
@@ -87,7 +87,7 @@ const simple = (routine, lex, type, needed, language) => {
   while (routine.lexemes[result.lex] && (simpleTypes.indexOf(routine.lexemes[result.lex].value) > -1)) {
     const operator = unambiguousOperator(routine.lexemes[result.lex].value, result.type)
     const next = term(routine, result.lex + 1, result.type, needed, language)
-    const makeAbsolute = (language === 'Python' && operator === 'bor')
+    const makeAbsolute = (language === 'Python' && operator === 'orl')
     result = pcoder.mergeWithOperator(result.pcode, next, operator, makeAbsolute)
   }
 
@@ -97,7 +97,7 @@ const simple = (routine, lex, type, needed, language) => {
 
 // handle a term
 const term = (routine, lex, type, needed, language) => {
-  const termTypes = ['and', 'band', 'div', 'divr', 'mod', 'mult']
+  const termTypes = ['and', 'andl', 'div', 'divr', 'mod', 'mult']
 
   // evaluate the first bit
   let result = factor(routine, lex, type, needed, language)
@@ -106,7 +106,7 @@ const term = (routine, lex, type, needed, language) => {
   while (routine.lexemes[result.lex] && termTypes.indexOf(routine.lexemes[result.lex].value) > -1) {
     const operator = unambiguousOperator(routine.lexemes[result.lex].value, result.type)
     const next = factor(routine, result.lex + 1, result.type, needed, language)
-    const makeAbsolute = (language === 'Python' && operator === 'band')
+    const makeAbsolute = (language === 'Python' && operator === 'andl')
     result = pcoder.mergeWithOperator(result.pcode, next, operator, makeAbsolute)
   }
 

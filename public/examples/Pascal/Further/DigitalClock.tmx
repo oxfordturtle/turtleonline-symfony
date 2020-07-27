@@ -1,0 +1,126 @@
+{
+  "format":1,
+  "language":"Pascal",
+  "version":13,
+  "name":"Digital clock (using IF and WHILE)",
+  "author":"Peter Millican",
+  "date":"23/07/2020",
+  "time":"11:59:01",
+  "code":"PROGRAM DigitalClock;\nVAR hours: integer;\n    minutes: integer;\n\n  Procedure showtime;\n  Var hstring, mstring: string;\n  Begin\n    setxy(300, 430);\n    box(400, 130, white, false);\n    if hours < 10 then\n      hstring := '0' + str(hours)\n    else\n      hstring := str(hours);\n    if minutes < 10 then\n      mstring := '0' + str(minutes)\n    else\n      mstring := str(minutes);\n    print(hstring + ':' + mstring, 21, 100)\n  End;\n\nBEGIN\n  blank(lightgreen);\n  setxy(250, 390);\n  colour(maroon);\n  thickness(10);\n  box(500, 210, lightbrown, true);\n  colour(black);\n  hours := 0;\n  minutes := 0;\n  while hours < 12 do\n    begin\n      showtime;\n      pause(600);\n      inc(minutes);\n      if minutes = 60 then\n        begin\n          inc(hours);\n          minutes := 0\n        end\n    end;\n  showtime\nEND.",
+  "usage":[
+    {
+      "category": "Turtle: absolute movement",
+      "expressions":[
+        {"name":"setxy", "level":1, "count":2, "lines":"8 23"}
+      ],
+      "total":2
+    },
+    {
+      "category": "Turtle: drawing shapes",
+      "expressions":[
+        {"name":"box", "level":2, "count":2, "lines":"9 26"}
+      ],
+      "total":2
+    },
+    {
+      "category": "Other Turtle commands",
+      "expressions":[
+        {"name":"colour", "level":1, "count":2, "lines":"24 27"},
+        {"name":"thickness", "level":1, "count":1, "lines":"25"}
+      ],
+      "total":3
+    },
+    {
+      "category": "Canvas operations",
+      "expressions":[
+        {"name":"blank", "level":1, "count":1, "lines":"22"}
+      ],
+      "total":1
+    },
+    {
+      "category": "General arithmetic functions",
+      "expressions":[
+        {"name":"inc", "level":1, "count":2, "lines":"34 37"}
+      ],
+      "total":2
+    },
+    {
+      "category": "String operations",
+      "expressions":[
+        {"name":"print", "level":1, "count":1, "lines":"18"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Type conversion routines",
+      "expressions":[
+        {"name":"str", "level":1, "count":4, "lines":"11 13 15 17"}
+      ],
+      "total":4
+    },
+    {
+      "category": "Input and timing routines",
+      "expressions":[
+        {"name":"pause", "level":1, "count":1, "lines":"33"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Command structures",
+      "expressions":[
+        {"name":"if", "level":1, "count":3, "lines":"10 14 35"},
+        {"name":"else", "level":1, "count":2, "lines":"12 16"},
+        {"name":"while", "level":2, "count":1, "lines":"30"},
+        {"name":"procedure", "level":2, "count":1, "lines":"5"}
+      ],
+      "total":7
+    },
+    {
+      "category": "Subroutine calls",
+      "expressions":[
+        {"name":"showtime", "level":0, "count":2, "lines":"32 41"}
+      ],
+      "total":2
+    }
+  ],
+  "pcode":[
+    [112,13,1,1,112,0,123,112,6,2,123,4,112,8,124,112,21,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [128,21],
+    [133,1],
+    [139,12,70],
+    [117,12,1,112,70,124],
+    [117,12,3,120,12,1,112,33,120,12,2],
+    [117,12,38,120,12,36,112,33,120,12,37],
+    [112,300,112,430,88],
+    [112,400,112,130,112,16777215,112,0,111],
+    [113,20,112,10,34,129,14],
+    [114,12,1,112,48,9,113,20,11,64,2,126,142],
+    [128,15],
+    [114,12,1,113,20,11,2,126,142],
+    [113,21,112,10,34,129,18],
+    [114,12,36,112,48,9,113,21,11,64,2,126,142],
+    [128,19],
+    [114,12,36,113,21,11,2,126,142],
+    [114,12,1,112,58,9,64,114,12,36,64,112,21,112,100,168,142],
+    [140,12,134,132],
+    [112,10025880,96],
+    [112,250,112,390,88],
+    [112,8388608,87],
+    [112,10,85],
+    [112,500,112,210,112,11567184,112,-1,111],
+    [112,0,87],
+    [112,0,119,20],
+    [112,0,119,21],
+    [113,20,112,12,34,129,37],
+    [131,4],
+    [112,600,174],
+    [116,21,1,122,4,2,123],
+    [113,21,112,60,32,129,36],
+    [116,20,1,122,4,2,123],
+    [112,0,119,21],
+    [128,29],
+    [131,4],
+    [130]
+  ]
+}

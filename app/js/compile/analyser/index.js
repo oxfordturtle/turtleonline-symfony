@@ -47,7 +47,7 @@ function usageCategory (language, lexemes, category) {
   const filtered = category.expressions.filter(isUsed.bind(null, language, lexemes))
   const mapped = filtered.map(usageExpression.bind(null, language, lexemes))
   return {
-    title: category.title,
+    category: category.title,
     expressions: mapped,
     total: mapped.reduce(countTotal, 0)
   }

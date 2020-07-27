@@ -1,257 +1,173 @@
 /*
  * Details of example programs.
  */
-let index = 1
+import { Names } from './languages'
+let index = 0
 
-export class Group {
-  readonly index: number
-  readonly title: string
-  readonly examples: string[]
-  constructor (title: string, examples: string[]) {
-    this.index = index++
-    this.title = title
-    this.examples = examples
+export class Example {
+  readonly groupId: string
+  readonly id: string
+  readonly names: Names
+
+  constructor (groupId: string, id: string, names: Names|string) {
+    this.groupId = groupId
+    this.id = id
+    this.names = (typeof names === 'string')
+      ? { BASIC: names, Pascal: names, Python: names }
+      : names
   }
 }
 
-export const groups = [
-  new Group('drawing and counting loops', [
-    'DrawPause',
-    'SmileyFace',
-    'ThePlough',
-    'OlympicRings',
-    'ForLoop',
-    'TriangleSpin',
-    'Circles',
-    'NestedLoops',
-    'RandomLines',
-    'RandomEllipses',
-    'ColourSpiral'
-  ]),
-  new Group('procedures and simple recursion', [
-    'SimpleProc',
-    'ParameterProc',
-    'ResizableFace',
-    'Polygons',
-    'Stars',
-    'PolygonRings',
-    'Triangle1',
-    'Triangle2',
-    'Triangle3',
-    'Triangles',
-    'Factorials',
-    'Fibonaccis'
-  ]),
-  new Group('further commands and structures', [
-    'YouAreHere',
-    'CycleColours',
-    'Clock',
-    'DigitalClock',
-    'Flashlights',
-    'RefParams',
-    'Balls3D',
-    'StringFunctions',
-    'UserStringFunctions',
-    'MathFunctions',
-    'TrigGraphs',
-    'RandomSentences',
-    'FileCommands',
-    'DirectoryCommands',
-    'FileSearching'
-  ]),
-  new Group('smooth movement and bouncing', [
-    'MovingBall',
-    'BouncingBall',
-    'TurtleMove',
-    'TurtleBounce',
-    'BouncingFace',
-    'MultiBounce',
-    'BouncingTriangle',
-    'BouncingShapes',
-    'GravitySteps',
-    'SolarSystem'
-  ]),
-  new Group('user input, interaction and games', [
-    'AskInput',
-    'QuickClick',
-    'TypingTest',
-    'TypingTestKeys',
-    'IterationGame',
-    'SpongeThrow',
-    'Arcade',
-    'SnakeGame',
-    'NoughtsAndCrosses',
-    'SimpleDraw',
-    'PaintApp',
-    'MultipleTurtles'
-  ]),
-  new Group('interdisciplinary models (CSAC project)', [
-    'AimCannon',
-    'AutoCannon',
-    'Launch',
-    'Disease',
-    'GameOfLife',
-    'LifeArrays',
-    'Automata',
-    'BrownianMotion',
-    'Dendrites',
-    'Cheetahs',
-    'SexRatio',
-    'Flocking',
-    'Roads',
-    'Schelling',
-    'IteratedPD',
-    'Interference',
-    'TwoSlits',
-    'WaveSuperposer'
-  ]),
-  new Group('self-similarity and chaos', [
-    'RecursionFactory',
-    'RecursiveTree',
-    'KochSnowflake',
-    'SquareKoch',
-    'Sierpinski',
-    'SierpinskiDots',
-    'IFSBackground',
-    'IFSColour',
-    'IFSDemonstrator',
-    'Logistic',
-    'LogisticSpider',
-    'MandelbrotDemo',
-    'MandelbrotSpectrumDemo',
-    'Quine'
-  ]),
-  new Group('logic and computer science', [
-    'Syllogisms',
-    'TuringMachines',
-    'Sorting',
-    'SortingStrings',
-    'NimLearn',
-    'MultiNim',
-    'KnightsTour'
-  ])
+export class Group {
+  readonly index: number
+  readonly id: string
+  readonly title: string
+  readonly examples: Example[]
+
+  constructor (id: string, title: string) {
+    this.index = index++
+    this.id = id
+    this.title = title
+    this.examples = examples.filter(x => x.groupId === id)
+  }
+}
+
+export const examples: Example[] = [
+  // examples 0 - CSAC (not to be shown in the menu)
+  new Example('CSAC', 'LifeStart', 'Initialising Conway’s Game of Life'),
+  new Example('CSAC', 'Mandelbrot', 'Mandelbrot set'),
+  new Example('CSAC', 'MandelbrotMini', 'Mandelbrot mini'),
+  new Example('CSAC', 'MandelbrotSpectrum', 'Mandelbrot spectrum'),
+  new Example('CSAC', 'MandelbrotMiniSpectrum', 'Mandelbrot mini spectrum'),
+  new Example('CSAC', 'SierpinskiColour', 'Sierpinski colour'),
+  new Example('CSAC', 'SierpinskiIFS', 'Sierpinski IFS'),
+  new Example('CSAC', 'BarnsleyColour', 'Barnsley colour'),
+  new Example('CSAC', 'BarnsleyIFS', 'Barnsley IFS'),
+  new Example('CSAC', 'DragonColour', 'Dragon colour'),
+  new Example('CSAC', 'DragonIFS', 'Dragon IFS'),
+  new Example('CSAC', 'TreeIFS', 'Tree IFS'),
+  // examples 1 - Drawing
+  new Example('Drawing', 'DrawPause', 'Simple drawing with pauses'),
+  new Example('Drawing', 'SmileyFace', 'Smiley face (using PENUP and ELLBLOT)'),
+  new Example('Drawing', 'ThePlough', 'The plough (using SETXY and POLYLINE)'),
+  new Example('Drawing', 'OlympicRings', 'Olympic rings (using a variable)'),
+  new Example('Drawing', 'ForLoop', 'FOR (counting) loop'),
+  new Example('Drawing', 'TriangleSpin', 'Spinning triangle pattern'),
+  new Example('Drawing', 'Circles', 'Circling circles'),
+  new Example('Drawing', 'NestedLoops', 'Nested FOR loops'),
+  new Example('Drawing', 'RandomLines', 'Random lines pattern'),
+  new Example('Drawing', 'RandomEllipses', 'Random ellipses pattern'),
+  // examples 2 - Procedures
+  new Example('Procedures', 'ColourSpiral', 'Spiral of colours (simple PCODE)'),
+  new Example('Procedures', 'SimpleProc', 'Simple procedure (using REPEAT)'),
+  new Example('Procedures', 'ParameterProc', 'Procedure with parameter'),
+  new Example('Procedures', 'ResizableFace', 'Resizable face (nested procedures)'),
+  new Example('Procedures', 'Polygons', 'Polygons (two parameters)'),
+  new Example('Procedures', 'Stars', 'Stars (using ANGLES and FORGET)'),
+  new Example('Procedures', 'PolygonRings', 'Polygon rings (three parameters)'),
+  new Example('Procedures', 'Triangle1', 'Simple triangle'),
+  new Example('Procedures', 'Triangle2', 'Triangle procedure'),
+  new Example('Procedures', 'Triangle3', 'Triangle procedure with limit'),
+  new Example('Procedures', 'Triangles', 'Recursive triangles'),
+  new Example('Procedures', 'Factorials', 'Recursive factorials'),
+  // examples 3 - Further
+  new Example('Further', 'YouAreHere', 'Text and arrow (using PRINT)'),
+  new Example('Further', 'CycleColours', 'Cycling colours (using MOD)'),
+  new Example('Further', 'Clock', 'Analogue clock (using REPEAT)'),
+  new Example('Further', 'DigitalClock', 'Digital clock (using IF and WHILE)'),
+  new Example('Further', 'Flashlights', 'Flashlights (using Booleans)'),
+  new Example('Further', 'RefParams', 'Reference parameters'),
+  new Example('Further', 'Balls3D', '3D colour effects'),
+  new Example('Further', 'StringFunctions', 'Standard string functions'),
+  new Example('Further', 'UserStringFunctions', 'User-defined string functions'),
+  new Example('Further', 'MathFunctions', 'Mathematical functions'),
+  new Example('Further', 'TrigGraphs', 'Trigonometric graphs'),
+  // examples 4 - Movement
+  new Example('Movement', 'MovingBall', 'Moving ball (using variables)'),
+  new Example('Movement', 'BouncingBall', 'Bouncing ball (using variables)'),
+  new Example('Movement', 'TurtleMove', 'Moving ball (using Turtle)'),
+  new Example('Movement', 'TurtleBounce', 'Bouncing ball (using Turtle)'),
+  new Example('Movement', 'BouncingFace', 'Bouncing face'),
+  new Example('Movement', 'MultiBounce', 'Multiple bouncing balls'),
+  new Example('Movement', 'BouncingTriangle', 'Bouncing triangle'),
+  new Example('Movement', 'BouncingShapes', 'Multiple bouncing shapes'),
+  new Example('Movement', 'GravitySteps', 'Movement under gravity'),
+  new Example('Movement', 'SolarSystem', 'Solar system'),
+  // examples 5 - Interaction
+  new Example('Interaction', 'AskInput', 'Asking for typed input'),
+  new Example('Interaction', 'QuickClick', 'Mouse reaction game'),
+  new Example('Interaction', 'TypingTest', 'Typing test (checking characters)'),
+  new Example('Interaction', 'TypingTestKeys', 'Typing test (checking keys)'),
+  new Example('Interaction', 'IterationGame', 'Iteration game (Collatz sequence)'),
+  new Example('Interaction', 'SpongeThrow', 'Throwing sponges at a moving face'),
+  new Example('Interaction', 'Arcade', 'Arcade shooting game'),
+  new Example('Interaction', 'SnakeGame', 'Snake (classic game)'),
+  new Example('Interaction', 'SimpleDraw', 'Drawing to the mouse'),
+  new Example('Interaction', 'PaintApp', 'Painting application'),
+  new Example('Interaction', 'MultipleTurtles', 'Multiple turtles and varying ANGLES'),
+  // examples 6 - Files
+  new Example('Files', 'RandomSentences', 'Random sentences (using files)'),
+  new Example('Files', 'FileCommands', 'File commands'),
+  new Example('Files', 'DirectoryCommands', 'Directory commands'),
+  new Example('Files', 'FileSearching', 'File searching'),
+  // examples 7 - Models
+  new Example('Models', 'AimCannon', 'Firing a cannon (manual)'),
+  new Example('Models', 'AutoCannon', 'Firing a cannon (automatic)'),
+  new Example('Models', 'Launch', 'Launching a rocket into orbit'),
+  new Example('Models', 'Disease', 'Spread of disease'),
+  new Example('Models', 'GameOfLife', 'Conway’s Game of Life'),
+  new Example('Models', 'LifeArrays', 'Game of Life, using arrays'),
+  new Example('Models', 'Automata', 'One-dimensional cellular automata'),
+  new Example('Models', 'Diffusion', 'A model of diffusion'),
+  new Example('Models', 'BrownianMotion', 'Brownian motion'),
+  new Example('Models', 'Dendrites', 'Dendritic crystal growth'),
+  new Example('Models', 'Cheetahs', 'Cheetahs and gazelles'),
+  new Example('Models', 'SexRatio', 'The sex ratio'),
+  new Example('Models', 'Flocking', 'Flocking behaviour'),
+  new Example('Models', 'Roads', 'Town road simulation'),
+  new Example('Models', 'Schelling', 'Schelling’s segregation model'),
+  new Example('Models', 'IteratedPD', 'Iterated Prisoner’s Dilemma'),
+  new Example('Models', 'Interference', 'Wave interference tutor'),
+  new Example('Models', 'TwoSlits', 'Interference from two slits'),
+  new Example('Models', 'WaveSuperposer', 'Hugh Wallis’s wave superposer'),
+  // examples 8 - Fractals
+  new Example('Fractals', 'RecursionFactory', 'Recursion factory'),
+  new Example('Fractals', 'RecursiveTree', 'Recursive tree'),
+  new Example('Fractals', 'KochSnowflake', 'Koch snowflake'),
+  new Example('Fractals', 'SquareKoch', 'Square Koch fractal curves'),
+  new Example('Fractals', 'Sierpinski', 'Sierpinski triangle (by deletion)'),
+  new Example('Fractals', 'SierpinskiDots', 'Sierpinski triangle (by random dots)'),
+  new Example('Fractals', 'IFSBackground', 'Iterated function systems (IFS) background'),
+  new Example('Fractals', 'IFSColour', 'IFS mappings on coloured background'),
+  new Example('Fractals', 'IFSDemonstrator', 'IFS demonstrator program'),
+  new Example('Fractals', 'Logistic', 'Logistic equation'),
+  new Example('Fractals', 'LogisticSpider', 'Logistic spider'),
+  new Example('Fractals', 'MandelbrotDemo', 'Mandelbrot multi-colour'),
+  new Example('Fractals', 'MandelbrotSpectrumDemo', 'Mandelbrot spectral colours'),
+  new Example('Fractals', 'Quine', 'Quine (self-replicating) program'),
+  // examples 9 - Logic&CS
+  new Example('Logic&CS', 'Hanoi', 'Tower of Hanoi by recursion'),
+  new Example('Logic&CS', 'IterateRoot', 'Square roots by iteration'),
+  new Example('Logic&CS', 'Fibonaccis', 'Fibonaccis (using ARRAY and TIME)'),
+  new Example('Logic&CS', 'Sorting', 'Comparison of sorting methods'),
+  new Example('Logic&CS', 'SortingStrings', 'Comparison of sorting methods (strings)'),
+  new Example('Logic&CS', 'NoughtsAndCrosses', 'Noughts and crosses'),
+  new Example('Logic&CS', 'NimLearn', 'Nim learning program'),
+  new Example('Logic&CS', 'MultiNim', 'Nim with multiple piles'),
+  new Example('Logic&CS', 'KnightsTour', 'Knight’s Tour program'),
+  new Example('Logic&CS', 'TuringMachines', 'Turing machine simulator'),
+  new Example('Logic&CS', 'Syllogisms', 'Syllogism testing program')
 ]
 
-export const names = {
-  // examples 1
-  DrawPause: 'Simple drawing with pauses',
-  SmileyFace: 'Smiley face (using PENUP and ELLBLOT)',
-  ThePlough: 'The plough (using SETXY and POLYLINE)',
-  OlympicRings: 'Olympic rings (using a variable)',
-  ForLoop: 'FOR (counting) loop',
-  TriangleSpin: 'Spinning triangle pattern',
-  Circles: 'Circling circles',
-  NestedLoops: 'Nested FOR loops',
-  RandomLines: 'Random lines pattern',
-  RandomEllipses: 'Random ellipses pattern',
-  ColourSpiral: 'Spiral of colours (simple PCODE)',
-  // examples 2
-  SimpleProc: 'Simple procedure (using REPEAT)',
-  ParameterProc: 'Procedure with parameter',
-  ResizableFace: 'Resizable face (nested procedures)',
-  Polygons: 'Polygons (two parameters)',
-  Stars: 'Stars (using ANGLES and FORGET)',
-  PolygonRings: 'Polygon rings (three parameters)',
-  Triangle1: 'Simple triangle',
-  Triangle2: 'Triangle procedure',
-  Triangle3: 'Triangle procedure with limit',
-  Triangles: 'Recursive triangles',
-  Factorials: 'Recursive factorials',
-  Fibonaccis: 'Fibonaccis (using ARRAY and TIME)',
-  // examples 3
-  YouAreHere: 'Text and arrow (using PRINT)',
-  CycleColours: 'Cycling colours (using MOD)',
-  Clock: 'Analogue clock (using REPEAT)',
-  DigitalClock: 'Digital clock (using IF and WHILE)',
-  Flashlights: 'Flashlights (using Booleans)',
-  RefParams: 'Reference parameters',
-  Balls3D: '3D colour effects',
-  StringFunctions: 'Standard string functions',
-  UserStringFunctions: 'User-defined string functions',
-  MathFunctions: 'Mathematical functions',
-  TrigGraphs: 'Trigonometric graphs',
-  RandomSentences: 'Random sentences (using files)',
-  FileCommands: 'File commands',
-  DirectoryCommands: 'Directory commands',
-  FileSearching: 'File searching',
-  // examples 4
-  MovingBall: 'Moving ball (using variables)',
-  BouncingBall: 'Bouncing ball (using variables)',
-  TurtleMove: 'Moving ball (using Turtle)',
-  TurtleBounce: 'Bouncing ball (using Turtle)',
-  BouncingFace: 'Bouncing face',
-  MultiBounce: 'Multiple bouncing balls',
-  BouncingTriangle: 'Bouncing triangle',
-  BouncingShapes: 'Multiple bouncing shapes',
-  GravitySteps: 'Movement under gravity',
-  SolarSystem: 'Solar system',
-  // examples 5
-  AskInput: 'Asking for typed input',
-  QuickClick: 'Mouse reaction game',
-  TypingTest: 'Typing test (checking characters)',
-  TypingTestKeys: 'Typing test (checking keys)',
-  IterationGame: 'Iteration game (Collatz sequence)',
-  SpongeThrow: 'Throwing sponges at a moving face',
-  Arcade: 'Arcade shooting game',
-  SnakeGame: 'Snake (classic game)',
-  NoughtsAndCrosses: 'Noughts and crosses',
-  SimpleDraw: 'Drawing to the mouse',
-  PaintApp: 'Painting application',
-  MultipleTurtles: 'Multiple turtles and varying ANGLES',
-  // examples 6
-  AimCannon: 'Firing a cannon (manual)',
-  AutoCannon: 'Firing a cannon (automatic)',
-  Launch: 'Launching a rocket into orbit',
-  Disease: 'Spread of disease',
-  GameOfLife: 'Conway’s Game of Life',
-  LifeArrays: 'Game of Life, using arrays',
-  Automata: 'One-dimensional cellular automata',
-  BrownianMotion: 'Brownian motion',
-  Dendrites: 'Dendritic crystal growth',
-  Cheetahs: 'Cheetahs and gazelles',
-  SexRatio: 'The sex ratio',
-  Flocking: 'Flocking behaviour',
-  Roads: 'Town road simulation',
-  Schelling: 'Schelling’s segregation model',
-  IteratedPD: 'Iterated Prisoner’s Dilemma',
-  Interference: 'Wave interference tutor',
-  TwoSlits: 'Interference from two slits',
-  WaveSuperposer: 'Hugh Wallis’s wave superposer',
-  // examples 7
-  RecursionFactory: 'Recursion factory',
-  RecursiveTree: 'Recursive tree',
-  KochSnowflake: 'Koch snowflake',
-  SquareKoch: 'Square Koch fractal curves',
-  Sierpinski: 'Sierpinski triangle (by deletion)',
-  SierpinskiDots: 'Sierpinski triangle (by random dots)',
-  IFSBackground: 'Iterated function systems (IFS) background',
-  IFSColour: 'IFS mappings on coloured background',
-  IFSDemonstrator: 'IFS demonstrator program',
-  Logistic: 'Logistic equation',
-  LogisticSpider: 'Logistic spider',
-  MandelbrotDemo: 'Mandelbrot multi-colour',
-  MandelbrotSpectrumDemo: 'Mandelbrot spectral colours',
-  Quine: 'Quine (self-replicating) program',
-  // examples 8
-  Syllogisms: 'Syllogism testing program',
-  TuringMachines: 'Turing machine simulator',
-  Sorting: 'Comparison of sorting methods',
-  SortingStrings: 'Comparison of sorting methods (strings)',
-  NimLearn: 'Nim learning program',
-  MultiNim: 'Nim with multiple piles',
-  KnightsTour: 'Knight’s Tour program',
-  // other CSAC examples not in the system menu
-  LifeStart: 'Initialising Conway’s Game of Life',
-  Diffusion: 'A model of diffusion',
-  Mandelbrot: 'Mandelbrot set',
-  MandelbrotMini: 'Mandelbrot mini',
-  MandelbrotSpectrum: 'Mandelbrot spectrum',
-  MandelbrotMiniSpectrum: 'Mandelbrot mini spectrum',
-  SierpinskiColour: 'Sierpinski colour',
-  SierpinskiIFS: 'Sierpinski IFS',
-  BarnsleyColour: 'Barnsley colour',
-  BarnsleyIFS: 'Barnsley IFS',
-  DragonColour: 'Dragon colour',
-  DragonIFS: 'Dragon IFS',
-  TreeIFS: 'Tree IFS'
-}
+export const groups: Group[] = [
+  new Group('CSAC', 'other CSAC programs'),
+  new Group('Drawing', 'drawing and counting loops'),
+  new Group('Procedures', 'procedures and simple recursion'),
+  new Group('Further', 'further commands and structures'),
+  new Group('Movement', 'smooth movement and bouncing'),
+  new Group('Files', 'file and directory handling'),
+  new Group('Interaction', 'user input, interaction and games'),
+  new Group('Models', 'interdisciplinary models (CSAC project)'),
+  new Group('Fractals', 'self-similarity and chaos'),
+  new Group('Logic&CS', 'logic and computer science')
+]

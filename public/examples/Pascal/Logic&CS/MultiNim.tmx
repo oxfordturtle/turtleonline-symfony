@@ -1,0 +1,244 @@
+{
+  "format":1,
+  "language":"Pascal",
+  "version":13,
+  "name":"Nim with multiple piles",
+  "author":"Peter Millican",
+  "date":"23/07/2020",
+  "time":"12:00:12",
+  "code":"PROGRAM MultiNim;\nCONST piles = 5;\n      maxheight = 8;\n      margin = 20;\nVAR pile: array[1..piles] of integer;\n    xgap, ygap, left, bottom, radius: integer;\n    totalcoins: integer;\n    xorscore: integer;\n    showmaths: boolean;\n    thiscolour, thispile, thiscoin: integer;\n    autopile, autocoin: integer;\n\n  Procedure setup;\n  Begin\n    xgap := (1000 - 2 * margin) div piles;\n    ygap := (800 - margin) div maxheight;\n    if ygap * maxheight > 800 then\n      ygap := 800 div maxheight;\n    radius := (ygap - margin) div 2;\n    left := margin + radius - xgap;\n    bottom := 800 - radius + ygap;\n    showmaths := false\n  End;\n\n  Procedure fixpiles;\n  Var p: integer;\n  Begin\n    for p := 1 to piles do\n      pile[p] := random(maxheight) + 1\n  End;\n\n  Procedure domaths;\n  Var p: integer;\n  Begin\n    totalcoins := 0;\n    xorscore := 0;\n    for p := 1 to piles do\n      begin\n        totalcoins := totalcoins + pile[p];\n        xorscore := xorscore xor pile[p]\n      end\n  End;\n\n  Procedure drawpiles;\n  Var p, c, autocount: integer;\n  Begin\n    blank(white);\n    autocount := random(totalcoins) + 1;\n    for p := 1 to piles do\n      begin\n        c := pile[p];\n        while c > 0 do\n          begin\n            dec(autocount);\n            if autocount = 0 then\n              begin\n                autopile := p;\n                autocoin := c\n              end;\n            setxy(left + xgap * p, bottom - ygap * c);\n            colour(rgb(p));\n            blot(radius);\n            if xorscore xor pile[p] xor (c - 1) = 0 then\n              begin\n                autopile := p;\n                autocoin := c;\n                autocount := 0\n              end;\n            if showmaths then\n              begin\n                movexy(radius + margin, -radius + 15);\n                colour(black);\n                print(str(xorscore xor pile[p] xor (c - 1)), 4, 20)\n              end;\n            dec(c)\n          end\n      end;\n    colour(black);\n    setxy(margin, 900);\n    print('Total Coins:  ' + str(totalcoins), 4, 30);\n    if showmaths then\n      begin\n        colour(black);\n        setxy(450, 900);\n        print('XOR score:  ' + str(xorscore), 4, 30);\n        setxy(850, 890);\n        colour(maroon);\n        box(140, 100, red, true);\n        print(' HIDE', 4, 25);\n        setxy(850, 940);\n        print(' MATHS', 4, 25)\n      end\n    else\n      begin\n        colour(maroon);\n        setxy(850, 890);\n        box(140, 100, red, true);\n        print(' SHOW', 4, 25);\n        setxy(850, 940);\n        print(' MATHS', 4, 25)\n      end\n  End;\n\n  Procedure blackout(p, c: integer);\n  Begin\n    setxy(left + xgap * p, bottom - ygap * c);\n    colour(black);\n    blot(radius)\n  End;\n\nBEGIN\n  setup;\n  repeat\n    fixpiles;\n    repeat\n      domaths;\n      drawpiles;\n      repeat\n        cursor(2);\n        repeat\n          repeat\n          until ?lmouse > 0;\n          pause(200);\n          thiscolour := pixcol(?clickx, ?clicky)\n        until (thiscolour <> rgb(white)) and (thiscolour <> rgb(black));\n        cursor(11);\n        if ?clicky >= 800 then\n          begin\n            thiscoin := maxheight + 1;\n            showmaths := not(showmaths);\n            domaths;\n            drawpiles\n          end\n        else\n          begin\n            thispile := (?clickx - margin + radius) div xgap + 1;\n            thiscoin := (bottom - radius - ?clicky) div ygap + 1\n          end\n      until (?clicky < 800);\n      pile[thispile] := thiscoin - 1;\n      domaths;\n      if totalcoins = 0 then\n        begin\n          blank(white);\n          setxy(330, 850);\n          colour(blue);\n          print('You Win!', 4, 60);\n          pause(5000)\n        end\n      else\n        begin\n          drawpiles;\n          pause(1000);\n          blackout(autopile, autocoin);\n          pile[autopile] := autocoin - 1;\n          domaths;\n          if (xorscore = 0) and not(showmaths) then\n            begin\n              colour(pink);\n              setxy(400, 900);\n              print('I''m going to win!', 4, 30)\n            end;\n          pause(2500);\n          if totalcoins = 0 then\n            begin\n              blank(white);\n              setxy(330, 850);\n              colour(red);\n              print('I Win!', 4, 60);\n              pause(5000)\n            end\n        end\n    until totalcoins = 0\n  until 0 = 1\nEND.",
+  "usage":[
+    {
+      "category": "Turtle: relative movement",
+      "expressions":[
+        {"name":"movexy", "level":2, "count":1, "lines":"71"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Turtle: absolute movement",
+      "expressions":[
+        {"name":"setxy", "level":1, "count":11, "lines":"60 79 84 86 90 96 99 106 145 160 167"}
+      ],
+      "total":11
+    },
+    {
+      "category": "Turtle: drawing shapes",
+      "expressions":[
+        {"name":"blot", "level":1, "count":2, "lines":"62 108"},
+        {"name":"box", "level":2, "count":2, "lines":"88 97"}
+      ],
+      "total":4
+    },
+    {
+      "category": "Other Turtle commands",
+      "expressions":[
+        {"name":"colour", "level":1, "count":10, "lines":"61 72 78 83 87 95 107 146 159 168"},
+        {"name":"rgb", "level":3, "count":3, "lines":"61 125 125"}
+      ],
+      "total":13
+    },
+    {
+      "category": "Canvas operations",
+      "expressions":[
+        {"name":"blank", "level":1, "count":3, "lines":"47 144 166"},
+        {"name":"pixcol", "level":3, "count":1, "lines":"124"}
+      ],
+      "total":4
+    },
+    {
+      "category": "General arithmetic functions",
+      "expressions":[
+        {"name":"dec", "level":1, "count":2, "lines":"54 75"},
+        {"name":"random", "level":2, "count":2, "lines":"29 48"}
+      ],
+      "total":4
+    },
+    {
+      "category": "String operations",
+      "expressions":[
+        {"name":"print", "level":1, "count":10, "lines":"73 80 85 89 91 98 100 147 161 169"}
+      ],
+      "total":10
+    },
+    {
+      "category": "Type conversion routines",
+      "expressions":[
+        {"name":"str", "level":1, "count":3, "lines":"73 80 85"}
+      ],
+      "total":3
+    },
+    {
+      "category": "Input and timing routines",
+      "expressions":[
+        {"name":"pause", "level":1, "count":5, "lines":"123 148 153 163 170"},
+        {"name":"cursor", "level":2, "count":2, "lines":"119 126"}
+      ],
+      "total":7
+    },
+    {
+      "category": "Command structures",
+      "expressions":[
+        {"name":"if", "level":1, "count":9, "lines":"17 55 63 69 81 127 142 157 164"},
+        {"name":"else", "level":1, "count":3, "lines":"93 134 150"},
+        {"name":"for", "level":1, "count":3, "lines":"28 37 49"},
+        {"name":"repeat", "level":2, "count":5, "lines":"113 115 118 120 121"},
+        {"name":"while", "level":2, "count":1, "lines":"52"},
+        {"name":"procedure", "level":2, "count":5, "lines":"13 25 32 44 104"}
+      ],
+      "total":26
+    },
+    {
+      "category": "Subroutine calls",
+      "expressions":[
+        {"name":"setup", "level":0, "count":1, "lines":"112"},
+        {"name":"fixpiles", "level":0, "count":1, "lines":"114"},
+        {"name":"domaths", "level":0, "count":4, "lines":"116 131 141 156"},
+        {"name":"drawpiles", "level":0, "count":3, "lines":"117 132 152"},
+        {"name":"blackout", "level":0, "count":1, "lines":"154"}
+      ],
+      "total":10
+    }
+  ],
+  "pcode":[
+    [112,17,1,1,112,0,123,112,6,2,123,4,112,26,124,112,43,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [116,25,119,24],
+    [112,5,119,25],
+    [128,93],
+    [133,1],
+    [112,1000,112,2,112,20,28,27,112,5,30,119,31],
+    [112,800,112,20,27,112,8,30,119,32],
+    [113,32,112,8,28,112,800,35,129,11],
+    [112,800,112,8,30,119,32],
+    [113,32,112,20,27,112,2,30,119,35],
+    [112,20,113,35,26,113,31,27,119,33],
+    [112,800,113,35,27,113,32,26,119,34],
+    [112,0,119,38],
+    [134,132],
+    [133,2],
+    [139,13,1],
+    [117,13,1,112,1,124],
+    [112,1],
+    [120,13,1,112,5],
+    [114,13,1,37,129,24],
+    [113,24,114,13,1,112,1,27,2,127,26,4,112,8,7,112,1,26,2,123],
+    [114,13,1,4,128,20],
+    [140,13,134,132],
+    [133,3],
+    [139,14,1],
+    [117,14,1,112,1,124],
+    [112,0,119,36],
+    [112,0,119,37],
+    [112,1],
+    [120,14,1,112,5],
+    [114,14,1,37,129,36],
+    [113,36,113,24,114,14,1,112,1,27,2,127,26,4,122,26,119,36],
+    [113,37,113,24,114,14,1,112,1,27,2,127,26,4,122,19,119,37],
+    [114,14,1,4,128,31],
+    [140,14,134,132],
+    [133,4],
+    [139,15,3],
+    [117,15,1,112,3,124],
+    [112,16777215,96],
+    [113,36,7,112,1,26,120,15,3],
+    [112,1],
+    [120,15,1,112,5],
+    [114,15,1,37,129,65],
+    [113,24,114,15,1,112,1,27,2,127,26,4,122,120,15,2],
+    [114,15,2,112,0,35,129,64],
+    [117,15,3,1,122,5,2,123],
+    [114,15,3,112,0,32,129,51],
+    [114,15,1,119,42],
+    [114,15,2,119,43],
+    [113,33,113,31,114,15,1,28,26,113,34,113,32,114,15,2,28,27,88],
+    [114,15,1,101,87],
+    [113,35,108],
+    [113,37,113,24,114,15,1,112,1,27,2,127,26,4,122,19,114,15,2,112,1,27,19,112,0,32,129,58],
+    [114,15,1,119,42],
+    [114,15,2,119,43],
+    [112,0,120,15,3],
+    [113,38,129,62],
+    [113,35,112,20,26,113,35,23,112,15,26,89],
+    [112,0,87],
+    [113,37,113,24,114,15,1,112,1,27,2,127,26,4,122,19,114,15,2,112,1,27,19,11,112,4,112,20,168,142],
+    [117,15,2,1,122,5,2,123],
+    [128,46],
+    [114,15,1,4,128,43],
+    [112,0,87],
+    [112,20,112,900,88],
+    [118,14,84,111,116,97,108,32,67,111,105,110,115,58,32,32,113,36,11,64,112,4,112,30,168,142],
+    [113,38,129,79],
+    [112,0,87],
+    [112,450,112,900,88],
+    [118,12,88,79,82,32,115,99,111,114,101,58,32,32,113,37,11,64,112,4,112,30,168,142],
+    [112,850,112,890,88],
+    [112,8388608,87],
+    [112,140,112,100,112,16711680,112,-1,111],
+    [118,5,32,72,73,68,69,112,4,112,25,168,142],
+    [112,850,112,940,88],
+    [118,6,32,77,65,84,72,83,112,4,112,25,168,142],
+    [128,85],
+    [112,8388608,87],
+    [112,850,112,890,88],
+    [112,140,112,100,112,16711680,112,-1,111],
+    [118,5,32,83,72,79,87,112,4,112,25,168,142],
+    [112,850,112,940,88],
+    [118,6,32,77,65,84,72,83,112,4,112,25,168,142],
+    [140,15,134,132],
+    [133,5],
+    [139,16,2],
+    [117,16,1,112,2,124,120,16,2,120,16,1],
+    [113,33,113,31,114,16,1,28,26,113,34,113,32,114,16,2,28,27,88],
+    [112,0,87],
+    [113,35,108],
+    [140,16,134,132],
+    [131,6],
+    [131,16],
+    [131,25],
+    [131,37],
+    [112,2,171],
+    [112,-1,160,112,0,35,129,98],
+    [112,200,174],
+    [112,-5,160,112,-6,160,99,119,39],
+    [113,39,112,16777215,101,33,113,39,112,0,101,33,17,129,98],
+    [112,11,171],
+    [112,-6,160,112,800,37,129,109],
+    [112,8,112,1,26,119,41],
+    [113,38,16,119,38],
+    [131,25],
+    [131,37],
+    [128,111],
+    [112,-5,160,112,20,27,113,35,26,113,31,30,112,1,26,119,40],
+    [113,34,113,35,27,112,-6,160,27,113,32,30,112,1,26,119,41],
+    [112,-6,160,112,800,34,129,97],
+    [113,24,113,40,112,1,27,2,127,26,4,113,41,112,1,27,2,123],
+    [131,25],
+    [113,36,112,0,32,129,121],
+    [112,16777215,96],
+    [112,330,112,850,88],
+    [112,255,87],
+    [118,8,89,111,117,32,87,105,110,33,112,4,112,60,168,142],
+    [112,5000,174],
+    [128,137],
+    [131,37],
+    [112,1000,174],
+    [113,42,113,43,131,86],
+    [113,24,113,42,112,1,27,2,127,26,4,113,43,112,1,27,2,123],
+    [131,25],
+    [113,37,112,0,32,113,38,16,17,129,130],
+    [112,15602313,87],
+    [112,400,112,900,88],
+    [118,17,73,39,109,32,103,111,105,110,103,32,116,111,32,119,105,110,33,112,4,112,30,168,142],
+    [112,2500,174],
+    [113,36,112,0,32,129,137],
+    [112,16777215,96],
+    [112,330,112,850,88],
+    [112,16711680,87],
+    [118,6,73,32,87,105,110,33,112,4,112,60,168,142],
+    [112,5000,174],
+    [113,36,112,0,32,129,95],
+    [112,0,112,1,32,129,94],
+    [130]
+  ]
+}

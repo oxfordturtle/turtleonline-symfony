@@ -1,0 +1,85 @@
+{
+  "format":1,
+  "language":"Pascal",
+  "version":13,
+  "name":"Flashlights (using Booleans)",
+  "author":"Peter Millican",
+  "date":"23/07/2020",
+  "time":"11:59:01",
+  "code":"PROGRAM Flashlights;\n\n  Procedure drawit(doblot: boolean);\n  Begin\n    if doblot then\n      begin\n        randcol(10);\n        blot(25)\n      end\n    else\n      begin\n        colour(black);\n        blot(30);\n        randcol(10);\n        circle(25)\n      end\n  End;\n\nBEGIN\n  blot(1000);\n  thickness(8);\n  repeat\n    setx((random(8) + 1) * 111);\n    sety((random(8) + 1) * 111);\n    drawit(random(2) = 1)\n  until false\nEND.",
+  "usage":[
+    {
+      "category": "Turtle: absolute movement",
+      "expressions":[
+        {"name":"setx", "level":1, "count":1, "lines":"23"},
+        {"name":"sety", "level":1, "count":1, "lines":"24"}
+      ],
+      "total":2
+    },
+    {
+      "category": "Turtle: drawing shapes",
+      "expressions":[
+        {"name":"blot", "level":1, "count":3, "lines":"8 13 20"},
+        {"name":"circle", "level":1, "count":1, "lines":"15"}
+      ],
+      "total":4
+    },
+    {
+      "category": "Other Turtle commands",
+      "expressions":[
+        {"name":"colour", "level":1, "count":1, "lines":"12"},
+        {"name":"randcol", "level":1, "count":2, "lines":"7 14"},
+        {"name":"thickness", "level":1, "count":1, "lines":"21"}
+      ],
+      "total":4
+    },
+    {
+      "category": "General arithmetic functions",
+      "expressions":[
+        {"name":"random", "level":2, "count":3, "lines":"23 24 25"}
+      ],
+      "total":3
+    },
+    {
+      "category": "Command structures",
+      "expressions":[
+        {"name":"if", "level":1, "count":1, "lines":"5"},
+        {"name":"else", "level":1, "count":1, "lines":"10"},
+        {"name":"repeat", "level":2, "count":1, "lines":"22"},
+        {"name":"procedure", "level":2, "count":1, "lines":"3"}
+      ],
+      "total":4
+    },
+    {
+      "category": "Subroutine calls",
+      "expressions":[
+        {"name":"drawit", "level":0, "count":1, "lines":"25"}
+      ],
+      "total":1
+    }
+  ],
+  "pcode":[
+    [112,13,1,1,112,0,123,112,6,2,123,4,112,6,124,112,19,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [128,16],
+    [133,1],
+    [139,12,1],
+    [117,12,1,112,1,124,120,12,1],
+    [114,12,1,129,11],
+    [112,10,7,4,101,87],
+    [112,25,108],
+    [128,15],
+    [112,0,87],
+    [112,30,108],
+    [112,10,7,4,101,87],
+    [112,25,107],
+    [140,12,134,132],
+    [112,1000,108],
+    [112,8,85],
+    [112,8,7,112,1,26,112,111,28,81],
+    [112,8,7,112,1,26,112,111,28,82],
+    [112,2,7,112,1,32,131,4],
+    [112,0,129,18],
+    [130]
+  ]
+}

@@ -19,35 +19,40 @@
     <script defer src="{{ asset('index.js') }}"></script>
     <script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');ga('create', 'UA-54853004-1', 'auto');ga('send', 'pageview');</script>
   </head>
-  <body class="{{ section }}" data-action="close-menu" data-arg="site,documentation,user">
+  <body class="{{ section }}">
     {% block body %}
       <nav class="site-nav">
         <div class="site-nav-left">{% include '_includes/main-menu.html.twig' %}</div>
         <div class="site-nav-right">{% include '_includes/security-menu.html.twig' %}</div>
       </nav>
-      <div class="container">
-        <header class="header">
-          {% block header %}{% endblock %}
-        </header>
-        {% for message in app.flashes('success') %}
-          <div class="notice success">{{ message }}</div>
-        {% endfor %}
-        {% for message in app.flashes('error') %}
-          <div class="notice error">{{ message }}</div>
-        {% endfor %}
-        <main class="main">
-          {% block main %}{% endblock %}
-        </main>
-        <footer class="footer">
-          <div class="logos-list">
-            <a href="http://www.cs.ox.ac.uk/" target="blank" title="Department of Computer Science, University of Oxford"><img src="{{ asset('images/computer-science-logo.png') }}" alt="Department of Computer Science Logo, University of Oxford"></a>
-            <a href="http://www.philosophy.ox.ac.uk/" target="blank" title="Philosophy Faculty, University of Oxford"><img src="{{ asset('images/philosophy-logo.jpg') }}" alt="Philoophy Faculty Logo, University of Oxford"></a>
-            <a href="https://www.gov.uk/government/organisations/department-for-education" target="blank" title="The Department for Education"><img src="{{ asset('images/government-logo.png') }}" alt="The Department for Education Crest"></a>
-            <a href="http://www.hertford.ox.ac.uk/" target="blank" title="Hertford College"><img src="{{ asset('images/hertford-logo.png') }}" alt="Hertford College Crest"></a>
-          </div>
-          <p class="acknowledgements">The Oxford Turtle Project is funded by the <a href="https://www.gov.uk/government/organisations/department-for-education" target="blank">UK Department for Education</a>, with matched funding from various sources within the University of Oxford (the <a href="http://www.cs.ox.ac.uk/" target="blank">Department of Computer Science</a>, the <a href="http://www.admin.ox.ac.uk/councilsec/trusts/applying/vanhoutenfund/" target="blank">Van Houten Fund</a>, and a private donor at <a href="http://www.hertford.ox.ac.uk/" target="blank">Hertford College</a>). It is housed in the University of Oxford&rsquo;s <a href="http://www.philosophy.ox.ac.uk/" target="blank">Faculty of Philosophy</a>.</p>
-        </footer>
+      <div class="wrapper" data-action="closeMenu" data-arg="site,documentation,user">
+        <div class="container">
+          <header class="header">
+            {% block header %}{% endblock %}
+          </header>
+          {% for message in app.flashes('success') %}
+            <div class="notice success">{{ message }}</div>
+          {% endfor %}
+          {% for message in app.flashes('error') %}
+            <div class="notice error">{{ message }}</div>
+          {% endfor %}
+          <main class="main">
+            {% block main %}{% endblock %}
+          </main>
+          <footer class="footer">
+            <div class="logos-list">
+              <a href="http://www.cs.ox.ac.uk/" target="blank" title="Department of Computer Science, University of Oxford"><img src="{{ asset('images/computer-science-logo.png') }}" alt="Department of Computer Science Logo, University of Oxford"></a>
+              <a href="http://www.philosophy.ox.ac.uk/" target="blank" title="Philosophy Faculty, University of Oxford"><img src="{{ asset('images/philosophy-logo.jpg') }}" alt="Philoophy Faculty Logo, University of Oxford"></a>
+              <a href="https://www.gov.uk/government/organisations/department-for-education" target="blank" title="The Department for Education"><img src="{{ asset('images/government-logo.png') }}" alt="The Department for Education Crest"></a>
+              <a href="http://www.hertford.ox.ac.uk/" target="blank" title="Hertford College"><img src="{{ asset('images/hertford-logo.png') }}" alt="Hertford College Crest"></a>
+            </div>
+            <p class="acknowledgements">The Oxford Turtle Project is funded by the <a href="https://www.gov.uk/government/organisations/department-for-education" target="blank">UK Department for Education</a>, with matched funding from various sources within the University of Oxford (the <a href="http://www.cs.ox.ac.uk/" target="blank">Department of Computer Science</a>, the <a href="http://www.admin.ox.ac.uk/councilsec/trusts/applying/vanhoutenfund/" target="blank">Van Houten Fund</a>, and a private donor at <a href="http://www.hertford.ox.ac.uk/" target="blank">Hertford College</a>). It is housed in the University of Oxford&rsquo;s <a href="http://www.philosophy.ox.ac.uk/" target="blank">Faculty of Philosophy</a>.</p>
+          </footer>
+        </div>
       </div>
+      {% for message in app.flashes('system') %}
+        <div class="hidden" data-message="{{ message }}"></div>
+      {% endfor %}
     {% endblock %}
   </body>
 </html>

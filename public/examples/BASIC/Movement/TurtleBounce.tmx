@@ -1,0 +1,85 @@
+{
+  "format":1,
+  "language":"BASIC",
+  "version":13,
+  "name":"Bouncing ball (using Turtle)",
+  "author":"Peter Millican",
+  "date":"23/07/2020",
+  "time":"12:00:26",
+  "code":"REM TurtleBounce\n\nSETXY(100, 700)\nxvel% = 8\nyvel% = -4\nWHILE 0 < 1\n  NOUPDATE\n  COLOUR(WHITE)\n  BLOT(51)\n  MOVEXY(xvel%, yvel%)\n  COLOUR(RED)\n  BLOT(50)\n  UPDATE\n  PAUSE(5)\n  IF (turtx% < 50) OR (turtx% > 949) THEN\n    xvel% = -xvel%\n  ENDIF\n  IF (turty% < 50) OR (turty% > 949) THEN\n    yvel% = -yvel%\n  ENDIF\nENDWHILE\nEND",
+  "usage":[
+    {
+      "category": "Turtle: relative movement",
+      "expressions":[
+        {"name":"MOVEXY", "level":2, "count":1, "lines":"10"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Turtle: absolute movement",
+      "expressions":[
+        {"name":"SETXY", "level":1, "count":1, "lines":"3"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Turtle: drawing shapes",
+      "expressions":[
+        {"name":"BLOT", "level":1, "count":2, "lines":"9 12"}
+      ],
+      "total":2
+    },
+    {
+      "category": "Other Turtle commands",
+      "expressions":[
+        {"name":"COLOUR", "level":1, "count":2, "lines":"8 11"}
+      ],
+      "total":2
+    },
+    {
+      "category": "Canvas operations",
+      "expressions":[
+        {"name":"NOUPDATE", "level":1, "count":1, "lines":"7"},
+        {"name":"UPDATE", "level":1, "count":1, "lines":"13"}
+      ],
+      "total":2
+    },
+    {
+      "category": "Input and timing routines",
+      "expressions":[
+        {"name":"PAUSE", "level":1, "count":1, "lines":"14"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Command structures",
+      "expressions":[
+        {"name":"IF", "level":1, "count":2, "lines":"15 18"},
+        {"name":"WHILE", "level":2, "count":1, "lines":"6"}
+      ],
+      "total":3
+    }
+  ],
+  "pcode":[
+    [112,12,1,1,112,0,123,112,6,2,123,4,112,8,124,112,20,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [112,100,112,700,88],
+    [112,8,119,19],
+    [112,4,23,119,20],
+    [112,0,112,1,34,129,20],
+    [112,0,146],
+    [112,16777215,87],
+    [112,51,108],
+    [113,19,113,20,89],
+    [112,16711680,87],
+    [112,50,108],
+    [112,-1,146],
+    [112,5,174],
+    [113,13,112,50,34,113,13,112,949,35,18,129,17],
+    [113,19,23,119,19],
+    [113,14,112,50,34,113,14,112,949,35,18,129,19],
+    [113,20,23,119,20],
+    [128,6],
+    [130]
+  ]
+}

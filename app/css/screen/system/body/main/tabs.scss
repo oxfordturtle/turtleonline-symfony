@@ -1,0 +1,25 @@
+@import "tabs/canvas.scss";
+@import "tabs/comments.scss";
+@import "tabs/memory.scss";
+@import "tabs/output.scss";
+@import "tabs/pcode.scss";
+@import "tabs/settings.scss";
+@import "tabs/syntax.scss";
+@import "tabs/usage.scss";
+@import "tabs/variables.scss";
+
+.system-tabs {
+  overflow-y: auto;
+}
+
+.system-tab-pane {
+  display: none;
+
+  &.active {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: #fff;
+    overflow: auto;
+  }
+}

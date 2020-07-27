@@ -1,21 +1,23 @@
 /*
  * file class
  */
-import { Language, extensions, skeletons } from './languages'
+import { Language, extensions } from './languages'
 
 export class File {
   language: Language
   example: string|null
   name: string
   code: string
+  backup: string
   compiled: boolean
   edited: boolean
 
-  constructor (language: Language, skeleton: boolean = false) {
+  constructor (language: Language, example: string|null = null) {
     this.language = language
-    this.example = null
+    this.example = example
     this.name = ''
-    this.code = skeleton ? skeletons[language] : ''
+    this.code = ''
+    this.backup = ''
     this.compiled = false
     this.edited = false
   }

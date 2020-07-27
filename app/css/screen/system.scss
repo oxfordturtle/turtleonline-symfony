@@ -1,21 +1,5 @@
-@import "system/buttons.scss";
-@import "system/canvas.scss";
-@import "system/checkboxes.scss";
-@import "system/code.scss";
-@import "system/console.scss";
-@import "system/controls.scss";
-@import "system/file.scss";
-@import "system/filename.scss";
-@import "system/lexemes.scss";
-@import "system/main.scss";
-@import "system/memory.scss";
-@import "system/menu.scss";
-@import "system/output.scss";
-@import "system/pcode.scss";
-@import "system/settings.scss";
-@import "system/system.scss";
-@import "system/turtle.scss";
-@import "system/usage.scss";
+@import "system/header.scss";
+@import "system/body.scss";
 
 .run .container {
   .header, .footer {
@@ -41,10 +25,14 @@
     display: none;
   }
 
+  .wrapper {
+    padding: 0 !important;
+    height: 100% !important;
+  }
+
   .container {
     max-width: none !important;
     height: 100% !important;
-    margin: 0 !important;
     box-shadow: none !important;
 
     .main {
@@ -57,24 +45,6 @@
   min-height: $system-default-height;
   height: 100%;
   display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
   background: $darkgray-transparent;
-
-  &.ready {
-    grid-template-rows: auto minmax(0, 1fr);
-  }
-}
-
-.system-loading {
-  display: grid;
-  height: 100%;
-  grid-template-rows: 1fr auto 1fr;
-  grid-template-columns: 1fr auto 1fr;
-
-  p {
-    grid-row: 2;
-    grid-column: 2;
-    color: #fff;
-    margin: 0;
-    font-size: 1.25em;
-  }
 }

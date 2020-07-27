@@ -1,0 +1,27 @@
+.option {
+  flex: 1;
+  background: $lightgray;
+  font-size: .875em;
+  padding: .5em;
+
+  &:not(:last-child) {
+    border-bottom: 1px solid $gray;
+  }
+
+  label {
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: .5em;
+  }
+
+  input {
+    padding: 0 .25em;
+    margin-left: .25em;
+  }
+
+  p {
+    margin: 0;
+  }
+}

@@ -1,0 +1,19 @@
+@import "wrapper/header.scss";
+@import "wrapper/main.scss";
+@import "wrapper/footer.scss";
+
+.wrapper {
+  @media (min-width: $break2) {
+    padding: 3em 0;
+  }
+}
+
+.container {
+  background: #fff;
+  margin: 0 auto;
+
+  @media (min-width: $break2) {
+    max-width: $break2;
+    box-shadow: $box-shadow;
+  }
+}

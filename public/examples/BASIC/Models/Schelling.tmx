@@ -1,0 +1,123 @@
+{
+  "format":1,
+  "language":"BASIC",
+  "version":13,
+  "name":"Schelling's segregation model",
+  "author":"Peter Millican",
+  "date":"23/07/2020",
+  "time":"12:00:33",
+  "code":"REM Schelling\n\nCONST WIDTH% = 50\nCONST HEIGHT% = 50\nCONST EMPTY% = GREEN\nCANVAS(-1, -1, WIDTH% + 2, HEIGHT% + 2)\nRESOLUTION(WIDTH% + 2, HEIGHT% + 2)\nNOUPDATE\nBLANK(EMPTY%)\nFOR i% = 0 TO WIDTH% - 1\n  FOR j% = 0 TO WIDTH% - 1\n    test% = RND(25)\n    IF test% = 1 THEN\n      PIXSET(i%, j%, EMPTY%)\n    ELSE\n      IF (i% + j%) MOD 2 = 0 THEN PIXSET(i%, j%, RED) ELSE PIXSET(i%, j%, BLUE)\n    ENDIF\n  NEXT\nNEXT\nPAUSE(2000)\nWHILE ?KEY <> \\ESCAPE\n  NOUPDATE\n  REPEAT\n    tryi% = RND(WIDTH%) - 1\n    tryj% = RND(HEIGHT%) - 1\n    this% = PIXCOL(tryi%, tryj%)\n  UNTIL (this% <> EMPTY%) AND (NOT(FNhappy(tryi%, tryj%, this%)))\n  PIXSET(tryi%, tryj%, EMPTY%)\n  REPEAT\n    tryi% = RND(WIDTH%) - 1\n    tryj% = RND(HEIGHT%) - 1\n  UNTIL (PIXCOL(tryi%, tryj%) = EMPTY%) AND FNhappy(tryi%, tryj%, this%)\n  PIXSET(tryi%, tryj%, this%)\n  UPDATE\nENDWHILE\nEND\n\nDEF FNhappy(x%, y%, c%)\n  LOCAL like%, unlike%, neighbour%, i%, j%\n  like% = 0\n  unlike% = 0\n  FOR i% = -1 TO 1\n    FOR j% = -1 TO 1\n      IF (i% <> 0) OR (j% <> 0) THEN\n        neighbour% = PIXCOL(x% + i%, y% + j%)\n        IF neighbour% <> EMPTY% THEN\n          IF neighbour% = c% THEN INC(like%) ELSE INC(unlike%)\n        ENDIF\n      ENDIF\n    NEXT\n  NEXT\n= (like% >= unlike% - 1)",
+  "usage":[
+    {
+      "category": "Canvas operations",
+      "expressions":[
+        {"name":"BLANK", "level":1, "count":1, "lines":"9"},
+        {"name":"NOUPDATE", "level":1, "count":2, "lines":"8 22"},
+        {"name":"UPDATE", "level":1, "count":1, "lines":"34"},
+        {"name":"CANVAS", "level":2, "count":1, "lines":"6"},
+        {"name":"RESOLUTION", "level":2, "count":1, "lines":"7"},
+        {"name":"PIXCOL", "level":3, "count":3, "lines":"45 26 32"},
+        {"name":"PIXSET", "level":3, "count":5, "lines":"14 16 16 28 33"}
+      ],
+      "total":14
+    },
+    {
+      "category": "General arithmetic functions",
+      "expressions":[
+        {"name":"INC", "level":1, "count":2, "lines":"47 47"},
+        {"name":"RND", "level":2, "count":5, "lines":"12 24 25 30 31"}
+      ],
+      "total":7
+    },
+    {
+      "category": "Input and timing routines",
+      "expressions":[
+        {"name":"PAUSE", "level":1, "count":1, "lines":"20"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Command structures",
+      "expressions":[
+        {"name":"IF", "level":1, "count":5, "lines":"44 46 47 13 16"},
+        {"name":"ELSE", "level":1, "count":3, "lines":"47 15 16"},
+        {"name":"FOR", "level":1, "count":4, "lines":"42 43 10 11"},
+        {"name":"REPEAT", "level":2, "count":2, "lines":"23 29"},
+        {"name":"WHILE", "level":2, "count":1, "lines":"21"},
+        {"name":"DEF FN", "level":3, "count":1, "lines":"38"}
+      ],
+      "total":16
+    },
+    {
+      "category": "Subroutine calls",
+      "expressions":[
+        {"name":"FNhappy", "level":0, "count":2, "lines":"27 32"}
+      ],
+      "total":2
+    }
+  ],
+  "pcode":[
+    [112,14,1,1,112,0,123,112,6,2,123,4,112,12,124,112,26,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [128,26],
+    [133,1],
+    [139,12,9],
+    [117,12,1,112,9,124,120,12,4,120,12,3,120,12,2],
+    [112,0,120,12,5],
+    [112,0,120,12,6],
+    [112,1,23],
+    [120,12,8,112,1],
+    [114,12,8,37,129,24],
+    [112,1,23],
+    [120,12,9,112,1],
+    [114,12,9,37,129,23],
+    [114,12,8,112,0,33,114,12,9,112,0,33,18,129,22],
+    [114,12,2,114,12,8,26,114,12,3,114,12,9,26,99,120,12,7],
+    [114,12,7,112,2263842,33,129,22],
+    [114,12,7,114,12,4,32,129,21],
+    [117,12,5,1,122,4,2,123],
+    [128,22],
+    [117,12,6,1,122,4,2,123],
+    [114,12,9,4,128,13],
+    [114,12,8,4,128,10],
+    [114,12,5,114,12,6,112,1,27,37,120,12,1],
+    [113,12,119,13,140,12,134,132],
+    [112,1,23,112,1,23,112,50,112,2,26,112,50,112,2,26,144],
+    [112,50,112,2,26,112,50,112,2,26,145],
+    [112,0,146],
+    [112,2263842,96],
+    [112,0],
+    [119,21,112,50,112,1,27],
+    [113,21,37,129,46],
+    [112,0],
+    [119,22,112,50,112,1,27],
+    [113,22,37,129,45],
+    [112,25,7,4,119,23],
+    [113,23,112,1,32,129,40],
+    [113,21,113,22,112,2263842,100],
+    [128,44],
+    [113,21,113,22,26,112,2,31,112,0,32,129,43],
+    [113,21,113,22,112,16711680,100],
+    [128,44],
+    [113,21,113,22,112,255,100],
+    [113,22,4,128,34],
+    [113,21,4,128,31],
+    [112,2000,174],
+    [112,-9,160,112,27,33,129,62],
+    [112,0,146],
+    [112,50,7,4,112,1,27,119,24],
+    [112,50,7,4,112,1,27,119,25],
+    [113,24,113,25,99,119,26],
+    [113,26,112,2263842,33,113,24,113,25,113,26,131,4],
+    [114,13,1,16,17,129,49],
+    [113,24,113,25,112,2263842,100],
+    [112,50,7,4,112,1,27,119,24],
+    [112,50,7,4,112,1,27,119,25],
+    [113,24,113,25,99,112,2263842,32,113,24,113,25,113,26,131,4],
+    [114,13,1,17,129,55],
+    [113,24,113,25,113,26,100],
+    [112,-1,146],
+    [128,47],
+    [130]
+  ]
+}

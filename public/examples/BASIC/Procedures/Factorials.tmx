@@ -1,0 +1,73 @@
+{
+  "format":1,
+  "language":"BASIC",
+  "version":13,
+  "name":"Recursive factorials",
+  "author":"Peter Millican",
+  "date":"23/07/2020",
+  "time":"12:00:24",
+  "code":"REM Factorials\n\nOUTPUT(TRUE, CREAM, TRUE)\nFOR count% = 1 TO 10\n  WRITELN(STR$(count%) + \"! = \" + STR$(FNfact(count%)))\nNEXT\nEND\n\nDEF FNfact(n%)\n  IF n% = 0 THEN\n    result% = 1\n  ELSE\n    result% = n% * FNfact(n% - 1)\n  ENDIF\n= result%",
+  "usage":[
+    {
+      "category": "Other Turtle commands",
+      "expressions":[
+        {"name":"OUTPUT", "level":2, "count":1, "lines":"3"}
+      ],
+      "total":1
+    },
+    {
+      "category": "String operations",
+      "expressions":[
+        {"name":"WRITELN", "level":1, "count":1, "lines":"5"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Type conversion routines",
+      "expressions":[
+        {"name":"STR$", "level":1, "count":2, "lines":"5 5"}
+      ],
+      "total":2
+    },
+    {
+      "category": "Command structures",
+      "expressions":[
+        {"name":"IF", "level":1, "count":1, "lines":"10"},
+        {"name":"ELSE", "level":1, "count":1, "lines":"12"},
+        {"name":"FOR", "level":1, "count":1, "lines":"4"},
+        {"name":"DEF FN", "level":3, "count":1, "lines":"9"}
+      ],
+      "total":4
+    },
+    {
+      "category": "Subroutine calls",
+      "expressions":[
+        {"name":"FNfact", "level":0, "count":2, "lines":"13 5"}
+      ],
+      "total":2
+    }
+  ],
+  "pcode":[
+    [112,14,1,1,112,0,123,112,6,2,123,4,112,8,124,112,22,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [128,14],
+    [133,1],
+    [139,12,2],
+    [117,12,1,112,2,124,120,12,2],
+    [114,12,2,112,0,32,129,10],
+    [112,1,119,22],
+    [128,12],
+    [114,12,2,114,12,2,112,1,27,131,4],
+    [114,13,1,28,119,22],
+    [113,22,120,12,1],
+    [113,12,119,13,140,12,134,132],
+    [112,-1,112,16777147,112,-1,166],
+    [112,1],
+    [119,21,112,10],
+    [113,21,37,129,21],
+    [113,21,11,118,4,33,32,61,32,64,113,21,131,4],
+    [114,13,1,11,64,169,170,142],
+    [113,21,4,128,16],
+    [130]
+  ]
+}

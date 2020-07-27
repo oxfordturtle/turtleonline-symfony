@@ -1,0 +1,126 @@
+{
+  "format":1,
+  "language":"BASIC",
+  "version":13,
+  "name":"Digital clock (using IF and WHILE)",
+  "author":"Peter Millican",
+  "date":"23/07/2020",
+  "time":"12:00:24",
+  "code":"REM DigitalClock\n\nBLANK(LIGHTGREEN)\nSETXY(250, 390)\nCOLOUR(MAROON)\nTHICKNESS(10)\nBOX(500, 210, LIGHTBROWN, TRUE)\nCOLOUR(BLACK)\nHours% = 0\nMinutes% = 0\nWHILE Hours% < 12\n  PROCshowtime\n  PAUSE(600)\n  INC(Minutes%)\n  IF Minutes% = 60 THEN\n    INC(Hours%)\n    Minutes% = 0\n  ENDIF\nENDWHILE\nPROCshowtime\nEND\n\nDEF PROCshowtime\n  LOCAL hstring$, mstring$\n  SETXY(300, 430)\n  BOX(400, 130, WHITE, FALSE)\n  IF Hours% < 10 THEN\n    hstring$ = \"0\" + STR$(Hours%)\n  ELSE\n    hstring$ = STR$(Hours%)\n  ENDIF\n  IF Minutes% < 10 THEN\n    mstring$ = \"0\" + STR$(Minutes%)\n  ELSE\n    mstring$ = STR$(Minutes%)\n  ENDIF\n  PRINT(hstring$ + \":\" + mstring$, 21, 100)\nENDPROC",
+  "usage":[
+    {
+      "category": "Turtle: absolute movement",
+      "expressions":[
+        {"name":"SETXY", "level":1, "count":2, "lines":"25 4"}
+      ],
+      "total":2
+    },
+    {
+      "category": "Turtle: drawing shapes",
+      "expressions":[
+        {"name":"BOX", "level":2, "count":2, "lines":"26 7"}
+      ],
+      "total":2
+    },
+    {
+      "category": "Other Turtle commands",
+      "expressions":[
+        {"name":"COLOUR", "level":1, "count":2, "lines":"5 8"},
+        {"name":"THICKNESS", "level":1, "count":1, "lines":"6"}
+      ],
+      "total":3
+    },
+    {
+      "category": "Canvas operations",
+      "expressions":[
+        {"name":"BLANK", "level":1, "count":1, "lines":"3"}
+      ],
+      "total":1
+    },
+    {
+      "category": "General arithmetic functions",
+      "expressions":[
+        {"name":"INC", "level":1, "count":2, "lines":"14 16"}
+      ],
+      "total":2
+    },
+    {
+      "category": "String operations",
+      "expressions":[
+        {"name":"PRINT", "level":1, "count":1, "lines":"37"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Type conversion routines",
+      "expressions":[
+        {"name":"STR$", "level":1, "count":4, "lines":"28 30 33 35"}
+      ],
+      "total":4
+    },
+    {
+      "category": "Input and timing routines",
+      "expressions":[
+        {"name":"PAUSE", "level":1, "count":1, "lines":"13"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Command structures",
+      "expressions":[
+        {"name":"IF", "level":1, "count":3, "lines":"27 32 15"},
+        {"name":"ELSE", "level":1, "count":2, "lines":"29 34"},
+        {"name":"WHILE", "level":2, "count":1, "lines":"11"},
+        {"name":"DEF PROC", "level":2, "count":1, "lines":"23"}
+      ],
+      "total":7
+    },
+    {
+      "category": "Subroutine calls",
+      "expressions":[
+        {"name":"PROCshowtime", "level":0, "count":2, "lines":"12 20"}
+      ],
+      "total":2
+    }
+  ],
+  "pcode":[
+    [112,13,1,1,112,0,123,112,6,2,123,4,112,8,124,112,21,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [128,21],
+    [133,1],
+    [139,12,70],
+    [117,12,1,112,70,124],
+    [117,12,3,120,12,1,112,33,120,12,2],
+    [117,12,38,120,12,36,112,33,120,12,37],
+    [112,300,112,430,88],
+    [112,400,112,130,112,16777215,112,0,111],
+    [113,20,112,10,34,129,14],
+    [114,12,1,118,1,48,113,20,11,64,2,126,142],
+    [128,15],
+    [114,12,1,113,20,11,2,126,142],
+    [113,21,112,10,34,129,18],
+    [114,12,36,118,1,48,113,21,11,64,2,126,142],
+    [128,19],
+    [114,12,36,113,21,11,2,126,142],
+    [114,12,1,118,1,58,64,114,12,36,64,112,21,112,100,168,142],
+    [140,12,134,132],
+    [112,10025880,96],
+    [112,250,112,390,88],
+    [112,8388608,87],
+    [112,10,85],
+    [112,500,112,210,112,11567184,112,-1,111],
+    [112,0,87],
+    [112,0,119,20],
+    [112,0,119,21],
+    [113,20,112,12,34,129,37],
+    [131,4],
+    [112,600,174],
+    [116,21,1,122,4,2,123],
+    [113,21,112,60,32,129,36],
+    [116,20,1,122,4,2,123],
+    [112,0,119,21],
+    [128,29],
+    [131,4],
+    [130]
+  ]
+}

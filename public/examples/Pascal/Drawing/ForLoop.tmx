@@ -1,0 +1,57 @@
+{
+  "format":1,
+  "language":"Pascal",
+  "version":13,
+  "name":"FOR loop (uses a counting variable)",
+  "author":"Peter Millican",
+  "date":"23/07/2020",
+  "time":"11:59:01",
+  "code":"PROGRAM ForLoop;\nVAR count: integer;\nBEGIN\n  {counting from 1 to 200 ...}\n  for count := 1 to 200 do\n    begin\n      {move forward and turn right 5 degrees}\n      forward(count / 3);\n      right(5);\n      {draw a red blot radius 200}\n      colour(red);\n      blot(200);\n      {draw a black circle around the red blot}\n      colour(black);\n      circle(200)\n    end\nEND.",
+  "usage":[
+    {
+      "category": "Turtle: relative movement",
+      "expressions":[
+        {"name":"forward", "level":1, "count":1, "lines":"8"},
+        {"name":"right", "level":1, "count":1, "lines":"9"}
+      ],
+      "total":2
+    },
+    {
+      "category": "Turtle: drawing shapes",
+      "expressions":[
+        {"name":"blot", "level":1, "count":1, "lines":"12"},
+        {"name":"circle", "level":1, "count":1, "lines":"15"}
+      ],
+      "total":2
+    },
+    {
+      "category": "Other Turtle commands",
+      "expressions":[
+        {"name":"colour", "level":1, "count":2, "lines":"11 14"}
+      ],
+      "total":2
+    },
+    {
+      "category": "Command structures",
+      "expressions":[
+        {"name":"for", "level":1, "count":1, "lines":"5"}
+      ],
+      "total":1
+    }
+  ],
+  "pcode":[
+    [112,12,1,1,112,0,123,112,6,2,123,4,112,7,124,112,19,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [112,1],
+    [119,19,112,200],
+    [113,19,37,129,13],
+    [113,19,112,3,29,91],
+    [112,5,94],
+    [112,16711680,87],
+    [112,200,108],
+    [112,0,87],
+    [112,200,107],
+    [113,19,4,128,4],
+    [130]
+  ]
+}

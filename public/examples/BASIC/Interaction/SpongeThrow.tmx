@@ -1,0 +1,148 @@
+{
+  "format":1,
+  "language":"BASIC",
+  "version":13,
+  "name":"Throwing sponges at a moving face",
+  "author":"Peter Millican",
+  "date":"23/07/2020",
+  "time":"12:00:27",
+  "code":"REM SpongeThrow\n\nCONST FACESIZE% = 100\nCONST SPONGESIZE% = 40\nx% = 300\ny% = 700\nxvel% = 8\nyvel% = -4\nWHILE 0 < 1\n  NOUPDATE\n  COLOUR(WHITE)\n  SETXY(x%, y%)\n  BLOT(FACESIZE% + SPONGESIZE%)\n  x% = x% + xvel%\n  y% = y% + yvel%\n  SETXY(x%, y%)\n  PROCface(FACESIZE%)\n  UPDATE\n  PAUSE(10)\n  IF (?LMOUSE > 0) AND (HYPOT(?MOUSEX - x%, ?MOUSEY - y%, 1) < FACESIZE%) THEN\n    SETXY(?MOUSEX, ?MOUSEY)\n    RNDCOL(4)\n    BLOT(SPONGESIZE%)\n    PAUSE(100)\n  ENDIF\n  IF (x% < FACESIZE%) OR (x% > 999 - FACESIZE%) THEN\n    xvel% = -xvel%\n  ENDIF\n  IF (y% < FACESIZE%) OR (y% > 999 - FACESIZE%) THEN\n    yvel% = -yvel%\n  ENDIF\nENDWHILE\nEND\n\nDEF PROCeye(size%)\n  COLOUR(WHITE)\n  ELLBLOT(size% * 3 / 20, size% / 10)\n  COLOUR(EMERALD)\n  BLOT(size% * 9 / 100)\n  COLOUR(BLACK)\n  BLOT(size% / 25)\nENDPROC\n\nDEF PROCface(size%)\n  DIRECTION(0)\n  COLOUR(PEACH)\n  BLOT(size%)\n  COLOUR(DARKRED)\n  BLOT(size% * 7 / 10)\n  FORWARD(size% * 3 / 20)\n  COLOUR(PEACH)\n  BLOT(size% * 3 / 4)\n  BACK(size% * 3 / 10)\n  COLOUR(ROYAL)\n  BLOT(size% * 3 / 20)\n  PENUP\n  FORWARD(size% * 9 / 20)\n  LEFT(90)\n  FORWARD(size% * 2 / 5)\n  PROCeye(size%)\n  BACK(size% * 4 / 5)\n  PROCeye(size%)\nENDPROC",
+  "usage":[
+    {
+      "category": "Turtle: relative movement",
+      "expressions":[
+        {"name":"BACK", "level":1, "count":2, "lines":"53 61"},
+        {"name":"FORWARD", "level":1, "count":3, "lines":"50 57 59"},
+        {"name":"LEFT", "level":1, "count":1, "lines":"58"}
+      ],
+      "total":6
+    },
+    {
+      "category": "Turtle: absolute movement",
+      "expressions":[
+        {"name":"DIRECTION", "level":1, "count":1, "lines":"45"},
+        {"name":"SETXY", "level":1, "count":3, "lines":"12 16 21"}
+      ],
+      "total":4
+    },
+    {
+      "category": "Turtle: drawing shapes",
+      "expressions":[
+        {"name":"BLOT", "level":1, "count":8, "lines":"39 41 47 49 52 55 13 23"},
+        {"name":"ELLBLOT", "level":1, "count":1, "lines":"37"}
+      ],
+      "total":9
+    },
+    {
+      "category": "Other Turtle commands",
+      "expressions":[
+        {"name":"COLOUR", "level":1, "count":8, "lines":"36 38 40 46 48 51 54 11"},
+        {"name":"PENUP", "level":1, "count":1, "lines":"56"},
+        {"name":"RNDCOL", "level":1, "count":1, "lines":"22"}
+      ],
+      "total":10
+    },
+    {
+      "category": "Canvas operations",
+      "expressions":[
+        {"name":"NOUPDATE", "level":1, "count":1, "lines":"10"},
+        {"name":"UPDATE", "level":1, "count":1, "lines":"18"}
+      ],
+      "total":2
+    },
+    {
+      "category": "General arithmetic functions",
+      "expressions":[
+        {"name":"HYPOT", "level":2, "count":1, "lines":"20"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Input and timing routines",
+      "expressions":[
+        {"name":"PAUSE", "level":1, "count":2, "lines":"19 24"}
+      ],
+      "total":2
+    },
+    {
+      "category": "Command structures",
+      "expressions":[
+        {"name":"IF", "level":1, "count":3, "lines":"20 26 29"},
+        {"name":"WHILE", "level":2, "count":1, "lines":"9"},
+        {"name":"DEF PROC", "level":2, "count":2, "lines":"35 44"}
+      ],
+      "total":6
+    },
+    {
+      "category": "Subroutine calls",
+      "expressions":[
+        {"name":"PROCeye", "level":0, "count":2, "lines":"60 62"},
+        {"name":"PROCface", "level":0, "count":1, "lines":"17"}
+      ],
+      "total":3
+    }
+  ],
+  "pcode":[
+    [112,14,1,1,112,0,123,112,6,2,123,4,112,10,124,112,24,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [128,36],
+    [133,1],
+    [139,12,1],
+    [117,12,1,112,1,124,120,12,1],
+    [112,16777215,87],
+    [114,12,1,112,3,28,112,20,29,114,12,1,112,10,29,110],
+    [112,51543,87],
+    [114,12,1,112,9,28,112,100,29,108],
+    [112,0,87],
+    [114,12,1,112,25,29,108],
+    [140,12,134,132],
+    [133,2],
+    [139,13,1],
+    [117,13,1,112,1,124,120,13,1],
+    [112,0,83],
+    [112,16764080,87],
+    [114,13,1,108],
+    [112,11674146,87],
+    [114,13,1,112,7,28,112,10,29,108],
+    [114,13,1,112,3,28,112,20,29,91],
+    [112,16764080,87],
+    [114,13,1,112,3,28,112,4,29,108],
+    [114,13,1,112,3,28,112,10,29,92],
+    [112,4286945,87],
+    [114,13,1,112,3,28,112,20,29,108],
+    [112,0,86],
+    [114,13,1,112,9,28,112,20,29,91],
+    [112,90,93],
+    [114,13,1,112,2,28,112,5,29,91],
+    [114,13,1,131,4],
+    [114,13,1,112,4,28,112,5,29,92],
+    [114,13,1,131,4],
+    [140,13,134,132],
+    [112,300,119,21],
+    [112,700,119,22],
+    [112,8,119,23],
+    [112,4,23,119,24],
+    [112,0,112,1,34,129,61],
+    [112,0,146],
+    [112,16777215,87],
+    [113,21,113,22,88],
+    [112,100,112,40,26,108],
+    [113,21,113,23,26,119,21],
+    [113,22,113,24,26,119,22],
+    [113,21,113,22,88],
+    [112,100,131,14],
+    [112,-1,146],
+    [112,10,174],
+    [112,-1,160,112,0,35,112,-7,160,113,21,27,112,-8,160,113,22,27,112,1,50,112,100,34,17,129,56],
+    [112,-7,160,112,-8,160,88],
+    [112,4,7,4,101,87],
+    [112,40,108],
+    [112,100,174],
+    [113,21,112,100,34,113,21,112,999,112,100,27,35,18,129,58],
+    [113,23,23,119,23],
+    [113,22,112,100,34,113,22,112,999,112,100,27,35,18,129,60],
+    [113,24,23,119,24],
+    [128,40],
+    [130]
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "format":1,
+  "language":"Pascal",
+  "version":13,
+  "name":"Simple drawing with pauses",
+  "author":"Peter Millican",
+  "date":"23/07/2020",
+  "time":"11:59:01",
+  "code":"PROGRAM DrawPause;\nBEGIN\n  {draw green blot radius 100, then pause}\n  colour(green);\n  blot(100);\n  pause(1000);\n  {draw red line length 450 upwards, then pause}\n  colour(red);\n  forward(450);\n  pause(1000);\n  {turn right 90 degrees and change thickness}\n  right(90);\n  thickness(9);\n  {change colour, pause, draw line length 300}\n  colour(blue);\n  pause(1000);\n  forward(300)\nEND.",
+  "usage":[
+    {
+      "category": "Turtle: relative movement",
+      "expressions":[
+        {"name":"forward", "level":1, "count":2, "lines":"9 17"},
+        {"name":"right", "level":1, "count":1, "lines":"12"}
+      ],
+      "total":3
+    },
+    {
+      "category": "Turtle: drawing shapes",
+      "expressions":[
+        {"name":"blot", "level":1, "count":1, "lines":"5"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Other Turtle commands",
+      "expressions":[
+        {"name":"colour", "level":1, "count":3, "lines":"4 8 15"},
+        {"name":"thickness", "level":1, "count":1, "lines":"13"}
+      ],
+      "total":4
+    },
+    {
+      "category": "Input and timing routines",
+      "expressions":[
+        {"name":"pause", "level":1, "count":3, "lines":"6 10 16"}
+      ],
+      "total":3
+    }
+  ],
+  "pcode":[
+    [112,12,1,1,112,0,123,112,6,2,123,4,112,6,124,112,18,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [112,2263842,87],
+    [112,100,108],
+    [112,1000,174],
+    [112,16711680,87],
+    [112,450,91],
+    [112,1000,174],
+    [112,90,94],
+    [112,9,85],
+    [112,255,87],
+    [112,1000,174],
+    [112,300,91],
+    [130]
+  ]
+}

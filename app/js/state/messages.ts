@@ -5,15 +5,20 @@
 export type Message = typeof messages[number]
 
 export const messages = [
-  // temporary properties changed
-  'menuOpenChanged',
-  'fullscreenChanged',
   // system settings changed
   'languageChanged',
   'modeChanged',
+  'editorFontFamilyChanged',
+  'editorFontSizeChanged',
+  'outputFontFamilyChanged',
+  'outputFontSizeChanged',
+  'includeCommentsInExamplesChanged',
   'loadCorrespondingExampleChanged',
   'assemblerChanged',
   'decimalChanged',
+  'autoCompileOnLoadChanged',
+  'autoRunOnLoadChanged',
+  'autoFormatOnLoadChanged',
   // help page properties changed
   'commandsCategoryIndexChanged',
   'showSimpleCommandsChanged',
@@ -22,27 +27,41 @@ export const messages = [
   // file memory changed
   'filesChanged',
   'currentFileIndexChanged',
-  'fileChanged',
-  'nameChanged',
+  'filenameChanged',
   'codeChanged',
   'lexemesChanged',
   'routinesChanged',
   'usageChanged',
   'pcodeChanged',
   // machine runtime options changed
-  'showCanvasChanged',
-  'showOutputChanged',
-  'showMemoryChanged',
+  'showCanvasOnRunChanged',
+  'showOutputOnWriteChanged',
+  'showMemoryOnDumpChanged',
   'drawCountMaxChanged',
   'codeCountMaxChanged',
   'smallSizeChanged',
   'stackSizeChanged',
+  'traceOnRunChanged',
+  'activateHCLRChanged',
+  'preventStackCollisionChanged',
+  'rangeCheckArraysChanged',
   // compiler options changed
-  // TODO ...
+  'canvasStartSizeChanged',
+  'setupDefaultKeyBufferChanged',
+  'turtleAttributesAsGlobalsChanged',
+  'initialiseLocalsChanged',
+  'allowCSTRChanged',
+  'separateReturnStackChanged',
+  'separateMemoryControlStackChanged',
+  'separateSubroutineRegisterStackChanged',
   // other messages (not involving state change)
-  'dumpMemory',
-  'error',
-  'showComponent'
+  'toggleMenu',
+  'openMenu',
+  'closeMenu',
+  'selectTab',
+  'memoryDumped',
+  'selectAll',
+  'error'
 ] as const
 
 // signature for reply functions

@@ -11,9 +11,17 @@ export const properties = [
   // system settings
   'language',
   'mode',
+  'editorFontFamily',
+  'editorFontSize',
+  'outputFontFamily',
+  'outputFontSize',
+  'includeCommentsInExamples',
   'loadCorrespondingExample',
   'assembler',
   'decimal',
+  'autoCompileOnLoad',
+  'autoRunOnLoad',
+  'autoFormatOnLoad',
   // help page properties
   'commandsCategoryIndex',
   'showSimpleCommands',
@@ -22,20 +30,32 @@ export const properties = [
   // file memory
   'files',
   'currentFileIndex',
+  'filename',
   'lexemes',
   'usage',
   'routines',
   'pcode',
   // machine runtime options
-  'showCanvas',
-  'showOutput',
-  'showMemory',
+  'showCanvasOnRun',
+  'showOutputOnWrite',
+  'showMemoryOnDump',
   'drawCountMax',
   'codeCountMax',
   'smallSize',
-  'stackSize'
+  'stackSize',
+  'traceOnRun',
+  'activateHCLR',
+  'preventStackCollision',
+  'rangeCheckArrays',
   // compiler options
-  // TODO ...
+  'canvasStartSize',
+  'setupDefaultKeyBuffer',
+  'turtleAttributesAsGlobals',
+  'initialiseLocals',
+  'allowCSTR',
+  'separateReturnStack',
+  'separateMemoryControlStack',
+  'separateSubroutineRegisterStack'
 ] as const
 
 // load a property from local/session storage

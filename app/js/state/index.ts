@@ -7,29 +7,35 @@
  * state is maintained between sessions.
  */
 import { SystemError } from '../definitions/errors'
-import { names } from '../definitions/examples'
+import { examples } from '../definitions/examples'
 import { File } from '../definitions/file'
-import { Language, languages, extensions } from '../definitions/languages'
+import { Language, languages, extensions, skeletons } from '../definitions/languages'
 import { Mode } from '../definitions/modes'
 import compile from '../compile/index'
 import lexer from '../compile/lexer/index'
 import * as machine from '../machine/index'
 import { Message, Reply } from './messages'
 import { load, save } from './storage'
+import { input } from '../tools/elements'
 
 // define the system state object
 class State {
   // record of callbacks to execute on state change
   #replies: Partial<Record<Message, Reply[]>>
-  // temporary properties (not saved to session)
-  #menuOpen: boolean
-  #fullscreen: boolean
   // system settings
   #language: Language
   #mode: Mode
+  #editorFontFamily: string
+  #editorFontSize: number
+  #outputFontFamily: string
+  #outputFontSize: number
+  #includeCommentsInExamples: boolean
   #loadCorrespondingExample: boolean
   #assembler: boolean
   #decimal: boolean
+  #autoCompileOnLoad: boolean
+  #autoRunOnLoad: boolean
+  #autoFormatOnLoad: boolean
   // help page properties
   #commandsCategoryIndex: number
   #showSimpleCommands: boolean
@@ -43,29 +49,45 @@ class State {
   #routines: any[]
   #pcode: number[][]
   // machine runtime options
-  #showCanvas: boolean
-  #showOutput: boolean
-  #showMemory: boolean
+  #showCanvasOnRun: boolean
+  #showOutputOnWrite: boolean
+  #showMemoryOnDump: boolean
   #drawCountMax: number
   #codeCountMax: number
   #smallSize: number
   #stackSize: number
+  #traceOnRun: boolean
+  #activateHCLR: boolean
+  #preventStackCollision: boolean
+  #rangeCheckArrays: boolean
   // compiler options
-  // TODO ...
+  #canvasStartSize: number
+  #setupDefaultKeyBuffer: boolean
+  #turtleAttributesAsGlobals: boolean
+  #initialiseLocals: boolean
+  #allowCSTR: boolean
+  #separateReturnStack: boolean
+  #separateMemoryControlStack: boolean
+  #separateSubroutineRegisterStack: boolean
 
   // constructor
   constructor () {
     // record of callbacks to execute on state change
     this.#replies = {}
-    // temporary properties
-    this.#menuOpen = false
-    this.#fullscreen = false
     // system settings
     this.#language = load('language', 'Pascal')
     this.#mode = load('mode', 'normal')
+    this.#editorFontFamily = load('editorFontFamily', 'Courier')
+    this.#editorFontSize = load('editorFontSize', 13)
+    this.#outputFontFamily = load('outputFontFamily', 'Courier')
+    this.#outputFontSize = load('outputFontSize', 13)
+    this.#includeCommentsInExamples = load('includeCommentsInExamples', true)
     this.#loadCorrespondingExample = load('loadCorrespondingExample', true)
     this.#assembler = load('assembler', true)
     this.#decimal = load('decimal', true)
+    this.#autoCompileOnLoad = load('autoCompileOnLoad', false)
+    this.#autoRunOnLoad = load('autoRunOnLoad', false)
+    this.#autoFormatOnLoad = load('autoFormatOnLoad', false)
     // help page properties
     this.#commandsCategoryIndex = load('commandsCategoryIndex', 0)
     this.#showSimpleCommands = load('showSimpleCommands', true)
@@ -79,20 +101,31 @@ class State {
     this.#routines = load('routines', [])
     this.#pcode = load('pcode', [])
     // machine runtime options
-    this.#showCanvas = load('showCanvas', true)
-    this.#showOutput = load('showOutput', false)
-    this.#showMemory = load('showMemory', true)
+    this.#showCanvasOnRun = load('showCanvasOnRun', true)
+    this.#showOutputOnWrite = load('showOutputOnWrite', false)
+    this.#showMemoryOnDump = load('showMemoryOnDump', true)
     this.#drawCountMax = load('drawCountMax', 4)
     this.#codeCountMax = load('codeCountMax', 100000)
     this.#smallSize = load('smallSize', 60)
     this.#stackSize = load('stackSize', 20000)
+    this.#traceOnRun = load('traceOnRun', false)
+    this.#activateHCLR = load('activateHCLR', true)
+    this.#preventStackCollision = load('preventStackCollision', true)
+    this.#rangeCheckArrays = load('rangeCheckArrays', true)
     // compiler options
-    // TODO ...
+    this.#canvasStartSize = load('canvasStartSize', 1000)
+    this.#setupDefaultKeyBuffer = load('setupDefaultKeyBuffer', true)
+    this.#turtleAttributesAsGlobals = load('turtleAttributesAsGlobals', true)
+    this.#initialiseLocals = load('initialiseLocals', true)
+    this.#allowCSTR = load('allowCSTR', true)
+    this.#separateReturnStack = load('separateReturnStack', true)
+    this.#separateMemoryControlStack = load('separateMemoryControlStack', true)
+    this.#separateSubroutineRegisterStack = load('separateSubroutineRegisterStack', true)
 
     // register to pass some machine signals on from here
-    machine.on('showCanvas', () => { this.send('showComponent', 'canvas') })
-    machine.on('showOutput', () => { this.send('showComponent', 'output') })
-    machine.on('showMemory', () => { this.send('showComponent', 'memory') })
+    machine.on('showCanvas', () => { this.send('selectTab', 'canvas') })
+    machine.on('showOutput', () => { this.send('selectTab', 'output') })
+    machine.on('showMemory', () => { this.send('selectTab', 'memory') })
   }
 
   // initialise the app (i.e. send all property changed messages)
@@ -100,9 +133,17 @@ class State {
     // system settings
     this.send('languageChanged')
     this.send('modeChanged')
+    this.send('editorFontFamilyChanged')
+    this.send('editorFontSizeChanged')
+    this.send('outputFontFamilyChanged')
+    this.send('outputFontSizeChanged')
+    this.send('includeCommentsInExamplesChanged')
     this.send('loadCorrespondingExampleChanged')
     this.send('assemblerChanged')
     this.send('decimalChanged')
+    this.send('autoCompileOnLoadChanged')
+    this.send('autoRunOnLoadChanged')
+    this.send('autoFormatOnLoadChanged')
     // help page properties
     this.send('commandsCategoryIndexChanged')
     this.send('showSimpleCommandsChanged')
@@ -111,131 +152,94 @@ class State {
     // file memory
     this.send('filesChanged')
     this.send('currentFileIndexChanged')
-    this.send('fileChanged')
+    this.send('lexemesChanged')
+    this.send('usageChanged')
+    this.send('routinesChanged')
+    this.send('pcodeChanged')
     // machine runtime options
-    this.send('showCanvasChanged')
-    this.send('showOutputChanged')
-    this.send('showMemoryChanged')
+    this.send('showCanvasOnRunChanged')
+    this.send('showOutputOnWriteChanged')
+    this.send('showMemoryOnDumpChanged')
     this.send('drawCountMaxChanged')
     this.send('codeCountMaxChanged')
     this.send('smallSizeChanged')
     this.send('stackSizeChanged')
-  }
-
-  // getters for temporary properties
-  get menuOpen (): boolean {
-    return this.#menuOpen
-  }
-
-  get fullscreen (): boolean {
-    return this.#fullscreen
+    this.send('traceOnRunChanged')
+    this.send('activateHCLRChanged')
+    this.send('preventStackCollisionChanged')
+    this.send('rangeCheckArraysChanged')
+    // compiler options
+    this.send('canvasStartSizeChanged')
+    this.send('setupDefaultKeyBufferChanged')
+    this.send('turtleAttributesAsGlobalsChanged')
+    this.send('initialiseLocalsChanged')
+    this.send('allowCSTRChanged')
+    this.send('separateReturnStackChanged')
+    this.send('separateMemoryControlStackChanged')
+    this.send('separateSubroutineRegisterStackChanged')
   }
 
   // getters for system settings
-  get language (): Language {
-    return this.#language
-  }
-
-  get mode (): Mode {
-    return this.#mode
-  }
-
-  get loadCorrespondingExample (): boolean {
-    return this.#loadCorrespondingExample
-  }
-
-  get assembler (): boolean {
-    return this.#assembler
-  }
-
-  get decimal (): boolean {
-    return this.#decimal
-  }
+  get language (): Language { return this.#language }
+  get mode (): Mode { return this.#mode }
+  get editorFontFamily (): string { return this.#editorFontFamily }
+  get editorFontSize (): number { return this.#editorFontSize }
+  get outputFontFamily (): string { return this.#outputFontFamily }
+  get outputFontSize (): number { return this.#outputFontSize }
+  get includeCommentsInExamples (): boolean { return this.#includeCommentsInExamples }
+  get loadCorrespondingExample (): boolean { return this.#loadCorrespondingExample }
+  get assembler (): boolean { return this.#assembler }
+  get decimal (): boolean { return this.#decimal }
+  get autoCompileOnLoad (): boolean { return this.#autoCompileOnLoad }
+  get autoRunOnLoad (): boolean { return this.#autoRunOnLoad }
+  get autoFormatOnLoad (): boolean { return this.#autoFormatOnLoad }
 
   // getters for help page properties
-  get commandsCategoryIndex (): number {
-    return this.#commandsCategoryIndex
-  }
-
-  get showSimpleCommands (): boolean {
-    return this.#showSimpleCommands
-  }
-
-  get showIntermediateCommands (): boolean {
-    return this.#showIntermediateCommands
-  }
-
-  get showAdvancedCommands (): boolean {
-    return this.#showAdvancedCommands
-  }
+  get commandsCategoryIndex (): number { return this.#commandsCategoryIndex }
+  get showSimpleCommands (): boolean { return this.#showSimpleCommands }
+  get showIntermediateCommands (): boolean { return this.#showIntermediateCommands }
+  get showAdvancedCommands (): boolean { return this.#showAdvancedCommands }
 
   // getters for file memory
-  get files (): File[] {
-    return this.#files
-  }
-
-  get currentFileIndex (): number {
-    return this.#currentFileIndex
-  }
-
-  get lexemes (): any[] {
-    return this.#lexemes
-  }
-
-  get routines (): any[] {
-    return this.#routines
-  }
-
-  get pcode (): number[][] {
-    return this.#pcode
-  }
-
-  get usage (): any[] {
-    return this.#usage
-  }
+  get files (): File[] { return this.#files }
+  get currentFileIndex (): number { return this.#currentFileIndex }
+  get file (): File { return this.files[this.currentFileIndex] }
+  get filename (): string { return this.files[this.currentFileIndex].name }
+  get code (): string { return this.files[this.currentFileIndex].code }
+  get lexemes (): any[] { return this.#lexemes }
+  get routines (): any[] { return this.#routines }
+  get pcode (): number[][] { return this.#pcode }
+  get usage (): any[] { return this.#usage }
 
   // getters for machine runtime options
-  get showCanvas (): boolean {
-    return this.#showCanvas
-  }
-
-  get showOutput (): boolean {
-    return this.#showOutput
-  }
-
-  get showMemory (): boolean {
-    return this.#showMemory
-  }
-
-  get drawCountMax (): number {
-    return this.#drawCountMax
-  }
-
-  get codeCountMax (): number {
-    return this.#codeCountMax
-  }
-
-  get smallSize (): number {
-    return this.#smallSize
-  }
-
-  get stackSize (): number {
-    return this.#stackSize
-  }
+  get showCanvasOnRun (): boolean { return this.#showCanvasOnRun }
+  get showOutputOnWrite (): boolean { return this.#showOutputOnWrite }
+  get showMemoryOnDump (): boolean { return this.#showMemoryOnDump }
+  get drawCountMax (): number { return this.#drawCountMax }
+  get codeCountMax (): number { return this.#codeCountMax }
+  get smallSize (): number { return this.#smallSize }
+  get stackSize (): number { return this.#stackSize }
+  get traceOnRun (): boolean { return this.#traceOnRun }
+  get activateHCLR (): boolean { return this.#activateHCLR }
+  get preventStackCollision (): boolean { return this.#preventStackCollision }
+  get rangeCheckArrays (): boolean { return this.#rangeCheckArrays }
 
   // getters for compiler options
-  // TODO ...
+  get canvasStartSize (): number { return this.#canvasStartSize }
+  get setupDefaultKeyBuffer (): boolean { return this.#setupDefaultKeyBuffer }
+  get turtleAttributesAsGlobals (): boolean { return this.#turtleAttributesAsGlobals }
+  get initialiseLocals (): boolean { return this.#initialiseLocals }
+  get allowCSTR (): boolean { return this.#allowCSTR }
+  get separateReturnStack (): boolean { return this.#separateReturnStack }
+  get separateMemoryControlStack (): boolean { return this.#separateMemoryControlStack }
+  get separateSubroutineRegisterStack (): boolean { return this.#separateSubroutineRegisterStack }
 
   // derivative getters
-  get file (): File {
-    return this.files[this.currentFileIndex]
-  }
-
   get machineOptions (): object {
     return {
-      showCanvas: this.showCanvas,
-      showOutput: this.showOutput,
-      showMemory: this.showMemory,
+      showCanvas: this.showCanvasOnRun,
+      showOutput: this.showOutputOnWrite,
+      showMemory: this.showMemoryOnDump,
       drawCountMax: this.drawCountMax,
       codeCountMax: this.codeCountMax,
       smallSize: this.smallSize,
@@ -243,19 +247,10 @@ class State {
     }
   }
 
-  // setters for temporary properties
-  set menuOpen (menuOpen: boolean) {
-    this.#menuOpen = menuOpen
-    this.send('menuOpenChanged')
-  }
-
-  set fullscreen (fullscreen: boolean) {
-    this.#fullscreen = fullscreen
-    this.send('fullscreenChanged')
-  }
-
   // setters for system settings
   set language (language: Language) {
+    const previousLanguage = this.language
+
     // check the input; the compiler cannot always do so, since the language can
     // be set on the HTML page itself
     if (!languages.includes(language)) {
@@ -265,9 +260,14 @@ class State {
     save('language', language)
     this.send('languageChanged')
 
+    // set file as not compiled
+    this.file.compiled = false
+    save('files', this.files)
+    this.send('codeChanged') // update the syntax highlighting
+
     // maybe load corresponding example
     if (this.files) { // false when language is set on first page load
-      if (this.language !== language) { // stop infinite loop from example setting the language
+      if (previousLanguage !== language) { // stop infinite loop from example setting the language
         if (this.file.example && this.loadCorrespondingExample) {
           this.openExampleFile(this.file.example)
         }
@@ -279,6 +279,36 @@ class State {
     this.#mode = mode
     save('mode', mode)
     this.send('modeChanged')
+  }
+
+  set editorFontFamily (editorFontFamily: string) {
+    this.#editorFontFamily = editorFontFamily
+    save('editorFontFamily', editorFontFamily)
+    this.send('editorFontFamilyChanged')
+  }
+
+  set editorFontSize (editorFontSize: number) {
+    this.#editorFontSize = editorFontSize
+    save('editorFontSize', editorFontSize)
+    this.send('editorFontSizeChanged')
+  }
+
+  set outputFontFamily (outputFontFamily: string) {
+    this.#outputFontFamily = outputFontFamily
+    save('outputFontFamily', outputFontFamily)
+    this.send('outputFontFamilyChanged')
+  }
+
+  set outputFontSize (outputFontSize: number) {
+    this.#outputFontSize = outputFontSize
+    save('outputFontSize', outputFontSize)
+    this.send('outputFontSizeChanged')
+  }
+
+  set includeCommentsInExamples (includeCommentsInExamples: boolean) {
+    this.#includeCommentsInExamples = includeCommentsInExamples
+    save('includeCommentsInExamples', includeCommentsInExamples)
+    this.send('includeCommentsInExamplesChanged')
   }
 
   set loadCorrespondingExample (loadCorrespondingExample: boolean) {
@@ -297,6 +327,24 @@ class State {
     this.#decimal = decimal
     save('decimal', decimal)
     this.send('pcodeChanged')
+  }
+
+  set autoCompileOnLoad (autoCompileOnLoad: boolean) {
+    this.#autoCompileOnLoad = autoCompileOnLoad
+    save('autoCompileOnLoad', this.#autoCompileOnLoad)
+    this.send('autoCompileOnLoadChanged')
+  }
+
+  set autoRunOnLoad (autoRunOnLoad: boolean) {
+    this.#autoRunOnLoad = autoRunOnLoad
+    save('autoRunOnLoad', this.#autoRunOnLoad)
+    this.send('autoRunOnLoadChanged')
+  }
+
+  set autoFormatOnLoad (autoFormatOnLoad: boolean) {
+    this.#autoFormatOnLoad = autoFormatOnLoad
+    save('autoFormatOnLoad', this.#autoFormatOnLoad)
+    this.send('autoFormatOnLoadChanged')
   }
 
   // setters for help page properties
@@ -350,8 +398,22 @@ class State {
       this.usage = []
     }
 
-    this.send('fileChanged')
-    this.send('showComponent', 'code')
+    this.send('currentFileIndexChanged')
+  }
+
+  set filename (name: string) {
+    this.file.name = name
+    this.file.edited = true
+    save('files', this.files)
+    this.send('filenameChanged')
+  }
+
+  set code (code: string) {
+    this.file.code = code
+    this.file.edited = true
+    this.file.compiled = false
+    save('files', this.files)
+    this.send('codeChanged')
   }
 
   set lexemes (lexemes: any[]) {
@@ -379,22 +441,22 @@ class State {
   }
 
   // setters for machine runtime options
-  set showCanvas (showCanvas: boolean) {
-    this.#showCanvas = showCanvas
-    save('showCanvas', showCanvas)
-    this.send('showCanvasChanged')
+  set showCanvasOnRun (showCanvasOnRun: boolean) {
+    this.#showCanvasOnRun = showCanvasOnRun
+    save('showCanvasOnRun', showCanvasOnRun)
+    this.send('showCanvasOnRunChanged')
   }
 
-  set showOutput (showOutput: boolean) {
-    this.#showOutput = showOutput
-    save('showOutput', showOutput)
-    this.send('showOutputChanged')
+  set showOutputOnWrite (showOutputOnWrite: boolean) {
+    this.#showOutputOnWrite = showOutputOnWrite
+    save('showOutputOnWrite', showOutputOnWrite)
+    this.send('showOutputOnWriteChanged')
   }
 
-  set showMemory (showMemory: boolean) {
-    this.#showMemory = showMemory
-    save('showMemory', showMemory)
-    this.send('showMemoryChanged')
+  set showMemoryOnDump (showMemoryOnDump: boolean) {
+    this.#showMemoryOnDump = showMemoryOnDump
+    save('showMemoryOnDump', showMemoryOnDump)
+    this.send('showMemoryOnDumpChanged')
   }
 
   set drawCountMax (drawCountMax: number) {
@@ -421,49 +483,136 @@ class State {
     this.send('stackSizeChanged')
   }
 
+  set traceOnRun (traceOnRun: boolean) {
+    this.#traceOnRun = traceOnRun
+    save('traceOnRun', traceOnRun)
+    this.send('traceOnRunChanged')
+  }
+
+  set activateHCLR (activateHCLR: boolean) {
+    this.#activateHCLR = activateHCLR
+    save('activateHCLR', activateHCLR)
+    this.send('activateHCLRChanged')
+  }
+
+  set preventStackCollision (preventStackCollision: boolean) {
+    this.#preventStackCollision = preventStackCollision
+    save('preventStackCollision', preventStackCollision)
+    this.send('preventStackCollisionChanged')
+  }
+
+  set rangeCheckArrays (rangeCheckArrays: boolean) {
+    this.#rangeCheckArrays = rangeCheckArrays
+    save('rangeCheckArrays', rangeCheckArrays)
+    this.send('rangeCheckArraysChanged')
+  }
+
+  // setters for compiler options
+  set canvasStartSize (canvasStartSize: number) {
+    this.#canvasStartSize = canvasStartSize
+    save('canvasStartSize', canvasStartSize)
+    this.send('canvasStartSizeChanged')
+  }
+
+  set setupDefaultKeyBuffer (setupDefaultKeyBuffer: boolean) {
+    this.#setupDefaultKeyBuffer = setupDefaultKeyBuffer
+    save('setupDefaultKeyBuffer', setupDefaultKeyBuffer)
+    this.send('setupDefaultKeyBufferChanged')
+  }
+
+  set turtleAttributesAsGlobals (turtleAttributesAsGlobals: boolean) {
+    this.#turtleAttributesAsGlobals = turtleAttributesAsGlobals
+    save('turtleAttributesAsGlobals', turtleAttributesAsGlobals)
+    this.send('turtleAttributesAsGlobalsChanged')
+  }
+
+  set initialiseLocals (initialiseLocals: boolean) {
+    this.#initialiseLocals = initialiseLocals
+    save('initialiseLocals', initialiseLocals)
+    this.send('initialiseLocalsChanged')
+  }
+
+  set allowCSTR (allowCSTR: boolean) {
+    this.#allowCSTR = allowCSTR
+    save('allowCSTR', allowCSTR)
+    this.send('allowCSTRChanged')
+  }
+
+  set separateReturnStack (separateReturnStack: boolean) {
+    this.#separateReturnStack = separateReturnStack
+    save('separateReturnStack', separateReturnStack)
+    this.send('separateReturnStackChanged')
+  }
+
+  set separateMemoryControlStack (separateMemoryControlStack: boolean) {
+    this.#separateMemoryControlStack = separateMemoryControlStack
+    save('separateMemoryControlStack', separateMemoryControlStack)
+    this.send('separateMemoryControlStackChanged')
+  }
+
+  set separateSubroutineRegisterStack (separateSubroutineRegisterStack: boolean) {
+    this.#separateSubroutineRegisterStack = separateSubroutineRegisterStack
+    save('separateSubroutineRegisterStack', separateSubroutineRegisterStack)
+    this.send('separateSubroutineRegisterStackChanged')
+  }
+
+  // edit actions
+  undo (): void {}
+
+  redo (): void {}
+
+  cut (): void {}
+
+  copy (): void {}
+
+  paste (): void {}
+
+  selectAll (): void {}
+
+  // save settings (requires login)
+  saveSettings (): void {}
+
+  // reset default settings
+  resetDefaults (): void {}
+
   // add a file to the files array (and update current file index)
   addFile (file: File): void {
-    if (this.#files.length === 0 || this.file.edited) {
-      this.#files.push(file)
-      this.currentFileIndex = this.files.length - 1
-    } else {
-      this.files[this.currentFileIndex] = file
-      this.language = file.language
-    }
-    this.files = this.files // to update the session storage
-    this.send('fileChanged')
-    this.send('showComponent', 'code')
+    this.files = this.files.concat([file])
+    this.currentFileIndex = this.files.length - 1
+    this.send('closeMenu', 'system')
   }
 
   // close the current file (and update current file index)
   closeCurrentFile (): void {
-    this.files.splice(this.currentFileIndex, 1)
+    this.files = this.files.slice(0, this.currentFileIndex).concat(this.files.slice(this.currentFileIndex + 1))
     if (this.files.length === 0) {
       this.newFile()
     } else if (this.currentFileIndex > this.files.length - 1) {
       this.currentFileIndex = this.currentFileIndex - 1
-      this.files = this.files // to update the session storage
     }
-    this.send('fileChanged')
+    this.send('closeMenu', 'system')
   }
 
   // create a new file
   newFile (skeleton: boolean = false) {
-    const file = new File(this.language, skeleton)
+    const file = new File(this.language)
+    if (skeleton) {
+      file.code = skeletons[this.language]
+    }
     this.addFile(file)
   }
 
   // open a file from disk
   openFile (filename: string, content: string, example: string|null = null) {
-    const file = new File(this.language)
+    const file = new File(this.language, example)
     const bits = filename.split('.')
     const ext = bits.pop()
     const name = bits.join('.')
+    let json: any
     switch (ext) {
       case 'tbas': // fallthrough
       case 'tgb': // support old file extension
         file.language = 'BASIC'
-        file.example = example
         file.name = name
         file.code = content.trim()
         break
@@ -471,7 +620,6 @@ class State {
       case 'tpas': // fallthrough
       case 'tgp': // support old file extension
         file.language = 'Pascal'
-        file.example = example
         file.name = name
         file.code = content.trim()
         break
@@ -479,54 +627,75 @@ class State {
       case 'tpy': // fallthrough
       case 'tgy': // support old file extension
         file.language = 'Python'
-        file.example = example
         file.name = name
         file.code = content.trim()
         break
 
-      case 'tgx':
+      case 'tmx': // fallthrough
+      case 'tgx': // support old file extension
         try {
-          const json = JSON.parse(content)
+          json = JSON.parse(content)
           if (json.language && json.name && json.code && json.usage && json.pcode) {
             file.language = json.language
-            file.example = example
             file.name = json.name
             file.code = json.code.trim()
-            file.compiled = true
-            this.usage = json.usage
-            this.lexemes = lexer(json.code.trim(), this.language)
-            this.pcode = json.pcode
           } else {
-            this.send('error', new SystemError('Invalid TGX file.'))
+            this.send('error', new SystemError('Invalid TMX file.'))
           }
         } catch (ignore) {
-          this.send('error', new SystemError('Invalid TGX file.'))
+          this.send('error', new SystemError('Invalid TMX file.'))
         }
         break
 
+      case 'tmj': // pcode only; TODO; fallthrough for now
+      case 'tmb': // pcode binary file; TODO; fallthrough for now
       default:
         throw new SystemError('Invalid file type.')
     }
     this.addFile(file)
+    if (json) {
+      this.usage = json.usage
+      this.lexemes = lexer(json.code.trim(), this.language)
+      this.pcode = json.pcode
+      this.file.compiled = true
+    }
+  }
+
+  openLocalFile () {
+    const state = this
+    const fileInput = input({
+      type: 'file',
+      on: ['change', function () {
+        const file = fileInput.files[0]
+        const fr = new FileReader()
+        fr.onload = function () {
+          state.openFile(file.name, fr.result as string)
+        }
+        fr.readAsText(file)
+      }]
+    })
+    fileInput.click()
   }
 
   openRemoteFile (url: string) {
     this.send('error', new SystemError('Feature not yet available.'))
   }
 
-  openExampleFile (example: string) {
-    if (!names[example]) {
-      this.send('error', new SystemError(`Unknown example "${example}".`))
+  openExampleFile (exampleId: string) {
+    const example = examples.find(x => x.id === exampleId)
+    if (!example) {
+      this.send('error', new SystemError(`Unknown example "${exampleId}".`))
     }
-    const filename = `${example}.${extensions[this.language]}`
-    window.fetch(`/examples/${this.language}/${filename}`)
+    const ext = (this.language === 'Python') ? extensions.Python : 'tmx'
+    const filename = `${example.id}.${ext}`
+    window.fetch(`/examples/${this.language}/${example.groupId}/${filename}`)
       .then(response => {
         if (response.ok) {
           response.text().then(content => {
-            this.openFile(filename, content.trim(), example)
+            this.openFile(filename, content.trim(), exampleId)
           })
         } else {
-          this.send('error', new SystemError(`Couldn't retrieve example "${example}".`))
+          this.send('error', new SystemError(`Couldn't retrieve example "${exampleId}".`))
         }
       })
   }
@@ -543,21 +712,6 @@ class State {
     this.send('error', new SystemError('Feature not yet available.'))
   }
 
-  setFileName (name: string) {
-    this.file.name = name
-    this.file.edited = true
-    this.files = this.files // to update the session storage
-    this.send('nameChanged')
-  }
-
-  setFileCode (code: string) {
-    this.file.code = code
-    this.file.edited = true
-    this.file.compiled = false
-    this.files = this.files // to update the session storage
-    this.send('codeChanged')
-  }
-
   compileCurrentFile (): void {
     try {
       const { lexemes, pcode, usage } = compile(this.file.code, this.language)
@@ -567,27 +721,42 @@ class State {
       this.lexemes = lexemes
       this.pcode = pcode
       this.usage = usage
-      this.send('fileChanged')
     } catch (error) {
       this.send('error', error)
     }
   }
 
+  backupCode (): void {
+    this.file.backup = this.file.code
+  }
+
+  restoreCode (): void {
+    if (this.file.code !== this.file.backup) {
+      this.file.compiled = false
+    }
+    this.file.code = this.file.backup
+  }
+
   resetMachineOptions (): void {
-    this.showCanvas = true
-    this.showOutput = false
-    this.showMemory = true
+    this.showCanvasOnRun = true
+    this.showOutputOnWrite = false
+    this.showMemoryOnDump = true
     this.drawCountMax = 4
     this.codeCountMax = 100000
     this.smallSize = 60
     this.stackSize = 20000
-    this.send('showCanvasChanged')
-    this.send('showOutputChanged')
-    this.send('showMemoryChanged')
+    this.send('showCanvasOnRunChanged')
+    this.send('showOutputOnWriteChanged')
+    this.send('showMemoryOnDumpChanged')
     this.send('drawCountMaxChanged')
     this.send('codeCountMaxChanged')
     this.send('smallSizeChanged')
     this.send('stackSizeChanged')
+  }
+
+  // TODO: this should be in the machine module
+  dumpMemory (): void {
+    this.send('memoryDumped', machine.dump())
   }
 
   // play/pause the machine
@@ -601,19 +770,12 @@ class State {
     } else {
       if (!this.file.compiled) {
         this.compileCurrentFile()
-        this.send('fileChanged')
       }
       if (this.file.compiled) {
         machine.run(this.pcode, this.machineOptions)
       }
     }
-  }
-
-  // halt the machine
-  haltMachine () {
-    if (machine.isRunning()) {
-      machine.halt()
-    }
+    this.send('closeMenu', 'system')
   }
 
   // register callback on the record of outgoing messages
@@ -627,98 +789,6 @@ class State {
 
   // function for executing any registered callbacks following a state change
   send (message: Message, data: any = null) {
-    // define callback arguments
-    switch (message) {
-      case 'error': // fallthrough
-      case 'showComponent': // fallthrough
-      case 'fileChanged':
-        // used passed data argument or null
-        break
-
-      case 'languageChanged':
-        data = this.language
-        break
-
-      case 'filesChanged':
-        data = {
-          files: this.files,
-          currentFileIndex: this.currentFileIndex
-        }
-        break
-
-      case 'currentFileIndexChanged':
-        data = this.currentFileIndex
-        break
-
-      case 'nameChanged':
-        data = this.file.name
-        break
-
-      case 'codeChanged':
-        // send language as well (for syntax highlighting)
-        data = {
-          code: this.file.code,
-          language: this.language
-        }
-        break
-
-      case 'usageChanged':
-        // send language as well (for syntax highlighting)
-        data = {
-          usage: this.usage,
-          language: this.language
-        }
-        break
-
-      case 'lexemesChanged':
-        // send language as well (for syntax highlighting)
-        data = {
-          lexemes: this.lexemes,
-          language: this.language
-        }
-        break
-
-      case 'pcodeChanged':
-        data = {
-          pcode: this.pcode,
-          assembler: this.assembler,
-          decimal: this.decimal
-        }
-        break
-
-      case 'showCanvasChanged':
-        data = this.showCanvas
-        break
-
-      case 'showOutputChanged':
-        data = this.showOutput
-        break
-
-      case 'showMemoryChanged':
-        data = this.showMemory
-        break
-
-      case 'drawCountMaxChanged':
-      data = this.drawCountMax
-        break
-
-      case 'codeCountMaxChanged':
-        data = this.codeCountMax
-        break
-
-      case 'smallSizeChanged':
-        data = this.smallSize
-        break
-
-      case 'stackSizeChanged':
-        data = this.stackSize
-        break
-
-      case 'dumpMemory':
-        data = machine.dump()
-        break
-    }
-
     // execute any callbacks registered for this message
     if (this.#replies[message]) {
       this.#replies[message].forEach((callback: Reply) => {
@@ -727,15 +797,9 @@ class State {
     }
 
     // if the file has changed, reply that the file properties have changed as well
-    if (message === 'fileChanged') {
-      this.send('filesChanged')
-      this.send('languageChanged')
-      this.send('currentFileIndexChanged')
-      this.send('nameChanged')
+    if (message === 'currentFileIndexChanged') {
+      this.send('filenameChanged')
       this.send('codeChanged')
-      this.send('usageChanged')
-      this.send('lexemesChanged')
-      this.send('pcodeChanged')
     }
   }
 }
