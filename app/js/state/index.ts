@@ -16,6 +16,7 @@ import lexer from '../compile/lexer/index'
 import * as machine from '../machine/index'
 import { Message, Reply } from './messages'
 import { load, save } from './storage'
+import { defaults } from './properties'
 import { input } from '../tools/elements'
 
 // define the system state object
@@ -75,52 +76,55 @@ class State {
     // record of callbacks to execute on state change
     this.#replies = {}
     // system settings
-    this.#language = load('language', 'Pascal')
-    this.#mode = load('mode', 'normal')
-    this.#editorFontFamily = load('editorFontFamily', 'Courier')
-    this.#editorFontSize = load('editorFontSize', 13)
-    this.#outputFontFamily = load('outputFontFamily', 'Courier')
-    this.#outputFontSize = load('outputFontSize', 13)
-    this.#includeCommentsInExamples = load('includeCommentsInExamples', true)
-    this.#loadCorrespondingExample = load('loadCorrespondingExample', true)
-    this.#assembler = load('assembler', true)
-    this.#decimal = load('decimal', true)
-    this.#autoCompileOnLoad = load('autoCompileOnLoad', false)
-    this.#autoRunOnLoad = load('autoRunOnLoad', false)
-    this.#autoFormatOnLoad = load('autoFormatOnLoad', false)
+    this.#language = load('language')
+    this.#mode = load('mode')
+    this.#editorFontFamily = load('editorFontFamily')
+    this.#editorFontSize = load('editorFontSize')
+    this.#outputFontFamily = load('outputFontFamily')
+    this.#outputFontSize = load('outputFontSize')
+    this.#includeCommentsInExamples = load('includeCommentsInExamples')
+    this.#loadCorrespondingExample = load('loadCorrespondingExample')
+    this.#assembler = load('assembler')
+    this.#decimal = load('decimal')
+    this.#autoCompileOnLoad = load('autoCompileOnLoad')
+    this.#autoRunOnLoad = load('autoRunOnLoad')
+    this.#autoFormatOnLoad = load('autoFormatOnLoad')
     // help page properties
-    this.#commandsCategoryIndex = load('commandsCategoryIndex', 0)
-    this.#showSimpleCommands = load('showSimpleCommands', true)
-    this.#showIntermediateCommands = load('showIntermediateCommands', false)
-    this.#showAdvancedCommands = load('showAdvancedCommands', false)
+    this.#commandsCategoryIndex = load('commandsCategoryIndex')
+    this.#showSimpleCommands = load('showSimpleCommands')
+    this.#showIntermediateCommands = load('showIntermediateCommands')
+    this.#showAdvancedCommands = load('showAdvancedCommands')
     // file memory
-    this.#files = load('files', [new File(this.language)])
-    this.#currentFileIndex = load('currentFileIndex', 0)
-    this.#lexemes = load('lexemes', [])
-    this.#usage = load('usage', [])
-    this.#routines = load('routines', [])
-    this.#pcode = load('pcode', [])
+    this.#files = load('files')
+    if (this.#files.length === 0) {
+      this.#files.push(new File(this.language))
+    }
+    this.#currentFileIndex = load('currentFileIndex')
+    this.#lexemes = load('lexemes')
+    this.#usage = load('usage')
+    this.#routines = load('routines')
+    this.#pcode = load('pcode')
     // machine runtime options
-    this.#showCanvasOnRun = load('showCanvasOnRun', true)
-    this.#showOutputOnWrite = load('showOutputOnWrite', false)
-    this.#showMemoryOnDump = load('showMemoryOnDump', true)
-    this.#drawCountMax = load('drawCountMax', 4)
-    this.#codeCountMax = load('codeCountMax', 100000)
-    this.#smallSize = load('smallSize', 60)
-    this.#stackSize = load('stackSize', 20000)
-    this.#traceOnRun = load('traceOnRun', false)
-    this.#activateHCLR = load('activateHCLR', true)
-    this.#preventStackCollision = load('preventStackCollision', true)
-    this.#rangeCheckArrays = load('rangeCheckArrays', true)
+    this.#showCanvasOnRun = load('showCanvasOnRun')
+    this.#showOutputOnWrite = load('showOutputOnWrite')
+    this.#showMemoryOnDump = load('showMemoryOnDump')
+    this.#drawCountMax = load('drawCountMax')
+    this.#codeCountMax = load('codeCountMax')
+    this.#smallSize = load('smallSize')
+    this.#stackSize = load('stackSize')
+    this.#traceOnRun = load('traceOnRun')
+    this.#activateHCLR = load('activateHCLR')
+    this.#preventStackCollision = load('preventStackCollision')
+    this.#rangeCheckArrays = load('rangeCheckArrays')
     // compiler options
-    this.#canvasStartSize = load('canvasStartSize', 1000)
-    this.#setupDefaultKeyBuffer = load('setupDefaultKeyBuffer', true)
-    this.#turtleAttributesAsGlobals = load('turtleAttributesAsGlobals', true)
-    this.#initialiseLocals = load('initialiseLocals', true)
-    this.#allowCSTR = load('allowCSTR', true)
-    this.#separateReturnStack = load('separateReturnStack', true)
-    this.#separateMemoryControlStack = load('separateMemoryControlStack', true)
-    this.#separateSubroutineRegisterStack = load('separateSubroutineRegisterStack', true)
+    this.#canvasStartSize = load('canvasStartSize')
+    this.#setupDefaultKeyBuffer = load('setupDefaultKeyBuffer')
+    this.#turtleAttributesAsGlobals = load('turtleAttributesAsGlobals')
+    this.#initialiseLocals = load('initialiseLocals')
+    this.#allowCSTR = load('allowCSTR')
+    this.#separateReturnStack = load('separateReturnStack')
+    this.#separateMemoryControlStack = load('separateMemoryControlStack')
+    this.#separateSubroutineRegisterStack = load('separateSubroutineRegisterStack')
 
     // register to pass some machine signals on from here
     machine.on('showCanvas', () => { this.send('selectTab', 'canvas') })
@@ -573,7 +577,43 @@ class State {
   saveSettings (): void {}
 
   // reset default settings
-  resetDefaults (): void {}
+  resetDefaults (): void {
+    // system settings
+    this.language = defaults.language
+    this.mode = defaults.mode
+    this.editorFontFamily = defaults.editorFontFamily
+    this.editorFontSize = defaults.editorFontSize
+    this.outputFontFamily = defaults.outputFontFamily
+    this.outputFontSize = defaults.outputFontSize
+    this.includeCommentsInExamples = defaults.includeCommentsInExamples
+    this.loadCorrespondingExample = defaults.loadCorrespondingExample
+    this.assembler = defaults.assembler
+    this.decimal = defaults.decimal
+    this.autoCompileOnLoad = defaults.autoCompileOnLoad
+    this.autoRunOnLoad = defaults.autoRunOnLoad
+    this.autoFormatOnLoad = defaults.autoFormatOnLoad
+    // machine runtime options
+    this.showCanvasOnRun = defaults.showCanvasOnRun
+    this.showOutputOnWrite = defaults.showOutputOnWrite
+    this.showMemoryOnDump = defaults.showMemoryOnDump
+    this.drawCountMax = defaults.drawCountMax
+    this.codeCountMax = defaults.codeCountMax
+    this.smallSize = defaults.smallSize
+    this.stackSize = defaults.stackSize
+    this.traceOnRun = defaults.traceOnRun
+    this.activateHCLR = defaults.activateHCLR
+    this.preventStackCollision = defaults.preventStackCollision
+    this.rangeCheckArrays = defaults.rangeCheckArrays
+    // compiler options
+    this.canvasStartSize = defaults.canvasStartSize
+    this.setupDefaultKeyBuffer = defaults.setupDefaultKeyBuffer
+    this.turtleAttributesAsGlobals = defaults.turtleAttributesAsGlobals
+    this.initialiseLocals = defaults.initialiseLocals
+    this.allowCSTR = defaults.allowCSTR
+    this.separateReturnStack = defaults.separateReturnStack
+    this.separateMemoryControlStack = defaults.separateMemoryControlStack
+    this.separateSubroutineRegisterStack = defaults.separateSubroutineRegisterStack
+  }
 
   // add a file to the files array (and update current file index)
   addFile (file: File): void {

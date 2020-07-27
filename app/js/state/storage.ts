@@ -2,66 +2,12 @@
  * This module facilitates saving/loading the state of the application to
  * session storage.
  */
-
-// session property type
-export type Property = typeof properties[number]
-
-// session properties
-export const properties = [
-  // system settings
-  'language',
-  'mode',
-  'editorFontFamily',
-  'editorFontSize',
-  'outputFontFamily',
-  'outputFontSize',
-  'includeCommentsInExamples',
-  'loadCorrespondingExample',
-  'assembler',
-  'decimal',
-  'autoCompileOnLoad',
-  'autoRunOnLoad',
-  'autoFormatOnLoad',
-  // help page properties
-  'commandsCategoryIndex',
-  'showSimpleCommands',
-  'showIntermediateCommands',
-  'showAdvancedCommands',
-  // file memory
-  'files',
-  'currentFileIndex',
-  'filename',
-  'lexemes',
-  'usage',
-  'routines',
-  'pcode',
-  // machine runtime options
-  'showCanvasOnRun',
-  'showOutputOnWrite',
-  'showMemoryOnDump',
-  'drawCountMax',
-  'codeCountMax',
-  'smallSize',
-  'stackSize',
-  'traceOnRun',
-  'activateHCLR',
-  'preventStackCollision',
-  'rangeCheckArrays',
-  // compiler options
-  'canvasStartSize',
-  'setupDefaultKeyBuffer',
-  'turtleAttributesAsGlobals',
-  'initialiseLocals',
-  'allowCSTR',
-  'separateReturnStack',
-  'separateMemoryControlStack',
-  'separateSubroutineRegisterStack'
-] as const
+import { Property, defaults } from './properties'
 
 // load a property from local/session storage
-export function load (property: Property, defaultValue: any): any {
+export function load (property: Property): any {
   return (sessionStorage.getItem(property) === null)
-    ? defaultValue
+    ? defaults[property]
     : JSON.parse(sessionStorage.getItem(property))
 }
 

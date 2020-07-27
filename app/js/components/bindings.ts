@@ -2,9 +2,9 @@
  * Binds select/input elements to state properties.
  */
 import state from '../state/index'
-import { Property } from '../state/storage'
+import { Property } from '../state/properties'
 import { languages, Language } from '../definitions/languages'
-import { modes, Mode } from '../definitions/modes'
+import { Mode } from '../definitions/modes'
 import { option, fill } from '../tools/elements'
 import { categories } from '../definitions/categories'
 import { SystemError } from '../definitions/errors'
