@@ -13,7 +13,9 @@ import { Language, languages, extensions, skeletons } from '../definitions/langu
 import { Mode } from '../definitions/modes'
 import compile from '../compile/index'
 import lexer from '../compile/lexer/index'
+import { Options as CompilerOptions } from '../compile/options'
 import * as machine from '../machine/index'
+import { Options as MachineOptions } from '../machine/options'
 import { Message, Reply } from './messages'
 import { load, save } from './storage'
 import { defaults } from './properties'
@@ -239,15 +241,32 @@ class State {
   get separateSubroutineRegisterStack (): boolean { return this.#separateSubroutineRegisterStack }
 
   // derivative getters
-  get machineOptions (): object {
+  get machineOptions (): MachineOptions {
     return {
-      showCanvas: this.showCanvasOnRun,
-      showOutput: this.showOutputOnWrite,
-      showMemory: this.showMemoryOnDump,
+      showCanvasOnRun: this.showCanvasOnRun,
+      showOutputOnWrite: this.showOutputOnWrite,
+      showMemoryOnDump: this.showMemoryOnDump,
       drawCountMax: this.drawCountMax,
       codeCountMax: this.codeCountMax,
       smallSize: this.smallSize,
-      stackSize: this.stackSize
+      stackSize: this.stackSize,
+      traceOnRun: this.traceOnRun,
+      activateHCLR: this.activateHCLR,
+      preventStackCollision: this.preventStackCollision,
+      rangeCheckArrays: this.rangeCheckArrays
+    }
+  }
+
+  get compilerOptions (): CompilerOptions {
+    return {
+        canvasStartSize: this.canvasStartSize,
+        setupDefaultKeyBuffer: this.setupDefaultKeyBuffer,
+        turtleAttributesAsGlobals: this.turtleAttributesAsGlobals,
+        initialiseLocals: this.initialiseLocals,
+        allowCSTR: this.allowCSTR,
+        separateReturnStack: this.separateReturnStack,
+        separateMemoryControlStack: this.separateMemoryControlStack,
+        separateSubroutineRegisterStack: this.separateSubroutineRegisterStack
     }
   }
 
@@ -776,23 +795,6 @@ class State {
       this.file.compiled = false
     }
     this.file.code = this.file.backup
-  }
-
-  resetMachineOptions (): void {
-    this.showCanvasOnRun = true
-    this.showOutputOnWrite = false
-    this.showMemoryOnDump = true
-    this.drawCountMax = 4
-    this.codeCountMax = 100000
-    this.smallSize = 60
-    this.stackSize = 20000
-    this.send('showCanvasOnRunChanged')
-    this.send('showOutputOnWriteChanged')
-    this.send('showMemoryOnDumpChanged')
-    this.send('drawCountMaxChanged')
-    this.send('codeCountMaxChanged')
-    this.send('smallSizeChanged')
-    this.send('stackSizeChanged')
   }
 
   // TODO: this should be in the machine module

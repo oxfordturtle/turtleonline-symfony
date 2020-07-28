@@ -2,11 +2,11 @@
   "format":1,
   "language":"Pascal",
   "version":13,
-  "name":"Text and arrow (using PRINT)",
+  "name":"Text and arrow [PRINT]",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"11:59:01",
-  "code":"PROGRAM YouAreHere;\nBEGIN\n  colour(red);\n  blot(20);\n  colour(violet);\n  print('You are here', 4, 36);\n  setxy(790, 540);\n  colour(blue);\n  drawxy(40, 0);\n  drawxy(28, -28);\n  drawxy(0, -40);\n  drawxy(-28, -28);\n  drawxy(-40, 0);\n  setxy(500, 500);\n  setxy(530, 480);\n  setxy(535, 505);\n  setxy(500, 500);\n  polyline(5);\n  polygon(3)\nEND.",
+  "date":"28/07/2020",
+  "time":"13:23:49",
+  "code":"PROGRAM YouAreHere;\nBEGIN\n colour(red);\n blot(20);\n colour(violet);\n print('You are here',4,36);\n setxy(790,540);\n colour(blue);\n drawxy(40,0);\n drawxy(28,-28);\n drawxy(0,-40);\n drawxy(-28,-28);\n drawxy(-40,0);\n setxy(500,500);\n setxy(530,480);\n setxy(535,505);\n setxy(500,500);\n polyline(5);\n polygon(3)\nEND.",
   "usage":[
     {
       "category": "Turtle: relative movement",

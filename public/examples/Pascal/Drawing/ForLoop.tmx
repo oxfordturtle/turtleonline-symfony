@@ -4,9 +4,9 @@
   "version":13,
   "name":"FOR loop (uses a counting variable)",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"11:59:01",
-  "code":"PROGRAM ForLoop;\nVAR count: integer;\nBEGIN\n  {counting from 1 to 200 ...}\n  for count := 1 to 200 do\n    begin\n      {move forward and turn right 5 degrees}\n      forward(count / 3);\n      right(5);\n      {draw a red blot radius 200}\n      colour(red);\n      blot(200);\n      {draw a black circle around the red blot}\n      colour(black);\n      circle(200)\n    end\nEND.",
+  "date":"28/07/2020",
+  "time":"13:23:48",
+  "code":"PROGRAM ForLoop;\nVAR count: integer;\nBEGIN\n {counting from 1 to 200 ...}\n for count:=1 to 200 do\n  begin\n   {move forward and turn right 5 degrees}\n   forward(count/3);\n   right(5);\n   {draw a red blot radius 200}\n   colour(red);\n   blot(200);\n   {draw a black circle around the red blot}\n   colour(black);\n   circle(200)\n  end\nEND.",
   "usage":[
     {
       "category": "Turtle: relative movement",

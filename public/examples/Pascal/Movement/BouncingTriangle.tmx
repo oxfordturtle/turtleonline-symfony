@@ -4,9 +4,9 @@
   "version":13,
   "name":"Bouncing triangle",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"11:59:03",
-  "code":"PROGRAM BouncingTriangle;\nCONST size = 100;\nVAR x, y, d: integer;\n    xvel, yvel, dvel: integer;\n    bouncex, bouncey: boolean;\n\n  Procedure triangle(col: integer);\n  Var count: integer;\n  Begin\n    bouncex := false;\n    bouncey := false;\n    setxy(x, y);\n    direction(d);\n    colour(col);\n    for count := 1 to 3 do\n      begin\n        forward(size);\n        if abs(turtx - 500) > 495 then\n          bouncex := true;\n        if abs(turty - 500) > 495 then\n          bouncey := true;\n        back(size);\n        forget(1);\n        right(120)\n      end;\n    polygon(3)\n  End;\n\nBEGIN\n  x := 300;\n  y := 700;\n  d := 0;\n  xvel := 8;\n  yvel := -4;\n  dvel := 5;\n  while 0 < 1 do\n    begin\n      noupdate;\n      triangle(white);\n      x := x + xvel;\n      y := y + yvel;\n      d := (d + dvel) mod 360;\n      triangle(red);\n      update;\n      pause(10);\n      if bouncex then\n        begin\n          xvel := -xvel;\n          dvel := -dvel\n        end;\n      if bouncey then\n        begin\n          yvel := -yvel;\n          dvel := -dvel\n        end\n    end\nEND.",
+  "date":"28/07/2020",
+  "time":"13:23:50",
+  "code":"PROGRAM BouncingTriangle;\nCONST size=100;\nVAR x,y,d: integer;\n    xvel,yvel,dvel: integer;\n    bouncex,bouncey: boolean;\n\n Procedure triangle(col: integer);\n Var count: integer;\n Begin\n  bouncex:=false;\n  bouncey:=false;\n  setxy(x,y);\n  direction(d);\n  colour(col);\n  for count:=1 to 3 do\n   begin\n    forward(size);\n    if abs(turtx-500)>495 then\n     bouncex:=true;\n    if abs(turty-500)>495 then\n     bouncey:=true;\n    back(size);\n    forget(1);\n    right(120)\n   end;\n  polygon(3)\n End;\n\nBEGIN\n x:=300;\n y:=700;\n d:=0;\n xvel:=8;\n yvel:=-4;\n dvel:=5;\n while 0<1 do\n  begin\n   noupdate;\n   triangle(white);\n   x:=x+xvel;\n   y:=y+yvel;\n   d:=(d+dvel) mod 360;\n   triangle(red);\n   update;\n   pause(10);\n   if bouncex then\n    begin\n     xvel:=-xvel;\n     dvel:=-dvel\n    end;\n   if bouncey then\n    begin\n     yvel:=-yvel;\n     dvel:=-dvel\n    end\n  end\nEND.",
   "usage":[
     {
       "category": "Turtle: relative movement",

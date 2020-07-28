@@ -4,9 +4,9 @@
   "version":13,
   "name":"Bouncing ball (using variables)",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:26",
-  "code":"REM BouncingBall\n\nx% = 100\ny% = 700\nxvel% = 8\nyvel% = -4\nWHILE 0 < 1\n  NOUPDATE\n  COLOUR(WHITE)\n  BLOT(51)\n  x% = x% + xvel%\n  y% = y% + yvel%\n  SETXY(x%, y%)\n  COLOUR(RED)\n  BLOT(50)\n  UPDATE\n  PAUSE(5)\n  IF (x% < 50) OR (x% > 949) THEN\n    xvel% = -xvel%\n  ENDIF\n  IF (y% < 50) OR (y% > 949) THEN\n    yvel% = -yvel%\n  ENDIF\nENDWHILE\nEND",
+  "date":"28/07/2020",
+  "time":"13:25:31",
+  "code":"REM BouncingBall\n\nx%=100\ny%=700\nxvel%=8\nyvel%=-4\nWHILE 0<1\n NOUPDATE\n COLOUR(WHITE)\n BLOT(51)\n x%=x%+xvel%\n y%=y%+yvel%\n SETXY(x%,y%)\n COLOUR(RED)\n BLOT(50)\n UPDATE\n PAUSE(5)\n IF (x%<50) OR (x%>949) THEN\n  xvel%=-xvel%\n ENDIF\n IF (y%<50) OR (y%>949) THEN\n  yvel%=-yvel%\n ENDIF\nENDWHILE\nEND",
   "usage":[
     {
       "category": "Turtle: absolute movement",

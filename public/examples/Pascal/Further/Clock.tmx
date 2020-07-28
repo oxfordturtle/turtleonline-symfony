@@ -2,11 +2,11 @@
   "format":1,
   "language":"Pascal",
   "version":13,
-  "name":"Analogue clock (nested REPEAT)",
+  "name":"Analogue clock (nested Repeat loops)",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"11:59:01",
-  "code":"PROGRAM Clock;\nVAR hours: integer;\n    minutes: integer;\n\n  Procedure showhands;\n  Begin\n    colour(white);\n    blot(360);\n    colour(red);\n    direction(hours * 30);\n    thickness(10);\n    forward(250);\n    back(250);\n    direction(minutes * 6);\n    thickness(6);\n    forward(350);\n    back(350)\n  End;\n\nBEGIN\n  thickness(10);\n  circle(400);\n  hours := 0;\n  minutes := 0;\n  repeat\n    repeat\n      showhands;\n      pause(600);\n      inc(minutes)\n    until minutes = 60;\n    inc(hours);\n    minutes := 0\n  until hours = 12;\n  showhands\nEND.",
+  "date":"28/07/2020",
+  "time":"13:23:49",
+  "code":"PROGRAM Clock;\nVAR hours: integer;\n    minutes: integer;\n\n Procedure showhands;\n Begin\n  colour(white);\n  blot(360);\n  colour(red);\n  direction(hours*30);\n  thickness(10);\n  forward(250);\n  back(250);\n  direction(minutes*6);\n  thickness(6);\n  forward(350);\n  back(350)\n End;\n\nBEGIN\n thickness(10);\n circle(400);\n hours:=0;\n minutes:=0;\n repeat\n  repeat\n   showhands;\n   pause(600);\n   inc(minutes)\n  until minutes=60;\n  inc(hours);\n  minutes:=0\n until hours=12;\n showhands\nEND.",
   "usage":[
     {
       "category": "Turtle: relative movement",

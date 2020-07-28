@@ -4,9 +4,9 @@
   "version":13,
   "name":"Circling circles",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"11:59:01",
-  "code":"PROGRAM Circles;\nVAR count: integer;\nBEGIN\n  {set up the turtle}\n  thickness(6);\n  penup;\n  blank(black);\n  colour(orange);\n  {counting from 1 to 36 ...}\n  for count := 1 to 36 do\n    begin\n      {move 200 units from middle of canvas}\n      forward(200);\n      {draw circle radius 200 centred there}\n      circle(200);\n      {move back to middle of canvas}\n      back(200);\n      {turn right 10 degrees - 1/36 of full turn}\n      right(10);\n      {pause 25 milliseconds before next circle}\n      pause(25)\n    end\nEND.",
+  "date":"28/07/2020",
+  "time":"13:23:48",
+  "code":"PROGRAM Circles;\nVAR count: integer;\nBEGIN\n {set up the turtle}\n thickness(6);\n penup;\n blank(black);\n colour(orange);\n {counting from 1 to 36 ...}\n for count:=1 to 36 do\n  begin\n   {move 200 units from middle of canvas}\n   forward(200);\n   {draw circle radius 200 centred there}\n   circle(200);\n   {move back to middle of canvas}\n   back(200);\n   {turn right 10 degrees - 1/36 of full turn}\n   right(10);\n   {pause 25 milliseconds before next circle}\n   pause(25)\n  end\nEND.",
   "usage":[
     {
       "category": "Turtle: relative movement",

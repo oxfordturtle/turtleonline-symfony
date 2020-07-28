@@ -4,9 +4,9 @@
   "version":13,
   "name":"Simple drawing with pauses",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"11:59:01",
-  "code":"PROGRAM DrawPause;\nBEGIN\n  {draw green blot radius 100, then pause}\n  colour(green);\n  blot(100);\n  pause(1000);\n  {draw red line length 450 upwards, then pause}\n  colour(red);\n  forward(450);\n  pause(1000);\n  {turn right 90 degrees and change thickness}\n  right(90);\n  thickness(9);\n  {change colour, pause, draw line length 300}\n  colour(blue);\n  pause(1000);\n  forward(300)\nEND.",
+  "date":"28/07/2020",
+  "time":"13:23:48",
+  "code":"PROGRAM DrawPause;\nBEGIN\n {draw green blot radius 100, then pause}\n colour(green);\n blot(100);\n pause(1000);\n {draw red line length 450 upwards, then pause}\n colour(red);\n forward(450);\n pause(1000);\n {turn right 90 degrees and change thickness}\n right(90);\n thickness(9);\n {change colour, pause, draw line length 300}\n colour(blue);\n pause(1000);\n forward(300)\nEND.",
   "usage":[
     {
       "category": "Turtle: relative movement",

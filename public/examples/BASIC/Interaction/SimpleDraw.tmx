@@ -4,9 +4,9 @@
   "version":13,
   "name":"Drawing to the mouse",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:27",
-  "code":"REM SimpleDraw\n\nPROCpalette\nHOME\nTHICKNESS(10)\nBLOT(2)\nREPEAT\n  REPEAT\n    UPDATE\n  UNTIL (?LMOUSE > 0) OR (?RMOUSE > 0)\n  IF ?MOUSEY > 900 THEN\n    COLOUR(RGB(?MOUSEX DIV 100 + 1))\n  ELSE\n    IF ?LMOUSE > 0 THEN\n      DRAWXY(?MOUSEX - turtx%, ?MOUSEY - turty%)\n    ELSE\n      SETXY(?MOUSEX, ?MOUSEY)\n    ENDIF\n  ENDIF\nUNTIL FALSE\nEND\n\nDEF PROCpalette\n  LOCAL col%\n  FOR col% = 1 TO 10\n    SETXY(col% * 100 - 50, 950)\n    COLOUR(RGB(col%))\n    BLOT(50)\n  NEXT\nENDPROC",
+  "date":"28/07/2020",
+  "time":"13:25:33",
+  "code":"REM SimpleDraw\n\nPROCpalette\nHOME\nTHICKNESS(10)\nBLOT(2)\nREPEAT\n REPEAT\n  UPDATE\n UNTIL (?LMOUSE>0) OR (?RMOUSE>0)\n IF ?MOUSEY>900 THEN\n  COLOUR(RGB(?MOUSEX DIV 100+1))\n ELSE\n  IF ?LMOUSE>0 THEN\n   DRAWXY(?MOUSEX-turtx%,?MOUSEY-turty%)\n  ELSE\n   SETXY(?MOUSEX,?MOUSEY)\n  ENDIF\n ENDIF\nUNTIL FALSE\nEND\n\nDEF PROCpalette\n LOCAL col%\n FOR col%=1 TO 10\n  SETXY(col%*100-50,950)\n  COLOUR(RGB(col%))\n  BLOT(50)\n NEXT\nENDPROC",
   "usage":[
     {
       "category": "Turtle: relative movement",

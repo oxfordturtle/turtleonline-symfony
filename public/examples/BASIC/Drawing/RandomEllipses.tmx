@@ -4,9 +4,9 @@
   "version":13,
   "name":"Random ellipses pattern",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:24",
-  "code":"REM RandomEllipses\n\nFOR count% = 1 TO 10\n  x% = RND(1500) - 250\n  y% = RND(1500) - 250\n  rx% = RND(500) + 500\n  ry% = RND(500) + 500\n  SETXY(x%, y%)\n  ELLIPSE(rx%, ry%)\nNEXT\nnextcol% = 0\nFOR count% = 1 TO 10000\n  x% = RND(1000)\n  y% = RND(1000)\n  IF PIXCOL(x%, y%) = WHITE THEN\n    nextcol% = nextcol% MOD 20 + 1\n    RECOLOUR(x%, y%, RGB(nextcol%))\n  ENDIF\nNEXT\nEND",
+  "date":"28/07/2020",
+  "time":"13:25:30",
+  "code":"REM RandomEllipses\n\nFOR count%=1 TO 10\n x%=RND(1500)-250\n y%=RND(1500)-250\n rx%=RND(500)+500\n ry%=RND(500)+500\n SETXY(x%,y%)\n ELLIPSE(rx%,ry%)\nNEXT\nnextcol%=0\nFOR count%=1 TO 10000\n x%=RND(1000)\n y%=RND(1000)\n IF PIXCOL(x%,y%)=WHITE THEN\n  nextcol%=nextcol% MOD 20+1\n  RECOLOUR(x%,y%,RGB(nextcol%))\n ENDIF\nNEXT\nEND",
   "usage":[
     {
       "category": "Turtle: absolute movement",

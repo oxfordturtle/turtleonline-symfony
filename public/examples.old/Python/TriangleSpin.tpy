@@ -1,6 +1,0 @@
-# TriangleSpin
-
-movexy(30, 20)
-for i in range(1, 300, 1):
-  forward(i * 3)
-  right(121)

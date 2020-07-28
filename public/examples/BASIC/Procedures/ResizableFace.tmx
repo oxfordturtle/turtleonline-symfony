@@ -4,9 +4,9 @@
   "version":13,
   "name":"Resizable face (hierarchical procedures)",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:24",
-  "code":"REM ResizableFace\n\nPROCface(400)\nEND\n\nDEF PROCface(size%)\n  COLOUR(PEACH)\n  BLOT(size%)\n  COLOUR(DARKRED)\n  BLOT(size% * 7 / 10)\n  FORWARD(size% * 3 / 20)\n  COLOUR(PEACH)\n  BLOT(size% * 3 / 4)\n  BACK(size% * 3 / 10)\n  COLOUR(ROYAL)\n  BLOT(size% * 3 / 20)\n  PENUP\n  FORWARD(size% * 9 / 20)\n  LEFT(90)\n  FORWARD(size% * 2 / 5)\n  PROCeye(size%)\n  BACK(size% * 4 / 5)\n  PROCeye(size%)\nENDPROC\n\nDEF PROCeye(size%)\n  COLOUR(WHITE)\n  ELLBLOT(size% * 3 / 20, size% / 10)\n  COLOUR(EMERALD)\n  BLOT(size% * 9 / 100)\n  COLOUR(BLACK)\n  BLOT(size% / 25)\nENDPROC",
+  "date":"28/07/2020",
+  "time":"13:25:30",
+  "code":"REM ResizableFace\n\nPROCface(400)\nEND\n\nDEF PROCface(size%)\n COLOUR(PEACH)\n BLOT(size%)\n COLOUR(DARKRED)\n BLOT(size%*7/10)\n FORWARD(size%*3/20)\n COLOUR(PEACH)\n BLOT(size%*3/4)\n BACK(size%*3/10)\n COLOUR(ROYAL)\n BLOT(size%*3/20)\n PENUP\n FORWARD(size%*9/20)\n LEFT(90)\n FORWARD(size%*2/5)\n PROCeye(size%)\n BACK(size%*4/5)\n PROCeye(size%)\nENDPROC\n\nDEF PROCeye(size%)\n COLOUR(WHITE)\n ELLBLOT(size%*3/20,size%/10)\n COLOUR(EMERALD)\n BLOT(size%*9/100)\n COLOUR(BLACK)\n BLOT(size%/25)\nENDPROC",
   "usage":[
     {
       "category": "Turtle: relative movement",

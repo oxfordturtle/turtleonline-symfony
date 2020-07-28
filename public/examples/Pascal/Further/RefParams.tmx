@@ -3,10 +3,10 @@
   "language":"Pascal",
   "version":13,
   "name":"Reference parameters",
-  "author":"meriv",
-  "date":"24/07/2020",
-  "time":"09:14:50",
-  "code":"PROGRAM RefParams;\n\n  Procedure lines(var style: integer; convert: boolean);\n  Var count: integer;\n  Begin\n    for count := 1 to 8 do\n      begin\n        if convert then\n          style := rgb(count)\n        else\n          style := count;\n        forward(50);\n        pause(100)\n      end\n  End;\n\n  Procedure dots(var coord: integer);\n  Var count: integer;\n  Begin\n    for count := 1 to 8 do\n      begin\n        coord := coord + 100;\n        blot(40);\n        pause(100)\n      end\n  End;\n\nBEGIN\n  setxy(100, 900);\n  lines(turtt, false);\n  lines(turtc, true);\n  dots(turtx);\n  dots(turty)\nEND.",
+  "author":"Peter Millican",
+  "date":"28/07/2020",
+  "time":"13:23:49",
+  "code":"PROGRAM RefParams;\n\n Procedure lines(var style: integer;convert: boolean);\n Var count: integer;\n Begin\n  for count:=1 to 8 do\n   begin\n    if convert then\n     style:=rgb(count)\n    else\n     style:=count;\n    forward(50);\n    pause(100)\n   end\n End;\n\n Procedure dots(var coord: integer);\n Var count: integer;\n Begin\n  for count:=1 to 8 do\n   begin\n    coord:=coord+100;\n    blot(40);\n    pause(100)\n   end\n End;\n\nBEGIN\n setxy(100,900);\n lines(turtt,false);\n lines(turtc,true);\n dots(turtx);\n dots(turty)\nEND.",
   "usage":[
     {
       "category": "Turtle: relative movement",

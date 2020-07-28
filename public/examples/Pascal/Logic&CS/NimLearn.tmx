@@ -4,21 +4,21 @@
   "version":13,
   "name":"Nim learning program",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:12",
-  "code":"PROGRAM NimLearn;\nCONST maxcoins = 20;\n      maxtake = 3;\n      columns = 10;\n      margin = 35;\n      menutype = 4;\n      menusize = 36;\nVAR prob: array[1..maxcoins, 1..maxtake] of integer;\n    taken: array[1..maxcoins] of integer;\n    numcoins, move: integer;\n    h, v, r, font: integer;\n    max: integer;\n    youwin: integer;\n    myscore, yourscore: integer;\n    opponent: integer;\n    total, count: integer;\n\n  Procedure menu;\n  Var choice: integer;\n  Begin\n    blank(white);\n    setxy(margin, 50);\n    colour(brown);\n    print('   NIM LEARNING PROGRAM', menutype or 16, 42);\n    colour(darkred);\n    setxy(margin, 150);\n    print('This program learns to play NIM, and can be', menutype, 32);\n    setxy(margin, 200);\n    print('configured to play either against you (human', menutype, 32);\n    setxy(margin, 250);\n    print('opponent), or against a simulated computer', menutype, 32);\n    setxy(margin, 300);\n    print('opponent, which either plays randomly or', menutype, 32);\n    setxy(margin, 350);\n    print('itself learns from experience.', menutype, 32);\n    colour(black);\n    setxy(margin, 525);\n    print('Choose from the following:', menutype or 16, menusize);\n    setxy(margin, 650);\n    print('  1.  Human opponent', menutype, menusize);\n    setxy(margin, 750);\n    print('  2.  Random opponent', menutype, menusize);\n    setxy(margin, 850);\n    print('  3.  Opponent that also learns', menutype, menusize);\n    repeat\n      choice := abs(?key) - 48\n    until (choice > 0) and (choice < 4);\n    opponent := choice;\n    blank(white)\n  End;\n\n  Procedure initialise;\n  Var i, j: integer;\n  Begin\n    for i := 1 to maxcoins do\n      for j := 1 to maxtake do\n        if j > i then\n          prob[i, j] := 0\n        else\n          prob[i, j] := 5;\n    numcoins := maxcoins;\n    h := 1000 / (columns + 1);\n    v := 50;\n    r := (h * 3) / 8;\n    font := 28;\n    myscore := 0;\n    yourscore := 0\n  End;\n\n  Procedure display;\n  Var i, j: integer;\n  Begin\n    noupdate;\n    blank(white);\n    for i := 0 to maxcoins - 1 do\n      begin\n        setxy(3 * h / 2 + (i mod columns) * h, v + (i div columns) * v * (maxtake + 3));\n        if i < numcoins then\n          begin\n            colour(red);\n            blot(r)\n          end\n        else\n          begin\n            colour(white);\n            blot(r)\n          end;\n        movexy(-3 * font / 4, 0);\n        for j := 1 to maxtake do\n          begin\n            movexy(0, v);\n            colour(black);\n            box(h / 2, v, cream, true);\n            if taken[i + 1] = j then\n              box(h / 2, v, lime, true)\n            else\n            if taken[i + 1] = -j then\n              box(h / 2, v, cyan, true)\n            else\n              box(h / 2, v, cream, true);\n            print(' ' + str(prob[i + 1, j]), 4, font)\n          end;\n        if i mod columns = 0 then\n          begin\n            setxy(h / 2 - font / 2, v + (i / columns) * v * (maxtake + 3));\n            colour(blue);\n            for j := 1 to maxtake do\n              begin\n                movexy(0, v);\n                print(str(j), 4, font)\n              end\n          end\n      end;\n    update\n  End;\n\n  Function coins(n: integer): string;\n  Begin\n    if n = 1 then\n      result := '1 coin'\n    else\n      result := str(n) + ' coins'\n  End;\n\n  Function usermove(max: integer): integer;\n  Var n: integer;\n  Begin\n    colour(black);\n    setxy(h, v + (((maxcoins - 1) div columns) + 1) * v * (maxtake + 3));\n    box(1000, 500, white, false);\n    if numcoins = 1 then\n      begin\n        print('Since there is only one coin left, you must take it', 4, font);\n        pause(2000);\n        result := 1\n      end\n    else\n      begin\n        print('There are ' + coins(numcoins) + ', of which you may take up to ' + str(max) + '.',\n     4, font);\n        movexy(0, v);\n        print('How many would you like to take? ', 4, font);\n        reset(\\keybuffer);\n        repeat\n          n := val(read(1))\n        until (n > 0) and (n <= max);\n        reset(\\keybuffer);\n        movexy(0, v * 2);\n        print('OK - you are taking ' + coins(n) + ' ...', 4, font);\n        movexy(0, v);\n        result := n\n      end\n  End;\n\n  Function randommove(max: integer): integer;\n  Begin\n    result := random(max) + 1\n  End;\n\n  Function machinemove: integer;\n  Var i, total, choose: integer;\n  Begin\n    total := 0;\n    for i := 1 to maxtake do\n      total := total + prob[numcoins, i];\n    choose := random(total);\n    i := 0;\n    repeat\n      inc(i);\n      choose := choose - prob[numcoins, i]\n    until choose < 0;\n    result := i\n  End;\n\n  Procedure showresult;\n  Var s: string;\n  Begin\n    if opponent = 1 then\n      begin\n        colour(black);\n        setxy(200, v + (((maxcoins - 1) div columns) + 1) * v * (maxtake + 3));\n        if youwin > 0 then\n          print('YOU WIN!!', 4, font * 3)\n        else\n          print(' I WIN!!', 4, font * 3);\n        movexy(0, 4 * v);\n        print('Press <RETURN> or <ENTER> to continue ...', 4, font);\n        s := readln\n      end\n    else\n      writeln('PROGRAM: ' + str(myscore) + ';  OPPONENT: ' + str(yourscore))\n  End;\n\n  Procedure startgame;\n  Var i: integer;\n  Begin\n    for i := 1 to maxcoins do\n      taken[i] := 0;\n    numcoins := maxcoins\n  End;\n\n  Procedure adjustweights;\n  Var i, j: integer;\n      add: integer;\n  Begin\n    for i := 1 to maxcoins do\n      if taken[i] <> 0 then\n        begin\n          if taken[i] * youwin > 0 then\n            add := 1\n          else\n            add := -1;\n          for j := 1 to maxtake do\n            begin\n              if j <= i then\n                begin\n                  if (j = abs(taken[i])) then\n                    prob[i, j] := prob[i, j] + add\n                  else\n                    prob[i, j] := prob[i, j] - add;\n                  if prob[i, j] < 0 then\n                    prob[i, j] := 0;\n                  if prob[i, j] > 9 then\n                    prob[i, j] := 9\n                end\n            end\n        end\n  End;\n\nBEGIN\n  keyecho(false);\n  menu;\n  initialise;\n  repeat\n    startgame;\n    repeat\n      display;\n      if numcoins > maxtake then\n        max := maxtake\n      else\n        max := numcoins;\n      if opponent = 1 then\n        move := usermove(max)\n      else\n      if opponent = 2 then\n        move := randommove(max)\n      else\n        move := machinemove;\n      taken[numcoins] := move;\n      numcoins := numcoins - move;\n      if numcoins = 0 then\n        youwin := 1\n      else\n        begin\n          youwin := -1;\n          move := machinemove;\n          if opponent = 1 then\n            begin\n              pause(2000);\n              display;\n              setxy(h, v + (((maxcoins - 1) div columns) + 1) * v * (maxtake + 3));\n              print('The computer will choose on these probabilities:', 4, font);\n              movexy(0, v / 2);\n              total := prob[numcoins, 1] + prob[numcoins, 2] + prob[numcoins, 3];\n              for count := 1 to 3 do\n                begin\n                  movexy(0, v);\n                  print('     ' + coins(count) + ': ' + str(prob[numcoins, count]) + '/' + str(total),\n     4, font)\n                end;\n              pause(2000);\n              movexy(0, 3 * v / 2);\n              print('OK, in response, the computer takes ' + coins(move) + ' ...', 4, font);\n              pause(2000)\n            end;\n          taken[numcoins] := -move;\n          numcoins := numcoins - move\n        end;\n      display\n    until numcoins = 0;\n    if youwin > 0 then\n      inc(yourscore)\n    else\n      inc(myscore);\n    showresult;\n    adjustweights\n  until 0 = 1\nEND.",
+  "date":"28/07/2020",
+  "time":"13:25:16",
+  "code":"PROGRAM NimLearn;\nCONST maxcoins=20;\n      maxtake=3;\n      columns=10;\n      margin=35;\n      menutype=4;\n      menusize=36;\nVAR prob: array[1..maxcoins,1..maxtake] of integer;\n    taken: array[1..maxcoins] of integer;\n    numcoins,move: integer;\n    h,v,r,font: integer;\n    max: integer;\n    youwin: integer;\n    myscore,yourscore: integer;\n    opponent: integer;\n    total,count: integer;\n\n Procedure menu;\n Var choice: integer;\n Begin\n  blank(white);\n  setxy(margin,50);\n  colour(brown);\n  print('   NIM LEARNING PROGRAM',menutype or 16,42);\n  colour(darkred);\n  setxy(margin,150);\n  print('This program learns to play NIM, and can be',menutype,32);\n  setxy(margin,200);\n  print('configured to play either against you (human',menutype,32);\n  setxy(margin,250);\n  print('opponent), or against a simulated computer',menutype,32);\n  setxy(margin,300);\n  print('opponent, which either plays randomly or',menutype,32);\n  setxy(margin,350);\n  print('itself learns from experience.',menutype,32);\n  colour(black);\n  setxy(margin,525);\n  print('Choose from the following:',menutype or 16,menusize);\n  setxy(margin,650);\n  print('  1.  Human opponent',menutype,menusize);\n  setxy(margin,750);\n  print('  2.  Random opponent',menutype,menusize);\n  setxy(margin,850);\n  print('  3.  Opponent that also learns',menutype,menusize);\n  repeat\n   choice:=abs(?key)-48\n  until (choice>0) and (choice<4);\n  opponent:=choice;\n  blank(white)\n End;\n\n Procedure initialise;\n Var i,j: integer;\n Begin\n  for i:=1 to maxcoins do\n   for j:=1 to maxtake do\n    if j>i then\n     prob[i,j]:=0\n    else\n     prob[i,j]:=5;\n  numcoins:=maxcoins;\n  h:=1000/(columns+1);\n  v:=50;\n  r:=(h*3)/8;\n  font:=28;\n  myscore:=0;\n  yourscore:=0\n End;\n\n Procedure display;\n Var i,j: integer;\n Begin\n  noupdate;\n  blank(white);\n  for i:=0 to maxcoins-1 do\n   begin\n    setxy(3*h/2+(i mod columns)*h,v+(i div columns)*v*(maxtake+3));\n    if i<numcoins then\n     begin\n      colour(red);\n      blot(r)\n     end\n    else\n     begin\n      colour(white);\n      blot(r)\n     end;\n    movexy(-3*font/4,0);\n    for j:=1 to maxtake do\n     begin\n      movexy(0,v);\n      colour(black);\n      box(h/2,v,cream,true);\n      if taken[i+1]=j then\n       box(h/2,v,lime,true)\n      else\n      if taken[i+1]=-j then\n       box(h/2,v,cyan,true)\n      else\n       box(h/2,v,cream,true);\n      print(' '+str(prob[i+1,j]),4,font)\n     end;\n    if i mod columns=0 then\n     begin\n      setxy(h/2-font/2,v+(i/columns)*v*(maxtake+3));\n      colour(blue);\n      for j:=1 to maxtake do\n       begin\n        movexy(0,v);\n        print(str(j),4,font)\n       end\n     end\n   end;\n  update\n End;\n\n Function coins(n: integer): string;\n Begin\n  if n=1 then\n   result:='1 coin'\n  else\n   result:=str(n)+' coins'\n End;\n\n Function usermove(max: integer): integer;\n Var n: integer;\n Begin\n  colour(black);\n  setxy(h,v+(((maxcoins-1) div columns)+1)*v*(maxtake+3));\n  box(1000,500,white,false);\n  if numcoins=1 then\n   begin\n    print('Since there is only one coin left, you must take it',4,font);\n    pause(2000);\n    result:=1\n   end\n  else\n   begin\n    print('There are '+coins(numcoins)+', of which you may take up to '+str(max)+'.',4,font);\n    movexy(0,v);\n    print('How many would you like to take? ',4,font);\n    reset(\\keybuffer);\n    repeat\n     n:=val(read(1))\n    until (n>0) and (n<=max);\n    reset(\\keybuffer);\n    movexy(0,v*2);\n    print('OK - you are taking '+coins(n)+' ...',4,font);\n    movexy(0,v);\n    result:=n\n   end\n End;\n\n Function randommove(max: integer): integer;\n Begin\n  result:=random(max)+1\n End;\n\n Function machinemove: integer;\n Var i,total,choose: integer;\n Begin\n  total:=0;\n  for i:=1 to maxtake do\n   total:=total+prob[numcoins,i];\n  choose:=random(total);\n  i:=0;\n  repeat\n   inc(i);\n   choose:=choose-prob[numcoins,i]\n  until choose<0;\n  result:=i\n End;\n\n Procedure showresult;\n Var s: string;\n Begin\n  if opponent=1 then\n   begin\n    colour(black);\n    setxy(200,v+(((maxcoins-1) div columns)+1)*v*(maxtake+3));\n    if youwin>0 then\n     print('YOU WIN!!',4,font*3)\n    else\n     print(' I WIN!!',4,font*3);\n    movexy(0,4*v);\n    print('Press <RETURN> or <ENTER> to continue ...',4,font);\n    s:=readln\n   end\n  else\n   writeln('PROGRAM: '+str(myscore)+';  OPPONENT: '+str(yourscore))\n End;\n\n Procedure startgame;\n Var i: integer;\n Begin\n  for i:=1 to maxcoins do\n   taken[i]:=0;\n  numcoins:=maxcoins\n End;\n\n Procedure adjustweights;\n Var i,j: integer;\n     add: integer;\n Begin\n  for i:=1 to maxcoins do\n   if taken[i]<>0 then\n    begin\n     if taken[i]*youwin>0 then\n      add:=1\n     else\n      add:=-1;\n     for j:=1 to maxtake do\n      begin\n       if j<=i then\n        begin\n         if (j=abs(taken[i])) then\n          prob[i,j]:=prob[i,j]+add\n         else\n          prob[i,j]:=prob[i,j]-add;\n         if prob[i,j]<0 then\n          prob[i,j]:=0;\n         if prob[i,j]>9 then\n          prob[i,j]:=9\n        end\n      end\n    end\n End;\n\nBEGIN\n keyecho(false);\n menu;\n initialise;\n repeat\n  startgame;\n  repeat\n   display;\n   if numcoins>maxtake then\n    max:=maxtake\n   else\n    max:=numcoins;\n   if opponent=1 then\n    move:=usermove(max)\n   else\n   if opponent=2 then\n    move:=randommove(max)\n   else\n    move:=machinemove;\n   taken[numcoins]:=move;\n   numcoins:=numcoins-move;\n   if numcoins=0 then\n    youwin:=1\n   else\n    begin\n     youwin:=-1;\n     move:=machinemove;\n     if opponent=1 then\n      begin\n       pause(2000);\n       display;\n       setxy(h,v+(((maxcoins-1) div columns)+1)*v*(maxtake+3));\n       print('The computer will choose on these probabilities:',4,font);\n       movexy(0,v/2);\n       total:=prob[numcoins,1]+prob[numcoins,2]+prob[numcoins,3];\n       for count:=1 to 3 do\n        begin\n         movexy(0,v);\n         print('     '+coins(count)+': '+str(prob[numcoins,count])+'/'+str(total),4,font)\n        end;\n       pause(2000);\n       movexy(0,3*v/2);\n       print('OK, in response, the computer takes '+coins(move)+' ...',4,font);\n       pause(2000)\n      end;\n     taken[numcoins]:=-move;\n     numcoins:=numcoins-move\n    end;\n   display\n  until numcoins=0;\n  if youwin>0 then\n   inc(yourscore)\n  else\n   inc(myscore);\n  showresult;\n  adjustweights\n until 0=1\nEND.",
   "usage":[
     {
       "category": "Turtle: relative movement",
       "expressions":[
-        {"name":"movexy", "level":2, "count":10, "lines":"88 91 109 141 148 150 186 263 267 272"}
+        {"name":"movexy", "level":2, "count":10, "lines":"88 91 109 140 147 149 185 262 266 270"}
       ],
       "total":10
     },
     {
       "category": "Turtle: absolute movement",
       "expressions":[
-        {"name":"setxy", "level":1, "count":15, "lines":"22 26 28 30 32 34 37 39 41 43 77 105 129 181 261"}
+        {"name":"setxy", "level":1, "count":15, "lines":"22 26 28 30 32 34 37 39 41 43 77 105 129 180 260"}
       ],
       "total":15
     },
@@ -33,7 +33,7 @@
     {
       "category": "Other Turtle commands",
       "expressions":[
-        {"name":"colour", "level":1, "count":9, "lines":"23 25 36 80 85 92 106 128 180"}
+        {"name":"colour", "level":1, "count":9, "lines":"23 25 36 80 85 92 106 128 179"}
       ],
       "total":9
     },
@@ -49,64 +49,64 @@
     {
       "category": "General arithmetic functions",
       "expressions":[
-        {"name":"abs", "level":1, "count":2, "lines":"46 217"},
-        {"name":"inc", "level":1, "count":3, "lines":"169 282 284"},
-        {"name":"random", "level":2, "count":2, "lines":"157 166"}
+        {"name":"abs", "level":1, "count":2, "lines":"46 216"},
+        {"name":"inc", "level":1, "count":3, "lines":"168 280 282"},
+        {"name":"random", "level":2, "count":2, "lines":"156 165"}
       ],
       "total":7
     },
     {
       "category": "String operations",
       "expressions":[
-        {"name":"print", "level":1, "count":22, "lines":"24 27 29 31 33 35 38 40 42 44 101 110 133 139 142 149 183 185 187 262 268 273"},
-        {"name":"writeln", "level":1, "count":1, "lines":"191"}
+        {"name":"print", "level":1, "count":22, "lines":"24 27 29 31 33 35 38 40 42 44 101 110 133 139 141 148 182 184 186 261 267 271"},
+        {"name":"writeln", "level":1, "count":1, "lines":"190"}
       ],
       "total":23
     },
     {
       "category": "Type conversion routines",
       "expressions":[
-        {"name":"str", "level":1, "count":8, "lines":"101 110 122 139 191 191 268 268"},
-        {"name":"val", "level":1, "count":1, "lines":"145"}
+        {"name":"str", "level":1, "count":8, "lines":"101 110 122 139 190 190 267 267"},
+        {"name":"val", "level":1, "count":1, "lines":"144"}
       ],
       "total":9
     },
     {
       "category": "Input and timing routines",
       "expressions":[
-        {"name":"pause", "level":1, "count":4, "lines":"134 259 271 274"},
-        {"name":"readln", "level":1, "count":1, "lines":"188"},
-        {"name":"keyecho", "level":2, "count":1, "lines":"231"},
-        {"name":"read", "level":2, "count":1, "lines":"145"},
-        {"name":"reset", "level":3, "count":2, "lines":"143 147"}
+        {"name":"pause", "level":1, "count":4, "lines":"134 258 269 272"},
+        {"name":"readln", "level":1, "count":1, "lines":"187"},
+        {"name":"keyecho", "level":2, "count":1, "lines":"230"},
+        {"name":"read", "level":2, "count":1, "lines":"144"},
+        {"name":"reset", "level":3, "count":2, "lines":"142 146"}
       ],
       "total":9
     },
     {
       "category": "Command structures",
       "expressions":[
-        {"name":"if", "level":1, "count":21, "lines":"57 78 94 97 103 119 131 178 182 207 209 215 217 221 223 238 242 245 251 257 281"},
-        {"name":"else", "level":1, "count":15, "lines":"59 83 96 99 121 137 184 190 211 219 240 244 247 253 283"},
-        {"name":"for", "level":1, "count":10, "lines":"55 56 75 89 107 164 197 206 213 265"},
-        {"name":"repeat", "level":2, "count":5, "lines":"45 144 168 234 236"},
-        {"name":"procedure", "level":2, "count":6, "lines":"18 52 70 175 194 202"},
-        {"name":"function", "level":3, "count":4, "lines":"117 125 155 160"}
+        {"name":"if", "level":1, "count":21, "lines":"57 78 94 97 103 119 131 177 181 206 208 214 216 220 222 237 241 244 250 256 279"},
+        {"name":"else", "level":1, "count":15, "lines":"59 83 96 99 121 137 183 189 210 218 239 243 246 252 281"},
+        {"name":"for", "level":1, "count":10, "lines":"55 56 75 89 107 163 196 205 212 264"},
+        {"name":"repeat", "level":2, "count":5, "lines":"45 143 167 233 235"},
+        {"name":"procedure", "level":2, "count":6, "lines":"18 52 70 174 193 201"},
+        {"name":"function", "level":3, "count":4, "lines":"117 125 154 159"}
       ],
       "total":61
     },
     {
       "category": "Subroutine calls",
       "expressions":[
-        {"name":"coins", "level":0, "count":4, "lines":"139 149 268 273"},
-        {"name":"menu", "level":0, "count":1, "lines":"232"},
-        {"name":"initialise", "level":0, "count":1, "lines":"233"},
-        {"name":"startgame", "level":0, "count":1, "lines":"235"},
-        {"name":"display", "level":0, "count":3, "lines":"237 260 279"},
-        {"name":"usermove", "level":0, "count":1, "lines":"243"},
-        {"name":"randommove", "level":0, "count":1, "lines":"246"},
-        {"name":"machinemove", "level":0, "count":2, "lines":"248 256"},
-        {"name":"showresult", "level":0, "count":1, "lines":"285"},
-        {"name":"adjustweights", "level":0, "count":1, "lines":"286"}
+        {"name":"coins", "level":0, "count":4, "lines":"139 148 267 271"},
+        {"name":"menu", "level":0, "count":1, "lines":"231"},
+        {"name":"initialise", "level":0, "count":1, "lines":"232"},
+        {"name":"startgame", "level":0, "count":1, "lines":"234"},
+        {"name":"display", "level":0, "count":3, "lines":"236 259 277"},
+        {"name":"usermove", "level":0, "count":1, "lines":"242"},
+        {"name":"randommove", "level":0, "count":1, "lines":"245"},
+        {"name":"machinemove", "level":0, "count":2, "lines":"247 255"},
+        {"name":"showresult", "level":0, "count":1, "lines":"283"},
+        {"name":"adjustweights", "level":0, "count":1, "lines":"284"}
       ],
       "total":16
     }

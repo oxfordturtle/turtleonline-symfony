@@ -4,9 +4,9 @@
   "version":13,
   "name":"Mouse reaction game",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:26",
-  "code":"REM QuickClick\n\nBLANK(CREAM)\nSETXY(15, 200)\nPRINT(\"This reaction game will display a sequence\", 4, 36)\nSETXY(20, 270)\nPRINT(\"of 10 coloured circles on the Canvas. Try\", 4, 36)\nSETXY(20, 340)\nPRINT(\"to click the mouse on each circle as quickly\", 4, 36)\nSETXY(20, 410)\nPRINT(\"as you can, and see how short a total time\", 4, 36)\nSETXY(20, 480)\nPRINT(\"you can achieve for all 10.\", 4, 36)\nSETXY(100, 620)\nPRINT(\"Now press the \"\"Esc\"\" key to start ...\", 4, 36)\nKEYECHO(FALSE)\nREPEAT\nUNTIL (ABS(?KEY) = \\ESCAPE)\nTIMESET(0)\nFOR count% = 1 TO 10\n  x% = RND(900) + 50\n  y% = RND(900) + 50\n  BLANK(BLACK)\n  SETXY(x%, y%)\n  COLOUR(RGB(count%))\n  BLOT(50)\n  REPEAT\n    REPEAT\n    UNTIL ?LMOUSE > 0\n    clickcol% = PIXCOL(?MOUSEX, ?MOUSEY)\n  UNTIL clickcol% = turtc%\nNEXT\nBLANK(LIGHTBLUE)\nSETXY(60, 460)\nCOLOUR(LIGHTRED)\nPRINT(\"Your time was \" + QSTR$(TIME, 1000, 2) + \" seconds\", 4, 50)\nEND",
+  "date":"28/07/2020",
+  "time":"13:25:32",
+  "code":"REM QuickClick\n\nBLANK(CREAM)\nSETXY(15,200)\nPRINT(\"This reaction game will display a sequence\",4,36)\nSETXY(20,270)\nPRINT(\"of 10 coloured circles on the Canvas. Try\",4,36)\nSETXY(20,340)\nPRINT(\"to click the mouse on each circle as quickly\",4,36)\nSETXY(20,410)\nPRINT(\"as you can, and see how short a total time\",4,36)\nSETXY(20,480)\nPRINT(\"you can achieve for all 10.\",4,36)\nSETXY(100,620)\nPRINT(\"Now press the \"\"Esc\"\" key to start ...\",4,36)\nKEYECHO(FALSE)\nREPEAT\nUNTIL (ABS(?KEY)=\\ESCAPE)\nTIMESET(0)\nFOR count%=1 TO 10\n x%=RND(900)+50\n y%=RND(900)+50\n BLANK(BLACK)\n SETXY(x%,y%)\n COLOUR(RGB(count%))\n BLOT(50)\n REPEAT\n  REPEAT\n  UNTIL ?LMOUSE>0\n  clickcol%=PIXCOL(?MOUSEX,?MOUSEY)\n UNTIL clickcol%=turtc%\nNEXT\nBLANK(LIGHTBLUE)\nSETXY(60,460)\nCOLOUR(LIGHTRED)\nPRINT(\"Your time was \"+QSTR$(TIME,1000,2)+\" seconds\",4,50)\nEND",
   "usage":[
     {
       "category": "Turtle: absolute movement",

@@ -4,9 +4,9 @@
   "version":13,
   "name":"Asking for typed input",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:26",
-  "code":"REM AskInput\n\nWRITE(\"What is your name?  \")\ns$ = GETLINE$\nWRITELN(\"\")\nWRITE(\"Hello, \" + s$ + \", ...  \")\nPAUSE(500)\nWRITELN(\"How are you?\")\nEND",
+  "date":"28/07/2020",
+  "time":"13:25:32",
+  "code":"REM AskInput\n\nWRITE(\"What is your name?  \")\ns$=GETLINE$\nWRITELN(\"\")\nWRITE(\"Hello, \"+s$+\", ...  \")\nPAUSE(500)\nWRITELN(\"How are you?\")\nEND",
   "usage":[
     {
       "category": "String operations",

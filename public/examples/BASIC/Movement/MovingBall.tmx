@@ -4,9 +4,9 @@
   "version":13,
   "name":"Moving ball (using variables)",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:25",
-  "code":"REM MovingBall\n\nx% = 100\ny% = 700\nFOR count% = 1 TO 100\n  NOUPDATE\n  COLOUR(WHITE)\n  BLOT(51)\n  x% = x% + 8\n  y% = y% - 4\n  SETXY(x%, y%)\n  COLOUR(RED)\n  BLOT(50)\n  UPDATE\n  PAUSE(5)\nNEXT\nEND",
+  "date":"28/07/2020",
+  "time":"13:25:31",
+  "code":"REM MovingBall\n\nx%=100\ny%=700\nFOR count%=1 TO 100\n NOUPDATE\n COLOUR(WHITE)\n BLOT(51)\n x%=x%+8\n y%=y%-4\n SETXY(x%,y%)\n COLOUR(RED)\n BLOT(50)\n UPDATE\n PAUSE(5)\nNEXT\nEND",
   "usage":[
     {
       "category": "Turtle: absolute movement",

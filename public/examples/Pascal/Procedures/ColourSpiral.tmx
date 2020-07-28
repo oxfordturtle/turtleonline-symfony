@@ -2,11 +2,11 @@
   "format":1,
   "language":"Pascal",
   "version":13,
-  "name":"Spiral of colours (uses REPEAT, RANDCOL)",
+  "name":"Spiral of colours [REPEAT, RANDCOL]",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"11:59:01",
-  "code":"PROGRAM ColourSpiral;\nVAR lineLength: integer;\n\n  {draws a line and turns right 60 degrees}\n  Procedure lineTurn;\n  Begin\n    forward(lineLength);\n    right(60)\n  End;\n\nBEGIN\n  {make the canvas black}\n  blank(black);\n  {position the turtle so pattern fits neatly}\n  forward(15);\n  {set line thickness and initial length}\n  thickness(27);\n  lineLength := 20;\n  {repeatedly ...}\n  repeat\n    {choose one of the first 40 turtle colours}\n    randcol(40);\n    {call the lineTurn procedure, then pause}\n    lineTurn;\n    pause(50);\n    {increment the lineLength value}\n    lineLength := lineLength + 10\n  {stop looping when lineLength gets to 510}\n  until lineLength > 500\nEND.",
+  "date":"28/07/2020",
+  "time":"13:23:48",
+  "code":"PROGRAM ColourSpiral;\nVAR lineLength: integer;\n\n {draws a line and turns right 60 degrees}\n Procedure lineTurn;\n Begin\n  forward(lineLength);\n  right(60)\n End;\n\nBEGIN\n {make the canvas black}\n blank(black);\n {position the turtle so pattern fits neatly}\n forward(15);\n {set line thickness and initial length}\n thickness(27);\n lineLength:=20;\n {repeatedly ...}\n repeat\n  {choose one of the first 40 turtle colours}\n  randcol(40);\n  {call the lineTurn procedure, then pause}\n  lineTurn;\n  pause(50);\n  {increment the lineLength value}\n  lineLength:=lineLength+10\n {stop looping when lineLength gets to 510}\n until lineLength>500\nEND.",
   "usage":[
     {
       "category": "Turtle: relative movement",

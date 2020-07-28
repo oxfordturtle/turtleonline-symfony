@@ -4,9 +4,9 @@
   "version":13,
   "name":"Movement under gravity",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:26",
-  "code":"REM GravitySteps\n\nPROCsteps(10)\nSETXY(950, 75)\nREPEAT\n  PROCthrowball(-2, -22, 1, turty% + 100)\nUNTIL turtx% < 75\nFOR bounce% = 1 TO 10\n  PROCthrowball(0, bounce% * 2 - 20, 1, turty%)\nNEXT\nEND\n\nDEF PROCsteps(s%)\n  LOCAL size%, count%\n  size% = 1000 / s%\n  SETXY(0, 1000)\n  THICKNESS(1)\n  FOR count% = 1 TO s% * 2\n    IF count% MOD 2 = 0 THEN MOVEXY(0, -size%) ELSE MOVEXY(size%, 0)\n  NEXT\n  MOVEXY(0, s% * size%)\n  MOVEXY(-s% * size%, 0)\n  COLOUR(BLUE)\n  POLYGON(s% * 2 + 2)\nENDPROC\n\nDEF PROCthrowball(xvel%, yvel%, gravity%, floor%)\n  REPEAT\n    COLOUR(WHITE)\n    BLOT(25)\n    MOVEXY(xvel%, yvel%)\n    yvel% = yvel% + gravity%\n    IF turty% > floor% THEN turty% = floor%\n    COLOUR(RED)\n    BLOT(24)\n    UPDATE\n    PAUSE(10)\n    NOUPDATE\n  UNTIL turty% = floor%\nENDPROC",
+  "date":"28/07/2020",
+  "time":"13:25:32",
+  "code":"REM GravitySteps\n\nPROCsteps(10)\nSETXY(950,75)\nREPEAT\n PROCthrowball(-2,-22,1,turty%+100)\nUNTIL turtx%<75\nFOR bounce%=1 TO 10\n PROCthrowball(0,bounce%*2-20,1,turty%)\nNEXT\nEND\n\nDEF PROCsteps(s%)\n LOCAL size%,count%\n size%=1000/s%\n SETXY(0,1000)\n THICKNESS(1)\n FOR count%=1 TO s%*2\n  IF count% MOD 2=0 THEN MOVEXY(0,-size%) ELSE MOVEXY(size%,0)\n NEXT\n MOVEXY(0,s%*size%)\n MOVEXY(-s%*size%,0)\n COLOUR(BLUE)\n POLYGON(s%*2+2)\nENDPROC\n\nDEF PROCthrowball(xvel%,yvel%,gravity%,floor%)\n REPEAT\n  COLOUR(WHITE)\n  BLOT(25)\n  MOVEXY(xvel%,yvel%)\n  yvel%=yvel%+gravity%\n  IF turty%>floor% THEN turty%=floor%\n  COLOUR(RED)\n  BLOT(24)\n  UPDATE\n  PAUSE(10)\n  NOUPDATE\n UNTIL turty%=floor%\nENDPROC",
   "usage":[
     {
       "category": "Turtle: relative movement",

@@ -4,9 +4,9 @@
   "version":13,
   "name":"Random ellipses pattern",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"11:59:01",
-  "code":"PROGRAM RandomEllipses;\nVAR count: integer;\n    x, y: integer;\n    nextColour: integer;\nBEGIN\n  {draw 10 ellipses, choosing a random centre}\n  for count := 1 to 10 do\n    begin\n      {with x and y both between -250 and 1249}\n      setxy(random(1500) - 250, random(1500) - 250);\n      {and ellipse radii between 500 and 999}\n      ellipse(random(500) + 500, random(500) + 500)\n    end;\n  {initialise the colour variable}\n  nextColour := 0;\n  {try to fill all the ellipses with colours}\n  for count := 1 to 10000 do\n    begin\n      {pick a random point}\n      x := random(1000);\n      y := random(1000);\n      {if the pixel is in a white region}\n      if pixcol(x, y) = white then\n        begin\n          {choose the next colour in the sequence}\n          nextColour := (nextColour mod 20) + 1;\n          {recolour the region in that colour}\n          recolour(x, y, rgb(nextColour))\n        end\n    end\nEND.",
+  "date":"28/07/2020",
+  "time":"13:23:48",
+  "code":"PROGRAM RandomEllipses;\nVAR count: integer;\n    x,y: integer;\n    nextColour: integer;\nBEGIN\n {draw 10 ellipses, choosing a random centre}\n for count:=1 to 10 do\n  begin\n   {with x and y both between -250 and 1249}\n   setxy(random(1500)-250,random(1500)-250);\n   {and ellipse radii between 500 and 999}\n   ellipse(random(500)+500,random(500)+500)\n  end;\n {initialise the colour variable}\n nextColour:=0;\n {try to fill all the ellipses with colours}\n for count:=1 to 10000 do\n  begin\n   {pick a random point}\n   x:=random(1000);\n   y:=random(1000);\n   {if the pixel is in a white region}\n   if pixcol(x,y)=white then\n    begin\n     {choose the next colour in the sequence}\n     nextColour:=(nextColour mod 20)+1;\n     {recolour the region in that colour}\n     recolour(x,y,rgb(nextColour))\n    end\n  end\nEND.",
   "usage":[
     {
       "category": "Turtle: absolute movement",

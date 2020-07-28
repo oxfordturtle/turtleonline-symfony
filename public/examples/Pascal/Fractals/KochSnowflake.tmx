@@ -4,9 +4,9 @@
   "version":13,
   "name":"Koch snowflake",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:01",
-  "code":"PROGRAM KochSnowflake;\nVAR count: integer;\n\n  Procedure kdraw(dist, level: integer);\n  Begin\n    if level = 0 then\n      forward(dist)\n    else\n      begin\n        kdraw(dist / 3, level - 1);\n        left(60);\n        kdraw(dist / 3, level - 1);\n        right(120);\n        kdraw(dist / 3, level - 1);\n        left(60);\n        kdraw(dist / 3, level - 1)\n      end\n  End;\n\nBEGIN\n  blank(black);\n  movexy(0, 430);\n  left(30);\n  for count := 1 to 3 do\n    begin\n      colour(rgb(count + 20));\n      kdraw(729, 4);\n      right(120)\n    end\nEND.",
+  "date":"28/07/2020",
+  "time":"13:25:03",
+  "code":"PROGRAM KochSnowflake;\nVAR count: integer;\n\n Procedure kdraw(dist,level: integer);\n Begin\n  if level=0 then\n   forward(dist)\n  else\n   begin\n    kdraw(dist/3,level-1);\n    left(60);\n    kdraw(dist/3,level-1);\n    right(120);\n    kdraw(dist/3,level-1);\n    left(60);\n    kdraw(dist/3,level-1)\n   end\n End;\n\nBEGIN\n blank(black);\n movexy(0,430);\n left(30);\n for count:=1 to 3 do\n  begin\n   colour(rgb(count+20));\n   kdraw(729,4);\n   right(120)\n  end\nEND.",
   "usage":[
     {
       "category": "Turtle: relative movement",

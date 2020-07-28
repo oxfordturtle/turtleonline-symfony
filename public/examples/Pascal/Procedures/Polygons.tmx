@@ -2,11 +2,11 @@
   "format":1,
   "language":"Pascal",
   "version":13,
-  "name":"Polygons (uses POLYGON, POLYLINE, 2 parameters)",
+  "name":"Polygons (uses 2 parameters) [POLYGON, POLYLINE]",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"11:59:01",
-  "code":"PROGRAM Polygons;\n\n  {draws a polygon with given sides & colour}\n  Procedure poly(sides, colr: integer);\n  Var count: integer;\n  Begin\n    {point turtle horizontally to right}\n    direction(90);\n    {trace the shape with the turtle}\n    for count := 1 to sides do\n      begin\n        {edge is shorter as sides increases}\n        forward(600 / sides);\n        {turn left by correct external angle}\n        left(360 / sides)\n      end;\n    {fill with the given colour}\n    colour(colr);\n    polygon(sides);\n    {draw a black outline}\n    colour(black);\n    polyline(sides + 1)\n  End;\n\nBEGIN\n  {do not draw as turtle moves}\n  penup;\n  {thickness is used by polyline command}\n  thickness(4);\n  {place the Turtle for the first polygon}\n  setxy(100, 400);\n  {draw a blue triangle}\n  poly(3, blue);\n  {place the Turtle for the second polygon}\n  setxy(400, 400);\n  {draw a red square}\n  poly(4, red);\n  setxy(700, 400);\n  {draw a yellow pentagon}\n  poly(5, yellow);\n  setxy(150, 750);\n  {draw a pink hexagon}\n  poly(6, pink);\n  setxy(440, 750);\n  {draw a green heptagon}\n  poly(7, green);\n  setxy(740, 750);\n  {draw a turquoise octagon}\n  poly(8, turquoise)\nEND.",
+  "date":"28/07/2020",
+  "time":"13:23:48",
+  "code":"PROGRAM Polygons;\n\n {draws a polygon with given sides & colour}\n Procedure poly(sides,colr: integer);\n Var count: integer;\n Begin\n  {point turtle horizontally to right}\n  direction(90);\n  {trace the shape with the turtle}\n  for count:=1 to sides do\n   begin\n    {edge is shorter as sides increases}\n    forward(600/sides);\n    {turn left by correct external angle}\n    left(360/sides)\n   end;\n  {fill with the given colour}\n  colour(colr);\n  polygon(sides);\n  {draw a black outline}\n  colour(black);\n  polyline(sides+1)\n End;\n\nBEGIN\n {do not draw as turtle moves}\n penup;\n {thickness is used by polyline command}\n thickness(4);\n {place the Turtle for the first polygon}\n setxy(100,400);\n {draw a blue triangle}\n poly(3,blue);\n {place the Turtle for the second polygon}\n setxy(400,400);\n {draw a red square}\n poly(4,red);\n setxy(700,400);\n {draw a yellow pentagon}\n poly(5,yellow);\n setxy(150,750);\n {draw a pink hexagon}\n poly(6,pink);\n setxy(440,750);\n {draw a green heptagon}\n poly(7,green);\n setxy(740,750);\n {draw a turquoise octagon}\n poly(8,turquoise)\nEND.",
   "usage":[
     {
       "category": "Turtle: relative movement",

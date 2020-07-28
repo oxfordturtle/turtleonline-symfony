@@ -4,9 +4,9 @@
   "version":13,
   "name":"3D colour effects",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:24",
-  "code":"REM Balls3D\n\nSETXY(250, 250)\nCOLOUR(&00FFFF)\nFOR count% = 240 TO 1 STEP -1\n  BLOT(count%)\n  turtc% = turtc% + &10000\nNEXT\nRIGHT(60)\nSETXY(750, 250)\nCOLOUR(&D2691E)\nFOR count% = 40 TO 1 STEP -1\n  BLOT(count% * 6)\n  FORWARD(3)\n  turtc% = turtc% + &10102\nNEXT\nSETXY(250, 750)\nCOLOUR(&D2691E)\nFOR count% = 40 TO 1 STEP -1\n  BLOT(count% * 6)\n  FORWARD(3)\n  turtc% = turtc% + &10102\nNEXT\nSETXY(750, 750)\nCOLOUR(&FFA500)\nFOR count% = 80 TO 1 STEP -1\n  BLOT(count% * 3)\n  FORWARD(2)\n  turtc% = turtc% + &101\nNEXT\nEND",
+  "date":"28/07/2020",
+  "time":"13:25:30",
+  "code":"REM Balls3D\n\nSETXY(250,250)\nCOLOUR(&00FFFF)\nFOR count%=240 TO 1 STEP -1\n BLOT(count%)\n turtc%=turtc%+&10000\nNEXT\nRIGHT(60)\nSETXY(750,250)\nCOLOUR(&D2691E)\nFOR count%=40 TO 1 STEP -1\n BLOT(count%*6)\n FORWARD(3)\n turtc%=turtc%+&10102\nNEXT\nSETXY(250,750)\nCOLOUR(&D2691E)\nFOR count%=40 TO 1 STEP -1\n BLOT(count%*6)\n FORWARD(3)\n turtc%=turtc%+&10102\nNEXT\nSETXY(750,750)\nCOLOUR(&FFA500)\nFOR count%=80 TO 1 STEP -1\n BLOT(count%*3)\n FORWARD(2)\n turtc%=turtc%+&101\nNEXT\nEND",
   "usage":[
     {
       "category": "Turtle: relative movement",

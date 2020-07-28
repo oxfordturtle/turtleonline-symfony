@@ -4,9 +4,9 @@
   "version":13,
   "name":"Recursive tree",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:34",
-  "code":"REM RecursiveTree\n\nBLANK(BLACK)\nMOVEXY(0, 400)\nCOLOUR(EMERALD)\nPROCrdraw(180, 10)\nEND\n\nDEF PROCrdraw(dist%, level%)\n  THICKNESS(level% * 2)\n  FORWARD(dist%)\n  LEFT(30)\n  IF level% > 0 THEN PROCrdraw(3 * dist% / 4, level% - 1)\n  RIGHT(30)\n  THICKNESS(level% * 2)\n  FORWARD(dist% / 3)\n  RIGHT(20)\n  IF level% > 0 THEN PROCrdraw(3 * dist% / 4, level% - 1)\n  LEFT(20)\n  BACK(dist% / 3)\n  BACK(dist%)\nENDPROC",
+  "date":"28/07/2020",
+  "time":"13:25:41",
+  "code":"REM RecursiveTree\n\nBLANK(BLACK)\nMOVEXY(0,400)\nCOLOUR(EMERALD)\nPROCrdraw(180,10)\nEND\n\nDEF PROCrdraw(dist%,level%)\n THICKNESS(level%*2)\n FORWARD(dist%)\n LEFT(30)\n IF level%>0 THEN PROCrdraw(3*dist%/4,level%-1)\n RIGHT(30)\n THICKNESS(level%*2)\n FORWARD(dist%/3)\n RIGHT(20)\n IF level%>0 THEN PROCrdraw(3*dist%/4,level%-1)\n LEFT(20)\n BACK(dist%/3)\n BACK(dist%)\nENDPROC",
   "usage":[
     {
       "category": "Turtle: relative movement",

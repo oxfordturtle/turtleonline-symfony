@@ -4,9 +4,9 @@
   "version":13,
   "name":"Moving ball (using variables)",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"11:59:03",
-  "code":"PROGRAM MovingBall;\nVAR x, y, count: integer;\nBEGIN\n  x := 100;\n  y := 700;\n  for count := 1 to 100 do\n    begin\n      noupdate;\n      colour(white);\n      blot(51);\n      x := x + 8;\n      y := y - 4;\n      setxy(x, y);\n      colour(red);\n      blot(50);\n      update;\n      pause(10)\n    end\nEND.",
+  "date":"28/07/2020",
+  "time":"13:23:50",
+  "code":"PROGRAM MovingBall;\nVAR x,y,count: integer;\nBEGIN\n x:=100;\n y:=700;\n for count:=1 to 100 do\n  begin\n   noupdate;\n   colour(white);\n   blot(51);\n   x:=x+8;\n   y:=y-4;\n   setxy(x,y);\n   colour(red);\n   blot(50);\n   update;\n   pause(10)\n  end\nEND.",
   "usage":[
     {
       "category": "Turtle: absolute movement",

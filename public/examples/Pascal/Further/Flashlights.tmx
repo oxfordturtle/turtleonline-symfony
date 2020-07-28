@@ -4,9 +4,9 @@
   "version":13,
   "name":"Flashlights (using Booleans)",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"11:59:01",
-  "code":"PROGRAM Flashlights;\n\n  Procedure drawit(doblot: boolean);\n  Begin\n    if doblot then\n      begin\n        randcol(10);\n        blot(25)\n      end\n    else\n      begin\n        colour(black);\n        blot(30);\n        randcol(10);\n        circle(25)\n      end\n  End;\n\nBEGIN\n  blot(1000);\n  thickness(8);\n  repeat\n    setx((random(8) + 1) * 111);\n    sety((random(8) + 1) * 111);\n    drawit(random(2) = 1)\n  until false\nEND.",
+  "date":"28/07/2020",
+  "time":"13:23:49",
+  "code":"PROGRAM Flashlights;\n\n Procedure drawit(doblot: boolean);\n Begin\n  if doblot then\n   begin\n    randcol(10);\n    blot(25)\n   end\n  else\n   begin\n    colour(black);\n    blot(30);\n    randcol(10);\n    circle(25)\n   end\n End;\n\nBEGIN\n blot(1000);\n thickness(8);\n repeat\n  setx((random(8)+1)*111);\n  sety((random(8)+1)*111);\n  drawit(random(2)=1)\n until false\nEND.",
   "usage":[
     {
       "category": "Turtle: absolute movement",

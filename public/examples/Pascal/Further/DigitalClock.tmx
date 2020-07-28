@@ -2,11 +2,11 @@
   "format":1,
   "language":"Pascal",
   "version":13,
-  "name":"Digital clock (using IF and WHILE)",
+  "name":"Digital clock [IF, WHILE, BOX]",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"11:59:01",
-  "code":"PROGRAM DigitalClock;\nVAR hours: integer;\n    minutes: integer;\n\n  Procedure showtime;\n  Var hstring, mstring: string;\n  Begin\n    setxy(300, 430);\n    box(400, 130, white, false);\n    if hours < 10 then\n      hstring := '0' + str(hours)\n    else\n      hstring := str(hours);\n    if minutes < 10 then\n      mstring := '0' + str(minutes)\n    else\n      mstring := str(minutes);\n    print(hstring + ':' + mstring, 21, 100)\n  End;\n\nBEGIN\n  blank(lightgreen);\n  setxy(250, 390);\n  colour(maroon);\n  thickness(10);\n  box(500, 210, lightbrown, true);\n  colour(black);\n  hours := 0;\n  minutes := 0;\n  while hours < 12 do\n    begin\n      showtime;\n      pause(600);\n      inc(minutes);\n      if minutes = 60 then\n        begin\n          inc(hours);\n          minutes := 0\n        end\n    end;\n  showtime\nEND.",
+  "date":"28/07/2020",
+  "time":"13:23:49",
+  "code":"PROGRAM DigitalClock;\nVAR hours: integer;\n    minutes: integer;\n\n Procedure showtime;\n Var hstring,mstring: string;\n Begin\n  setxy(300,430);\n  box(400,130,white,false);\n  if hours<10 then\n   hstring:='0'+str(hours)\n  else\n   hstring:=str(hours);\n  if minutes<10 then\n   mstring:='0'+str(minutes)\n  else\n   mstring:=str(minutes);\n  print(hstring+':'+mstring,21,100)\n End;\n\nBEGIN\n blank(lightgreen);\n setxy(250,390);\n colour(maroon);\n thickness(10);\n box(500,210,lightbrown,true);\n colour(black);\n hours:=0;\n minutes:=0;\n while hours<12 do\n  begin\n   showtime;\n   pause(600);\n   inc(minutes);\n   if minutes=60 then\n    begin\n     inc(hours);\n     minutes:=0\n    end\n  end;\n showtime\nEND.",
   "usage":[
     {
       "category": "Turtle: absolute movement",

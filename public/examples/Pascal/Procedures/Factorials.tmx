@@ -2,11 +2,11 @@
   "format":1,
   "language":"Pascal",
   "version":13,
-  "name":"Recursive factorials (uses FUNCTION, OUTPUT)",
+  "name":"Recursive factorials [FUNCTION, OUTPUT]",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"11:59:01",
-  "code":"PROGRAM Factorials;\nVAR n: integer;\n\n  {calculates n! recursively}\n  Function factorial(n: integer): integer;\n  Begin\n    if n = 0 then\n      {0! is defined as equal to 1}\n      result := 1\n    else\n      {e.g. 7! = 7 x 6!}\n      result := n * factorial(n - 1)\n  End;\n\nBEGIN\n  {set up and show the output}\n  output(true, cream, true);\n  {calculate and display n! for n = 1 to 10}\n  for n := 1 to 10 do\n    writeln(str(n) + '! = ' + str(factorial(n)))\nEND.",
+  "date":"28/07/2020",
+  "time":"13:23:48",
+  "code":"PROGRAM Factorials;\nVAR n: integer;\n\n {calculates n! recursively}\n Function factorial(n: integer): integer;\n Begin\n  if n=0 then\n   {0! is defined as equal to 1}\n   result:=1\n  else\n   {e.g. 7! = 7 x 6!}\n   result:=n*factorial(n-1)\n End;\n\nBEGIN\n {set up and show the output}\n output(true,cream,true);\n {calculate and display n! for n = 1 to 10}\n for n:=1 to 10 do\n  writeln(str(n)+'! = '+str(factorial(n)))\nEND.",
   "usage":[
     {
       "category": "Other Turtle commands",

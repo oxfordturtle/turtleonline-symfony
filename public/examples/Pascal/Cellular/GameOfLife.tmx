@@ -1,0 +1,91 @@
+{
+  "format":1,
+  "language":"Pascal",
+  "version":13,
+  "name":"Conway's Game of Life",
+  "author":"Peter Millican",
+  "date":"28/07/2020",
+  "time":"13:23:59",
+  "code":"PROGRAM GameOfLife;\nCONST width=32;\n      height=32;\nVAR x,y,i,j,dn: integer;\nBEGIN\n canvas(0,0,width,height);\n resolution(width,height);\n for x:=0 to width-1 do\n  for y:=0 to height-1 do\n   if random(7)=0 then\n    pixset(x,y,black);\n while ?key<>\\escape do\n  begin\n   noupdate;\n   for x:=0 to width-1 do\n    for y:=0 to height-1 do\n     begin\n      dn:=0;\n      for i:=-1 to 1 do\n       for j:=-1 to 1 do\n        dn:=dn+pixcol((x+i+width) mod width,(y+j+height) mod height) and 1;\n      if ((pixcol(x,y) and 1=0) and ((dn<5) or (dn>6))) or ((pixcol(x,y) and 1=1) and (dn=6))\n     then\n       pixset(x,y,pixcol(x,y) xor 2)\n     end;\n   for x:=0 to width-1 do\n    for y:=0 to height-1 do\n     if (pixcol(x,y) and 3) mod 3<>0 then\n      pixset(x,y,pixcol(x,y) xor #FFFFFD);\n   update\n  end\nEND.",
+  "usage":[
+    {
+      "category": "Canvas operations",
+      "expressions":[
+        {"name":"noupdate", "level":1, "count":1, "lines":"14"},
+        {"name":"update", "level":1, "count":1, "lines":"30"},
+        {"name":"canvas", "level":2, "count":1, "lines":"6"},
+        {"name":"resolution", "level":2, "count":1, "lines":"7"},
+        {"name":"pixcol", "level":3, "count":6, "lines":"21 22 22 24 28 29"},
+        {"name":"pixset", "level":3, "count":3, "lines":"11 24 29"}
+      ],
+      "total":13
+    },
+    {
+      "category": "General arithmetic functions",
+      "expressions":[
+        {"name":"random", "level":2, "count":1, "lines":"10"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Command structures",
+      "expressions":[
+        {"name":"if", "level":1, "count":3, "lines":"10 22 28"},
+        {"name":"for", "level":1, "count":8, "lines":"8 9 15 16 19 20 26 27"},
+        {"name":"while", "level":2, "count":1, "lines":"12"}
+      ],
+      "total":12
+    }
+  ],
+  "pcode":[
+    [112,12,1,1,112,0,123,112,6,2,123,4,112,11,124,112,23,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [112,0,112,0,112,32,112,32,144],
+    [112,32,112,32,145],
+    [112,0],
+    [119,19,112,32,112,1,27],
+    [113,19,37,129,15],
+    [112,0],
+    [119,20,112,32,112,1,27],
+    [113,20,37,129,14],
+    [112,7,7,112,0,32,129,13],
+    [113,19,113,20,112,0,100],
+    [113,20,4,128,9],
+    [113,19,4,128,6],
+    [112,-9,160,112,27,33,129,49],
+    [112,0,146],
+    [112,0],
+    [119,19,112,32,112,1,27],
+    [113,19,37,129,37],
+    [112,0],
+    [119,20,112,32,112,1,27],
+    [113,20,37,129,36],
+    [112,0,119,23],
+    [112,1,23],
+    [119,21,112,1],
+    [113,21,37,129,33],
+    [112,1,23],
+    [119,22,112,1],
+    [113,22,37,129,32],
+    [113,23,113,19,113,21,26,112,32,26,112,32,31,113,20,113,22,26,112,32,26,112,32,31,99,112,1,17,26,119,23],
+    [113,22,4,128,28],
+    [113,21,4,128,25],
+    [113,19,113,20,99,112,1,17,112,0,32,113,23,112,5,34,113,23,112,6,35,18,17,113,19,113,20,99,112,1,17,112,1,32,113,23,112,6,32,17,18,129,35],
+    [113,19,113,20,113,19,113,20,99,112,2,19,100],
+    [113,20,4,128,21],
+    [113,19,4,128,18],
+    [112,0],
+    [119,19,112,32,112,1,27],
+    [113,19,37,129,47],
+    [112,0],
+    [119,20,112,32,112,1,27],
+    [113,20,37,129,46],
+    [113,19,113,20,99,112,3,17,112,3,31,112,0,33,129,45],
+    [113,19,113,20,113,19,113,20,99,112,16777213,19,100],
+    [113,20,4,128,41],
+    [113,19,4,128,38],
+    [112,-1,146],
+    [128,15],
+    [130]
+  ]
+}

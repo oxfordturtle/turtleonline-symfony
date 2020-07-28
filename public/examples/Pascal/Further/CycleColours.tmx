@@ -2,11 +2,11 @@
   "format":1,
   "language":"Pascal",
   "version":13,
-  "name":"Cycling colours (using MOD)",
+  "name":"Cycling colours [MOD]",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"11:59:01",
-  "code":"PROGRAM CycleColours;\nVAR len: integer;\n    colinc, colcode: integer;\nBEGIN\n  blank(black);\n  colinc := random(5);\n  colcode := random(20) + 1;\n  len := 0;\n  thickness(16);\n  repeat\n    colcode := (colcode + colinc) mod 20 + 1;\n    colour(rgb(colcode));\n    len := len + 1;\n    forward(len);\n    right(30)\n  until len > 250\nEND.",
+  "date":"28/07/2020",
+  "time":"13:23:49",
+  "code":"PROGRAM CycleColours;\nVAR len: integer;\n    colinc,colcode: integer;\nBEGIN\n blank(black);\n colinc:=random(5);\n colcode:=random(20)+1;\n len:=0;\n thickness(16);\n repeat\n  colcode:=(colcode+colinc) mod 20+1;\n  colour(rgb(colcode));\n  len:=len+1;\n  forward(len);\n  right(30)\n until len>250\nEND.",
   "usage":[
     {
       "category": "Turtle: relative movement",

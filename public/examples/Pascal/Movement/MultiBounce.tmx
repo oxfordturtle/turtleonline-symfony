@@ -4,9 +4,9 @@
   "version":13,
   "name":"Multiple bouncing balls",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"11:59:03",
-  "code":"PROGRAM MultiBounce;\nCONST minsize = 70;\n      maxsize = 130;\n      balls = 10;\nVAR x, y: array[1..balls] of integer;\n    xvel, yvel: array[1..balls] of integer;\n    size, colr: array[1..balls] of integer;\n    n: integer;\nBEGIN\n  for n := 1 to balls do\n    begin\n      size[n] := minsize + random(maxsize - minsize);\n      colr[n] := rgb(n);\n      x[n] := random(1000 - 2 * size[n]) + size[n];\n      y[n] := random(1000 - 2 * size[n]) + size[n];\n      xvel[n] := random(15) - 7;\n      yvel[n] := random(15) - 7\n    end;\n  repeat\n    noupdate;\n    blank(white);\n    for n := 1 to balls do\n      begin\n        x[n] := x[n] + xvel[n];\n        y[n] := y[n] + yvel[n];\n        setxy(x[n], y[n]);\n        colour(colr[n]);\n        blot(size[n]);\n        if (x[n] < size[n]) or (x[n] > 1000 - size[n]) then\n          xvel[n] := -xvel[n];\n        if (y[n] < size[n]) or (y[n] > 1000 - size[n]) then\n          yvel[n] := -yvel[n]\n      end;\n    update;\n    pause(5)\n  until 1 = 0\nEND.",
+  "date":"28/07/2020",
+  "time":"13:23:50",
+  "code":"PROGRAM MultiBounce;\nCONST minsize=70;\n      maxsize=130;\n      balls=10;\nVAR x,y: array[1..balls] of integer;\n    xvel,yvel: array[1..balls] of integer;\n    size,colr: array[1..balls] of integer;\n    n: integer;\nBEGIN\n for n:=1 to balls do\n  begin\n   size[n]:=minsize+random(maxsize-minsize);\n   colr[n]:=rgb(n);\n   x[n]:=random(1000-2*size[n])+size[n];\n   y[n]:=random(1000-2*size[n])+size[n];\n   xvel[n]:=random(15)-7;\n   yvel[n]:=random(15)-7\n  end;\n repeat\n  noupdate;\n  blank(white);\n  for n:=1 to balls do\n   begin\n    x[n]:=x[n]+xvel[n];\n    y[n]:=y[n]+yvel[n];\n    setxy(x[n],y[n]);\n    colour(colr[n]);\n    blot(size[n]);\n    if (x[n]<size[n]) or (x[n]>1000-size[n]) then\n     xvel[n]:=-xvel[n];\n    if (y[n]<size[n]) or (y[n]>1000-size[n]) then\n     yvel[n]:=-yvel[n]\n   end;\n  update;\n  pause(5)\n until 1=0\nEND.",
   "usage":[
     {
       "category": "Turtle: absolute movement",

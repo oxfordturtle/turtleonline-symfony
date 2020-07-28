@@ -4,9 +4,9 @@
   "version":13,
   "name":"Recursive triangles",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"11:59:01",
-  "code":"PROGRAM Triangles;\n\n  {draws triangles recursively, starting with}\n  {one of the given size, but then also making}\n  {half-sized triangles at each triangle point}\n  Procedure triangle(size: integer);\n  Begin\n    if size > 1 then\n      begin\n        forward(size);\n        triangle(size / 2);\n        right(120);\n        forward(size);\n        triangle(size / 2);\n        right(120);\n        forward(size);\n        triangle(size / 2);\n        right(120)\n      end\n  End;\n\nBEGIN\n  {move to the start, without drawing}\n  movexy(-100, 150);\n  {draw a recursive triangle of size 256}\n  triangle(256)\nEND.",
+  "date":"28/07/2020",
+  "time":"13:23:48",
+  "code":"PROGRAM Triangles;\n\n {draws triangles recursively, starting with}\n {one of the given size, but then also making}\n {half-sized triangles at each triangle point}\n Procedure triangle(size: integer);\n Begin\n  if size>1 then\n   begin\n    forward(size);\n    triangle(size/2);\n    right(120);\n    forward(size);\n    triangle(size/2);\n    right(120);\n    forward(size);\n    triangle(size/2);\n    right(120)\n   end\n End;\n\nBEGIN\n {move to the start, without drawing}\n movexy(-100,150);\n {draw a recursive triangle of size 256}\n triangle(256)\nEND.",
   "usage":[
     {
       "category": "Turtle: relative movement",

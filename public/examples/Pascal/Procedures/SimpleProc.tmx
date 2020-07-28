@@ -2,11 +2,11 @@
   "format":1,
   "language":"Pascal",
   "version":13,
-  "name":"Simple procedure (uses REPEAT, TURTD)",
+  "name":"Simple procedure [REPEAT, TURTD]",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"11:59:01",
-  "code":"PROGRAM SimpleProc;\n\n  {draws a single \"prong\" and then returns}\n  Procedure prong;\n  Begin\n    forward(400);\n    blot(20);\n    back(400)\n  End;\n\nBEGIN\n  {repeatedly draws prongs in random colours}\n  repeat\n    randcol(10);\n    prong;\n    {right turn gives impression of motion}\n    right(61)\n  {until Turtle is pointing north again}\n  until turtd = 0\nEND.",
+  "date":"28/07/2020",
+  "time":"13:23:48",
+  "code":"PROGRAM SimpleProc;\n\n {draws a single \"prong\" and then returns}\n Procedure prong;\n Begin\n  forward(400);\n  blot(20);\n  back(400)\n End;\n\nBEGIN\n {repeatedly draws prongs in random colours}\n repeat\n  randcol(10);\n  prong;\n  {right turn gives impression of motion}\n  right(61)\n {until Turtle is pointing north again}\n until turtd=0\nEND.",
   "usage":[
     {
       "category": "Turtle: relative movement",

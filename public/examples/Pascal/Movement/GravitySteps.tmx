@@ -4,9 +4,9 @@
   "version":13,
   "name":"Movement under gravity",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"11:59:03",
-  "code":"PROGRAM GravitySteps;\nVAR bounce: integer;\n\n  Procedure steps(s: integer);\n  Var size, count: integer;\n  Begin\n    size := 1000 / s;\n    setxy(0, 1000);\n    thickness(1);\n    for count := 1 to s * 2 do\n      if count mod 2 = 0 then\n        movexy(0, -size)\n      else\n        movexy(size, 0);\n    movexy(0, s * size);\n    movexy(-s * size, 0);\n    colour(blue);\n    polygon(s * 2 + 2)\n  End;\n\n  Procedure throwball(xvel, yvel, gravity, floor: integer);\n  Begin\n    repeat\n      colour(white);\n      blot(25);\n      movexy(xvel, yvel);\n      yvel := yvel + gravity;\n      if turty > floor then\n        turty := floor;\n      colour(red);\n      blot(24);\n      update;\n      pause(10);\n      noupdate\n    until turty = floor\n  End;\n\nBEGIN\n  steps(10);\n  setxy(950, 75);\n  repeat\n    throwball(-2, -22, 1, turty + 100)\n  until turtx < 75;\n  for bounce := 1 to 10 do\n    throwball(0, bounce * 2 - 20, 1, turty)\nEND.",
+  "date":"28/07/2020",
+  "time":"13:23:51",
+  "code":"PROGRAM GravitySteps;\nVAR bounce: integer;\n\n Procedure steps(s: integer);\n Var size,count: integer;\n Begin\n  size:=1000/s;\n  setxy(0,1000);\n  thickness(1);\n  for count:=1 to s*2 do\n   if count mod 2=0 then\n    movexy(0,-size)\n   else\n    movexy(size,0);\n  movexy(0,s*size);\n  movexy(-s*size,0);\n  colour(blue);\n  polygon(s*2+2)\n End;\n\n Procedure throwball(xvel,yvel,gravity,floor: integer);\n Begin\n  repeat\n   colour(white);\n   blot(25);\n   movexy(xvel,yvel);\n   yvel:=yvel+gravity;\n   if turty>floor then\n    turty:=floor;\n   colour(red);\n   blot(24);\n   update;\n   pause(10);\n   noupdate\n  until turty=floor\n End;\n\nBEGIN\n steps(10);\n setxy(950,75);\n repeat\n  throwball(-2,-22,1,turty+100)\n until turtx<75;\n for bounce:=1 to 10 do\n  throwball(0,bounce*2-20,1,turty)\nEND.",
   "usage":[
     {
       "category": "Turtle: relative movement",

@@ -4,9 +4,9 @@
   "version":13,
   "name":"Text and arrow (using PRINT)",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:24",
-  "code":"REM YouAreHere\n\nCOLOUR(RED)\nBLOT(20)\nCOLOUR(VIOLET)\nPRINT(\"You are here\", 4, 36)\nSETXY(790, 540)\nCOLOUR(BLUE)\nDRAWXY(40, 0)\nDRAWXY(28, -28)\nDRAWXY(0, -40)\nDRAWXY(-28, -28)\nDRAWXY(-40, 0)\nSETXY(500, 500)\nSETXY(530, 480)\nSETXY(535, 505)\nSETXY(500, 500)\nPOLYLINE(5)\nPOLYGON(3)\nEND",
+  "date":"28/07/2020",
+  "time":"13:25:30",
+  "code":"REM YouAreHere\n\nCOLOUR(RED)\nBLOT(20)\nCOLOUR(VIOLET)\nPRINT(\"You are here\",4,36)\nSETXY(790,540)\nCOLOUR(BLUE)\nDRAWXY(40,0)\nDRAWXY(28,-28)\nDRAWXY(0,-40)\nDRAWXY(-28,-28)\nDRAWXY(-40,0)\nSETXY(500,500)\nSETXY(530,480)\nSETXY(535,505)\nSETXY(500,500)\nPOLYLINE(5)\nPOLYGON(3)\nEND",
   "usage":[
     {
       "category": "Turtle: relative movement",

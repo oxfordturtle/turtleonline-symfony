@@ -4,9 +4,9 @@
   "version":13,
   "name":"Recursive factorials",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:24",
-  "code":"REM Factorials\n\nOUTPUT(TRUE, CREAM, TRUE)\nFOR count% = 1 TO 10\n  WRITELN(STR$(count%) + \"! = \" + STR$(FNfact(count%)))\nNEXT\nEND\n\nDEF FNfact(n%)\n  IF n% = 0 THEN\n    result% = 1\n  ELSE\n    result% = n% * FNfact(n% - 1)\n  ENDIF\n= result%",
+  "date":"28/07/2020",
+  "time":"13:25:30",
+  "code":"REM Factorials\n\nOUTPUT(TRUE,CREAM,TRUE)\nFOR count%=1 TO 10\n WRITELN(STR$(count%)+\"! = \"+STR$(FNfact(count%)))\nNEXT\nEND\n\nDEF FNfact(n%)\n IF n%=0 THEN\n  result%=1\n ELSE\n  result%=n%*FNfact(n%-1)\n ENDIF\n=result%",
   "usage":[
     {
       "category": "Other Turtle commands",

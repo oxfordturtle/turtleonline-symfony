@@ -4,9 +4,9 @@
   "version":13,
   "name":"The plough (using SETXY and POLYLINE)",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:24",
-  "code":"REM ThePlough\n\nBLANK(BLACK)\nCOLOUR(LIGHTBLUE)\nSETXY(100, 200)\nBLOT(10)\nSETXY(300, 250)\nBLOT(10)\nSETXY(420, 350)\nBLOT(10)\nSETXY(570, 490)\nBLOT(10)\nSETXY(900, 560)\nBLOT(10)\nSETXY(840, 720)\nBLOT(10)\nSETXY(590, 660)\nBLOT(10)\nSETXY(570, 490)\nCOLOUR(SILVER)\nPOLYLINE(8)\nEND",
+  "date":"28/07/2020",
+  "time":"13:25:29",
+  "code":"REM ThePlough\n\nBLANK(BLACK)\nCOLOUR(LIGHTBLUE)\nSETXY(100,200)\nBLOT(10)\nSETXY(300,250)\nBLOT(10)\nSETXY(420,350)\nBLOT(10)\nSETXY(570,490)\nBLOT(10)\nSETXY(900,560)\nBLOT(10)\nSETXY(840,720)\nBLOT(10)\nSETXY(590,660)\nBLOT(10)\nSETXY(570,490)\nCOLOUR(SILVER)\nPOLYLINE(8)\nEND",
   "usage":[
     {
       "category": "Turtle: absolute movement",

@@ -4,9 +4,9 @@
   "version":13,
   "name":"Polygons (two parameters)",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:24",
-  "code":"REM Polygons\n\nPENUP\nTHICKNESS(4)\nSETXY(100, 400)\nPROCpoly(3, BLUE)\nSETXY(400, 400)\nPROCpoly(4, RED)\nSETXY(700, 400)\nPROCpoly(5, YELLOW)\nSETXY(150, 750)\nPROCpoly(6, PINK)\nSETXY(440, 750)\nPROCpoly(7, GREEN)\nSETXY(740, 750)\nPROCpoly(8, TURQUOISE)\nEND\n\nDEF PROCpoly(points%, col%)\n  LOCAL count%\n  DIRECTION(90)\n  FOR count% = 1 TO points%\n    FORWARD(600 DIV points%)\n    LEFT(360 DIV points%)\n  NEXT\n  COLOUR(col%)\n  POLYGON(points%)\n  COLOUR(BLACK)\n  POLYLINE(points% + 1)\nENDPROC",
+  "date":"28/07/2020",
+  "time":"13:25:30",
+  "code":"REM Polygons\n\nPENUP\nTHICKNESS(4)\nSETXY(100,400)\nPROCpoly(3,BLUE)\nSETXY(400,400)\nPROCpoly(4,RED)\nSETXY(700,400)\nPROCpoly(5,YELLOW)\nSETXY(150,750)\nPROCpoly(6,PINK)\nSETXY(440,750)\nPROCpoly(7,GREEN)\nSETXY(740,750)\nPROCpoly(8,TURQUOISE)\nEND\n\nDEF PROCpoly(points%,col%)\n LOCAL count%\n DIRECTION(90)\n FOR count%=1 TO points%\n  FORWARD(600 DIV points%)\n  LEFT(360 DIV points%)\n NEXT\n COLOUR(col%)\n POLYGON(points%)\n COLOUR(BLACK)\n POLYLINE(points%+1)\nENDPROC",
   "usage":[
     {
       "category": "Turtle: relative movement",

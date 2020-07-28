@@ -4,9 +4,9 @@
   "version":13,
   "name":"Procedure with parameter",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"11:59:01",
-  "code":"PROGRAM ParameterProc;\nVAR count: integer;\n\n  {draws a prong of the given size}\n  Procedure prong(size: integer);\n  Begin\n    forward(size);\n    {blot radius is 1/20 of prong length}\n    blot(size / 20);\n    back(size)\n  End;\n\nBEGIN\n  {draw 360 prongs of decreasing size}\n  for count := 360 downto 1 do\n    begin\n      randcol(10);\n      {longest is 460, smallest is 101}\n      prong(count + 100);\n      {61 degrees gives six-arm spiral}\n      right(61)\n    end\nEND.",
+  "date":"28/07/2020",
+  "time":"13:23:48",
+  "code":"PROGRAM ParameterProc;\nVAR count: integer;\n\n {draws a prong of the given size}\n Procedure prong(size: integer);\n Begin\n  forward(size);\n  {blot radius is 1/20 of prong length}\n  blot(size/20);\n  back(size)\n End;\n\nBEGIN\n {draw 360 prongs of decreasing size}\n for count:=360 downto 1 do\n  begin\n   randcol(10);\n   {longest is 460, smallest is 101}\n   prong(count+100);\n   {61 degrees gives six-arm spiral}\n   right(61)\n  end\nEND.",
   "usage":[
     {
       "category": "Turtle: relative movement",

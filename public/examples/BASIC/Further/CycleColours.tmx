@@ -4,9 +4,9 @@
   "version":13,
   "name":"Cycling colours (using MOD)",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:24",
-  "code":"REM CycleColours\n\nBLANK(BLACK)\ncolinc% = RND(5) - 1\ncolcode% = RND(20)\nCOLOUR(RGB(colcode%))\nlength% = 0\nTHICKNESS(16)\nREPEAT\n  colcode% = (colcode% + colinc%) MOD 20 + 1\n  COLOUR(RGB(colcode%))\n  length% = length% + 1\n  FORWARD(length%)\n  RIGHT(30)\nUNTIL length% > 250\nEND",
+  "date":"28/07/2020",
+  "time":"13:25:30",
+  "code":"REM CycleColours\n\nBLANK(BLACK)\ncolinc%=RND(5)-1\ncolcode%=RND(20)\nCOLOUR(RGB(colcode%))\nlength%=0\nTHICKNESS(16)\nREPEAT\n colcode%=(colcode%+colinc%) MOD 20+1\n COLOUR(RGB(colcode%))\n length%=length%+1\n FORWARD(length%)\n RIGHT(30)\nUNTIL length%>250\nEND",
   "usage":[
     {
       "category": "Turtle: relative movement",

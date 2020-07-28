@@ -4,9 +4,9 @@
   "version":13,
   "name":"Square Koch fractal curves",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:34",
-  "code":"REM SquareKoch\n\nCONST MAXLEVEL% = 5\nBLANK(BLACK)\nMOVEXY(0, 486)\nLEFT(45)\nFOR count% = 1 TO 4\n  COLOUR(RGB(count% + 20))\n  PROCkdraw(729, MAXLEVEL%)\n  RIGHT(90)\nNEXT\nMOVEXY(0, -323)\nFOR count% = 1 TO 4\n  COLOUR(RGB(count% + 20))\n  PROCkdraw(243, MAXLEVEL% - 1)\n  RIGHT(90)\nNEXT\nEND\n\nDEF PROCkdraw(dist%, level%)\n  IF level% = 0 THEN\n    FORWARD(dist%)\n  ELSE\n    PROCkdraw(dist% / 3, level% - 1)\n    LEFT(90)\n    PROCkdraw(dist% / 3, level% - 1)\n    RIGHT(90)\n    PROCkdraw(dist% / 3, level% - 1)\n    RIGHT(90)\n    PROCkdraw(dist% / 3, level% - 1)\n    LEFT(90)\n    PROCkdraw(dist% / 3, level% - 1)\n  ENDIF\nENDPROC",
+  "date":"28/07/2020",
+  "time":"13:25:41",
+  "code":"REM SquareKoch\n\nCONST MAXLEVEL%=5\nBLANK(BLACK)\nMOVEXY(0,486)\nLEFT(45)\nFOR count%=1 TO 4\n COLOUR(RGB(count%+20))\n PROCkdraw(729,MAXLEVEL%)\n RIGHT(90)\nNEXT\nMOVEXY(0,-323)\nFOR count%=1 TO 4\n COLOUR(RGB(count%+20))\n PROCkdraw(243,MAXLEVEL%-1)\n RIGHT(90)\nNEXT\nEND\n\nDEF PROCkdraw(dist%,level%)\n IF level%=0 THEN\n  FORWARD(dist%)\n ELSE\n  PROCkdraw(dist%/3,level%-1)\n  LEFT(90)\n  PROCkdraw(dist%/3,level%-1)\n  RIGHT(90)\n  PROCkdraw(dist%/3,level%-1)\n  RIGHT(90)\n  PROCkdraw(dist%/3,level%-1)\n  LEFT(90)\n  PROCkdraw(dist%/3,level%-1)\n ENDIF\nENDPROC",
   "usage":[
     {
       "category": "Turtle: relative movement",

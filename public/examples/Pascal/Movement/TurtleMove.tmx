@@ -4,9 +4,9 @@
   "version":13,
   "name":"Moving ball (using Turtle)",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"11:59:03",
-  "code":"PROGRAM TurtleMove;\nVAR count: integer;\nBEGIN\n  setxy(100, 700);\n  for count := 1 to 100 do\n    begin\n      noupdate;\n      colour(white);\n      blot(51);\n      movexy(8, -4);\n      colour(red);\n      blot(50);\n      update;\n      pause(10)\n    end\nEND.",
+  "date":"28/07/2020",
+  "time":"13:23:50",
+  "code":"PROGRAM TurtleMove;\nVAR count: integer;\nBEGIN\n setxy(100,700);\n for count:=1 to 100 do\n  begin\n   noupdate;\n   colour(white);\n   blot(51);\n   movexy(8,-4);\n   colour(red);\n   blot(50);\n   update;\n   pause(10)\n  end\nEND.",
   "usage":[
     {
       "category": "Turtle: relative movement",

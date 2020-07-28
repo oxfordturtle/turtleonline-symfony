@@ -4,9 +4,9 @@
   "version":13,
   "name":"Simple triangle",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"11:59:01",
-  "code":"PROGRAM Triangle1;\nBEGIN\n  {move to the start, without drawing}\n  movexy(-100, 150);\n  {draw the first side, and turn}\n  forward(256);\n  right(120);\n  {draw the second side, and turn}\n  forward(256);\n  right(120);\n  {draw the third side, and turn}\n  forward(256);\n  right(120)\nEND.",
+  "date":"28/07/2020",
+  "time":"13:23:48",
+  "code":"PROGRAM Triangle1;\nBEGIN\n {move to the start, without drawing}\n movexy(-100,150);\n {draw the first side, and turn}\n forward(256);\n right(120);\n {draw the second side, and turn}\n forward(256);\n right(120);\n {draw the third side, and turn}\n forward(256);\n right(120)\nEND.",
   "usage":[
     {
       "category": "Turtle: relative movement",

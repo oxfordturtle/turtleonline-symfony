@@ -4,9 +4,9 @@
   "version":13,
   "name":"Recursive tree",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:01",
-  "code":"PROGRAM RecursiveTree;\nVAR count: integer;\n\n  Procedure rdraw(dist, level: integer);\n  Begin\n    thickness(level * 2);\n    forward(dist);\n    left(30);\n    if level > 0 then\n      rdraw(3 * dist / 4, level - 1);\n    right(30);\n    thickness(level * 2);\n    forward(dist / 3);\n    right(20);\n    if level > 0 then\n      rdraw(3 * dist / 4, level - 1);\n    left(20);\n    back(dist / 3);\n    back(dist)\n  End;\n\nBEGIN\n  blank(black);\n  movexy(0, 400);\n  colour(emerald);\n  rdraw(180, 10)\nEND.",
+  "date":"28/07/2020",
+  "time":"13:25:03",
+  "code":"PROGRAM RecursiveTree;\nVAR count: integer;\n\n Procedure rdraw(dist,level: integer);\n Begin\n  thickness(level*2);\n  forward(dist);\n  left(30);\n  if level>0 then\n   rdraw(3*dist/4,level-1);\n  right(30);\n  thickness(level*2);\n  forward(dist/3);\n  right(20);\n  if level>0 then\n   rdraw(3*dist/4,level-1);\n  left(20);\n  back(dist/3);\n  back(dist)\n End;\n\nBEGIN\n blank(black);\n movexy(0,400);\n colour(emerald);\n rdraw(180,10)\nEND.",
   "usage":[
     {
       "category": "Turtle: relative movement",

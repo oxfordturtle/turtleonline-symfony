@@ -4,9 +4,9 @@
   "version":13,
   "name":"Drawing to the mouse",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"11:59:05",
-  "code":"PROGRAM SimpleDraw;\n\n  Procedure palette;\n  Var col: integer;\n  Begin\n    for col := 1 to 10 do\n      begin\n        setxy(col * 100 - 50, 950);\n        colour(rgb(col));\n        blot(50)\n      end\n  End;\n\nBEGIN\n  palette;\n  home;\n  thickness(10);\n  blot(2);\n  repeat\n    repeat\n    until (?lmouse > 0) or (?rmouse > 0);\n    if ?mousey > 900 then\n      colour(rgb(?mousex div 100 + 1))\n    else\n    if ?lmouse > 0 then\n      drawxy(?mousex - turtx, ?mousey - turty)\n    else\n      setxy(?mousex, ?mousey)\n  until false\nEND.",
+  "date":"28/07/2020",
+  "time":"13:23:53",
+  "code":"PROGRAM SimpleDraw;\n\n Procedure palette;\n Var col: integer;\n Begin\n  for col:=1 to 10 do\n   begin\n    setxy(col*100-50,950);\n    colour(rgb(col));\n    blot(50)\n   end\n End;\n\nBEGIN\n palette;\n home;\n thickness(10);\n blot(2);\n repeat\n  repeat\n  until (?lmouse>0) or (?rmouse>0);\n  if ?mousey>900 then\n   colour(rgb(?mousex div 100+1))\n  else\n  if ?lmouse>0 then\n   drawxy(?mousex-turtx,?mousey-turty)\n  else\n   setxy(?mousex,?mousey)\n until false\nEND.",
   "usage":[
     {
       "category": "Turtle: relative movement",

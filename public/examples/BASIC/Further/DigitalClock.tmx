@@ -4,9 +4,9 @@
   "version":13,
   "name":"Digital clock (using IF and WHILE)",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:24",
-  "code":"REM DigitalClock\n\nBLANK(LIGHTGREEN)\nSETXY(250, 390)\nCOLOUR(MAROON)\nTHICKNESS(10)\nBOX(500, 210, LIGHTBROWN, TRUE)\nCOLOUR(BLACK)\nHours% = 0\nMinutes% = 0\nWHILE Hours% < 12\n  PROCshowtime\n  PAUSE(600)\n  INC(Minutes%)\n  IF Minutes% = 60 THEN\n    INC(Hours%)\n    Minutes% = 0\n  ENDIF\nENDWHILE\nPROCshowtime\nEND\n\nDEF PROCshowtime\n  LOCAL hstring$, mstring$\n  SETXY(300, 430)\n  BOX(400, 130, WHITE, FALSE)\n  IF Hours% < 10 THEN\n    hstring$ = \"0\" + STR$(Hours%)\n  ELSE\n    hstring$ = STR$(Hours%)\n  ENDIF\n  IF Minutes% < 10 THEN\n    mstring$ = \"0\" + STR$(Minutes%)\n  ELSE\n    mstring$ = STR$(Minutes%)\n  ENDIF\n  PRINT(hstring$ + \":\" + mstring$, 21, 100)\nENDPROC",
+  "date":"28/07/2020",
+  "time":"13:25:30",
+  "code":"REM DigitalClock\n\nBLANK(LIGHTGREEN)\nSETXY(250,390)\nCOLOUR(MAROON)\nTHICKNESS(10)\nBOX(500,210,LIGHTBROWN,TRUE)\nCOLOUR(BLACK)\nHours%=0\nMinutes%=0\nWHILE Hours%<12\n PROCshowtime\n PAUSE(600)\n INC(Minutes%)\n IF Minutes%=60 THEN\n  INC(Hours%)\n  Minutes%=0\n ENDIF\nENDWHILE\nPROCshowtime\nEND\n\nDEF PROCshowtime\n LOCAL hstring$,mstring$\n SETXY(300,430)\n BOX(400,130,WHITE,FALSE)\n IF Hours%<10 THEN\n  hstring$=\"0\"+STR$(Hours%)\n ELSE\n  hstring$=STR$(Hours%)\n ENDIF\n IF Minutes%<10 THEN\n  mstring$=\"0\"+STR$(Minutes%)\n ELSE\n  mstring$=STR$(Minutes%)\n ENDIF\n PRINT(hstring$+\":\"+mstring$,21,100)\nENDPROC",
   "usage":[
     {
       "category": "Turtle: absolute movement",

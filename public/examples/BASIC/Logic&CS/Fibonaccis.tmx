@@ -2,11 +2,11 @@
   "format":1,
   "language":"BASIC",
   "version":13,
-  "name":"Fibonacci recursion and iteration (dynamic programming)",
+  "name":"Fibonacci recursion and iteration [dynamic programming]",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:39",
-  "code":"REM Fibonaccis\n\nCONST LASTNUM% = 25\nDIM fibsave%(LASTNUM%)\nOUTPUT(TRUE, CREAM, TRUE)\nWRITELN(\"First, by recursion:\")\nTIMESET(0)\nFOR count% = 1 TO LASTNUM%\n  WRITELN(\"fib(\" + STR$(count%) + \") = \" + STR$(FNfibrec(count%)))\nNEXT\nWRITELN(\"Time taken: \" + QSTR$(TIME, 1000, 2) + \" seconds\")\nWRITELN(\"\")\nWRITELN(\"Then, by iteration:\")\nTIMESET(0)\nFOR count% = 1 TO LASTNUM%\n  WRITELN(\"fib(\" + STR$(count%) + \") = \" + STR$(FNfibiter(count%)))\nNEXT\nWRITELN(\"Time taken: \" + QSTR$(TIME, 1000, 2) + \" seconds\")\nEND\n\nDEF FNfibrec(n%)\n  IF (n% = 1) OR (n% = 2) THEN\n    result% = 1\n  ELSE\n    result% = FNfibrec(n% - 1) + FNfibrec(n% - 2)\n  ENDIF\n= result%\n\nDEF FNfibiter(n%)\n  IF (n% = 1) OR (n% = 2) THEN\n    fibsave%(n%) = 1\n  ELSE\n    fibsave%(n%) = fibsave%(n% - 1) + fibsave%(n% - 2)\n  ENDIF\n= fibsave%(n%)",
+  "date":"28/07/2020",
+  "time":"13:25:45",
+  "code":"REM Fibonaccis\n\nCONST LASTNUM%=25\nDIM fibsave%(LASTNUM%)\nOUTPUT(TRUE,CREAM,TRUE)\nWRITELN(\"First, by recursion:\")\nTIMESET(0)\nFOR count%=1 TO LASTNUM%\n WRITELN(\"fib(\"+STR$(count%)+\") = \"+STR$(FNfibrec(count%)))\nNEXT\nWRITELN(\"Time taken: \"+QSTR$(TIME,1000,2)+\" seconds\")\nWRITELN(\"\")\nWRITELN(\"Then, by iteration:\")\nTIMESET(0)\nFOR count%=1 TO LASTNUM%\n WRITELN(\"fib(\"+STR$(count%)+\") = \"+STR$(FNfibiter(count%)))\nNEXT\nWRITELN(\"Time taken: \"+QSTR$(TIME,1000,2)+\" seconds\")\nEND\n\nDEF FNfibrec(n%)\n IF (n%=1) OR (n%=2) THEN\n  result%=1\n ELSE\n  result%=FNfibrec(n%-1)+FNfibrec(n%-2)\n ENDIF\n=result%\n\nDEF FNfibiter(n%)\n IF (n%=1) OR (n%=2) THEN\n  fibsave%(n%)=1\n ELSE\n  fibsave%(n%)=fibsave%(n%-1)+fibsave%(n%-2)\n ENDIF\n=fibsave%(n%)",
   "usage":[
     {
       "category": "Other Turtle commands",

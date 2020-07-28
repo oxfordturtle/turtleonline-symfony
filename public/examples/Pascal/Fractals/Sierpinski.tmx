@@ -4,9 +4,9 @@
   "version":13,
   "name":"Sierpinski triangle (by deletion)",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:01",
-  "code":"PROGRAM Sierpinski;\n\n  Procedure triangle(x1, y1, x2, y2, x3, y3: integer);\n  Var x12, y12, x23, y23, x31, y31: integer;\n  Begin\n    setxy(x1, y1);\n    setxy(x2, y2);\n    setxy(x3, y3);\n    setxy(x1, y1);\n    colour(black);\n    polyline(4);\n    if hypot(x2 - x1, y2 - y1, 1) > 3 then\n      begin\n        x12 := (x1 + x2) / 2;\n        y12 := (y1 + y2) / 2;\n        x23 := (x2 + x3) / 2;\n        y23 := (y2 + y3) / 2;\n        x31 := (x3 + x1) / 2;\n        y31 := (y3 + y1) / 2;\n        setxy(x12, y12);\n        setxy(x23, y23);\n        setxy(x31, y31);\n        colour(white);\n        polygon(3);\n        triangle(x1, y1, x12, y12, x31, y31);\n        triangle(x2, y2, x23, y23, x12, y12);\n        triangle(x3, y3, x31, y31, x23, y23)\n      end\n  End;\n\nBEGIN\n  blank(cream);\n  thickness(1);\n  triangle(400, 138, 843, 650, 179, 778)\nEND.",
+  "date":"28/07/2020",
+  "time":"13:25:03",
+  "code":"PROGRAM Sierpinski;\n\n Procedure triangle(x1,y1,x2,y2,x3,y3: integer);\n Var x12,y12,x23,y23,x31,y31: integer;\n Begin\n  setxy(x1,y1);\n  setxy(x2,y2);\n  setxy(x3,y3);\n  setxy(x1,y1);\n  colour(black);\n  polyline(4);\n  if hypot(x2-x1,y2-y1,1)>3 then\n   begin\n    x12:=(x1+x2)/2;\n    y12:=(y1+y2)/2;\n    x23:=(x2+x3)/2;\n    y23:=(y2+y3)/2;\n    x31:=(x3+x1)/2;\n    y31:=(y3+y1)/2;\n    setxy(x12,y12);\n    setxy(x23,y23);\n    setxy(x31,y31);\n    colour(white);\n    polygon(3);\n    triangle(x1,y1,x12,y12,x31,y31);\n    triangle(x2,y2,x23,y23,x12,y12);\n    triangle(x3,y3,x31,y31,x23,y23)\n   end\n End;\n\nBEGIN\n blank(cream);\n thickness(1);\n triangle(400,138,843,650,179,778)\nEND.",
   "usage":[
     {
       "category": "Turtle: absolute movement",

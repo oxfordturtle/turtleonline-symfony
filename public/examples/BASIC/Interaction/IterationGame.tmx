@@ -4,9 +4,9 @@
   "version":13,
   "name":"Iteration game (Collatz sequence)",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:27",
-  "code":"REM IterationGame\n\nKEYECHO(FALSE)\nREPEAT\n  BLANK(WHITE)\n  SETXY(50, 20)\n  COLOUR(BLUE)\n  PRINT(\"Type in a starting integer (>1):\", 4, 36)\n  SETXY(800, 20)\n  COLOUR(BLACK)\n  REPEAT\n    RESET(\\KEYBUFFER)\n    REPEAT\n      BOX(200, 60, WHITE, FALSE)\n      PRINT(GET$(0), 4, 36)\n      PAUSE(100)\n    UNTIL ABS(?KEY) = \\RETURN\n    RESET(?KEY)\n    s$ = GETLINE$\n    first% = VALDEF(s$, -1)\n  UNTIL first% > 1\n  latest% = first%\n  count% = 0\n  COLOUR(BLUE)\n  REPEAT\n    SETXY((count% MOD 10) * 100 + 20, (count% DIV 10) * 45 + 300)\n    PRINT(STR$(latest%), 4, 24)\n    IF latest% MOD 2 = 0 THEN\n      latest% = latest% / 2\n    ELSE\n      latest% = 3 * latest% + 1\n    ENDIF\n    INC(count%)\n    COLOUR(GREEN)\n  UNTIL latest% = 1\n  SETXY((count% MOD 10) * 100 + 20, (count% DIV 10) * 45 + 300)\n  COLOUR(RED)\n  PRINT(STR$(latest%), 4, 24)\n  SETXY(100, 100)\n  PRINT(\"That took \" + STR$(count%) + \" iterations to reach 1\", 4, 36)\n  COLOUR(BLACK)\n  SETXY(250, 200)\n  PRINT(\"[Press a key to continue]\", 4, 30)\n  REPEAT\n  UNTIL ?KEY > 0\n  RESET(?KEY)\nUNTIL FALSE\nEND",
+  "date":"28/07/2020",
+  "time":"13:25:32",
+  "code":"REM IterationGame\n\nKEYECHO(FALSE)\nREPEAT\n BLANK(WHITE)\n SETXY(50,20)\n COLOUR(BLUE)\n PRINT(\"Type in a starting integer (>1):\",4,36)\n SETXY(800,20)\n COLOUR(BLACK)\n REPEAT\n  RESET(\\KEYBUFFER)\n  REPEAT\n   BOX(200,60,WHITE,FALSE)\n   PRINT(GET$(0),4,36)\n   PAUSE(100)\n  UNTIL ABS(?KEY)=\\RETURN\n  RESET(?KEY)\n  s$=GETLINE$\n  first%=VALDEF(s$,-1)\n UNTIL first%>1\n latest%=first%\n count%=0\n COLOUR(BLUE)\n REPEAT\n  SETXY((count% MOD 10)*100+20,(count% DIV 10)*45+300)\n  PRINT(STR$(latest%),4,24)\n  IF latest% MOD 2=0 THEN\n   latest%=latest%/2\n  ELSE\n   latest%=3*latest%+1\n  ENDIF\n  INC(count%)\n  COLOUR(GREEN)\n UNTIL latest%=1\n SETXY((count% MOD 10)*100+20,(count% DIV 10)*45+300)\n COLOUR(RED)\n PRINT(STR$(latest%),4,24)\n SETXY(100,100)\n PRINT(\"That took \"+STR$(count%)+\" iterations to reach 1\",4,36)\n COLOUR(BLACK)\n SETXY(250,200)\n PRINT(\"[Press a key to continue]\",4,30)\n REPEAT\n UNTIL ?KEY>0\n RESET(?KEY)\nUNTIL FALSE\nEND",
   "usage":[
     {
       "category": "Turtle: absolute movement",

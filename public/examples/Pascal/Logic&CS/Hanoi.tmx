@@ -4,9 +4,9 @@
   "version":13,
   "name":"Tower of Hanoi by recursion",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:07",
-  "code":"PROGRAM Hanoi;\nCONST delay = 500;\nVAR numdisks: integer;\n    pile: array[1..3] of string;\n    x, y, top: array[1..3] of integer;\n    count: integer;\n    start, finish: integer;\n\n  Function getnum(prompt: string): integer;\n  Var s: string;\n  Begin\n    write(prompt);\n    repeat\n      s := readln\n    until pos(s[1], '123') > 0;\n    result := ord(s[1]) - 48\n  End;\n\n  Procedure setup(startdisk: integer);\n  Var d, p: integer;\n  Begin\n    x[1] := 250;\n    x[2] := 500;\n    x[3] := 750;\n    y[1] := 800;\n    y[2] := 500;\n    y[3] := 800;\n    for p := 1 to 3 do\n      begin\n        pile[p] := '';\n        top[p] := y[p] - numdisks * 20 - 40\n      end;\n    for d := 1 to numdisks do\n      pile[startdisk] := pile[startdisk] + chr(d + 48);\n    writeln(pad(' ', ' ', -32) + '   PILE 1   PILE 2   PILE 3');\n    writeln('');\n    write(pad('Starting position:', ' ', -32));\n    writeln(pad(pile[1], ' ', 9) + pad(pile[2], ' ', 9) + pad(pile[3], ' ', 9));\n    writeln('')\n  End;\n\n  Procedure draw;\n  Var p, i: integer;\n  Begin\n    for p := 1 to 3 do\n      begin\n        setxy(x[p], y[p]);\n        for i := length(pile[p]) downto 1 do\n          begin\n            movexy(0, -20);\n            colour(rgb(ord(pile[p, i]) - 47));\n            ellblot((ord(pile[p, i]) - 47) * 20, (ord(pile[p, i]) - 47) * 10)\n          end;\n        colour(black);\n        setxy(x[p], top[p]);\n        polyline(2)\n      end\n  End;\n\n  Procedure movedisk(n, start, finish: integer);\n  Begin\n    pile[finish] := pile[start, 1] + pile[finish];\n    pile[start] := delete(pile[start], 1, 1);\n    blank(white);\n    draw;\n    inc(count);\n    write(pad(str(count), ' ', 4) + '. Move disk ' + str(n) + ' from ' + str(start) + ' to ' +\n     str(finish) + ':  ');\n    writeln(pad(pile[1], ' ', 9) + pad(pile[2], ' ', 9) + pad(pile[3], ' ', 9));\n    pause(delay)\n  End;\n\n  Procedure movepile(n, start, finish: integer);\n  Begin\n    if n > 0 then\n      begin\n        movepile(n - 1, start, 6 - start - finish);\n        movedisk(n, start, finish);\n        movepile(n - 1, 6 - start - finish, finish)\n      end\n  End;\n\nBEGIN\n  repeat\n    console(true, cream);\n    writeln('TOWER OF HANOI');\n    writeln('');\n    write('How many disks would you like in the tower? ');\n    numdisks := val(readln)\n  until (numdisks > 1);\n  start := getnum('Start pillar (1, 2, or 3)? ');\n  finish := getnum('Finish pillar (1, 2 or 3)? ');\n  output(true, cream, false);\n  setup(start);\n  thickness(10);\n  draw;\n  pause(1000);\n  count := 0;\n  movepile(numdisks, start, finish)\nEND.",
+  "date":"28/07/2020",
+  "time":"13:25:10",
+  "code":"PROGRAM Hanoi;\nCONST delay=500;\nVAR numdisks: integer;\n    pile: array[1..3] of string;\n    x,y,top: array[1..3] of integer;\n    count: integer;\n    start,finish: integer;\n\n Function getnum(prompt: string): integer;\n Var s: string;\n Begin\n  write(prompt);\n  repeat\n   s:=readln\n  until pos(s[1],'123')>0;\n  result:=ord(s[1])-48\n End;\n\n Procedure setup(startdisk: integer);\n Var d,p: integer;\n Begin\n  x[1]:=250;\n  x[2]:=500;\n  x[3]:=750;\n  y[1]:=800;\n  y[2]:=500;\n  y[3]:=800;\n  for p:=1 to 3 do\n   begin\n    pile[p]:='';\n    top[p]:=y[p]-numdisks*20-40\n   end;\n  for d:=1 to numdisks do\n   pile[startdisk]:=pile[startdisk]+chr(d+48);\n  writeln(pad(' ',' ',-32)+'   PILE 1   PILE 2   PILE 3');\n  writeln('');\n  write(pad('Starting position:',' ',-32));\n  writeln(pad(pile[1],' ',9)+pad(pile[2],' ',9)+pad(pile[3],' ',9));\n  writeln('')\n End;\n\n Procedure draw;\n Var p,i: integer;\n Begin\n  for p:=1 to 3 do\n   begin\n    setxy(x[p],y[p]);\n    for i:=length(pile[p]) downto 1 do\n     begin\n      movexy(0,-20);\n      colour(rgb(ord(pile[p,i])-47));\n      ellblot((ord(pile[p,i])-47)*20,(ord(pile[p,i])-47)*10)\n     end;\n    colour(black);\n    setxy(x[p],top[p]);\n    polyline(2)\n   end\n End;\n\n Procedure movedisk(n,start,finish: integer);\n Begin\n  pile[finish]:=pile[start,1]+pile[finish];\n  pile[start]:=delete(pile[start],1,1);\n  blank(white);\n  draw;\n  inc(count);\n  write(pad(str(count),' ',4)+'. Move disk '+str(n)+' from '+str(start)+' to '+str(finish)+':  ');\n  writeln(pad(pile[1],' ',9)+pad(pile[2],' ',9)+pad(pile[3],' ',9));\n  pause(delay)\n End;\n\n Procedure movepile(n,start,finish: integer);\n Begin\n  if n>0 then\n   begin\n    movepile(n-1,start,6-start-finish);\n    movedisk(n,start,finish);\n    movepile(n-1,6-start-finish,finish)\n   end\n End;\n\nBEGIN\n repeat\n  console(true,cream);\n  writeln('TOWER OF HANOI');\n  writeln('');\n  write('How many disks would you like in the tower? ');\n  numdisks:=val(readln)\n until (numdisks>1);\n start:=getnum('Start pillar (1, 2, or 3)? ');\n finish:=getnum('Finish pillar (1, 2 or 3)? ');\n output(true,cream,false);\n setup(start);\n thickness(10);\n draw;\n pause(1000);\n count:=0;\n movepile(numdisks,start,finish)\nEND.",
   "usage":[
     {
       "category": "Turtle: relative movement",
@@ -34,9 +34,9 @@
       "category": "Other Turtle commands",
       "expressions":[
         {"name":"colour", "level":1, "count":2, "lines":"51 54"},
-        {"name":"thickness", "level":1, "count":1, "lines":"95"},
-        {"name":"console", "level":2, "count":1, "lines":"85"},
-        {"name":"output", "level":2, "count":1, "lines":"93"},
+        {"name":"thickness", "level":1, "count":1, "lines":"94"},
+        {"name":"console", "level":2, "count":1, "lines":"84"},
+        {"name":"output", "level":2, "count":1, "lines":"92"},
         {"name":"rgb", "level":3, "count":1, "lines":"51"}
       ],
       "total":6
@@ -58,11 +58,11 @@
     {
       "category": "String operations",
       "expressions":[
-        {"name":"write", "level":1, "count":4, "lines":"12 37 67 88"},
-        {"name":"writeln", "level":1, "count":7, "lines":"35 36 38 39 69 86 87"},
+        {"name":"write", "level":1, "count":4, "lines":"12 37 67 87"},
+        {"name":"writeln", "level":1, "count":7, "lines":"35 36 38 39 68 85 86"},
         {"name":"length", "level":2, "count":1, "lines":"48"},
         {"name":"delete", "level":3, "count":1, "lines":"63"},
-        {"name":"pad", "level":3, "count":9, "lines":"35 37 38 38 38 67 69 69 69"},
+        {"name":"pad", "level":3, "count":9, "lines":"35 37 38 38 38 67 68 68 68"},
         {"name":"pos", "level":3, "count":1, "lines":"15"}
       ],
       "total":23
@@ -70,8 +70,8 @@
     {
       "category": "Type conversion routines",
       "expressions":[
-        {"name":"str", "level":1, "count":4, "lines":"67 67 67 68"},
-        {"name":"val", "level":1, "count":1, "lines":"89"},
+        {"name":"str", "level":1, "count":4, "lines":"67 67 67 67"},
+        {"name":"val", "level":1, "count":1, "lines":"88"},
         {"name":"chr", "level":3, "count":1, "lines":"34"},
         {"name":"ord", "level":3, "count":4, "lines":"16 51 52 52"}
       ],
@@ -80,18 +80,18 @@
     {
       "category": "Input and timing routines",
       "expressions":[
-        {"name":"pause", "level":1, "count":2, "lines":"70 97"},
-        {"name":"readln", "level":1, "count":2, "lines":"14 89"}
+        {"name":"pause", "level":1, "count":2, "lines":"69 96"},
+        {"name":"readln", "level":1, "count":2, "lines":"14 88"}
       ],
       "total":4
     },
     {
       "category": "Command structures",
       "expressions":[
-        {"name":"if", "level":1, "count":1, "lines":"75"},
+        {"name":"if", "level":1, "count":1, "lines":"74"},
         {"name":"for", "level":1, "count":4, "lines":"28 33 45 48"},
-        {"name":"repeat", "level":2, "count":2, "lines":"13 84"},
-        {"name":"procedure", "level":2, "count":4, "lines":"19 42 60 73"},
+        {"name":"repeat", "level":2, "count":2, "lines":"13 83"},
+        {"name":"procedure", "level":2, "count":4, "lines":"19 42 60 72"},
         {"name":"function", "level":3, "count":1, "lines":"9"}
       ],
       "total":12
@@ -99,11 +99,11 @@
     {
       "category": "Subroutine calls",
       "expressions":[
-        {"name":"draw", "level":0, "count":2, "lines":"65 96"},
-        {"name":"movepile", "level":0, "count":3, "lines":"77 79 99"},
-        {"name":"movedisk", "level":0, "count":1, "lines":"78"},
-        {"name":"getnum", "level":0, "count":2, "lines":"91 92"},
-        {"name":"setup", "level":0, "count":1, "lines":"94"}
+        {"name":"draw", "level":0, "count":2, "lines":"65 95"},
+        {"name":"movepile", "level":0, "count":3, "lines":"76 78 98"},
+        {"name":"movedisk", "level":0, "count":1, "lines":"77"},
+        {"name":"getnum", "level":0, "count":2, "lines":"90 91"},
+        {"name":"setup", "level":0, "count":1, "lines":"93"}
       ],
       "total":9
     }

@@ -4,9 +4,9 @@
   "version":13,
   "name":"Mathematical functions",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"11:59:02",
-  "code":"PROGRAM MathFunctions;\nCONST decimals = 4;\n      denominator = 1000000;\nVAR count: integer;\n    a, b, c: integer;\n\n  Procedure show(s: string; n: integer);\n  Begin\n    writeln(s + '(' + str(a) + '/' + str(b) + ') = ' + qstr(n, denominator, decimals))\n  End;\n\n  Procedure selectab;\n  Begin\n    a := random(900) + 100;\n    b := random(900) + 100\n  End;\n\nBEGIN\n  output(true, white, true);\n  writeln('This program selects two random numbers a and b, in the range');\n  writeln('100-999, and then outputs various mathematical functions of the');\n  writeln('fraction a/b.  The results are expressed to ' + str(decimals) +\n     ' decimal places, and');\n  writeln('a denominator of ' + str(denominator) + ' is used in the calculations to provide');\n  writeln('precision, even though the Turtle functions strictly operate');\n  writeln('only on integers and produce integer results.');\n  writeln('');\n  selectab;\n  writeln('a=' + str(a) + '; b=' + str(b));\n  writeln('a/b = ' + str(a) + '/' + str(b) + ' = ' + qstr(a, b, decimals));\n  writeln('');\n  show('square', power(a, b, 2, denominator));\n  show('square root', root(a, b, 2, denominator));\n  show('cube', power(a, b, 3, denominator));\n  show('cube root', root(a, b, 3, denominator));\n  writeln('');\n  show('hypot', hypot(a, b, denominator));\n  show('calculated hypot', sqrt(a * a + b * b, denominator));\n  writeln('');\n  show('sin', sin(a, b, denominator));\n  show('cos', cos(a, b, denominator));\n  show('tan', tan(a, b, denominator));\n  writeln('');\n  show('ln', ln(a, b, denominator));\n  if divmult(a, b, 1000) + ln(denominator, 1, 1000) > ln(maxint, 1, 1000) then\n    begin\n      writeln('EXP(' + str(a) + '/' + str(b) + ') would give numerical overflow, because');\n      writeln('the result*' + str(denominator) + ' would be greater than ' + str(maxint))\n    end\n  else\n    show('exp', exp(a, b, denominator));\n  show('log10', log10(a, b, denominator));\n  if divmult(a, b, 1000) + log10(denominator, 1, 1000) > log10(maxint, 1, 1000) then\n    begin\n      writeln('ANTILOG(' + str(a) + '/' + str(b) + ') would give numerical overflow, because');\n      writeln('the result*' + str(denominator) + ' would be greater than ' + str(maxint))\n    end\n  else\n    show('antilog', antilog(a, b, denominator));\n  writeln('');\n  if a > b then\n    writeln('ARCCOS and ARCSIN are not defined for ' + str(a) + '/' + str(b) + ' = ' + qstr(a, b,\n     decimals))\n  else\n    begin\n      show('arccos', arccos(a, b, denominator));\n      show('arcsin', arcsin(a, b, denominator))\n    end;\n  show('arctan', arctan(a, b, denominator))\nEND.",
+  "date":"28/07/2020",
+  "time":"13:23:50",
+  "code":"PROGRAM MathFunctions;\nCONST decimals=4;\n      denominator=1000000;\nVAR count: integer;\n    a,b,c: integer;\n\n Procedure show(s: string;n: integer);\n Begin\n  writeln(s+'('+str(a)+'/'+str(b)+') = '+qstr(n,denominator,decimals))\n End;\n\n Procedure selectab;\n Begin\n  a:=random(900)+100;\n  b:=random(900)+100\n End;\n\nBEGIN\n output(true,white,true);\n writeln('This program selects two random numbers a and b, in the range');\n writeln('100-999, and then outputs various mathematical functions of the');\n writeln('fraction a/b.  The results are expressed to '+str(decimals)+' decimal places, and');\n writeln('a denominator of '+str(denominator)+' is used in the calculations to provide');\n writeln('precision, even though the Turtle functions strictly operate');\n writeln('only on integers and produce integer results.');\n writeln('');\n selectab;\n writeln('a='+str(a)+'; b='+str(b));\n writeln('a/b = '+str(a)+'/'+str(b)+' = '+qstr(a,b,decimals));\n writeln('');\n show('square',power(a,b,2,denominator));\n show('square root',root(a,b,2,denominator));\n show('cube',power(a,b,3,denominator));\n show('cube root',root(a,b,3,denominator));\n writeln('');\n show('hypot',hypot(a,b,denominator));\n show('calculated hypot',sqrt(a*a+b*b,denominator));\n writeln('');\n show('sin',sin(a,b,denominator));\n show('cos',cos(a,b,denominator));\n show('tan',tan(a,b,denominator));\n writeln('');\n show('ln',ln(a,b,denominator));\n if divmult(a,b,1000)+ln(denominator,1,1000)>ln(maxint,1,1000) then\n  begin\n   writeln('EXP('+str(a)+'/'+str(b)+') would give numerical overflow, because');\n   writeln('the result*'+str(denominator)+' would be greater than '+str(maxint))\n  end\n else\n  show('exp',exp(a,b,denominator));\n show('log10',log10(a,b,denominator));\n if divmult(a,b,1000)+log10(denominator,1,1000)>log10(maxint,1,1000) then\n  begin\n   writeln('ANTILOG('+str(a)+'/'+str(b)+') would give numerical overflow, because');\n   writeln('the result*'+str(denominator)+' would be greater than '+str(maxint))\n  end\n else\n  show('antilog',antilog(a,b,denominator));\n writeln('');\n if a>b then\n  writeln('ARCCOS and ARCSIN are not defined for '+str(a)+'/'+str(b)+' = '+qstr(a,b,decimals))\n else\n  begin\n   show('arccos',arccos(a,b,denominator));\n   show('arcsin',arcsin(a,b,denominator))\n  end;\n show('arctan',arctan(a,b,denominator))\nEND.",
   "usage":[
     {
       "category": "Other Turtle commands",
@@ -18,52 +18,52 @@
     {
       "category": "General arithmetic functions",
       "expressions":[
-        {"name":"hypot", "level":2, "count":1, "lines":"37"},
+        {"name":"hypot", "level":2, "count":1, "lines":"36"},
         {"name":"random", "level":2, "count":2, "lines":"14 15"},
-        {"name":"sqrt", "level":2, "count":1, "lines":"38"},
-        {"name":"divmult", "level":3, "count":2, "lines":"45 53"},
-        {"name":"maxint", "level":3, "count":4, "lines":"45 48 53 56"},
-        {"name":"power", "level":3, "count":2, "lines":"32 34"},
-        {"name":"root", "level":3, "count":2, "lines":"33 35"}
+        {"name":"sqrt", "level":2, "count":1, "lines":"37"},
+        {"name":"divmult", "level":3, "count":2, "lines":"44 52"},
+        {"name":"maxint", "level":3, "count":4, "lines":"44 47 52 55"},
+        {"name":"power", "level":3, "count":2, "lines":"31 33"},
+        {"name":"root", "level":3, "count":2, "lines":"32 34"}
       ],
       "total":14
     },
     {
       "category": "Trig / exp / log functions",
       "expressions":[
-        {"name":"cos", "level":2, "count":1, "lines":"41"},
-        {"name":"exp", "level":2, "count":1, "lines":"51"},
-        {"name":"ln", "level":2, "count":3, "lines":"44 45 45"},
-        {"name":"sin", "level":2, "count":1, "lines":"40"},
-        {"name":"tan", "level":2, "count":1, "lines":"42"},
-        {"name":"antilog", "level":3, "count":1, "lines":"59"},
-        {"name":"arccos", "level":3, "count":1, "lines":"66"},
-        {"name":"arcsin", "level":3, "count":1, "lines":"67"},
-        {"name":"arctan", "level":3, "count":1, "lines":"69"},
-        {"name":"log10", "level":3, "count":3, "lines":"52 53 53"}
+        {"name":"cos", "level":2, "count":1, "lines":"40"},
+        {"name":"exp", "level":2, "count":1, "lines":"50"},
+        {"name":"ln", "level":2, "count":3, "lines":"43 44 44"},
+        {"name":"sin", "level":2, "count":1, "lines":"39"},
+        {"name":"tan", "level":2, "count":1, "lines":"41"},
+        {"name":"antilog", "level":3, "count":1, "lines":"58"},
+        {"name":"arccos", "level":3, "count":1, "lines":"64"},
+        {"name":"arcsin", "level":3, "count":1, "lines":"65"},
+        {"name":"arctan", "level":3, "count":1, "lines":"67"},
+        {"name":"log10", "level":3, "count":3, "lines":"51 52 52"}
       ],
       "total":14
     },
     {
       "category": "String operations",
       "expressions":[
-        {"name":"writeln", "level":1, "count":20, "lines":"9 20 21 22 24 25 26 27 29 30 31 36 39 43 47 48 55 56 60 62"}
+        {"name":"writeln", "level":1, "count":20, "lines":"9 20 21 22 23 24 25 26 28 29 30 35 38 42 46 47 54 55 59 61"}
       ],
       "total":20
     },
     {
       "category": "Type conversion routines",
       "expressions":[
-        {"name":"str", "level":1, "count":18, "lines":"9 9 22 24 29 29 30 30 47 47 48 48 55 55 56 56 62 62"},
-        {"name":"qstr", "level":2, "count":3, "lines":"9 30 62"}
+        {"name":"str", "level":1, "count":18, "lines":"9 9 22 23 28 28 29 29 46 46 47 47 54 54 55 55 61 61"},
+        {"name":"qstr", "level":2, "count":3, "lines":"9 29 61"}
       ],
       "total":21
     },
     {
       "category": "Command structures",
       "expressions":[
-        {"name":"if", "level":1, "count":3, "lines":"45 53 61"},
-        {"name":"else", "level":1, "count":3, "lines":"50 58 64"},
+        {"name":"if", "level":1, "count":3, "lines":"44 52 60"},
+        {"name":"else", "level":1, "count":3, "lines":"49 57 62"},
         {"name":"procedure", "level":2, "count":2, "lines":"7 12"}
       ],
       "total":8
@@ -71,8 +71,8 @@
     {
       "category": "Subroutine calls",
       "expressions":[
-        {"name":"selectab", "level":0, "count":1, "lines":"28"},
-        {"name":"show", "level":0, "count":16, "lines":"32 33 34 35 37 38 40 41 42 44 51 52 59 66 67 69"}
+        {"name":"selectab", "level":0, "count":1, "lines":"27"},
+        {"name":"show", "level":0, "count":16, "lines":"31 32 33 34 36 37 39 40 41 43 50 51 58 64 65 67"}
       ],
       "total":17
     }

@@ -4,9 +4,9 @@
   "version":13,
   "name":"Sierpinski triangle (by random dots)",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:34",
-  "code":"REM SierpinskiDots\n\nDIM x%(2)\nDIM y%(2)\nx%(0) = 400\ny%(0) = 138\nx%(1) = 843\ny%(1) = 650\nx%(2) = 179\ny%(2) = 778\nthisx% = RND(200) + 399\nthisy% = RND(200) + 399\nREPEAT\n  thisc% = RND(3) - 1\n  thisx% = (thisx% + x%(thisc%)) / 2\n  thisy% = (thisy% + y%(thisc%)) / 2\n  PIXSET(thisx%, thisy%, PURPLE)\nUNTIL 0 = 1\nEND",
+  "date":"28/07/2020",
+  "time":"13:25:41",
+  "code":"REM SierpinskiDots\n\nDIM x%(2)\nDIM y%(2)\nx%(0)=400\ny%(0)=138\nx%(1)=843\ny%(1)=650\nx%(2)=179\ny%(2)=778\nthisx%=RND(200)+399\nthisy%=RND(200)+399\nREPEAT\n thisc%=RND(3)-1\n thisx%=(thisx%+x%(thisc%))/2\n thisy%=(thisy%+y%(thisc%))/2\n PIXSET(thisx%,thisy%,PURPLE)\nUNTIL 0=1\nEND",
   "usage":[
     {
       "category": "Canvas operations",

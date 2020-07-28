@@ -4,9 +4,9 @@
   "version":13,
   "name":"Multiple bouncing balls",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:26",
-  "code":"REM MultiBounce\n\nCONST MINSIZE% = 70\nCONST MAXSIZE% = 130\nCONST BALLS% = 10\nDIM x%(BALLS%)\nDIM y%(BALLS%)\nDIM xvel%(BALLS%)\nDIM yvel%(BALLS%)\nDIM size%(BALLS%)\nDIM colr%(BALLS%)\nFOR n% = 1 TO BALLS%\n  size%(n%) = MINSIZE% + RND(MAXSIZE% - MINSIZE%)\n  colr%(n%) = RGB(n%)\n  x%(n%) = RND(1000 - 2 * size%(n%)) + size%(n%)\n  y%(n%) = RND(1000 - 2 * size%(n%)) + size%(n%)\n  xvel%(n%) = RND(15) - 7\n  yvel%(n%) = RND(15) - 7\nNEXT\nREPEAT\n  NOUPDATE\n  BLANK(WHITE)\n  FOR n% = 1 TO BALLS%\n    x%(n%) = x%(n%) + xvel%(n%)\n    y%(n%) = y%(n%) + yvel%(n%)\n    SETXY(x%(n%), y%(n%))\n    COLOUR(colr%(n%))\n    BLOT(size%(n%))\n    IF (x%(n%) < size%(n%)) OR (x%(n%) > 1000 - size%(n%)) THEN\n      xvel%(n%) = -xvel%(n%)\n    ENDIF\n    IF (y%(n%) < size%(n%)) OR (y%(n%) > 1000 - size%(n%)) THEN\n      yvel%(n%) = -yvel%(n%)\n    ENDIF\n  NEXT\n  UPDATE\n  PAUSE(5)\nUNTIL 1 = 0\nEND",
+  "date":"28/07/2020",
+  "time":"13:25:31",
+  "code":"REM MultiBounce\n\nCONST MINSIZE%=70\nCONST MAXSIZE%=130\nCONST BALLS%=10\nDIM x%(BALLS%)\nDIM y%(BALLS%)\nDIM xvel%(BALLS%)\nDIM yvel%(BALLS%)\nDIM size%(BALLS%)\nDIM colr%(BALLS%)\nFOR n%=1 TO BALLS%\n size%(n%)=MINSIZE%+RND(MAXSIZE%-MINSIZE%)\n colr%(n%)=RGB(n%)\n x%(n%)=RND(1000-2*size%(n%))+size%(n%)\n y%(n%)=RND(1000-2*size%(n%))+size%(n%)\n xvel%(n%)=RND(15)-7\n yvel%(n%)=RND(15)-7\nNEXT\nREPEAT\n NOUPDATE\n BLANK(WHITE)\n FOR n%=1 TO BALLS%\n  x%(n%)=x%(n%)+xvel%(n%)\n  y%(n%)=y%(n%)+yvel%(n%)\n  SETXY(x%(n%),y%(n%))\n  COLOUR(colr%(n%))\n  BLOT(size%(n%))\n  IF (x%(n%)<size%(n%)) OR (x%(n%)>1000-size%(n%)) THEN\n   xvel%(n%)=-xvel%(n%)\n  ENDIF\n  IF (y%(n%)<size%(n%)) OR (y%(n%)>1000-size%(n%)) THEN\n   yvel%(n%)=-yvel%(n%)\n  ENDIF\n NEXT\n UPDATE\n PAUSE(5)\nUNTIL 1=0\nEND",
   "usage":[
     {
       "category": "Turtle: absolute movement",

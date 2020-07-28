@@ -4,9 +4,9 @@
   "version":13,
   "name":"Bouncing ball (using Turtle)",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:26",
-  "code":"REM TurtleBounce\n\nSETXY(100, 700)\nxvel% = 8\nyvel% = -4\nWHILE 0 < 1\n  NOUPDATE\n  COLOUR(WHITE)\n  BLOT(51)\n  MOVEXY(xvel%, yvel%)\n  COLOUR(RED)\n  BLOT(50)\n  UPDATE\n  PAUSE(5)\n  IF (turtx% < 50) OR (turtx% > 949) THEN\n    xvel% = -xvel%\n  ENDIF\n  IF (turty% < 50) OR (turty% > 949) THEN\n    yvel% = -yvel%\n  ENDIF\nENDWHILE\nEND",
+  "date":"28/07/2020",
+  "time":"13:25:31",
+  "code":"REM TurtleBounce\n\nSETXY(100,700)\nxvel%=8\nyvel%=-4\nWHILE 0<1\n NOUPDATE\n COLOUR(WHITE)\n BLOT(51)\n MOVEXY(xvel%,yvel%)\n COLOUR(RED)\n BLOT(50)\n UPDATE\n PAUSE(5)\n IF (turtx%<50) OR (turtx%>949) THEN\n  xvel%=-xvel%\n ENDIF\n IF (turty%<50) OR (turty%>949) THEN\n  yvel%=-yvel%\n ENDIF\nENDWHILE\nEND",
   "usage":[
     {
       "category": "Turtle: relative movement",

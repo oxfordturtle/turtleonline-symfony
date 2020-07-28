@@ -4,9 +4,9 @@
   "version":13,
   "name":"Simple triangle",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:24",
-  "code":"REM Triangle1\n\nMOVEXY(-100, 150)\nFORWARD(256)\nRIGHT(120)\nFORWARD(256)\nRIGHT(120)\nFORWARD(256)\nRIGHT(120)\nEND",
+  "date":"28/07/2020",
+  "time":"13:25:30",
+  "code":"REM Triangle1\n\nMOVEXY(-100,150)\nFORWARD(256)\nRIGHT(120)\nFORWARD(256)\nRIGHT(120)\nFORWARD(256)\nRIGHT(120)\nEND",
   "usage":[
     {
       "category": "Turtle: relative movement",

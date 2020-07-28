@@ -4,9 +4,9 @@
   "version":13,
   "name":"Resizable face (nested procedures)",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"11:59:01",
-  "code":"PROGRAM ResizableFace;\n\n  {draws a face of the given radius}\n  Procedure face(radius: integer);\n\n    {draws an eye of appropriate size}\n    procedure eye;\n    begin\n      colour(white);\n      ellblot(radius * 3 / 20, radius / 10);\n      colour(emerald);\n      blot(radius * 9 / 100);\n      colour(black);\n      blot(radius / 25)\n    end;\n\n  Begin\n    {avoid drawing lines as Turtle moves}\n    penup;\n    {draw head with blot of given radius}\n    colour(peach);\n    blot(radius);\n    {draw mouth using overlapping blots}\n    colour(darkred);\n    blot(radius * 7 / 10);\n    forward(radius * 3 / 20);\n    colour(peach);\n    blot(radius * 3 / 4);\n    {draw blue nose}\n    back(radius * 3 / 10);\n    colour(royal);\n    blot(radius * 3 / 20);\n    {move to left eye position}\n    forward(radius * 9 / 20);\n    left(90);\n    {Turtle is now pointing leftwards}\n    forward(radius * 2 / 5);\n    {draw left eye}\n    eye;\n    {move to right eye position}\n    back(radius * 4 / 5);\n    {draw right eye}\n    eye\n  End;\n\nBEGIN\n  {draw a face of radius 400}\n  face(400)\nEND.",
+  "date":"28/07/2020",
+  "time":"13:23:48",
+  "code":"PROGRAM ResizableFace;\n\n {draws a face of the given radius}\n Procedure face(radius: integer);\n\n  {draws an eye of appropriate size}\n  procedure eye;\n  begin\n   colour(white);\n   ellblot(radius*3/20,radius/10);\n   colour(emerald);\n   blot(radius*9/100);\n   colour(black);\n   blot(radius/25)\n  end;\n\n Begin\n  {avoid drawing lines as Turtle moves}\n  penup;\n  {draw head with blot of given radius}\n  colour(peach);\n  blot(radius);\n  {draw mouth using overlapping blots}\n  colour(darkred);\n  blot(radius*7/10);\n  forward(radius*3/20);\n  colour(peach);\n  blot(radius*3/4);\n  {draw blue nose}\n  back(radius*3/10);\n  colour(royal);\n  blot(radius*3/20);\n  {move to left eye position}\n  forward(radius*9/20);\n  left(90);\n  {Turtle is now pointing leftwards}\n  forward(radius*2/5);\n  {draw left eye}\n  eye;\n  {move to right eye position}\n  back(radius*4/5);\n  {draw right eye}\n  eye\n End;\n\nBEGIN\n {draw a face of radius 400}\n face(400)\nEND.",
   "usage":[
     {
       "category": "Turtle: relative movement",

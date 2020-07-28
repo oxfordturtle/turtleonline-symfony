@@ -4,9 +4,9 @@
   "version":13,
   "name":"Reference parameters (using RETURN)",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:24",
-  "code":"REM RefParams\n\nSETXY(100, 900)\nPROClines(turtt%, FALSE)\nPROClines(turtc%, TRUE)\nPROCdots(turtx%)\nPROCdots(turty%)\nEND\n\nDEF PROClines(RETURN style%, convert%)\n  LOCAL count%\n  FOR count% = 1 TO 8\n    IF convert% THEN\n      style% = RGB(count%)\n    ELSE\n      style% = count%\n    ENDIF\n    FORWARD(50)\n    PAUSE(100)\n  NEXT\nENDPROC\n\nDEF PROCdots(RETURN coord%)\n  LOCAL count%\n  FOR count% = 1 TO 8\n    coord% = coord% + 100\n    BLOT(40)\n    PAUSE(100)\n  NEXT\nENDPROC",
+  "date":"28/07/2020",
+  "time":"13:25:30",
+  "code":"REM RefParams\n\nSETXY(100,900)\nPROClines(turtt%,FALSE)\nPROClines(turtc%,TRUE)\nPROCdots(turtx%)\nPROCdots(turty%)\nEND\n\nDEF PROClines(RETURN style%,convert%)\n LOCAL count%\n FOR count%=1 TO 8\n  IF convert% THEN\n   style%=RGB(count%)\n  ELSE\n   style%=count%\n  ENDIF\n  FORWARD(50)\n  PAUSE(100)\n NEXT\nENDPROC\n\nDEF PROCdots(RETURN coord%)\n LOCAL count%\n FOR count%=1 TO 8\n  coord%=coord%+100\n  BLOT(40)\n  PAUSE(100)\n NEXT\nENDPROC",
   "usage":[
     {
       "category": "Turtle: relative movement",

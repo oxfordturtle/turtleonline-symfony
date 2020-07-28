@@ -4,9 +4,9 @@
   "version":13,
   "name":"Logistic equation",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:05",
-  "code":"PROGRAM Logistic;\nCONST maxpop = 100000;\n      maxgen = 100;\n      lmargin = 105;\n      rmargin = 40;\n      tmargin = 150;\n      bmargin = 200;\n      output = false;\nVAR gen, pop: integer;\n    r: integer;\n\n  Procedure axes;\n  Var i: integer;\n  Begin\n    colour(black);\n    for i := 0 to 10 do\n      begin\n        setxy(i * 100 - 25, 1000);\n        print(str(i * maxgen / 10), 4, 20)\n      end;\n    for i := 1 to 10 do\n      begin\n        setxy(-lmargin + 5, 1000 - i * 100 - 20);\n        print(str(i * maxpop / 10), 4, 20)\n      end;\n    setxy(0, 0);\n    drawxy(0, 1000);\n    drawxy(1000, 0);\n    colour(red);\n    setxy(0, 1060);\n    print('Population over ' + str(maxgen) + ' generations, where P (population/' + str(maxpop)\n     + ')', 4, 25);\n    setxy(0, 1110);\n    print('is determined by the logistic equation P'' = rP(1 - P), with r = ' + qstr(r, 10, 1),\n     4, 25)\n  End;\n\n  Procedure menu;\n  Var i: integer;\n  Begin\n    colour(black);\n    setxy(10, -tmargin + 20);\n    print('Set r:', 4, 25);\n    for i := 21 to 40 do\n      begin\n        setxy(((i - 1) mod 10) * 90 + 130, ((i - 1) div 10) * 50 - 100 - tmargin);\n        if i = r then\n          box(90, 50, red, true)\n        else\n          box(90, 50, cream, true);\n        print('  ' + qstr(i, 10, 1), 4, 25)\n      end\n  End;\n\nBEGIN\n  canvas(-lmargin, -tmargin, 1000 + lmargin + rmargin, 1000 + tmargin + bmargin);\n  resolution(1000 + lmargin + rmargin, 1000 + tmargin + bmargin);\n  thickness(3);\n  r := 30;\n  repeat\n    noupdate;\n    blank(white);\n    axes;\n    menu;\n    colour(blue);\n    pop := random(maxpop - 9) + 10;\n    if output then\n      begin\n        writeln('');\n        writeln('r = ' + qstr(r, 10, 1) + '; Initial population = ' + str(pop))\n      end;\n    setxy(0, 1000 - divmult(pop, maxpop, 1000));\n    for gen := 1 to maxgen do\n      begin\n        pop := divmult(pop, 10 * maxpop, r * (maxpop - pop));\n        setxy(divmult(gen, maxgen, 1000), 1000 - divmult(pop, maxpop, 1000));\n        polyline(2);\n        if output then\n          begin\n            write(str(pop) + ' ');\n            if gen mod 10 = 0 then\n              writeln('')\n          end\n      end;\n    update;\n    repeat\n    until (?lmouse > 0) and (?clicky < (100 - tmargin)) and (?clickx >= 130) and (?clickx < 1030);\n    r := ((?clickx - 130) div 90) + ((?clicky + tmargin + 100) div 50) * 10 + 1\n  until 0 = 1\nEND.",
+  "date":"28/07/2020",
+  "time":"13:25:08",
+  "code":"PROGRAM Logistic;\nCONST maxpop=100000;\n      maxgen=100;\n      lmargin=105;\n      rmargin=40;\n      tmargin=150;\n      bmargin=200;\n      output=false;\nVAR gen,pop: integer;\n    r: integer;\n\n Procedure axes;\n Var i: integer;\n Begin\n  colour(black);\n  for i:=0 to 10 do\n   begin\n    setxy(i*100-25,1000);\n    print(str(i*maxgen/10),4,20)\n   end;\n  for i:=1 to 10 do\n   begin\n    setxy(-lmargin+5,1000-i*100-20);\n    print(str(i*maxpop/10),4,20)\n   end;\n  setxy(0,0);\n  drawxy(0,1000);\n  drawxy(1000,0);\n  colour(red);\n  setxy(0,1060);\n  print('Population over '+str(maxgen)+' generations, where P (population/'+str(maxpop)+')',4,25);\n  setxy(0,1110);\n  print('is determined by the logistic equation P'' = rP(1 - P), with r = '+qstr(r,10,1),4,25)\n End;\n\n Procedure menu;\n Var i: integer;\n Begin\n  colour(black);\n  setxy(10,-tmargin+20);\n  print('Set r:',4,25);\n  for i:=21 to 40 do\n   begin\n    setxy(((i-1) mod 10)*90+130,((i-1) div 10)*50-100-tmargin);\n    if i=r then\n     box(90,50,red,true)\n    else\n     box(90,50,cream,true);\n    print('  '+qstr(i,10,1),4,25)\n   end\n End;\n\nBEGIN\n canvas(-lmargin,-tmargin,1000+lmargin+rmargin,1000+tmargin+bmargin);\n resolution(1000+lmargin+rmargin,1000+tmargin+bmargin);\n thickness(3);\n r:=30;\n repeat\n  noupdate;\n  blank(white);\n  axes;\n  menu;\n  colour(blue);\n  pop:=random(maxpop-9)+10;\n  if output then\n   begin\n    writeln('');\n    writeln('r = '+qstr(r,10,1)+'; Initial population = '+str(pop))\n   end;\n  setxy(0,1000-divmult(pop,maxpop,1000));\n  for gen:=1 to maxgen do\n   begin\n    pop:=divmult(pop,10*maxpop,r*(maxpop-pop));\n    setxy(divmult(gen,maxgen,1000),1000-divmult(pop,maxpop,1000));\n    polyline(2);\n    if output then\n     begin\n      write(str(pop)+' ');\n      if gen mod 10=0 then\n       writeln('')\n     end\n   end;\n  update;\n  repeat\n  until (?lmouse>0) and (?clicky<(100-tmargin)) and (?clickx>=130) and (?clickx<1030);\n  r:=((?clickx-130) div 90)+((?clicky+tmargin+100) div 50)*10+1\n until 0=1\nEND.",
   "usage":[
     {
       "category": "Turtle: relative movement",
@@ -18,78 +18,78 @@
     {
       "category": "Turtle: absolute movement",
       "expressions":[
-        {"name":"setxy", "level":1, "count":9, "lines":"18 23 26 30 33 42 46 72 76"}
+        {"name":"setxy", "level":1, "count":9, "lines":"18 23 26 30 32 40 44 70 74"}
       ],
       "total":9
     },
     {
       "category": "Turtle: drawing shapes",
       "expressions":[
-        {"name":"box", "level":2, "count":2, "lines":"48 50"},
-        {"name":"polyline", "level":2, "count":1, "lines":"77"}
+        {"name":"box", "level":2, "count":2, "lines":"46 48"},
+        {"name":"polyline", "level":2, "count":1, "lines":"75"}
       ],
       "total":3
     },
     {
       "category": "Other Turtle commands",
       "expressions":[
-        {"name":"colour", "level":1, "count":4, "lines":"15 29 41 65"},
-        {"name":"thickness", "level":1, "count":1, "lines":"58"}
+        {"name":"colour", "level":1, "count":4, "lines":"15 29 39 63"},
+        {"name":"thickness", "level":1, "count":1, "lines":"56"}
       ],
       "total":5
     },
     {
       "category": "Canvas operations",
       "expressions":[
-        {"name":"blank", "level":1, "count":1, "lines":"62"},
-        {"name":"noupdate", "level":1, "count":1, "lines":"61"},
-        {"name":"update", "level":1, "count":1, "lines":"85"},
-        {"name":"canvas", "level":2, "count":1, "lines":"56"},
-        {"name":"resolution", "level":2, "count":1, "lines":"57"}
+        {"name":"blank", "level":1, "count":1, "lines":"60"},
+        {"name":"noupdate", "level":1, "count":1, "lines":"59"},
+        {"name":"update", "level":1, "count":1, "lines":"83"},
+        {"name":"canvas", "level":2, "count":1, "lines":"54"},
+        {"name":"resolution", "level":2, "count":1, "lines":"55"}
       ],
       "total":5
     },
     {
       "category": "General arithmetic functions",
       "expressions":[
-        {"name":"random", "level":2, "count":1, "lines":"66"},
-        {"name":"divmult", "level":3, "count":4, "lines":"72 75 76 76"}
+        {"name":"random", "level":2, "count":1, "lines":"64"},
+        {"name":"divmult", "level":3, "count":4, "lines":"70 73 74 74"}
       ],
       "total":5
     },
     {
       "category": "String operations",
       "expressions":[
-        {"name":"print", "level":1, "count":6, "lines":"19 24 31 34 43 51"},
-        {"name":"write", "level":1, "count":1, "lines":"80"},
-        {"name":"writeln", "level":1, "count":3, "lines":"69 70 82"}
+        {"name":"print", "level":1, "count":6, "lines":"19 24 31 33 41 49"},
+        {"name":"write", "level":1, "count":1, "lines":"78"},
+        {"name":"writeln", "level":1, "count":3, "lines":"67 68 80"}
       ],
       "total":10
     },
     {
       "category": "Type conversion routines",
       "expressions":[
-        {"name":"str", "level":1, "count":6, "lines":"19 24 31 31 70 80"},
-        {"name":"qstr", "level":2, "count":3, "lines":"34 51 70"}
+        {"name":"str", "level":1, "count":6, "lines":"19 24 31 31 68 78"},
+        {"name":"qstr", "level":2, "count":3, "lines":"33 49 68"}
       ],
       "total":9
     },
     {
       "category": "Command structures",
       "expressions":[
-        {"name":"if", "level":1, "count":4, "lines":"47 67 78 81"},
-        {"name":"else", "level":1, "count":1, "lines":"49"},
-        {"name":"for", "level":1, "count":4, "lines":"16 21 44 73"},
-        {"name":"repeat", "level":2, "count":2, "lines":"60 86"},
-        {"name":"procedure", "level":2, "count":2, "lines":"12 38"}
+        {"name":"if", "level":1, "count":4, "lines":"45 65 76 79"},
+        {"name":"else", "level":1, "count":1, "lines":"47"},
+        {"name":"for", "level":1, "count":4, "lines":"16 21 42 71"},
+        {"name":"repeat", "level":2, "count":2, "lines":"58 84"},
+        {"name":"procedure", "level":2, "count":2, "lines":"12 36"}
       ],
       "total":13
     },
     {
       "category": "Subroutine calls",
       "expressions":[
-        {"name":"axes", "level":0, "count":1, "lines":"63"},
-        {"name":"menu", "level":0, "count":1, "lines":"64"}
+        {"name":"axes", "level":0, "count":1, "lines":"61"},
+        {"name":"menu", "level":0, "count":1, "lines":"62"}
       ],
       "total":2
     }

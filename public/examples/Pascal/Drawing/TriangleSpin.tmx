@@ -2,11 +2,11 @@
   "format":1,
   "language":"Pascal",
   "version":13,
-  "name":"Spinning triangle pattern (uses MOVEXY)",
+  "name":"Spinning triangle pattern [MOVEXY]",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"11:59:01",
-  "code":"PROGRAM TriangleSpin;\nVAR i: integer;\nBEGIN\n  {adjust start position so pattern is central}\n  movexy(30, 20);\n  {counting from 1 to 300 ...}\n  for i := 1 to 300 do\n    begin\n      {move forward by 3 times the count number}\n      forward(i * 3);\n      {turn right by 121 degrees}\n      right(121)\n    end\nEND.",
+  "date":"28/07/2020",
+  "time":"13:23:48",
+  "code":"PROGRAM TriangleSpin;\nVAR i: integer;\nBEGIN\n {adjust start position so pattern is central}\n movexy(30,20);\n {counting from 1 to 300 ...}\n for i:=1 to 300 do\n  begin\n   {move forward by 3 times the count number}\n   forward(i*3);\n   {turn right by 121 degrees}\n   right(121)\n  end\nEND.",
   "usage":[
     {
       "category": "Turtle: relative movement",

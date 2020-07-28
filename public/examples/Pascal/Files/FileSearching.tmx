@@ -4,9 +4,9 @@
   "version":13,
   "name":"File searching",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"11:59:07",
-  "code":"PROGRAM File_searching;\nVAR dhandle: integer;\n    thisdir: string;\n\n  Procedure showdir(d: string);\n  Var fhandle: integer;\n      thisfile: string;\n  Begin\n    if d = '' then\n      writeln('Base directory:')\n    else\n      writeln('Directory \"' + d + '\":');\n    chdir(d);\n    fhandle := 0;\n    thisfile := findfirst('*.*', fhandle);\n    if thisfile = '' then\n      writeln('  <no files>')\n    else\n      while thisfile <> '' do\n        begin\n          writeln('  ' + thisfile);\n          thisfile := findnext(fhandle)\n        end;\n    writeln('')\n  End;\n\nBEGIN\n  output(true, cream, true);\n  writeln('Turtle directories (up to first level) and their files ...');\n  writeln('');\n  showdir('');\n  dhandle := 0;\n  thisdir := finddir('*.*', dhandle);\n  while thisdir <> '' do\n    begin\n      showdir(thisdir);\n      thisdir := findnext(dhandle)\n    end\nEND.",
+  "date":"28/07/2020",
+  "time":"13:23:53",
+  "code":"PROGRAM FileSearching;\nVAR dhandle: integer;\n    thisdir: string;\n\n Procedure showdir(d: string);\n Var fhandle: integer;\n     thisfile: string;\n Begin\n  if d='' then\n   writeln('Base directory:')\n  else\n   writeln('Directory \"'+d+'\":');\n  chdir(d);\n  fhandle:=0;\n  thisfile:=findfirst('*.*',fhandle);\n  if thisfile='' then\n   writeln('  <no files>')\n  else\n   while thisfile<>'' do\n    begin\n     writeln('  '+thisfile);\n     thisfile:=findnext(fhandle)\n    end;\n  writeln('')\n End;\n\nBEGIN\n output(true,cream,true);\n writeln('Turtle directories (up to first level) and their files ...');\n writeln('');\n showdir('');\n dhandle:=0;\n thisdir:=finddir('*.*',dhandle);\n while thisdir<>'' do\n  begin\n   showdir(thisdir);\n   thisdir:=findnext(dhandle)\n  end\nEND.",
   "usage":[
     {
       "category": "Other Turtle commands",

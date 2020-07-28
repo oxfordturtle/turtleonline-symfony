@@ -4,9 +4,9 @@
   "version":13,
   "name":"Flashlights (using Booleans)",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:24",
-  "code":"REM Flashlights\n\nBLOT(1000)\nTHICKNESS(8)\nREPEAT\n  SETX(RND(8) * 111)\n  SETY(RND(8) * 111)\n  PROCdrawit(RND(2) = 1)\nUNTIL FALSE\nEND\n\nDEF PROCdrawit(doblot%)\n  IF doblot% THEN\n    RNDCOL(10)\n    BLOT(25)\n  ELSE\n    COLOUR(BLACK)\n    BLOT(30)\n    RNDCOL(10)\n    CIRCLE(25)\n  ENDIF\nENDPROC",
+  "date":"28/07/2020",
+  "time":"13:25:30",
+  "code":"REM Flashlights\n\nBLOT(1000)\nTHICKNESS(8)\nREPEAT\n SETX(RND(8)*111)\n SETY(RND(8)*111)\n PROCdrawit(RND(2)=1)\nUNTIL FALSE\nEND\n\nDEF PROCdrawit(doblot%)\n IF doblot% THEN\n  RNDCOL(10)\n  BLOT(25)\n ELSE\n  COLOUR(BLACK)\n  BLOT(30)\n  RNDCOL(10)\n  CIRCLE(25)\n ENDIF\nENDPROC",
   "usage":[
     {
       "category": "Turtle: absolute movement",

@@ -2,11 +2,11 @@
   "format":1,
   "language":"Pascal",
   "version":13,
-  "name":"Stars (uses ANGLES, FORGET)",
+  "name":"Stars [ANGLES, FORGET]",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"11:59:01",
-  "code":"PROGRAM Stars;\nVAR n: integer;\n\n  {draws a star with given points & colour}\n  Procedure star(points, colr: integer);\n  Var count: integer;\n  Begin\n    {set the size of a \"degree\" so there   }\n    {are twice as many in a complete circle}\n    {as there are points in the polygon    }\n    angles(points * 2);\n    {trace outline with the turtle}\n    for count := 1 to points do\n      begin\n        {move out to point}\n        forward(450);\n        {move back to centre}\n        back(450);\n        {forget visit back to the centre}\n        forget(1);\n        {turn right by 1 \"degree\", i.e.}\n        {halfway round to next point   }\n        right(1);\n        {move out to inner corner}\n        forward(200);\n        {move back to centre}\n        back(200);\n        {forget visit back to the centre}\n        forget(1);\n        {turn right by 1 \"degree\", i.e. the}\n        {rest of the way to the next point }\n        right(1)\n      end;\n    {set the specified colour}\n    colour(colr);\n    {draw polygon joining remembered points}\n    polygon(points * 2)\n  End;\n\nBEGIN\n  {don't draw as the Turtle moves}\n  penup;\n  {draw stars with increasing points}\n  for n := 3 to 12 do\n    begin\n      {each star is a different colour}\n      star(n, rgb(n - 2));\n      {pause to enable each to be seen}\n      pause(500)\n    end\nEND.",
+  "date":"28/07/2020",
+  "time":"13:23:48",
+  "code":"PROGRAM Stars;\nVAR n: integer;\n\n {draws a star with given points & colour}\n Procedure star(points,colr: integer);\n Var count: integer;\n Begin\n  {set the size of a \"degree\" so there   }\n  {are twice as many in a complete circle}\n  {as there are points in the polygon    }\n  angles(points*2);\n  {trace outline with the turtle}\n  for count:=1 to points do\n   begin\n    {move out to point}\n    forward(450);\n    {move back to centre}\n    back(450);\n    {forget visit back to the centre}\n    forget(1);\n    {turn right by 1 \"degree\", i.e.}\n    {halfway round to next point   }\n    right(1);\n    {move out to inner corner}\n    forward(200);\n    {move back to centre}\n    back(200);\n    {forget visit back to the centre}\n    forget(1);\n    {turn right by 1 \"degree\", i.e. the}\n    {rest of the way to the next point }\n    right(1)\n   end;\n  {set the specified colour}\n  colour(colr);\n  {draw polygon joining remembered points}\n  polygon(points*2)\n End;\n\nBEGIN\n {don't draw as the Turtle moves}\n penup;\n {draw stars with increasing points}\n for n:=3 to 12 do\n  begin\n   {each star is a different colour}\n   star(n,rgb(n-2));\n   {pause to enable each to be seen}\n   pause(500)\n  end\nEND.",
   "usage":[
     {
       "category": "Turtle: relative movement",

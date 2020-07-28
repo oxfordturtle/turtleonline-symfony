@@ -2,11 +2,11 @@
   "format":1,
   "language":"Pascal",
   "version":13,
-  "name":"Polygon rings (uses MOD, 3 parameters)",
+  "name":"Polygon rings (uses 3 parameters) [MOD]",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"11:59:01",
-  "code":"PROGRAM PolygonRings;\n\n  {draws an annulus (ring) with a given inner}\n  {radius, width, and coloured segment angle }\n  Procedure annulus(inner, width, angle: integer);\n  Var count: integer;\n  Begin\n    {count enough segments to go full circle}\n    for count := 0 to (360 / angle) do\n      begin\n        {move from centre to outside edge}\n        forward(inner + width);\n        {move back to inside edge}\n        back(width);\n        {move back to centre}\n        back(inner);\n        {forget visit to centre}\n        forget(1);\n        {turn right by specified angle}\n        right(angle);\n        {move from centre to inside edge}\n        forward(inner);\n        {move to outside edge}\n        forward(width);\n        {rotate round 20 standard colours}\n        colour(rgb(count mod 20 + 1));\n        {draw coloured quadrilateral}\n        polygon(4);\n        {move back to the centre}\n        back(inner + width)\n      end\n  End;\n\nBEGIN\n  penup;\n  {draw a black blot for background}\n  blot(500);\n  {draw five annuli within the blot}\n  annulus(410, 80, 2);\n  annulus(310, 80, 3);\n  annulus(210, 80, 5);\n  annulus(110, 80, 7);\n  annulus(10, 80, 1)\nEND.",
+  "date":"28/07/2020",
+  "time":"13:23:48",
+  "code":"PROGRAM PolygonRings;\n\n {draws an annulus (ring) with a given inner}\n {radius, width, and coloured segment angle }\n Procedure annulus(inner,width,angle: integer);\n Var count: integer;\n Begin\n  {count enough segments to go full circle}\n  for count:=0 to (360/angle) do\n   begin\n    {move from centre to outside edge}\n    forward(inner+width);\n    {move back to inside edge}\n    back(width);\n    {move back to centre}\n    back(inner);\n    {forget visit to centre}\n    forget(1);\n    {turn right by specified angle}\n    right(angle);\n    {move from centre to inside edge}\n    forward(inner);\n    {move to outside edge}\n    forward(width);\n    {rotate round 20 standard colours}\n    colour(rgb(count mod 20+1));\n    {draw coloured quadrilateral}\n    polygon(4);\n    {move back to the centre}\n    back(inner+width)\n   end\n End;\n\nBEGIN\n penup;\n {draw a black blot for background}\n blot(500);\n {draw five annuli within the blot}\n annulus(410,80,2);\n annulus(310,80,3);\n annulus(210,80,5);\n annulus(110,80,7);\n annulus(10,80,1)\nEND.",
   "usage":[
     {
       "category": "Turtle: relative movement",

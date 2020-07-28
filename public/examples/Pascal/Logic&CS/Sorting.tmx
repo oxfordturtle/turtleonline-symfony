@@ -4,14 +4,14 @@
   "version":13,
   "name":"Comparison of sorting methods",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:08",
-  "code":"PROGRAM Sorting;\nCONST methods = 4;\n      n = 100;\n      cols = 10;\n      tries = 10;\n      checking = true;\nVAR a: array[0..n] of integer;\n    comps, swaps: integer;\n    caption: array[1..methods] of string;\n    comptotal, swaptotal: array[1..methods] of integer;\n    round, m: integer;\n\n  Procedure setup;\n  Begin\n    caption[1] := 'Bubblesort:';\n    caption[2] := 'Selectionsort:';\n    caption[3] := 'Insertionsort:';\n    caption[4] := 'Quicksort:'\n  End;\n\n  Procedure init;\n  Var i: integer;\n  Begin\n    for i := 1 to n do\n      a[i] := i;\n    for i := 1 to methods do\n      begin\n        comptotal[i] := 0;\n        swaptotal[i] := 0\n      end\n  End;\n\n  Function lessthan(x, y: integer): boolean;\n  Begin\n    result := (x < y);\n    inc(comps)\n  End;\n\n  Procedure swap(x, y: integer);\n  Var t: integer;\n  Begin\n    t := a[x];\n    a[x] := a[y];\n    a[y] := t;\n    inc(swaps)\n  End;\n\n  Function ordered: boolean;\n  Var i: integer;\n  Begin\n    result := true;\n    for i := 2 to n do\n      if a[i - 1] > a[i] then\n        result := false\n  End;\n\n  Procedure list;\n  Var i: integer;\n  Begin\n    write('     ');\n    for i := 1 to n do\n      begin\n        write(str(a[i]) + ' ');\n        if i mod cols = 0 then\n          begin\n            writeln('');\n            write('     ')\n          end\n      end;\n    writeln('')\n  End;\n\n  Procedure randomise;\n  Var i, j: integer;\n  Begin\n    for i := 1 to n do\n      begin\n        j := random(n) + 1;\n        swap(i, j)\n      end\n  End;\n\n  Procedure bubblesort;\n  Var i, numswaps: integer;\n  Begin\n    repeat\n      numswaps := 0;\n      for i := 1 to n - 1 do\n        if lessthan(a[i + 1], a[i]) then\n          begin\n            swap(i, i + 1);\n            inc(numswaps)\n          end\n    until numswaps = 0\n  End;\n\n  Procedure selectionsort;\n  Var i, j: integer;\n      lowsofar: integer;\n  Begin\n    for i := 1 to n - 1 do\n      begin\n        lowsofar := i;\n        for j := i + 1 to n do\n          if lessthan(a[j], a[lowsofar]) then\n            lowsofar := j;\n        if lowsofar <> i then\n          swap(i, lowsofar)\n      end\n  End;\n\n  Procedure insertionsort;\n  Var i, j: integer;\n  Begin\n    for i := 2 to n do\n      begin\n        j := i;\n        while (j > 1) and lessthan(a[j], a[j - 1]) do\n          begin\n            swap(j - 1, j);\n            dec(j)\n          end\n      end\n  End;\n\n  Procedure quicksort;\n\n    procedure qsort(left, right: integer);\n    var m, i: integer;\n    begin\n      if left < right then\n        begin\n          m := left;\n          for i := left + 1 to right do\n            if lessthan(a[i], a[left]) then\n              begin\n                inc(m);\n                swap(m, i)\n              end;\n          swap(left, m);\n          qsort(left, m - 1);\n          qsort(m + 1, right)\n        end\n    end;\n\n  Begin\n    qsort(1, n)\n  End;\n\n  Procedure sort(method: integer);\n  Begin\n    comps := 0;\n    swaps := 0;\n    if method = 1 then\n      bubblesort\n    else\n    if method = 2 then\n      selectionsort\n    else\n    if method = 3 then\n      insertionsort\n    else\n    if method = 4 then\n      quicksort;\n    write(pad(caption[method], ' ', -17) + pad(str(comps), ' ', 4) + ' comparisons');\n    writeln(pad(str(swaps), ' ', 6) + ' swaps');\n    if checking then\n      if not(ordered) then\n        begin\n          writeln('     Sort failed:');\n          list;\n          halt\n        end\n  End;\n\nBEGIN\n  output(true, white, true);\n  setup;\n  init;\n  writeln(str(methods) + ' sorting methods will be compared, each of them being used to');\n  writeln('sort randomised arrays of ' + str(n) + ' items (' + str(tries) +\n     ' times), while keeping');\n  writeln('track of the numbers of comparisons and swaps required.');\n  if checking then\n    writeln('If sorting fails, the program will halt and show the array.');\n  writeln('');\n  for round := 1 to tries do\n    begin\n      for m := 1 to methods do\n        begin\n          randomise;\n          sort(m);\n          comptotal[m] := comptotal[m] + comps;\n          swaptotal[m] := swaptotal[m] + swaps\n        end;\n      writeln('')\n    end;\n  output(true, cream, true);\n  writeln('Averages from sorting ' + str(n) + ' items, over ' + str(tries) + ' trials');\n  writeln('');\n  writeln('               COMPARISONS    SWAPS');\n  for m := 1 to methods do\n    begin\n      write(pad(caption[m], ' ', -17) + pad(qstr(comptotal[m], tries, 1), ' ', 7));\n      writeln(pad(qstr(swaptotal[m], tries, 1), ' ', 11))\n    end\nEND.",
+  "date":"28/07/2020",
+  "time":"13:25:11",
+  "code":"PROGRAM Sorting;\nCONST methods=4;\n      n=100;\n      cols=10;\n      tries=10;\n      checking=true;\nVAR a: array[0..n] of integer;\n    comps,swaps: integer;\n    caption: array[1..methods] of string;\n    comptotal,swaptotal: array[1..methods] of integer;\n    round,m: integer;\n\n Procedure setup;\n Begin\n  caption[1]:='Bubblesort:';\n  caption[2]:='Selectionsort:';\n  caption[3]:='Insertionsort:';\n  caption[4]:='Quicksort:'\n End;\n\n Procedure init;\n Var i: integer;\n Begin\n  for i:=1 to n do\n   a[i]:=i;\n  for i:=1 to methods do\n   begin\n    comptotal[i]:=0;\n    swaptotal[i]:=0\n   end\n End;\n\n Function lessthan(x,y: integer): boolean;\n Begin\n  result:=(x<y);\n  inc(comps)\n End;\n\n Procedure swap(x,y: integer);\n Var t: integer;\n Begin\n  t:=a[x];\n  a[x]:=a[y];\n  a[y]:=t;\n  inc(swaps)\n End;\n\n Function ordered: boolean;\n Var i: integer;\n Begin\n  result:=true;\n  for i:=2 to n do\n   if a[i-1]>a[i] then\n    result:=false\n End;\n\n Procedure list;\n Var i: integer;\n Begin\n  write('     ');\n  for i:=1 to n do\n   begin\n    write(str(a[i])+' ');\n    if i mod cols=0 then\n     begin\n      writeln('');\n      write('     ')\n     end\n   end;\n  writeln('')\n End;\n\n Procedure randomise;\n Var i,j: integer;\n Begin\n  for i:=1 to n do\n   begin\n    j:=random(n)+1;\n    swap(i,j)\n   end\n End;\n\n Procedure bubblesort;\n Var i,numswaps: integer;\n Begin\n  repeat\n   numswaps:=0;\n   for i:=1 to n-1 do\n    if lessthan(a[i+1],a[i]) then\n     begin\n      swap(i,i+1);\n      inc(numswaps)\n     end\n  until numswaps=0\n End;\n\n Procedure selectionsort;\n Var i,j: integer;\n     lowsofar: integer;\n Begin\n  for i:=1 to n-1 do\n   begin\n    lowsofar:=i;\n    for j:=i+1 to n do\n     if lessthan(a[j],a[lowsofar]) then\n      lowsofar:=j;\n    if lowsofar<>i then\n     swap(i,lowsofar)\n   end\n End;\n\n Procedure insertionsort;\n Var i,j: integer;\n Begin\n  for i:=2 to n do\n   begin\n    j:=i;\n    while (j>1) and lessthan(a[j],a[j-1]) do\n     begin\n      swap(j-1,j);\n      dec(j)\n     end\n   end\n End;\n\n Procedure quicksort;\n\n  procedure qsort(left,right: integer);\n  var m,i: integer;\n  begin\n   if left<right then\n    begin\n     m:=left;\n     for i:=left+1 to right do\n      if lessthan(a[i],a[left]) then\n       begin\n        inc(m);\n        swap(m,i)\n       end;\n     swap(left,m);\n     qsort(left,m-1);\n     qsort(m+1,right)\n    end\n  end;\n\n Begin\n  qsort(1,n)\n End;\n\n Procedure sort(method: integer);\n Begin\n  comps:=0;\n  swaps:=0;\n  if method=1 then\n   bubblesort\n  else\n  if method=2 then\n   selectionsort\n  else\n  if method=3 then\n   insertionsort\n  else\n  if method=4 then\n   quicksort;\n  write(pad(caption[method],' ',-17)+pad(str(comps),' ',4)+' comparisons');\n  writeln(pad(str(swaps),' ',6)+' swaps');\n  if checking then\n   if not(ordered) then\n    begin\n     writeln('     Sort failed:');\n     list;\n     halt\n    end\n End;\n\nBEGIN\n output(true,white,true);\n setup;\n init;\n writeln(str(methods)+' sorting methods will be compared, each of them being used to');\n writeln('sort randomised arrays of '+str(n)+' items ('+str(tries)+' times), while keeping');\n writeln('track of the numbers of comparisons and swaps required.');\n if checking then\n  writeln('If sorting fails, the program will halt and show the array.');\n writeln('');\n for round:=1 to tries do\n  begin\n   for m:=1 to methods do\n    begin\n     randomise;\n     sort(m);\n     comptotal[m]:=comptotal[m]+comps;\n     swaptotal[m]:=swaptotal[m]+swaps\n    end;\n   writeln('')\n  end;\n output(true,cream,true);\n writeln('Averages from sorting '+str(n)+' items, over '+str(tries)+' trials');\n writeln('');\n writeln('               COMPARISONS    SWAPS');\n for m:=1 to methods do\n  begin\n   write(pad(caption[m],' ',-17)+pad(qstr(comptotal[m],tries,1),' ',7));\n   writeln(pad(qstr(swaptotal[m],tries,1),' ',11))\n  end\nEND.",
   "usage":[
     {
       "category": "Other Turtle commands",
       "expressions":[
-        {"name":"output", "level":2, "count":2, "lines":"177 198"}
+        {"name":"output", "level":2, "count":2, "lines":"177 197"}
       ],
       "total":2
     },
@@ -27,17 +27,17 @@
     {
       "category": "String operations",
       "expressions":[
-        {"name":"write", "level":1, "count":5, "lines":"60 63 67 165 204"},
-        {"name":"writeln", "level":1, "count":14, "lines":"66 70 166 170 180 181 183 185 186 196 199 200 201 205"},
-        {"name":"pad", "level":3, "count":6, "lines":"165 165 166 204 204 205"}
+        {"name":"write", "level":1, "count":5, "lines":"60 63 67 165 203"},
+        {"name":"writeln", "level":1, "count":14, "lines":"66 70 166 170 180 181 182 184 185 195 198 199 200 204"},
+        {"name":"pad", "level":3, "count":6, "lines":"165 165 166 203 203 204"}
       ],
       "total":25
     },
     {
       "category": "Type conversion routines",
       "expressions":[
-        {"name":"str", "level":1, "count":8, "lines":"63 165 166 180 181 181 199 199"},
-        {"name":"qstr", "level":2, "count":2, "lines":"204 205"}
+        {"name":"str", "level":1, "count":8, "lines":"63 165 166 180 181 181 198 198"},
+        {"name":"qstr", "level":2, "count":2, "lines":"203 204"}
       ],
       "total":10
     },
@@ -51,9 +51,9 @@
     {
       "category": "Command structures",
       "expressions":[
-        {"name":"if", "level":1, "count":14, "lines":"53 64 89 105 107 131 135 154 157 160 163 167 168 184"},
+        {"name":"if", "level":1, "count":14, "lines":"53 64 89 105 107 131 135 154 157 160 163 167 168 183"},
         {"name":"else", "level":1, "count":3, "lines":"156 159 162"},
-        {"name":"for", "level":1, "count":13, "lines":"24 26 52 61 76 88 101 104 115 134 187 189 202"},
+        {"name":"for", "level":1, "count":13, "lines":"24 26 52 61 76 88 101 104 115 134 186 188 201"},
         {"name":"repeat", "level":2, "count":1, "lines":"86"},
         {"name":"while", "level":2, "count":1, "lines":"118"},
         {"name":"procedure", "level":2, "count":11, "lines":"13 21 39 57 73 83 97 112 126 128 150"},
@@ -75,8 +75,8 @@
         {"name":"list", "level":0, "count":1, "lines":"171"},
         {"name":"setup", "level":0, "count":1, "lines":"178"},
         {"name":"init", "level":0, "count":1, "lines":"179"},
-        {"name":"randomise", "level":0, "count":1, "lines":"191"},
-        {"name":"sort", "level":0, "count":1, "lines":"192"}
+        {"name":"randomise", "level":0, "count":1, "lines":"190"},
+        {"name":"sort", "level":0, "count":1, "lines":"191"}
       ],
       "total":23
     }

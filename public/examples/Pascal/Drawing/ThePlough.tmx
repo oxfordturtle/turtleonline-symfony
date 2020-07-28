@@ -2,11 +2,11 @@
   "format":1,
   "language":"Pascal",
   "version":13,
-  "name":"The plough (uses SETXY, POLYLINE)",
+  "name":"The plough [SETXY, POLYLINE]",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"11:59:01",
-  "code":"PROGRAM ThePlough;\nBEGIN\n  {set canvas to black, and pen to lightblue}\n  blank(black);\n  colour(lightblue);\n  {place turtle and draw blots for stars}\n  setxy(100, 200);\n  blot(10);\n  setxy(300, 250);\n  blot(10);\n  setxy(420, 350);\n  blot(10);\n  setxy(570, 490);\n  blot(10);\n  setxy(900, 560);\n  blot(10);\n  setxy(840, 720);\n  blot(10);\n  setxy(590, 660);\n  blot(10);\n  setxy(570, 490);\n  {join the dots to highlight plough shape}\n  colour(silver);\n  polyline(8)\nEND.",
+  "date":"28/07/2020",
+  "time":"13:23:48",
+  "code":"PROGRAM ThePlough;\nBEGIN\n {set canvas to black, and pen to lightblue}\n blank(black);\n colour(lightblue);\n {place turtle and draw blots for stars}\n setxy(100,200);\n blot(10);\n setxy(300,250);\n blot(10);\n setxy(420,350);\n blot(10);\n setxy(570,490);\n blot(10);\n setxy(900,560);\n blot(10);\n setxy(840,720);\n blot(10);\n setxy(590,660);\n blot(10);\n setxy(570,490);\n {join the dots to highlight plough shape}\n colour(silver);\n polyline(8)\nEND.",
   "usage":[
     {
       "category": "Turtle: absolute movement",

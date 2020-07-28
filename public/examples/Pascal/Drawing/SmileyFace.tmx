@@ -2,11 +2,11 @@
   "format":1,
   "language":"Pascal",
   "version":13,
-  "name":"Smiley face (uses PENUP, ELLBLOT)",
+  "name":"Smiley face [PENUP, ELLBLOT]",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"11:59:01",
-  "code":"PROGRAM SmileyFace;\nBEGIN\n  {draw head}\n  colour(peach);\n  blot(200);\n  {draw mouth}\n  colour(darkred);\n  blot(140);\n  forward(30);\n  colour(peach);\n  blot(150);\n  {draw nose}\n  back(60);\n  colour(royal);\n  blot(30);\n  {move to left eye position (not drawing)}\n  penup;\n  forward(90);\n  left(90);\n  forward(80);\n  {draw left eye}\n  colour(white);\n  ellblot(30, 20);\n  colour(emerald);\n  blot(18);\n  colour(black);\n  blot(8);\n  {move to right eye position (not drawing)}\n  back(160);\n  {draw right eye}\n  colour(white);\n  ellblot(30, 20);\n  colour(emerald);\n  blot(18);\n  colour(black);\n  blot(8)\nEND.",
+  "date":"28/07/2020",
+  "time":"13:23:48",
+  "code":"PROGRAM SmileyFace;\nBEGIN\n {draw head}\n colour(peach);\n blot(200);\n {draw mouth}\n colour(darkred);\n blot(140);\n forward(30);\n colour(peach);\n blot(150);\n {draw nose}\n back(60);\n colour(royal);\n blot(30);\n {move to left eye position (not drawing)}\n penup;\n forward(90);\n left(90);\n forward(80);\n {draw left eye}\n colour(white);\n ellblot(30,20);\n colour(emerald);\n blot(18);\n colour(black);\n blot(8);\n {move to right eye position (not drawing)}\n back(160);\n {draw right eye}\n colour(white);\n ellblot(30,20);\n colour(emerald);\n blot(18);\n colour(black);\n blot(8)\nEND.",
   "usage":[
     {
       "category": "Turtle: relative movement",

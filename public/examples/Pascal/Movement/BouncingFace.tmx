@@ -4,9 +4,9 @@
   "version":13,
   "name":"Bouncing face",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"11:59:03",
-  "code":"PROGRAM BouncingFace;\nCONST facesize = 100;\nVAR x, y: integer;\n    xvel, yvel: integer;\n\n  Procedure face(size: integer);\n\n    procedure eye;\n    begin\n      colour(white);\n      ellblot(size * 3 / 20, size / 10);\n      colour(emerald);\n      blot(size * 9 / 100);\n      colour(black);\n      blot(size / 25)\n    end;\n\n  Begin\n    direction(0);\n    colour(peach);\n    blot(size);\n    colour(darkred);\n    blot(size * 7 / 10);\n    forward(size * 3 / 20);\n    colour(peach);\n    blot(size * 3 / 4);\n    back(size * 3 / 10);\n    colour(royal);\n    blot(size * 3 / 20);\n    penup;\n    forward(size * 9 / 20);\n    left(90);\n    forward(size * 2 / 5);\n    eye;\n    back(size * 4 / 5);\n    eye\n  End;\n\nBEGIN\n  x := 300;\n  y := 700;\n  xvel := 8;\n  yvel := -4;\n  while 0 < 1 do\n    begin\n      noupdate;\n      colour(white);\n      blot(facesize + 1);\n      x := x + xvel;\n      y := y + yvel;\n      setxy(x, y);\n      face(facesize);\n      setxy(x, y);\n      update;\n      pause(10);\n      if (x < facesize) or (x > 999 - facesize) then\n        xvel := -xvel;\n      if (y < facesize) or (y > 999 - facesize) then\n        yvel := -yvel\n    end\nEND.",
+  "date":"28/07/2020",
+  "time":"13:23:50",
+  "code":"PROGRAM BouncingFace;\nCONST facesize=100;\nVAR x,y: integer;\n    xvel,yvel: integer;\n\n Procedure face(size: integer);\n\n  procedure eye;\n  begin\n   colour(white);\n   ellblot(size*3/20,size/10);\n   colour(emerald);\n   blot(size*9/100);\n   colour(black);\n   blot(size/25)\n  end;\n\n Begin\n  direction(0);\n  colour(peach);\n  blot(size);\n  colour(darkred);\n  blot(size*7/10);\n  forward(size*3/20);\n  colour(peach);\n  blot(size*3/4);\n  back(size*3/10);\n  colour(royal);\n  blot(size*3/20);\n  penup;\n  forward(size*9/20);\n  left(90);\n  forward(size*2/5);\n  eye;\n  back(size*4/5);\n  eye\n End;\n\nBEGIN\n x:=300;\n y:=700;\n xvel:=8;\n yvel:=-4;\n while 0<1 do\n  begin\n   noupdate;\n   colour(white);\n   blot(facesize+1);\n   x:=x+xvel;\n   y:=y+yvel;\n   setxy(x,y);\n   face(facesize);\n   setxy(x,y);\n   update;\n   pause(10);\n   if (x<facesize) or (x>999-facesize) then\n    xvel:=-xvel;\n   if (y<facesize) or (y>999-facesize) then\n    yvel:=-yvel\n  end\nEND.",
   "usage":[
     {
       "category": "Turtle: relative movement",

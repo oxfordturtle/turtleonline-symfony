@@ -4,9 +4,9 @@
   "version":13,
   "name":"Procedure with parameter",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:24",
-  "code":"REM ParameterProc\n\nFOR count% = 360 TO 1 STEP -1\n  RNDCOL(10)\n  PROCprong(count% + 100)\n  RIGHT(61)\nNEXT\nEND\n\nDEF PROCprong(len%)\n  FORWARD(len%)\n  BLOT(len% / 20)\n  BACK(len%)\nENDPROC",
+  "date":"28/07/2020",
+  "time":"13:25:30",
+  "code":"REM ParameterProc\n\nFOR count%=360 TO 1 STEP -1\n RNDCOL(10)\n PROCprong(count%+100)\n RIGHT(61)\nNEXT\nEND\n\nDEF PROCprong(len%)\n FORWARD(len%)\n BLOT(len%/20)\n BACK(len%)\nENDPROC",
   "usage":[
     {
       "category": "Turtle: relative movement",

@@ -106,31 +106,37 @@ export const examples: Example[] = [
   new Example('Interaction', 'PaintApp', 'Painting application'),
   new Example('Interaction', 'MultipleTurtles', 'Multiple turtles and varying ANGLES'),
   // examples 6 - Files
+  new Example('Files', 'WriteAndReadFile', 'Writing and reading a text file'),
+  new Example('Files', 'RenameAndDeleteFile', 'Renaming and deleting a file'),
+  new Example('Files', 'FileSearching', 'File searching'),
+  new Example('Files', 'SaveCSV', 'Saving a CSV file'),
+  new Example('Files', 'ReadCSV', 'Reading a CSV file'),
   new Example('Files', 'RandomSentences', 'Random sentences (using files)'),
   new Example('Files', 'FileCommands', 'File commands'),
   new Example('Files', 'DirectoryCommands', 'Directory commands'),
-  new Example('Files', 'FileSearching', 'File searching'),
-  // examples 7 - Models
+  // examples 7 - Cellular
+  new Example('Cellular', 'Disease', 'Spread of disease'),
+  new Example('Cellular', 'TippingPoint', 'Tipping point (city epidemic)'),
+  new Example('Cellular', 'GameOfLife', 'Conway’s Game of Life'),
+  new Example('Cellular', 'LifeArrays', 'Game of Life, using arrays'),
+  new Example('Cellular', 'Automata', 'One-dimensional cellular automata'),
+  new Example('Cellular', 'Diffusion', 'A model of diffusion'),
+  new Example('Cellular', 'Dendrites', 'Dendritic crystal growth'),
+  new Example('Cellular', 'Schelling', 'Schelling’s segregation model'),
+  new Example('Cellular', 'IteratedPD', 'Iterated Prisoner’s Dilemma'),
+  // examples 8 - Models
   new Example('Models', 'AimCannon', 'Firing a cannon (manual)'),
   new Example('Models', 'AutoCannon', 'Firing a cannon (automatic)'),
   new Example('Models', 'Launch', 'Launching a rocket into orbit'),
-  new Example('Models', 'Disease', 'Spread of disease'),
-  new Example('Models', 'GameOfLife', 'Conway’s Game of Life'),
-  new Example('Models', 'LifeArrays', 'Game of Life, using arrays'),
-  new Example('Models', 'Automata', 'One-dimensional cellular automata'),
-  new Example('Models', 'Diffusion', 'A model of diffusion'),
   new Example('Models', 'BrownianMotion', 'Brownian motion'),
-  new Example('Models', 'Dendrites', 'Dendritic crystal growth'),
   new Example('Models', 'Cheetahs', 'Cheetahs and gazelles'),
   new Example('Models', 'SexRatio', 'The sex ratio'),
   new Example('Models', 'Flocking', 'Flocking behaviour'),
   new Example('Models', 'Roads', 'Town road simulation'),
-  new Example('Models', 'Schelling', 'Schelling’s segregation model'),
-  new Example('Models', 'IteratedPD', 'Iterated Prisoner’s Dilemma'),
   new Example('Models', 'Interference', 'Wave interference tutor'),
   new Example('Models', 'TwoSlits', 'Interference from two slits'),
   new Example('Models', 'WaveSuperposer', 'Hugh Wallis’s wave superposer'),
-  // examples 8 - Fractals
+  // examples 9 - Fractals
   new Example('Fractals', 'RecursionFactory', 'Recursion factory'),
   new Example('Fractals', 'RecursiveTree', 'Recursive tree'),
   new Example('Fractals', 'KochSnowflake', 'Koch snowflake'),
@@ -145,7 +151,7 @@ export const examples: Example[] = [
   new Example('Fractals', 'MandelbrotDemo', 'Mandelbrot multi-colour'),
   new Example('Fractals', 'MandelbrotSpectrumDemo', 'Mandelbrot spectral colours'),
   new Example('Fractals', 'Quine', 'Quine (self-replicating) program'),
-  // examples 9 - Logic&CS
+  // examples 10 - Logic&CS
   new Example('Logic&CS', 'Hanoi', 'Tower of Hanoi by recursion'),
   new Example('Logic&CS', 'IterateRoot', 'Square roots by iteration'),
   new Example('Logic&CS', 'Fibonaccis', 'Fibonaccis (using ARRAY and TIME)'),
@@ -167,7 +173,8 @@ export const groups: Group[] = [
   new Group('Movement', 'smooth movement and bouncing'),
   new Group('Files', 'file and directory handling'),
   new Group('Interaction', 'user input, interaction and games'),
-  new Group('Models', 'interdisciplinary models (CSAC project)'),
+  new Group('Cellular', 'cellular models'),
+  new Group('Models', 'other models'),
   new Group('Fractals', 'self-similarity and chaos'),
-  new Group('Logic&CS', 'logic and computer science')
+  new Group('Logic&CS', 'computer science and logic')
 ]

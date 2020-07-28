@@ -2,16 +2,16 @@
   "format":1,
   "language":"Pascal",
   "version":13,
-  "name":"Nested FOR loops (uses DIRECTION, RGB)",
+  "name":"Nested FOR loops [DIRECTION, RGB]",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"11:59:01",
-  "code":"PROGRAM NestedLoops;\nVAR blotCount: integer;\n    circleCount: integer;\nBEGIN\n  thickness(4);\n  penup;\n  {counting from 0 to 9 ...}\n  for blotCount := 0 to 9 do\n    begin\n      {set direction, multiple of 36 degrees}\n      direction(blotCount * 36);\n      {move 260 units from middle of canvas}\n      forward(260);\n      {draw a black blot, radius 150}\n      colour(black);\n      blot(150);\n      {set colour based on blotCount}\n      colour(rgb(blotCount));\n      {draw 25 circles of increasing radius}\n      for circleCount := 1 to 25 do\n        circle(circleCount * 8);\n      {reposition the turtle to canvas middle}\n      back(260)\n    end\nEND.",
+  "date":"28/07/2020",
+  "time":"13:23:48",
+  "code":"PROGRAM NestedLoops;\nVAR blotCount: integer;\n    circleCount: integer;\nBEGIN\n thickness(4);\n penup;\n {counting from 0 to 29 ...}\n for blotCount:=0 to 29 do\n  begin\n   {set direction, multiple of 36 degrees}\n   direction(blotCount*36);\n   {move 260 units from middle of canvas}\n   forward(260);\n   {draw large black and smaller white blot}\n   colour(black);\n   blot(150);\n   colour(white);\n   blot(56);\n   {set standard Turtle colour blotCount+1}\n   colour(rgb(blotCount+1));\n   {draw 19 circles, radius 56 up to 200}\n   for circleCount:=7 to 25 do\n    circle(circleCount*8);\n   {reposition the turtle to canvas middle}\n   back(260);\n   {pause for 1/5 second before continuing}\n   pause(200)\n  end\nEND.",
   "usage":[
     {
       "category": "Turtle: relative movement",
       "expressions":[
-        {"name":"back", "level":1, "count":1, "lines":"23"},
+        {"name":"back", "level":1, "count":1, "lines":"25"},
         {"name":"forward", "level":1, "count":1, "lines":"13"}
       ],
       "total":2
@@ -26,25 +26,32 @@
     {
       "category": "Turtle: drawing shapes",
       "expressions":[
-        {"name":"blot", "level":1, "count":1, "lines":"16"},
-        {"name":"circle", "level":1, "count":1, "lines":"21"}
+        {"name":"blot", "level":1, "count":2, "lines":"16 18"},
+        {"name":"circle", "level":1, "count":1, "lines":"23"}
       ],
-      "total":2
+      "total":3
     },
     {
       "category": "Other Turtle commands",
       "expressions":[
-        {"name":"colour", "level":1, "count":2, "lines":"15 18"},
+        {"name":"colour", "level":1, "count":3, "lines":"15 17 20"},
         {"name":"penup", "level":1, "count":1, "lines":"6"},
         {"name":"thickness", "level":1, "count":1, "lines":"5"},
-        {"name":"rgb", "level":3, "count":1, "lines":"18"}
+        {"name":"rgb", "level":3, "count":1, "lines":"20"}
       ],
-      "total":5
+      "total":6
+    },
+    {
+      "category": "Input and timing routines",
+      "expressions":[
+        {"name":"pause", "level":1, "count":1, "lines":"27"}
+      ],
+      "total":1
     },
     {
       "category": "Command structures",
       "expressions":[
-        {"name":"for", "level":1, "count":2, "lines":"8 20"}
+        {"name":"for", "level":1, "count":2, "lines":"8 22"}
       ],
       "total":2
     }
@@ -55,19 +62,22 @@
     [112,4,85],
     [112,0,86],
     [112,0],
-    [119,19,112,9],
-    [113,19,37,129,20],
+    [119,19,112,29],
+    [113,19,37,129,23],
     [113,19,112,36,28,83],
     [112,260,91],
     [112,0,87],
     [112,150,108],
-    [113,19,101,87],
-    [112,1],
+    [112,16777215,87],
+    [112,56,108],
+    [113,19,112,1,26,101,87],
+    [112,7],
     [119,20,112,25],
-    [113,20,37,129,18],
+    [113,20,37,129,20],
     [113,20,112,8,28,107],
-    [113,20,4,128,14],
+    [113,20,4,128,16],
     [112,260,92],
+    [112,200,174],
     [113,19,4,128,6],
     [130]
   ]

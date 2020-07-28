@@ -4,9 +4,9 @@
   "version":13,
   "name":"Triangle procedure with limit",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:24",
-  "code":"REM Triangle3\n\nMOVEXY(-100, 150)\nPROCtriangle(256)\nEND\n\nDEF PROCtriangle(size%)\n  IF size% > 1 THEN\n    FORWARD(size%)\n    RIGHT(120)\n    FORWARD(size%)\n    RIGHT(120)\n    FORWARD(size%)\n    RIGHT(120)\n  ENDIF\nENDPROC",
+  "date":"28/07/2020",
+  "time":"13:25:30",
+  "code":"REM Triangle3\n\nMOVEXY(-100,150)\nPROCtriangle(256)\nEND\n\nDEF PROCtriangle(size%)\n IF size%>1 THEN\n  FORWARD(size%)\n  RIGHT(120)\n  FORWARD(size%)\n  RIGHT(120)\n  FORWARD(size%)\n  RIGHT(120)\n ENDIF\nENDPROC",
   "usage":[
     {
       "category": "Turtle: relative movement",

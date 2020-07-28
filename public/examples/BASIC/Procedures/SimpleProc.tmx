@@ -4,9 +4,9 @@
   "version":13,
   "name":"Simple procedure (using REPEAT)",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:24",
-  "code":"REM SimpleProc\n\nREPEAT\n  RNDCOL(10)\n  PROCprong\n  RIGHT(61)\nUNTIL turtd% = 0\nEND\n\nDEF PROCprong\n  FORWARD(400)\n  BLOT(20)\n  BACK(400)\nENDPROC",
+  "date":"28/07/2020",
+  "time":"13:25:30",
+  "code":"REM SimpleProc\n\nREPEAT\n RNDCOL(10)\n PROCprong\n RIGHT(61)\nUNTIL turtd%=0\nEND\n\nDEF PROCprong\n FORWARD(400)\n BLOT(20)\n BACK(400)\nENDPROC",
   "usage":[
     {
       "category": "Turtle: relative movement",

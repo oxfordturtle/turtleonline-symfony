@@ -4,9 +4,9 @@
   "version":13,
   "name":"Bouncing triangle",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:26",
-  "code":"REM BouncingTriangle\n\nCONST SIZE% = 100\nx% = 300\ny% = 700\nd% = 0\nxvel% = 8\nyvel% = -4\ndvel% = 5\nWHILE 0 < 1\n  NOUPDATE\n  PROCtriangle(WHITE)\n  x% = x% + xvel%\n  y% = y% + yvel%\n  d% = (d% + dvel%) MOD 360\n  PROCtriangle(RED)\n  UPDATE\n  PAUSE(10)\n  IF bouncex% THEN\n    xvel% = -xvel%\n    dvel% = -dvel%\n  ENDIF\n  IF bouncey% THEN\n    yvel% = -yvel%\n    dvel% = -dvel%\n  ENDIF\nENDWHILE\nEND\n\nDEF PROCtriangle(col%)\n  LOCAL count%\n  bouncex% = FALSE\n  bouncey% = FALSE\n  SETXY(x%, y%)\n  DIRECTION(d%)\n  COLOUR(col%)\n  FOR count% = 1 TO 3\n    FORWARD(SIZE%)\n    IF ABS(turtx% - 500) > 495 THEN\n      bouncex% = TRUE\n    ENDIF\n    IF ABS(turty% - 500) > 495 THEN\n      bouncey% = TRUE\n    ENDIF\n    BACK(SIZE%)\n    FORGET(1)\n    RIGHT(120)\n  NEXT\n  POLYGON(3)\nENDPROC",
+  "date":"28/07/2020",
+  "time":"13:25:32",
+  "code":"REM BouncingTriangle\n\nCONST SIZE%=100\nx%=300\ny%=700\nd%=0\nxvel%=8\nyvel%=-4\ndvel%=5\nWHILE 0<1\n NOUPDATE\n PROCtriangle(WHITE)\n x%=x%+xvel%\n y%=y%+yvel%\n d%=(d%+dvel%) MOD 360\n PROCtriangle(RED)\n UPDATE\n PAUSE(10)\n IF bouncex% THEN\n  xvel%=-xvel%\n  dvel%=-dvel%\n ENDIF\n IF bouncey% THEN\n  yvel%=-yvel%\n  dvel%=-dvel%\n ENDIF\nENDWHILE\nEND\n\nDEF PROCtriangle(col%)\n LOCAL count%\n bouncex%=FALSE\n bouncey%=FALSE\n SETXY(x%,y%)\n DIRECTION(d%)\n COLOUR(col%)\n FOR count%=1 TO 3\n  FORWARD(SIZE%)\n  IF ABS(turtx%-500)>495 THEN\n   bouncex%=TRUE\n  ENDIF\n  IF ABS(turty%-500)>495 THEN\n   bouncey%=TRUE\n  ENDIF\n  BACK(SIZE%)\n  FORGET(1)\n  RIGHT(120)\n NEXT\n POLYGON(3)\nENDPROC",
   "usage":[
     {
       "category": "Turtle: relative movement",

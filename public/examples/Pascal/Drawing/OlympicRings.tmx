@@ -4,9 +4,9 @@
   "version":13,
   "name":"Olympic rings (uses a variable)",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"11:59:01",
-  "code":"PROGRAM OlympicRings;\nVAR ringRadius: integer;\nBEGIN\n  {set ring radius and pen thickness}\n  ringRadius := 130;\n  thickness(20);\n  {raise pen to avoid drawing lines}\n  penup;\n  {draw black ring}\n  forward(50);\n  circle(ringRadius);\n  {draw blue ring}\n  left(90);\n  forward(300);\n  colour(blue);\n  circle(ringRadius);\n  {draw red ring}\n  back(600);\n  colour(red);\n  circle(ringRadius);\n  {draw green ring}\n  forward(150);\n  right(90);\n  back(125);\n  colour(lime);\n  circle(ringRadius);\n  {draw yellow ring}\n  left(90);\n  forward(300);\n  colour(yellow);\n  circle(ringRadius)\nEND.",
+  "date":"28/07/2020",
+  "time":"13:23:48",
+  "code":"PROGRAM OlympicRings;\nVAR ringRadius: integer;\nBEGIN\n {set ring radius and pen thickness}\n ringRadius:=130;\n thickness(20);\n {raise pen to avoid drawing lines}\n penup;\n {draw black ring}\n forward(50);\n circle(ringRadius);\n {draw blue ring}\n left(90);\n forward(300);\n colour(blue);\n circle(ringRadius);\n {draw red ring}\n back(600);\n colour(red);\n circle(ringRadius);\n {draw green ring}\n forward(150);\n right(90);\n back(125);\n colour(lime);\n circle(ringRadius);\n {draw yellow ring}\n left(90);\n forward(300);\n colour(yellow);\n circle(ringRadius)\nEND.",
   "usage":[
     {
       "category": "Turtle: relative movement",

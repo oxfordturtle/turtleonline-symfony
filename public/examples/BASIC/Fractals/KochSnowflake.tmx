@@ -4,9 +4,9 @@
   "version":13,
   "name":"Koch snowflake",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:34",
-  "code":"REM KochSnowflake\n\nBLANK(BLACK)\nMOVEXY(0, 430)\nLEFT(30)\nFOR count% = 1 TO 3\n  COLOUR(RGB(count% + 20))\n  PROCkdraw(729, 4)\n  RIGHT(120)\nNEXT\nEND\n\nDEF PROCkdraw(dist%, level%)\n  IF level% = 0 THEN\n    FORWARD(dist%)\n  ELSE\n    PROCkdraw(dist% / 3, level% - 1)\n    LEFT(60)\n    PROCkdraw(dist% / 3, level% - 1)\n    RIGHT(120)\n    PROCkdraw(dist% / 3, level% - 1)\n    LEFT(60)\n    PROCkdraw(dist% / 3, level% - 1)\n  ENDIF\nENDPROC",
+  "date":"28/07/2020",
+  "time":"13:25:41",
+  "code":"REM KochSnowflake\n\nBLANK(BLACK)\nMOVEXY(0,430)\nLEFT(30)\nFOR count%=1 TO 3\n COLOUR(RGB(count%+20))\n PROCkdraw(729,4)\n RIGHT(120)\nNEXT\nEND\n\nDEF PROCkdraw(dist%,level%)\n IF level%=0 THEN\n  FORWARD(dist%)\n ELSE\n  PROCkdraw(dist%/3,level%-1)\n  LEFT(60)\n  PROCkdraw(dist%/3,level%-1)\n  RIGHT(120)\n  PROCkdraw(dist%/3,level%-1)\n  LEFT(60)\n  PROCkdraw(dist%/3,level%-1)\n ENDIF\nENDPROC",
   "usage":[
     {
       "category": "Turtle: relative movement",

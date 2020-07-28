@@ -4,29 +4,29 @@
   "version":13,
   "name":"Random sentences (using files)",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"11:59:06",
-  "code":"PROGRAM Random_sentences;\nCONST art = 1;\n      adj = 2;\n      col = 3;\n      noun = 4;\n      verb = 5;\n      maxwords = 10;\n      subdir = 'sentences';\nVAR handle: array[1..5] of integer;\n    fname: array[1..5] of string;\n    wstr: array[1..5] of string[50];\n    numwords: array[1..5] of integer;\n    word: array[1..5, 1..maxwords] of string;\n\n  Procedure setup;\n  Begin\n    fname[art] := 'articles';\n    fname[adj] := 'adjectives';\n    fname[col] := 'colours';\n    fname[noun] := 'nouns';\n    fname[verb] := 'verbs';\n    wstr[art] := 'the,a';\n    wstr[adj] := 'hungry,quick,lazy,slow';\n    wstr[col] := 'black,brown,grey,white';\n    wstr[noun] := 'cat,dog,fox,monkey,rabbit';\n    wstr[verb] := 'chases,jumps over,runs away from,watches'\n  End;\n\n  Procedure writewordfiles;\n  Var i, count, posn: integer;\n      s: string[50];\n  Begin\n    for i := 1 to 5 do\n      begin\n        handle[i] := openfile(subdir + '\\' + fname[i] + '.txt', 4);\n        s := wstr[i];\n        count := 1;\n        posn := pos(',', s);\n        while posn > 0 do\n          begin\n            inc(count);\n            fwriteln(i, copy(s, 1, posn - 1));\n            s := delete(s, 1, posn);\n            posn := pos(',', s)\n          end;\n        fwriteln(i, s);\n        writeln('File \"' + subdir + '\\' + fname[i] + '.txt\" has been created, with ' + str(count)\n     + ' lines')\n      end;\n    writeln('');\n    closefile(0)\n  End;\n\n  Procedure readwordfiles;\n  Var i: integer;\n  Begin\n    for i := 1 to 5 do\n      begin\n        handle[i] := openfile(subdir + '\\' + fname[i] + '.txt', 1);\n        if handle[i] > 0 then\n          begin\n            numwords[i] := 0;\n            while not(eof(handle[i])) and (numwords[i] < maxwords) do\n              begin\n                inc(numwords[i]);\n                word[i, numwords[i]] := freadln(handle[i])\n              end\n          end;\n        writeln(str(numwords[i]) + ' lines have been read from file \"' + subdir + '\\' + fname[i]\n     + '.txt\"')\n      end;\n    writeln('');\n    closefile(0)\n  End;\n\n  Procedure generate(n: integer);\n  Var s: string[60];\n      fhandle, i: integer;\n\n    function rand(n: integer): string;\n    begin\n      result := word[n, random(numwords[n]) + 1]\n    end;\n\n  Begin\n    writeln('Now up to ' + str(n) + ' random sentences will be generated using');\n    writeln('these words. The generation will stop if a well-known target');\n    writeln('sentence is achieved before the maximum has been reached.');\n    writeln('');\n    fhandle := openfile(subdir + '\\' + str(n) + '_sentences.txt', 4);\n    i := 0;\n    cursor(11);\n    repeat\n      s := rand(art) + ' ' + rand(adj) + ' ' + rand(col) + ' ' + rand(noun) + ' ' + rand(verb) +\n     ' ' + rand(art) + ' ' + rand(adj) + ' ' + rand(noun) + '.';\n      s[1] := chr(ord(s[1]) - 32);\n      fwriteln(fhandle, s);\n      inc(i)\n    until (i = n) or (s = 'The quick brown fox jumps over the lazy dog.');\n    cursor(1);\n    closefile(fhandle);\n    if i = n then\n      writeln(str(i) + ' sentences written to \"' + subdir + '\\' + str(n) + '_sentences.txt' +\n     '\".')\n    else\n      begin\n        if renamefile(subdir + '\\' + str(n) + '_sentences.txt', subdir + '\\' + str(i) +\n     '_sentences.txt') then\n          writeln(str(i) + ' sentences written to \"' + subdir + '\\' + str(i) + '_sentences.txt'\n     + '\"')\n        else\n          begin\n            writeln(str(i) + ' sentences written to \"' + subdir + '\\' + str(n) +\n     '_sentences.txt' + '\"');\n            writeln('For some reason, this file could not be renamed')\n          end\n      end;\n    if i < n then\n      begin\n        writeln('');\n        writeln('  Loop terminated early, having written:');\n        writeln('  \"The quick brown fox jumps over the lazy dog.\"')\n      end;\n    if i < n / 2 then\n      begin\n        writeln('');\n        if movefile(subdir + '\\' + str(i) + '_sentences.txt', str(i) + '_sentences.txt') then\n          begin\n            writeln('File moved to base directory.');\n            if copyfile(str(i) + '_sentences.txt', subdir + '\\Latest_Good_Example.txt') then\n              writeln('File then copied back as \"Latest_Good_Example.txt\".')\n            else\n              begin\n                writeln('But it could not be copied back as \"Latest_Good_Example.txt\" ...');\n                if deletefile(subdir + '\\Latest_Good_Example.txt') then\n                  begin\n                    if copyfile(str(i) + '_sentences.txt', subdir + '\\Latest_Good_Example.txt')\n     then\n                      writeln('... until the existing file with that name was deleted.')\n                    else\n                      writeln('... for some reason unknown.')\n                  end\n                else\n                  writeln('... and the existing file with that name could not be deleted')\n              end\n          end\n        else\n          writeln('For some reason, the file \"' + subdir + '\\' + str(i) + '_sentences.txt\" ' +\n     'could not be moved to the base directory')\n      end\n  End;\n\nBEGIN\n  output(true, cream, true);\n  if mkdir(subdir) then\n    begin\n      setup;\n      writewordfiles;\n      readwordfiles;\n      generate(100000)\n    end\n  else\n    writeln('Subdirectory ' + subdir + ' could not be created')\nEND.",
+  "date":"28/07/2020",
+  "time":"13:23:55",
+  "code":"PROGRAM RandomSentences;\nCONST art=1;\n      adj=2;\n      col=3;\n      noun=4;\n      verb=5;\n      maxwords=10;\n      subdir='sentences';\nVAR handle: array[1..5] of integer;\n    fname: array[1..5] of string;\n    wstr: array[1..5] of string[50];\n    numwords: array[1..5] of integer;\n    word: array[1..5,1..maxwords] of string;\n\n Procedure setup;\n Begin\n  fname[art]:='articles';\n  fname[adj]:='adjectives';\n  fname[col]:='colours';\n  fname[noun]:='nouns';\n  fname[verb]:='verbs';\n  wstr[art]:='the,a';\n  wstr[adj]:='hungry,quick,lazy,slow';\n  wstr[col]:='black,brown,grey,white';\n  wstr[noun]:='cat,dog,fox,monkey,rabbit';\n  wstr[verb]:='chases,jumps over,runs away from,watches'\n End;\n\n Procedure writewordfiles;\n Var i,count,posn: integer;\n     s: string[50];\n Begin\n  for i:=1 to 5 do\n   begin\n    handle[i]:=openfile(subdir+'\\'+fname[i]+'.txt',4);\n    s:=wstr[i];\n    count:=1;\n    posn:=pos(',',s);\n    while posn>0 do\n     begin\n      inc(count);\n      fwriteln(i,copy(s,1,posn-1));\n      s:=delete(s,1,posn);\n      posn:=pos(',',s)\n     end;\n    fwriteln(i,s);\n    writeln('File \"'+subdir+'\\'+fname[i]+'.txt\" has been created, with '+str(count)+' lines')\n   end;\n  writeln('');\n  closefile(0)\n End;\n\n Procedure readwordfiles;\n Var i: integer;\n Begin\n  for i:=1 to 5 do\n   begin\n    handle[i]:=openfile(subdir+'\\'+fname[i]+'.txt',1);\n    if handle[i]>0 then\n     begin\n      numwords[i]:=0;\n      while not(eof(handle[i])) and (numwords[i]<maxwords) do\n       begin\n        inc(numwords[i]);\n        word[i,numwords[i]]:=freadln(handle[i])\n       end\n     end;\n    writeln(str(numwords[i])+' lines have been read from file \"'+subdir+'\\'+fname[i]+'.txt\"')\n   end;\n  writeln('');\n  closefile(0)\n End;\n\n Procedure generate(n: integer);\n Var s: string[60];\n     fhandle,i: integer;\n\n  function rand(n: integer): string;\n  begin\n   result:=word[n,random(numwords[n])+1]\n  end;\n\n Begin\n  writeln('Now up to '+str(n)+' random sentences will be generated using');\n  writeln('these words. The generation will stop if a well-known target');\n  writeln('sentence is achieved before the maximum has been reached.');\n  writeln('');\n  fhandle:=openfile(subdir+'\\'+str(n)+'_sentences.txt',4);\n  i:=0;\n  cursor(11);\n  repeat\n   s:=rand(art)+' '+rand(adj)+' '+rand(col)+' '+rand(noun)+' '+rand(verb)+' '+rand(art)+' '+rand(adj)+' '+rand(noun)+'.';\n   s[1]:=chr(ord(s[1])-32);\n   fwriteln(fhandle,s);\n   inc(i)\n  until (i=n) or (s='The quick brown fox jumps over the lazy dog.');\n  cursor(1);\n  closefile(fhandle);\n  if i=n then\n   writeln(str(i)+' sentences written to \"'+subdir+'\\'+str(n)+'_sentences.txt'+'\".')\n  else\n   begin\n    if renamefile(subdir+'\\'+str(n)+'_sentences.txt',subdir+'\\'+str(i)+'_sentences.txt') then\n     writeln(str(i)+' sentences written to \"'+subdir+'\\'+str(i)+'_sentences.txt'+'\"')\n    else\n     begin\n      writeln(str(i)+' sentences written to \"'+subdir+'\\'+str(n)+'_sentences.txt'+'\"');\n      writeln('For some reason, this file could not be renamed')\n     end\n   end;\n  if i<n then\n   begin\n    writeln('');\n    writeln('  Loop terminated early, having written:');\n    writeln('  \"The quick brown fox jumps over the lazy dog.\"')\n   end;\n  if i<n/2 then\n   begin\n    writeln('');\n    if movefile(subdir+'\\'+str(i)+'_sentences.txt',str(i)+'_sentences.txt') then\n     begin\n      writeln('File moved to base directory.');\n      if copyfile(str(i)+'_sentences.txt',subdir+'\\Latest_Good_Example.txt') then\n       writeln('File then copied back as \"Latest_Good_Example.txt\".')\n      else\n       begin\n        writeln('But it could not be copied back as \"Latest_Good_Example.txt\" ...');\n        if deletefile(subdir+'\\Latest_Good_Example.txt') then\n         begin\n          if copyfile(str(i)+'_sentences.txt',subdir+'\\Latest_Good_Example.txt') then\n           writeln('... until the existing file with that name was deleted.')\n          else\n           writeln('... for some reason unknown.')\n         end\n        else\n         writeln('... and the existing file with that name could not be deleted')\n       end\n     end\n    else\n     writeln('For some reason, the file \"'+subdir+'\\'+str(i)+'_sentences.txt\" '+'could not be moved to the base directory')\n   end\n End;\n\nBEGIN\n output(true,cream,true);\n if mkdir(subdir) then\n  begin\n   setup;\n   writewordfiles;\n   readwordfiles;\n   generate(100000)\n  end\n else\n  writeln('Subdirectory '+subdir+' could not be created')\nEND.",
   "usage":[
     {
       "category": "Other Turtle commands",
       "expressions":[
-        {"name":"output", "level":2, "count":1, "lines":"154"}
+        {"name":"output", "level":2, "count":1, "lines":"145"}
       ],
       "total":1
     },
     {
       "category": "General arithmetic functions",
       "expressions":[
-        {"name":"inc", "level":1, "count":3, "lines":"41 65 98"},
-        {"name":"random", "level":2, "count":1, "lines":"82"}
+        {"name":"inc", "level":1, "count":3, "lines":"41 64 95"},
+        {"name":"random", "level":2, "count":1, "lines":"80"}
       ],
       "total":4
     },
     {
       "category": "String operations",
       "expressions":[
-        {"name":"writeln", "level":1, "count":24, "lines":"47 50 69 72 86 87 88 89 103 109 113 115 120 121 122 126 129 131 134 139 141 144 148 163"},
+        {"name":"writeln", "level":1, "count":24, "lines":"47 49 68 70 84 85 86 87 100 104 107 108 113 114 115 119 122 124 127 131 133 136 140 154"},
         {"name":"copy", "level":3, "count":1, "lines":"42"},
         {"name":"delete", "level":3, "count":1, "lines":"43"},
         {"name":"pos", "level":3, "count":2, "lines":"38 44"}
@@ -36,56 +36,56 @@
     {
       "category": "Type conversion routines",
       "expressions":[
-        {"name":"str", "level":1, "count":17, "lines":"47 69 86 90 103 103 107 107 109 109 113 113 127 127 130 137 148"},
-        {"name":"chr", "level":3, "count":1, "lines":"96"},
-        {"name":"ord", "level":3, "count":1, "lines":"96"}
+        {"name":"str", "level":1, "count":17, "lines":"47 68 84 88 100 100 103 103 104 104 107 107 120 120 123 130 140"},
+        {"name":"chr", "level":3, "count":1, "lines":"93"},
+        {"name":"ord", "level":3, "count":1, "lines":"93"}
       ],
       "total":19
     },
     {
       "category": "Input and timing routines",
       "expressions":[
-        {"name":"cursor", "level":2, "count":2, "lines":"92 100"}
+        {"name":"cursor", "level":2, "count":2, "lines":"90 97"}
       ],
       "total":2
     },
     {
       "category": "File processing",
       "expressions":[
-        {"name":"closefile", "level":2, "count":3, "lines":"51 73 101"},
-        {"name":"deletefile", "level":2, "count":1, "lines":"135"},
-        {"name":"eof", "level":2, "count":1, "lines":"63"},
-        {"name":"freadln", "level":2, "count":1, "lines":"66"},
-        {"name":"fwriteln", "level":2, "count":3, "lines":"42 46 97"},
-        {"name":"mkdir", "level":2, "count":1, "lines":"155"},
-        {"name":"openfile", "level":2, "count":3, "lines":"35 59 90"},
-        {"name":"copyfile", "level":3, "count":2, "lines":"130 137"},
-        {"name":"movefile", "level":3, "count":1, "lines":"127"},
-        {"name":"renamefile", "level":3, "count":1, "lines":"107"}
+        {"name":"closefile", "level":2, "count":3, "lines":"50 71 98"},
+        {"name":"deletefile", "level":2, "count":1, "lines":"128"},
+        {"name":"eof", "level":2, "count":1, "lines":"62"},
+        {"name":"freadln", "level":2, "count":1, "lines":"65"},
+        {"name":"fwriteln", "level":2, "count":3, "lines":"42 46 94"},
+        {"name":"mkdir", "level":2, "count":1, "lines":"146"},
+        {"name":"openfile", "level":2, "count":3, "lines":"35 58 88"},
+        {"name":"copyfile", "level":3, "count":2, "lines":"123 130"},
+        {"name":"movefile", "level":3, "count":1, "lines":"120"},
+        {"name":"renamefile", "level":3, "count":1, "lines":"103"}
       ],
       "total":17
     },
     {
       "category": "Command structures",
       "expressions":[
-        {"name":"if", "level":1, "count":10, "lines":"60 102 107 118 124 127 130 135 137 155"},
-        {"name":"else", "level":1, "count":7, "lines":"105 111 132 140 143 147 162"},
-        {"name":"for", "level":1, "count":2, "lines":"33 57"},
-        {"name":"repeat", "level":2, "count":1, "lines":"93"},
-        {"name":"while", "level":2, "count":2, "lines":"39 63"},
-        {"name":"procedure", "level":2, "count":4, "lines":"15 29 54 76"},
-        {"name":"function", "level":3, "count":1, "lines":"80"}
+        {"name":"if", "level":1, "count":10, "lines":"59 99 103 111 117 120 123 128 130 146"},
+        {"name":"else", "level":1, "count":7, "lines":"101 105 125 132 135 139 153"},
+        {"name":"for", "level":1, "count":2, "lines":"33 56"},
+        {"name":"repeat", "level":2, "count":1, "lines":"91"},
+        {"name":"while", "level":2, "count":2, "lines":"39 62"},
+        {"name":"procedure", "level":2, "count":4, "lines":"15 29 53 74"},
+        {"name":"function", "level":3, "count":1, "lines":"78"}
       ],
       "total":27
     },
     {
       "category": "Subroutine calls",
       "expressions":[
-        {"name":"rand", "level":0, "count":8, "lines":"94 94 94 94 94 95 95 95"},
-        {"name":"setup", "level":0, "count":1, "lines":"157"},
-        {"name":"writewordfiles", "level":0, "count":1, "lines":"158"},
-        {"name":"readwordfiles", "level":0, "count":1, "lines":"159"},
-        {"name":"generate", "level":0, "count":1, "lines":"160"}
+        {"name":"rand", "level":0, "count":8, "lines":"92 92 92 92 92 92 92 92"},
+        {"name":"setup", "level":0, "count":1, "lines":"148"},
+        {"name":"writewordfiles", "level":0, "count":1, "lines":"149"},
+        {"name":"readwordfiles", "level":0, "count":1, "lines":"150"},
+        {"name":"generate", "level":0, "count":1, "lines":"151"}
       ],
       "total":12
     }

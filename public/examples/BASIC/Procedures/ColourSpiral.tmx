@@ -4,9 +4,9 @@
   "version":13,
   "name":"Spiral of colours (simple PCODE)",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:24",
-  "code":"REM ColourSpiral\n\nBLANK(BLACK)\nFORWARD(15)\nTHICKNESS(27)\nlen% = 20\nREPEAT\n  RNDCOL(40)\n  PROClineturn\n  len% = len% + 10\nUNTIL len% > 500\nEND\n\nDEF PROClineturn\n  FORWARD(len%)\n  RIGHT(60)\nENDPROC",
+  "date":"28/07/2020",
+  "time":"13:25:30",
+  "code":"REM ColourSpiral\n\nBLANK(BLACK)\nFORWARD(15)\nTHICKNESS(27)\nlen%=20\nREPEAT\n RNDCOL(40)\n PROClineturn\n len%=len%+10\nUNTIL len%>500\nEND\n\nDEF PROClineturn\n FORWARD(len%)\n RIGHT(60)\nENDPROC",
   "usage":[
     {
       "category": "Turtle: relative movement",

@@ -4,9 +4,9 @@
   "version":13,
   "name":"Mouse reaction game",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"11:59:04",
-  "code":"PROGRAM QuickClick;\nVAR x, y: integer;\n    count: integer;\n    clickcol: integer;\nBEGIN\n  blank(cream);\n  setxy(15, 200);\n  print('This reaction game will display a sequence', 4, 36);\n  setxy(20, 270);\n  print('of 10 coloured circles on the Canvas.  Try', 4, 36);\n  setxy(20, 340);\n  print('to click the mouse on each circle as quickly', 4, 36);\n  setxy(20, 410);\n  print('as you can, and see how short a total time', 4, 36);\n  setxy(20, 480);\n  print('you can achieve for all 10.', 4, 36);\n  setxy(100, 620);\n  print('Now press the \"Esc\" key to start ...', 4, 36);\n  keyecho(false);\n  repeat\n  until (abs(?key) = \\escape);\n  timeset(0);\n  for count := 1 to 10 do\n    begin\n      x := random(900) + 50;\n      y := random(900) + 50;\n      blank(black);\n      setxy(x, y);\n      colour(rgb(count));\n      blot(50);\n      repeat\n        repeat\n        until ?lmouse > 0;\n        clickcol := pixcol(?mousex, ?mousey)\n      until clickcol = turtc\n    end;\n  blank(lightblue);\n  setxy(60, 460);\n  colour(lightred);\n  print('Your time was ' + qstr(time, 1000, 2) + ' seconds', 4, 50)\nEND.",
+  "date":"28/07/2020",
+  "time":"13:23:51",
+  "code":"PROGRAM QuickClick;\nVAR x,y: integer;\n    count: integer;\n    clickcol: integer;\nBEGIN\n blank(cream);\n setxy(15,200);\n print('This reaction game will display a sequence',4,36);\n setxy(20,270);\n print('of 10 coloured circles on the Canvas.  Try',4,36);\n setxy(20,340);\n print('to click the mouse on each circle as quickly',4,36);\n setxy(20,410);\n print('as you can, and see how short a total time',4,36);\n setxy(20,480);\n print('you can achieve for all 10.',4,36);\n setxy(100,620);\n print('Now press the \"Esc\" key to start ...',4,36);\n keyecho(false);\n repeat\n until (abs(?key)=\\escape);\n timeset(0);\n for count:=1 to 10 do\n  begin\n   x:=random(900)+50;\n   y:=random(900)+50;\n   blank(black);\n   setxy(x,y);\n   colour(rgb(count));\n   blot(50);\n   repeat\n    repeat\n    until ?lmouse>0;\n    clickcol:=pixcol(?mousex,?mousey)\n   until clickcol=turtc\n  end;\n blank(lightblue);\n setxy(60,460);\n colour(lightred);\n print('Your time was '+qstr(time,1000,2)+' seconds',4,50)\nEND.",
   "usage":[
     {
       "category": "Turtle: absolute movement",

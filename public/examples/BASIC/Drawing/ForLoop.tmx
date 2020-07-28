@@ -4,9 +4,9 @@
   "version":13,
   "name":"FOR (counting) loop",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:24",
-  "code":"REM ForLoop\n\nFOR count% = 1 TO 200\n  FORWARD(count% DIV 3)\n  RIGHT(5)\n  COLOUR(RED)\n  BLOT(200)\n  COLOUR(BLACK)\n  CIRCLE(200)\nNEXT\nEND",
+  "date":"28/07/2020",
+  "time":"13:25:29",
+  "code":"REM ForLoop\n\nFOR count%=1 TO 200\n FORWARD(count% DIV 3)\n RIGHT(5)\n COLOUR(RED)\n BLOT(200)\n COLOUR(BLACK)\n CIRCLE(200)\nNEXT\nEND",
   "usage":[
     {
       "category": "Turtle: relative movement",

@@ -4,9 +4,9 @@
   "version":13,
   "name":"Bouncing ball (using variables)",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"11:59:03",
-  "code":"PROGRAM BouncingBall;\nVAR x, y: integer;\n    xvel, yvel: integer;\nBEGIN\n  x := 100;\n  y := 700;\n  xvel := 8;\n  yvel := -4;\n  while 0 < 1 do\n    begin\n      noupdate;\n      colour(white);\n      blot(51);\n      x := x + xvel;\n      y := y + yvel;\n      setxy(x, y);\n      colour(red);\n      blot(50);\n      update;\n      pause(10);\n      if (x < 50) or (x > 949) then\n        xvel := -xvel;\n      if (y < 50) or (y > 949) then\n        yvel := -yvel\n    end\nEND.",
+  "date":"28/07/2020",
+  "time":"13:23:50",
+  "code":"PROGRAM BouncingBall;\nVAR x,y: integer;\n    xvel,yvel: integer;\nBEGIN\n x:=100;\n y:=700;\n xvel:=8;\n yvel:=-4;\n while 0<1 do\n  begin\n   noupdate;\n   colour(white);\n   blot(51);\n   x:=x+xvel;\n   y:=y+yvel;\n   setxy(x,y);\n   colour(red);\n   blot(50);\n   update;\n   pause(10);\n   if (x<50) or (x>949) then\n    xvel:=-xvel;\n   if (y<50) or (y>949) then\n    yvel:=-yvel\n  end\nEND.",
   "usage":[
     {
       "category": "Turtle: absolute movement",

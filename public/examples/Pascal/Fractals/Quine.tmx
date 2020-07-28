@@ -4,9 +4,9 @@
   "version":13,
   "name":"Quine (self-replicating) program",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:06",
-  "code":"PROGRAM Quine;\nVAR lines: array[0..14] of string[82];\n    i: integer;\nBEGIN\n  output(true, cream, true);\n  lines[0] := 'PROGRAM Quine;';\n  lines[1] := 'VAR lines: array[0..14] of string[82];';\n  lines[2] := '    i: integer;';\n  lines[3] := 'BEGIN';\n  lines[4] := ' output(true,cream,true);';\n  lines[5] := ' for i:=0 to 4 do';\n  lines[6] := '  writeln(lines[i]);';\n  lines[7] := ' for i:=0 to 14 do';\n  lines[8] :=\n     '  writeln(chr(32)+lines[12]+str(i)+lines[13]+chr(39)+lines[i]+chr(39)+lines[14]);';\n  lines[9] := ' for i:=5 to 11 do';\n  lines[10] := '  writeln(lines[i])';\n  lines[11] := 'END.';\n  lines[12] := 'lines[';\n  lines[13] := ']:=';\n  lines[14] := ';';\n  for i := 0 to 4 do\n    writeln(lines[i]);\n  for i := 0 to 14 do\n    writeln(chr(32) + lines[12] + str(i) + lines[13] + chr(39) + lines[i] + chr(39) + lines[14]);\n  for i := 5 to 11 do\n    writeln(lines[i])\nEND.",
+  "date":"28/07/2020",
+  "time":"13:25:10",
+  "code":"PROGRAM Quine;\nVAR lines: array[0..14] of string[82];\n    i: integer;\nBEGIN\n output(true,cream,true);\n lines[0]:='PROGRAM Quine;';\n lines[1]:='VAR lines: array[0..14] of string[82];';\n lines[2]:='    i: integer;';\n lines[3]:='BEGIN';\n lines[4]:=' output(true,cream,true);';\n lines[5]:=' for i:=0 to 4 do';\n lines[6]:='  writeln(lines[i]);';\n lines[7]:=' for i:=0 to 14 do';\n lines[8]:='  writeln(chr(32)+lines[12]+str(i)+lines[13]+chr(39)+lines[i]+chr(39)+lines[14]);';\n lines[9]:=' for i:=5 to 11 do';\n lines[10]:='  writeln(lines[i])';\n lines[11]:='END.';\n lines[12]:='lines[';\n lines[13]:=']:=';\n lines[14]:=';';\n for i:=0 to 4 do\n  writeln(lines[i]);\n for i:=0 to 14 do\n  writeln(chr(32)+lines[12]+str(i)+lines[13]+chr(39)+lines[i]+chr(39)+lines[14]);\n for i:=5 to 11 do\n  writeln(lines[i])\nEND.",
   "usage":[
     {
       "category": "Other Turtle commands",
@@ -18,22 +18,22 @@
     {
       "category": "String operations",
       "expressions":[
-        {"name":"writeln", "level":1, "count":3, "lines":"23 25 27"}
+        {"name":"writeln", "level":1, "count":3, "lines":"22 24 26"}
       ],
       "total":3
     },
     {
       "category": "Type conversion routines",
       "expressions":[
-        {"name":"str", "level":1, "count":1, "lines":"25"},
-        {"name":"chr", "level":3, "count":3, "lines":"25 25 25"}
+        {"name":"str", "level":1, "count":1, "lines":"24"},
+        {"name":"chr", "level":3, "count":3, "lines":"24 24 24"}
       ],
       "total":4
     },
     {
       "category": "Command structures",
       "expressions":[
-        {"name":"for", "level":1, "count":3, "lines":"22 24 26"}
+        {"name":"for", "level":1, "count":3, "lines":"21 23 25"}
       ],
       "total":3
     }

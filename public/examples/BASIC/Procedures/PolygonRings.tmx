@@ -4,9 +4,9 @@
   "version":13,
   "name":"Polygon rings (three parameters)",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:24",
-  "code":"REM PolygonRings\n\nPENUP\nBLOT(500)\nRNDCOL(6)\nPROCannulus(410, 80, 2)\nPROCannulus(310, 80, 3)\nPROCannulus(210, 80, 5)\nPROCannulus(110, 80, 7)\nPROCannulus(10, 80, 1)\nEND\n\nDEF PROCannulus(inner%, width%, angle%)\n  LOCAL count%\n  FOR count% = 0 TO 360 DIV angle%\n    FORWARD(inner% + width%)\n    BACK(width%)\n    BACK(inner%)\n    FORGET(1)\n    RIGHT(angle%)\n    FORWARD(inner%)\n    FORWARD(width%)\n    COLOUR(RGB(count% MOD 20 + 1))\n    POLYGON(4)\n    BACK(inner% + width%)\n  NEXT\nENDPROC",
+  "date":"28/07/2020",
+  "time":"13:25:30",
+  "code":"REM PolygonRings\n\nPENUP\nBLOT(500)\nRNDCOL(6)\nPROCannulus(410,80,2)\nPROCannulus(310,80,3)\nPROCannulus(210,80,5)\nPROCannulus(110,80,7)\nPROCannulus(10,80,1)\nEND\n\nDEF PROCannulus(inner%,width%,angle%)\n LOCAL count%\n FOR count%=0 TO 360 DIV angle%\n  FORWARD(inner%+width%)\n  BACK(width%)\n  BACK(inner%)\n  FORGET(1)\n  RIGHT(angle%)\n  FORWARD(inner%)\n  FORWARD(width%)\n  COLOUR(RGB(count% MOD 20+1))\n  POLYGON(4)\n  BACK(inner%+width%)\n NEXT\nENDPROC",
   "usage":[
     {
       "category": "Turtle: relative movement",

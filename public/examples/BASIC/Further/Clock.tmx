@@ -4,9 +4,9 @@
   "version":13,
   "name":"Analogue clock (nested REPEAT)",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:24",
-  "code":"REM Clock\n\nTHICKNESS(10)\nCIRCLE(400)\nHours% = 0\nMinutes% = 0\nREPEAT\n  REPEAT\n    PROCshowhands\n    PAUSE(600)\n    INC(Minutes%)\n  UNTIL Minutes% = 60\n  INC(Hours%)\n  Minutes% = 0\nUNTIL Hours% = 12\nPROCshowhands\nEND\n\nDEF PROCshowhands\n  COLOUR(WHITE)\n  BLOT(360)\n  COLOUR(RED)\n  DIRECTION(Hours% * 30)\n  THICKNESS(10)\n  FORWARD(250)\n  BACK(250)\n  DIRECTION(Minutes% * 6)\n  THICKNESS(6)\n  FORWARD(350)\n  BACK(350)\nENDPROC",
+  "date":"28/07/2020",
+  "time":"13:25:30",
+  "code":"REM Clock\n\nTHICKNESS(10)\nCIRCLE(400)\nHours%=0\nMinutes%=0\nREPEAT\n REPEAT\n  PROCshowhands\n  PAUSE(600)\n  INC(Minutes%)\n UNTIL Minutes%=60\n INC(Hours%)\n Minutes%=0\nUNTIL Hours%=12\nPROCshowhands\nEND\n\nDEF PROCshowhands\n COLOUR(WHITE)\n BLOT(360)\n COLOUR(RED)\n DIRECTION(Hours%*30)\n THICKNESS(10)\n FORWARD(250)\n BACK(250)\n DIRECTION(Minutes%*6)\n THICKNESS(6)\n FORWARD(350)\n BACK(350)\nENDPROC",
   "usage":[
     {
       "category": "Turtle: relative movement",

@@ -4,9 +4,9 @@
   "version":13,
   "name":"Sierpinski triangle (by random dots)",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:01",
-  "code":"PROGRAM SierpinskiDots;\nVAR x: array[0..2] of integer;\n    y: array[0..2] of integer;\n    thisx, thisy, thisc: integer;\nBEGIN\n  x[0] := 400;\n  y[0] := 138;\n  x[1] := 843;\n  y[1] := 650;\n  x[2] := 179;\n  y[2] := 778;\n  thisx := random(200) + 400;\n  thisy := random(200) + 400;\n  repeat\n    thisc := random(3);\n    thisx := (thisx + x[thisc]) / 2;\n    thisy := (thisy + y[thisc]) / 2;\n    pixset(thisx, thisy, purple)\n  until 0 = 1\nEND.",
+  "date":"28/07/2020",
+  "time":"13:25:04",
+  "code":"PROGRAM SierpinskiDots;\nVAR x: array[0..2] of integer;\n    y: array[0..2] of integer;\n    thisx,thisy,thisc: integer;\nBEGIN\n x[0]:=400;\n y[0]:=138;\n x[1]:=843;\n y[1]:=650;\n x[2]:=179;\n y[2]:=778;\n thisx:=random(200)+400;\n thisy:=random(200)+400;\n repeat\n  thisc:=random(3);\n  thisx:=(thisx+x[thisc])/2;\n  thisy:=(thisy+y[thisc])/2;\n  pixset(thisx,thisy,purple)\n until 0=1\nEND.",
   "usage":[
     {
       "category": "Canvas operations",

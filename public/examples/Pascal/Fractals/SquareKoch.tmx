@@ -4,9 +4,9 @@
   "version":13,
   "name":"Square Koch fractal curves",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:01",
-  "code":"PROGRAM SquareKoch;\nCONST maxlevel = 5;\nVAR count: integer;\n\n  Procedure kdraw(dist, level: integer);\n  Begin\n    if level = 0 then\n      forward(dist)\n    else\n      begin\n        kdraw(dist / 3, level - 1);\n        left(90);\n        kdraw(dist / 3, level - 1);\n        right(90);\n        kdraw(dist / 3, level - 1);\n        right(90);\n        kdraw(dist / 3, level - 1);\n        left(90);\n        kdraw(dist / 3, level - 1)\n      end\n  End;\n\nBEGIN\n  blank(black);\n  movexy(0, 486);\n  left(45);\n  for count := 1 to 4 do\n    begin\n      colour(rgb(count + 20));\n      kdraw(729, maxlevel);\n      right(90)\n    end;\n  movexy(0, -323);\n  for count := 1 to 4 do\n    begin\n      colour(rgb(count + 20));\n      kdraw(243, maxlevel - 1);\n      right(90)\n    end\nEND.",
+  "date":"28/07/2020",
+  "time":"13:25:03",
+  "code":"PROGRAM SquareKoch;\nCONST maxlevel=5;\nVAR count: integer;\n\n Procedure kdraw(dist,level: integer);\n Begin\n  if level=0 then\n   forward(dist)\n  else\n   begin\n    kdraw(dist/3,level-1);\n    left(90);\n    kdraw(dist/3,level-1);\n    right(90);\n    kdraw(dist/3,level-1);\n    right(90);\n    kdraw(dist/3,level-1);\n    left(90);\n    kdraw(dist/3,level-1)\n   end\n End;\n\nBEGIN\n blank(black);\n movexy(0,486);\n left(45);\n for count:=1 to 4 do\n  begin\n   colour(rgb(count+20));\n   kdraw(729,maxlevel);\n   right(90)\n  end;\n movexy(0,-323);\n for count:=1 to 4 do\n  begin\n   colour(rgb(count+20));\n   kdraw(243,maxlevel-1);\n   right(90)\n  end\nEND.",
   "usage":[
     {
       "category": "Turtle: relative movement",

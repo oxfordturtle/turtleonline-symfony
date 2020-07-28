@@ -2,11 +2,11 @@
   "format":1,
   "language":"Pascal",
   "version":13,
-  "name":"Fibonacci recursion and iteration (dynamic programming)",
+  "name":"Fibonacci recursion and iteration [dynamic programming]",
   "author":"Peter Millican",
-  "date":"23/07/2020",
-  "time":"12:00:07",
-  "code":"PROGRAM Fibonaccis;\n{specify number of values to be calculated}\nCONST lastnum = 25;\nVAR count: integer;\n    fibSave: array[1..lastnum] of integer;\n\n  {calculates nth Fibonacci number recursively}\n  Function fibRecursive(n: integer): integer;\n  Begin\n    if (n = 1) or (n = 2) then\n      result := 1\n    else\n      result := fibRecursive(n - 1) + fibRecursive(n - 2)\n  End;\n\n  {calculates nth Fibonacci number iteratively,}\n  {assuming the n-1 and n-2 values have already}\n  {been calculated and stored in fibSave array }\n  Function fibIterative(n: integer): integer;\n  Begin\n    if (n = 1) or (n = 2) then\n      fibSave[n] := 1\n    else\n      fibSave[n] := fibSave[n - 1] + fibSave[n - 2];\n    result := fibSave[n]\n  End;\n\nBEGIN\n  {set up and show the output display}\n  output(true, cream, true);\n  {calculate 25 Fibonacci values recursively (slow)}\n  writeln('First, by recursion:');\n  timeset(0);\n  for count := 1 to lastnum do\n    writeln('fib(' + str(count) + ') = ' + str(fibRecursive(count)));\n  writeln('Time taken: ' + qstr(time, 1000, 2) + ' seconds');\n  writeln('');\n  {calculate 25 Fibonacci values iteratively (fast)}\n  writeln('Then, by iteration:');\n  timeset(0);\n  for count := 1 to lastnum do\n    writeln('fib(' + str(count) + ') = ' + str(fibIterative(count)));\n  writeln('Time taken: ' + qstr(time, 1000, 2) + ' seconds')\nEND.",
+  "date":"28/07/2020",
+  "time":"13:25:10",
+  "code":"PROGRAM Fibonaccis;\n{specify number of values to be calculated}\nCONST lastnum=25;\nVAR count: integer;\n    fibSave: array[1..lastnum] of integer;\n\n {calculates nth Fibonacci number recursively}\n Function fibRecursive(n: integer): integer;\n Begin\n  if (n=1) or (n=2) then\n   result:=1\n  else\n   result:=fibRecursive(n-1)+fibRecursive(n-2)\n End;\n\n {calculates nth Fibonacci number iteratively,}\n {assuming the n-1 and n-2 values have already}\n {been calculated and stored in fibSave array }\n Function fibIterative(n: integer): integer;\n Begin\n  if (n=1) or (n=2) then\n   fibSave[n]:=1\n  else\n   fibSave[n]:=fibSave[n-1]+fibSave[n-2];\n  result:=fibSave[n]\n End;\n\nBEGIN\n {set up and show the output display}\n output(true,cream,true);\n {calculate 25 Fibonacci values recursively (slow)}\n writeln('First, by recursion:');\n timeset(0);\n for count:=1 to lastnum do\n  writeln('fib('+str(count)+') = '+str(fibRecursive(count)));\n writeln('Time taken: '+qstr(time,1000,2)+' seconds');\n writeln('');\n {calculate 25 Fibonacci values iteratively (fast)}\n writeln('Then, by iteration:');\n timeset(0);\n for count:=1 to lastnum do\n  writeln('fib('+str(count)+') = '+str(fibIterative(count)));\n writeln('Time taken: '+qstr(time,1000,2)+' seconds')\nEND.",
   "usage":[
     {
       "category": "Other Turtle commands",
