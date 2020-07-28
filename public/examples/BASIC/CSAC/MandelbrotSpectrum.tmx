@@ -1,0 +1,150 @@
+{
+  "format":1,
+  "language":"BASIC",
+  "version":13,
+  "name":"MandelbrotSpectrum",
+  "author":"meriv",
+  "date":"28/07/2020",
+  "time":"08:33:10",
+  "code":"CONST MAXCOL% = 40\nCONST SCALE% = 250\nCONST PIXELS% = 750\nCONST XCENTRE% = -500000\nCONST YCENTRE% = 0\nCONST SPECTRUM% = 7\nDIM spectcol%(SPECTRUM%)\nDIM boundary%(SPECTRUM%)\nPROCcolsetup\nxstart% = DIVMULT(XCENTRE%, 1000000, SCALE%) - PIXELS% / 2\nystart% = DIVMULT(YCENTRE%, 1000000, SCALE%) - PIXELS% / 2\nxfinish% = xstart% + PIXELS% - 1\nyfinish% = ystart% + PIXELS% - 1\nCANVAS(xstart%, ystart%, PIXELS%, PIXELS%)\nRESOLUTION(PIXELS%, PIXELS%)\nTIMESET(0)\nFOR a% = xstart% TO xfinish%\n  NOUPDATE\n  FOR b% = ystart% TO yfinish%\n    x% = a%\n    y% = b%\n    iterations% = 0\n    WHILE (HYPOT(x%, y%, 1) < 2 * SCALE%) AND (iterations% <= MAXCOL%)\n      temp% = DIVMULT(x% + y%, SCALE%, x% - y%)\n      y% = DIVMULT(2 * x%, SCALE%, y%) + b%\n      x% = temp% + a%\n      INC(iterations%)\n    ENDWHILE\n    IF iterations% > MAXCOL% THEN\n      PIXSET(a%, b%, BLACK)\n    ELSE\n      PIXSET(a%, b%, FNmixcolour(iterations%))\n    ENDIF\n  NEXT\n  UPDATE\nNEXT\nWRITELN(\"Resolution: \" + STR$(SCALE% * 3) + \" Time taken: \" + QSTR$(TIME, 1000, 1) + \" seconds.\")\nEND\n\nDEF PROCcolsetup\n  spectcol%(0) = VIOLET\n  spectcol%(1) = BLUE\n  spectcol%(2) = CYAN\n  spectcol%(3) = LIME\n  spectcol%(4) = YELLOW\n  spectcol%(5) = ORANGE\n  spectcol%(6) = RED\n  spectcol%(7) = VIOLET\n  FOR n% = 0 TO SPECTRUM%\n    boundary%(n%) = DIVMULT(MAXCOL%, SPECTRUM%, n%)\n  NEXT\nENDPROC\n\nDEF FNmixcolour(n%)\n  col2% = 0\n  REPEAT\n    INC(col2%)\n  UNTIL (boundary%(col2%) >= n%) OR (col2% = SPECTRUM%)\n  col1% = col2% - 1\n= MIXCOLS(spectcol%(col1%), spectcol%(col2%), boundary%(col2%) - n%, n% - boundary%(col1%))\n",
+  "usage":[
+    {
+      "category": "Other Turtle commands",
+      "expressions":[
+        {"name":"MIXCOLS", "level":3, "count":1, "lines":"60"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Canvas operations",
+      "expressions":[
+        {"name":"NOUPDATE", "level":1, "count":1, "lines":"18"},
+        {"name":"UPDATE", "level":1, "count":1, "lines":"35"},
+        {"name":"CANVAS", "level":2, "count":1, "lines":"14"},
+        {"name":"RESOLUTION", "level":2, "count":1, "lines":"15"},
+        {"name":"PIXSET", "level":3, "count":2, "lines":"30 32"}
+      ],
+      "total":6
+    },
+    {
+      "category": "General arithmetic functions",
+      "expressions":[
+        {"name":"INC", "level":1, "count":2, "lines":"57 27"},
+        {"name":"HYPOT", "level":2, "count":1, "lines":"23"},
+        {"name":"DIVMULT", "level":3, "count":5, "lines":"50 10 11 24 25"}
+      ],
+      "total":8
+    },
+    {
+      "category": "String operations",
+      "expressions":[
+        {"name":"WRITELN", "level":1, "count":1, "lines":"37"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Type conversion routines",
+      "expressions":[
+        {"name":"STR$", "level":1, "count":1, "lines":"37"},
+        {"name":"QSTR$", "level":2, "count":1, "lines":"37"}
+      ],
+      "total":2
+    },
+    {
+      "category": "Input and timing routines",
+      "expressions":[
+        {"name":"TIME", "level":2, "count":1, "lines":"37"},
+        {"name":"TIMESET", "level":2, "count":1, "lines":"16"}
+      ],
+      "total":2
+    },
+    {
+      "category": "Command structures",
+      "expressions":[
+        {"name":"IF", "level":1, "count":1, "lines":"29"},
+        {"name":"ELSE", "level":1, "count":1, "lines":"31"},
+        {"name":"FOR", "level":1, "count":3, "lines":"49 17 19"},
+        {"name":"REPEAT", "level":2, "count":1, "lines":"56"},
+        {"name":"WHILE", "level":2, "count":1, "lines":"23"},
+        {"name":"DEF PROC", "level":2, "count":1, "lines":"40"},
+        {"name":"DEF FN", "level":3, "count":1, "lines":"54"}
+      ],
+      "total":9
+    },
+    {
+      "category": "Subroutine calls",
+      "expressions":[
+        {"name":"PROCcolsetup", "level":0, "count":1, "lines":"9"},
+        {"name":"FNmixcolour", "level":0, "count":1, "lines":"32"}
+      ],
+      "total":2
+    }
+  ],
+  "pcode":[
+    [112,15,1,1,112,0,123,112,6,2,123,4,112,39,124,112,54,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [116,23,119,22],
+    [112,8,119,23],
+    [116,33,119,32],
+    [112,8,119,33],
+    [128,32],
+    [133,1],
+    [113,22,112,0,2,127,26,4,112,9055202,2,123],
+    [113,22,112,1,2,127,26,4,112,255,2,123],
+    [113,22,112,2,2,127,26,4,112,65535,2,123],
+    [113,22,112,3,2,127,26,4,112,65280,2,123],
+    [113,22,112,4,2,127,26,4,112,16776960,2,123],
+    [113,22,112,5,2,127,26,4,112,16755200,2,123],
+    [113,22,112,6,2,127,26,4,112,16711680,2,123],
+    [113,22,112,7,2,127,26,4,112,9055202,2,123],
+    [112,0],
+    [119,52,112,7],
+    [113,52,37,129,22],
+    [113,32,113,52,2,127,26,4,112,40,112,7,113,52,48,2,123],
+    [113,52,4,128,18],
+    [134,132],
+    [133,2],
+    [139,13,2],
+    [117,13,1,112,2,124,120,13,2],
+    [112,0,119,53],
+    [116,53,1,122,4,2,123],
+    [113,32,113,53,2,127,26,4,122,114,13,2,37,113,53,112,7,32,18,129,27],
+    [113,53,112,1,27,119,54],
+    [113,22,113,54,2,127,26,4,122,113,22,113,53,2,127,26,4,122,113,32,113,53,2,127,26,4,122,114,13,2,27,114,13,2,113,32,113,54,2,127,26,4,122,27,102,120,13,1],
+    [113,13,119,14,140,13,134,132],
+    [131,8],
+    [112,-500000,112,1000000,112,250,48,112,750,112,2,29,27,119,42],
+    [112,0,112,1000000,112,250,48,112,750,112,2,29,27,119,43],
+    [113,42,112,750,26,112,1,27,119,44],
+    [113,43,112,750,26,112,1,27,119,45],
+    [113,42,113,43,112,750,112,750,144],
+    [112,750,112,750,145],
+    [112,0,173],
+    [113,42],
+    [119,46,113,44],
+    [113,46,37,129,64],
+    [112,0,146],
+    [113,43],
+    [119,47,113,45],
+    [113,47,37,129,62],
+    [113,46,119,48],
+    [113,47,119,49],
+    [112,0,119,50],
+    [113,48,113,49,112,1,50,112,2,112,250,28,34,113,50,112,40,36,17,129,56],
+    [113,48,113,49,26,112,250,113,48,113,49,27,48,119,51],
+    [112,2,113,48,28,112,250,113,49,48,113,47,26,119,49],
+    [113,51,113,46,26,119,48],
+    [116,50,1,122,4,2,123],
+    [128,50],
+    [113,50,112,40,35,129,59],
+    [113,46,113,47,112,0,100],
+    [128,61],
+    [113,46,113,47,113,50,131,23],
+    [114,14,1,100],
+    [113,47,4,128,45],
+    [112,-1,146],
+    [113,46,4,128,41],
+    [118,12,82,101,115,111,108,117,116,105,111,110,58,32,112,250,112,3,28,11,64,118,13,32,84,105,109,101,32,116,97,107,101,110,58,32,64,172,112,1000,112,1,14,64,118,9,32,115,101,99,111,110,100,115,46,64,169,170,142],
+    [130]
+  ]
+}

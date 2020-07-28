@@ -1,0 +1,152 @@
+{
+  "format":1,
+  "language":"Pascal",
+  "version":13,
+  "name":"MandelbrotMiniSpectrum",
+  "author":"meriv",
+  "date":"28/07/2020",
+  "time":"08:28:45",
+  "code":"PROGRAM MandelbrotMiniSpectrum;\nCONST maxcol = 100;\n      scale = 10000;\n      pixels = 300;\n      xcentre = -159200;\n      ycentre = -1033000;\n      spectrum = 7;\nVAR xstart, xfinish, ystart, yfinish: integer;\n    a, b, x, y: integer;\n    iterations, temp: integer;\n    spectcol: array[0..spectrum] of integer;\n    boundary: array[0..spectrum] of integer;\n\n  Procedure colsetup;\n  Var n: integer;\n  Begin\n    spectcol[0] := violet;\n    spectcol[1] := blue;\n    spectcol[2] := cyan;\n    spectcol[3] := lime;\n    spectcol[4] := yellow;\n    spectcol[5] := orange;\n    spectcol[6] := red;\n    spectcol[7] := violet;\n    for n := 0 to spectrum do\n      boundary[n] := divmult(maxcol, spectrum, n)\n  End;\n\n  Function mixcolour(n: integer): integer;\n  Var col1, col2: integer;\n      mix1, mix2: integer;\n  Begin\n    col2 := 0;\n    repeat\n      inc(col2)\n    until (boundary[col2] >= n) or (col2 = spectrum);\n    col1 := col2 - 1;\n    result := mixcols(spectcol[col1], spectcol[col2], boundary[col2] - n, n - boundary[col1])\n  End;\n\nBEGIN\n  colsetup;\n  xstart := divmult(xcentre, 1000000, scale) - pixels / 2;\n  ystart := divmult(ycentre, 1000000, scale) - pixels / 2;\n  xfinish := xstart + pixels - 1;\n  yfinish := ystart + pixels - 1;\n  canvas(xstart, ystart, pixels, pixels);\n  resolution(pixels, pixels);\n  timeset(0);\n  for a := xstart to xfinish do\n    begin\n      noupdate;\n      for b := ystart to yfinish do\n        begin\n          x := a;\n          y := b;\n          iterations := 0;\n          while (hypot(x, y, 1) < 2 * scale) and (iterations <= maxcol) do\n            begin\n              temp := divmult(x + y, scale, x - y);\n              y := divmult(2 * x, scale, y) + b;\n              x := temp + a;\n              inc(iterations)\n            end;\n          if iterations > maxcol then\n            pixset(a, b, black)\n          else\n            pixset(a, b, mixcolour(iterations))\n        end;\n      update\n    end;\n  writeln('Resolution: ' + str(scale * 3) + '; Time taken: ' + qstr(time, 1000, 1) + ' seconds.')\nEND.\n",
+  "usage":[
+    {
+      "category": "Other Turtle commands",
+      "expressions":[
+        {"name":"mixcols", "level":3, "count":1, "lines":"38"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Canvas operations",
+      "expressions":[
+        {"name":"noupdate", "level":1, "count":1, "lines":"52"},
+        {"name":"update", "level":1, "count":1, "lines":"70"},
+        {"name":"canvas", "level":2, "count":1, "lines":"47"},
+        {"name":"resolution", "level":2, "count":1, "lines":"48"},
+        {"name":"pixset", "level":3, "count":2, "lines":"66 68"}
+      ],
+      "total":6
+    },
+    {
+      "category": "General arithmetic functions",
+      "expressions":[
+        {"name":"inc", "level":1, "count":2, "lines":"35 63"},
+        {"name":"hypot", "level":2, "count":1, "lines":"58"},
+        {"name":"divmult", "level":3, "count":5, "lines":"26 43 44 60 61"}
+      ],
+      "total":8
+    },
+    {
+      "category": "String operations",
+      "expressions":[
+        {"name":"writeln", "level":1, "count":1, "lines":"72"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Type conversion routines",
+      "expressions":[
+        {"name":"str", "level":1, "count":1, "lines":"72"},
+        {"name":"qstr", "level":2, "count":1, "lines":"72"}
+      ],
+      "total":2
+    },
+    {
+      "category": "Input and timing routines",
+      "expressions":[
+        {"name":"time", "level":2, "count":1, "lines":"72"},
+        {"name":"timeset", "level":2, "count":1, "lines":"49"}
+      ],
+      "total":2
+    },
+    {
+      "category": "Command structures",
+      "expressions":[
+        {"name":"if", "level":1, "count":1, "lines":"65"},
+        {"name":"else", "level":1, "count":1, "lines":"67"},
+        {"name":"for", "level":1, "count":3, "lines":"25 50 53"},
+        {"name":"repeat", "level":2, "count":1, "lines":"34"},
+        {"name":"while", "level":2, "count":1, "lines":"58"},
+        {"name":"procedure", "level":2, "count":1, "lines":"14"},
+        {"name":"function", "level":3, "count":1, "lines":"29"}
+      ],
+      "total":9
+    },
+    {
+      "category": "Subroutine calls",
+      "expressions":[
+        {"name":"colsetup", "level":0, "count":1, "lines":"42"},
+        {"name":"mixcolour", "level":0, "count":1, "lines":"68"}
+      ],
+      "total":2
+    }
+  ],
+  "pcode":[
+    [112,15,1,1,112,0,123,112,6,2,123,4,112,36,124,112,51,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [116,33,119,32],
+    [112,8,119,33],
+    [116,43,119,42],
+    [112,8,119,43],
+    [128,34],
+    [133,1],
+    [139,12,1],
+    [117,12,1,112,1,124],
+    [113,32,112,0,2,127,26,4,112,9055202,2,123],
+    [113,32,112,1,2,127,26,4,112,255,2,123],
+    [113,32,112,2,2,127,26,4,112,65535,2,123],
+    [113,32,112,3,2,127,26,4,112,65280,2,123],
+    [113,32,112,4,2,127,26,4,112,16776960,2,123],
+    [113,32,112,5,2,127,26,4,112,16755200,2,123],
+    [113,32,112,6,2,127,26,4,112,16711680,2,123],
+    [113,32,112,7,2,127,26,4,112,9055202,2,123],
+    [112,0],
+    [120,12,1,112,7],
+    [114,12,1,37,129,24],
+    [113,42,114,12,1,2,127,26,4,112,100,112,7,114,12,1,48,2,123],
+    [114,12,1,4,128,20],
+    [140,12,134,132],
+    [133,2],
+    [139,13,6],
+    [117,13,1,112,6,124,120,13,2],
+    [112,0,120,13,4],
+    [117,13,4,1,122,4,2,123],
+    [113,42,114,13,4,2,127,26,4,122,114,13,2,37,114,13,4,112,7,32,18,129,29],
+    [114,13,4,112,1,27,120,13,3],
+    [113,32,114,13,3,2,127,26,4,122,113,32,114,13,4,2,127,26,4,122,113,42,114,13,4,2,127,26,4,122,114,13,2,27,114,13,2,113,42,114,13,3,2,127,26,4,122,27,102,120,13,1],
+    [113,13,119,14,140,13,134,132],
+    [131,8],
+    [112,-159200,112,1000000,112,10000,48,112,300,112,2,29,27,119,22],
+    [112,-1033000,112,1000000,112,10000,48,112,300,112,2,29,27,119,24],
+    [113,22,112,300,26,112,1,27,119,23],
+    [113,24,112,300,26,112,1,27,119,25],
+    [113,22,113,24,112,300,112,300,144],
+    [112,300,112,300,145],
+    [112,0,173],
+    [113,22],
+    [119,26,113,23],
+    [113,26,37,129,66],
+    [112,0,146],
+    [113,24],
+    [119,27,113,25],
+    [113,27,37,129,64],
+    [113,26,119,28],
+    [113,27,119,29],
+    [112,0,119,30],
+    [113,28,113,29,112,1,50,112,2,112,10000,28,34,113,30,112,100,36,17,129,58],
+    [113,28,113,29,26,112,10000,113,28,113,29,27,48,119,31],
+    [112,2,113,28,28,112,10000,113,29,48,113,27,26,119,29],
+    [113,31,113,26,26,119,28],
+    [116,30,1,122,4,2,123],
+    [128,52],
+    [113,30,112,100,35,129,61],
+    [113,26,113,27,112,0,100],
+    [128,63],
+    [113,26,113,27,113,30,131,25],
+    [114,14,1,100],
+    [113,27,4,128,47],
+    [112,-1,146],
+    [113,26,4,128,43],
+    [118,12,82,101,115,111,108,117,116,105,111,110,58,32,112,10000,112,3,28,11,64,118,14,59,32,84,105,109,101,32,116,97,107,101,110,58,32,64,172,112,1000,112,1,14,64,118,9,32,115,101,99,111,110,100,115,46,64,169,170,142],
+    [130]
+  ]
+}

@@ -1756,7 +1756,7 @@ function execute (pcode, line, code, options) {
           halt()
           console.log(line)
           console.log(code)
-          throw error('File processing has not yet been implemented.')
+          throw error('File processing has not yet been implemented in the online Turtle System. We are working on introducing this very soon. In the meantime, please run this program using the downloable system to run this program.')
 
         // anything else is an error
         default:

@@ -620,6 +620,7 @@ class State {
     this.files = this.files.concat([file])
     this.currentFileIndex = this.files.length - 1
     this.send('closeMenu', 'system')
+    machine.halt()
   }
 
   // close the current file (and update current file index)
@@ -735,7 +736,7 @@ class State {
             this.openFile(filename, content.trim(), exampleId)
           })
         } else {
-          this.send('error', new SystemError(`Couldn't retrieve example "${exampleId}".`))
+          this.send('error', new SystemError(`Example "${exampleId}" is not available for Turtle ${this.language}.`))
         }
       })
   }
