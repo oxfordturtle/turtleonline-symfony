@@ -1,33 +1,31 @@
 /*
- * tokenizer for Turtle BASIC
+ * tokenizer for Turtle Python
  */
-import { colours } from '../../definitions/colours'
-import { commands } from '../../definitions/commands'
+import { colours } from '../../machine/colours'
+import { commands } from '../commands'
 import { Token } from './token'
 
-// exported tokenizer function
 export default function (code: string): Token[] {
   const tokens = []
   while (code.length > 0) {
     const token = linebreak(code) ||
       spaces(code) ||
       comment(code) ||
-      string(code) ||
-      operator(code) ||
       delimiter(code) ||
+      operator(code) ||
+      string(code) ||
       boolean(code) ||
       binary(code) ||
+      octal(code) ||
       hexadecimal(code) ||
       decimal(code) ||
       keyword(code) ||
-      variableClash(code) ||
       command(code) ||
-      custom(code) ||
       turtle(code) ||
       colour(code) ||
-      variable(code) ||
       keycode(code) ||
       query(code) ||
+      identifier(code) ||
       illegal(code)
     tokens.push(token)
     code = code.slice(token.content.length)
@@ -48,56 +46,64 @@ function spaces (code: string): Token|false {
 
 // comments
 function comment (code: string): Token|false {
-  const start = code.match(/^REM\b/)
+  const start = code.match(/^#/)
   if (start) return { type: 'comment', content: code.split('\n')[0] }
   return false
 }
 
-// string literals
-function string (code: string): Token|false {
-  // awkward cases
-  if (code.match(/^""""/)) return { type: 'string', content: '""""' }
-  if (code.match(/^""[^"]/)) return { type: 'string', content: '""' }
-  // normal cases
-  const start = code[0] === '"'
-  const end = code.match(/[^"](")([^"]|$)/)
-  if (start && end) return { type: 'string', content: code.slice(0, end.index + 2) }
-  if (start) return { type: 'unterminated-string', content: code.split('\n')[0] }
-  return false
+// punctuation
+function delimiter (code: string): Token|false {
+  const test = code.match(/^(\(|\)|,|;|:|->)/)
+  return test ? { type: 'delimiter', content: test[0] } : false
 }
 
 // operators
 function operator (code: string): Token|false {
-  const test = code.match(/^(\+|-|\*|\/|DIV\b|MOD\b|=|<>|<=|>=|<|>|NOT\b|AND\b|OR\b|EOR\b)/)
+  const test = code.match(/^(\+|-|\*|\/\/|\/|%|==|!=|<=|>=|=|<|>|~|&|\||\^|not\b|and\b|or\b)/)
   return test ? { type: 'operator', content: test[0] } : false
 }
 
-// punctuation
-function delimiter (code: string): Token|false {
-  const test = code.match(/^(\(|\)|,|:)/)
-  return test ? { type: 'delimiter', content: test[0] } : false
+// string literals
+function string (code: string): Token|false {
+  const start1 = code[0] === '\''
+  const start2 = code[0] === '"'
+  const end1 = code.match(/[^\\](')/)
+  const end2 = code.match(/[^\\](")/)
+  if (start1 && end1) return { type: 'string', content: code.slice(0, end1.index + 2) }
+  if (start1) return { type: 'unterminated-string', content: code.split('\n')[0] }
+  if (start2 && end2) return { type: 'string', content: code.slice(0, end2.index + 2) }
+  if (start2) return { type: 'unterminated-string', content: code.split('\n')[0] }
+  return false
 }
 
 // boolean literals
 function boolean (code: string): Token|false {
-  const test = code.match(/^(TRUE|FALSE)\b/)
+  const test = code.match(/^(True|False)\b/)
   return test ? { type: 'boolean', content: test[0] } : false
 }
 
 // integer literals
 function binary (code: string): Token|false {
-  const good = code.match(/^(%[01]+)\b/)
-  const bad = code.match(/^(0b[01]+)\b/)
+  const good = code.match(/^(0b[01]+)\b/)
+  const bad = code.match(/^(%[01]+)\b/)
   if (good) return { type: 'binary', content: good[0] }
   if (bad) return { type: 'bad-binary', content: bad[0] }
   return false
 }
 
+function octal (code: string): Token|false {
+  const good = code.match(/^(0o[0-7]+)\b/)
+  const bad = code.match(/^(&[0-7]+)\b/)
+  if (good) return { type: 'octal', content: good[0] }
+  if (bad) return { type: 'bad-octal', content: bad[0] }
+  return false
+}
+
 function hexadecimal (code: string): Token|false {
-  const bad = code.match(/^((\$|(0x))[A-Fa-f0-9]+)\b/)
-  const good = code.match(/^((&|#)[A-Fa-f0-9]+)\b/)
-  if (bad) return { type: 'bad-hexadecimal', content: bad[0] }
+  const good = code.match(/^(0x[A-Fa-f0-9]+)\b/)
+  const bad = code.match(/^((&|#|\$)[A-Fa-f0-9]+)\b/)
   if (good) return { type: 'hexadecimal', content: good[0] }
+  if (bad) return { type: 'bad-hexadecimal', content: bad[0] }
   return false
 }
 
@@ -111,64 +117,53 @@ function decimal (code: string): Token|false {
 
 // keywords
 function keyword (code: string): Token|false {
-  const test = code.match(/^(CONST|DEF|DIM|ELSE|END|ENDIF|ENDPROC|ENDWHILE|FOR|IF|LOCAL|NEXT|PRIVATE|REPEAT|RETURN|STEP|THEN|TO|UNTIL|WHILE)\b/)
+  const test = code.match(/^(def|elif|else|for|global|if|in|nonlocal|pass|return|while)\b/)
   return test ? { type: 'keyword', content: test[0] } : false
-}
-
-// variable names that would clash with native turtle commands
-function variableClash (code: string): Token|false {
-  const test = code.match(/^((ABS|ACS|ANGLES|ANTILOG|ASC|ASN|ATN|BACK|BLANK|BLOT|BOOLINT|BOX|CANVAS|CIRCLE|COLOU?R|CONSOLE|COS|CURSOR|DEC||DETECT|DIRECTION|DIVMULT|DRAWXY|DUMP|ELLBLOT|ELLIPSE|EXP|FILL|FORGET|FORWARD|HEAPRESET||HOME|HYPOT|INC|INSTR|KEYBUFFER|KEYECHO|KEYSTATUS|LEFT|LEN|LN|LOG10|MAX|MAXINT|MIN|MIXCOLS|MOVEXY|NEWTURTLE|NOUPDATE|OLDTURTLE|OUTPUT|PAUSE|PENDOWN|PENUP|PI|PIXCOL|PIXSET|POLYGON|POLYLINE|POWER|PRINT|QVAL|RECOLOU?R|REMEMBER|RESET|RESOLUTION|RGB|RIGHT|RND|RNDCOL|ROOT|SETX|SETXY|SETY|SIGN|SIN|SQR|TAN|THICKNESS|TIME|TIMESET|TRACE|TURNXY|UPDATE|VAL|VALDEF|WATCH|WRITE|WRITELN)[$%])/)
-  return test ? { type: 'variable', content: test[0] } : false
 }
 
 // native turtle commands
 function command (code: string): Token|false {
   const names = commands
-    .reduce((x, y) => y.names.BASIC ? `${x}|${y.names.BASIC}\\b` : x, '')
+    .reduce((x, y) => y.names.Python ? `${x}|${y.names.Python}` : x, '')
     .slice(1)
-  const regex = new RegExp(new RegExp(`^(${names.replace(/\$/g, '\\$')})`))
+  // pretend "bool" and "range" are also commands (these should be added later)
+  const regex = new RegExp(new RegExp(`^(${names}|bool|range)\\b`))
   const test = code.match(regex)
   return test ? { type: 'command', content: test[0] } : false
 }
 
-// custom procedure or function names
-function custom (code: string): Token|false {
-  const test = code.match(/^((PROC|FN)[_a-zA-Z0-9]+[%|$]?)/)
-  return test ? { type: 'custom', content: test[0] } : false
-}
-
 // built-in turtle property variables
 function turtle (code: string): Token|false {
-  const test = code.match(/^(turt[xydatc]%)/)
+  const test = code.match(/^(turt[xydatc])\b/)
   return test ? { type: 'turtle', content: test[0] } : false
 }
 
 // native colour constants
 function colour (code: string): Token|false {
   const names = colours
-    .reduce((x, y) => `${x}|${y.names.BASIC}`, '')
+    .reduce((x, y) => `${x}|${y.names.Python}`, '')
     .slice(1)
   const regex = new RegExp(new RegExp(`^(${names})\\b`))
   const test = code.match(regex)
   return test ? { type: 'colour', content: test[0] } : false
 }
 
-// variable names
-function variable (code: string): Token|false {
-  const test = code.match(/^([_a-zA-Z][_a-zA-Z0-9]*[%|$]?)/)
-  return test ? { type: 'variable', content: test[0] } : false
-}
-
 // native keycode constants
 function keycode (code: string): Token|false {
-  const test = code.match(/^(\\[#A-Z0-9]+)/)
+  const test = code.match(/^(\\[#a-z0-9]+)/)
   return test ? { type: 'keycode', content: test[0] } : false
 }
 
 // native query codes
 function query (code: string): Token|false {
-  const test = code.match(/^(\?[A-Z]+)\b/)
+  const test = code.match(/^(\?[a-z]+)\b/)
   return test ? { type: 'query', content: test[0] } : false
+}
+
+// identifiers (i.e. variable, or subroutine names)
+function identifier (code: string): Token|false {
+  const test = code.match(/^([_a-zA-Z][_a-zA-Z0-9]*)\b/)
+  return test ? { type: 'identifier', content: test[0] } : false
 }
 
 // illegal (anything that isn't one of the above)

@@ -1,7 +1,11 @@
-// session property type
+/**
+ * State properties and their default values.
+ */
+
+/** property type */
 export type Property = typeof properties[number]
 
-// session properties
+/** array of property names */
 export const properties = [
   // system settings
   'language',
@@ -53,7 +57,7 @@ export const properties = [
   'separateSubroutineRegisterStack'
 ] as const
 
-// default values
+/** default values */
 export const defaults: Record<Property, any> = {
   // system settings
   'language': 'Pascal',

@@ -1,8 +1,8 @@
 /*
  * usage data generator - arrays of lexemes and subroutines go in, usage data comes out
  */
-import { categories } from '../../definitions/categories'
-import { groups } from '../../definitions/groups'
+import { categories } from '../categories'
+import { groups } from '../groups'
 
 // the analyser function
 export default function (lexemes, subroutines, language) {

@@ -1,7 +1,7 @@
 /**
  * Keycodes reference table.
  */
-import { inputs, Input } from '../../definitions/inputs'
+import { inputs, Input } from '../../compiler/inputs'
 import { fill, tr, td, code } from '../../tools/elements'
 import state from '../../state/index'
 

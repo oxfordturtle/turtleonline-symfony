@@ -1,10 +1,10 @@
 /**
  * Native commands reference table.
  */
-import { Command } from '../../definitions/commands'
-import { categories } from '../../definitions/categories'
+import { Command } from '../../compiler/commands'
+import { categories } from '../../compiler/categories'
 import { fill, tr, td, code } from '../../tools/elements'
-import highlight from '../../compile/highlight'
+import highlight from '../../compiler/highlight'
 import state from '../../state/index'
 
 // get relevant elements

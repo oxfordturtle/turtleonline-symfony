@@ -1,13 +1,18 @@
 /*
  * An array of input codes.
  */
-import { Names } from './languages'
+import { Language } from '../state/languages'
 
 export class Input {
-  readonly names: Names
+  readonly names: Record<Language, string>
   readonly value: number
+
   constructor (name: string, value: number) {
-    this.names = { 'BASIC': name.toUpperCase(), 'Pascal': name, 'Python': name }
+    this.names = {
+      'BASIC': (value < 0) ? name.toUpperCase() : name,
+      'Pascal': name,
+      'Python': name
+    }
     this.value = value
   }
 }

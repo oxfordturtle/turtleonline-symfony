@@ -3,11 +3,11 @@
  */
 import state from '../state/index'
 import { Property } from '../state/properties'
-import { languages, Language } from '../definitions/languages'
-import { Mode } from '../definitions/modes'
+import { languages, Language } from '../state/languages'
+import { Mode } from '../state/modes'
 import { option, fill } from '../tools/elements'
-import { categories } from '../definitions/categories'
-import { SystemError } from '../definitions/errors'
+import { categories } from '../compiler/categories'
+import SystemError from '../state/error'
 
 for (const element of document.querySelectorAll('[data-binding]')) {
   switch ((element as HTMLElement).dataset.binding as Property) {

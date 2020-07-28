@@ -1,19 +1,11 @@
 /*
  * The Virtual Turtle Machine.
  */
-import { colours } from '../definitions/colours'
-import { PCode } from '../definitions/pcodes'
+import { colours } from './colours'
+import { PCode } from './pcodes'
 import memory from './memory'
 import { Options } from './options'
-import { MachineError } from '../definitions/errors'
-
-// machine constants
-const turtxIndex = 1
-const turtyIndex = 2
-const turtdIndex = 3
-const turtaIndex = 4
-const turttIndex = 5
-const turtcIndex = 6
+import MachineError from './error'
 
 // the canvas and its 2d drawing context
 // the canvas element will send this to the machine when it's ready

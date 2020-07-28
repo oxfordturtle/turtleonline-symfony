@@ -2,11 +2,12 @@
  * An array of expression categories (i.e. command categories plus a few other things). Used by
  * the usage analyser).
  */
-import { Names } from './languages'
+import { Language } from '../state/languages'
 
 export class Group {
   readonly title: string
   readonly expressions: Keyword[]
+
   constructor (title: string, expressions: Keyword[]) {
     this.title = title
     this.expressions = expressions
@@ -14,9 +15,10 @@ export class Group {
 }
 
 export class Keyword {
-  readonly names: Names
+  readonly names: Record<Language, string>
   readonly level: number
-  constructor (names: Names, level: number) {
+
+  constructor (names: Record<Language, string>, level: number) {
     this.names = names
     this.level = level
   }

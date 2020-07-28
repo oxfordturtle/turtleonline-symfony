@@ -1,9 +1,9 @@
 /*
 functions to find various things
 */
-import { colours } from '../../definitions/colours'
-import { inputs } from '../../definitions/inputs'
-import { commands } from '../../definitions/commands'
+import { colours } from '../../machine/colours'
+import { inputs } from '../../compiler/inputs'
+import { commands } from '../../compiler/commands'
 
 // get the main program from a routine
 export const program = (routine) =>

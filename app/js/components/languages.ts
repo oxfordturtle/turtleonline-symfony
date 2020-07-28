@@ -1,9 +1,9 @@
 /**
  * Language features.
  */
-import { Language } from '../definitions/languages'
+import { Language } from '../state/languages'
 import state from '../state/index'
-import highlight from '../compile/highlight'
+import highlight from '../compiler/highlight'
 
 export default init()
 

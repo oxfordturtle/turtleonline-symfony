@@ -1,8 +1,8 @@
 /**
  * Colour constants reference table.
  */
-import { colours, Colour } from '../../definitions/colours'
-import { Language } from '../../definitions/languages'
+import { colours, Colour } from '../../machine/colours'
+import { Language } from '../../state/languages'
 import state from '../../state/index'
 
 // get relevant elements

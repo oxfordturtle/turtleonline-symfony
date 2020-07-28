@@ -1,7 +1,7 @@
 /*
  * The program code component.
  */
-import highlight from '../../compile/highlight'
+import highlight from '../../compiler/highlight'
 import state from '../../state/index'
 import { fill, li } from '../../tools/elements'
 

@@ -6,22 +6,22 @@
  * also initializes the variables and saves them to local storage, so that the
  * state is maintained between sessions.
  */
-import { SystemError } from '../definitions/errors'
-import { examples } from '../definitions/examples'
-import { File } from '../definitions/file'
-import { Language, languages, extensions, skeletons } from '../definitions/languages'
-import { Mode } from '../definitions/modes'
-import compile from '../compile/index'
-import lexer from '../compile/lexer/index'
-import { Options as CompilerOptions } from '../compile/options'
+import SystemError from './error'
+import { examples } from './examples'
+import File from './file'
+import { Language, languages } from './languages'
+import { Message, Reply } from './messages'
+import { Mode } from './modes'
+import { defaults } from './properties'
+import { load, save } from './storage'
+import compile from '../compiler/index'
+import lexer from '../compiler/lexer/index'
+import { Options as CompilerOptions } from '../compiler/options'
 import * as machine from '../machine/index'
 import { Options as MachineOptions } from '../machine/options'
-import { Message, Reply } from './messages'
-import { load, save } from './storage'
-import { defaults } from './properties'
 import { input } from '../tools/elements'
 
-// define the system state object
+/** the system state object */
 class State {
   // record of callbacks to execute on state change
   #replies: Partial<Record<Message, Reply[]>>
@@ -259,14 +259,14 @@ class State {
 
   get compilerOptions (): CompilerOptions {
     return {
-        canvasStartSize: this.canvasStartSize,
-        setupDefaultKeyBuffer: this.setupDefaultKeyBuffer,
-        turtleAttributesAsGlobals: this.turtleAttributesAsGlobals,
-        initialiseLocals: this.initialiseLocals,
-        allowCSTR: this.allowCSTR,
-        separateReturnStack: this.separateReturnStack,
-        separateMemoryControlStack: this.separateMemoryControlStack,
-        separateSubroutineRegisterStack: this.separateSubroutineRegisterStack
+      canvasStartSize: this.canvasStartSize,
+      setupDefaultKeyBuffer: this.setupDefaultKeyBuffer,
+      turtleAttributesAsGlobals: this.turtleAttributesAsGlobals,
+      initialiseLocals: this.initialiseLocals,
+      allowCSTR: this.allowCSTR,
+      separateReturnStack: this.separateReturnStack,
+      separateMemoryControlStack: this.separateMemoryControlStack,
+      separateSubroutineRegisterStack: this.separateSubroutineRegisterStack
     }
   }
 
@@ -410,7 +410,26 @@ class State {
     this.language = this.file.language
 
     // update lexemes, pcode, and usage to match current file
-    if (this.file.compiled) {
+    if (this.file.example && this.file.edited === false) {
+      if (this.file.language !== 'Python') {
+        const example = examples.find(x => x.id === this.file.example)
+        if (example) {
+          const filename = `${example.id}.tmx`
+          window.fetch(`/examples/${this.language}/${example.groupId}/${filename}`)
+            .then(response => {
+              if (response.ok) {
+                response.text().then(content => {
+                  const json = JSON.parse(content)
+                  this.pcode = json.pcode
+                  this.usage = json.usage
+                  this.lexemes = lexer(json.code, this.language)
+                  this.file.compiled = true
+                })
+              }
+            })
+        }
+      }
+    } else if (this.file.compiled) {
       const { lexemes, pcode, usage } = compile(this.file.code, this.language)
       this.lexemes = lexemes
       this.pcode = pcode
@@ -657,7 +676,7 @@ class State {
   newFile (skeleton: boolean = false) {
     const file = new File(this.language)
     if (skeleton) {
-      file.code = skeletons[this.language]
+      file.code = File.skeletons[this.language]
     }
     this.addFile(file)
   }
@@ -746,7 +765,7 @@ class State {
     if (!example) {
       this.send('error', new SystemError(`Unknown example "${exampleId}".`))
     }
-    const ext = (this.language === 'Python') ? extensions.Python : 'tmx'
+    const ext = (this.language === 'Python') ? File.extensions.Python : 'tmx'
     const filename = `${example.id}.${ext}`
     window.fetch(`/examples/${this.language}/${example.groupId}/${filename}`)
       .then(response => {

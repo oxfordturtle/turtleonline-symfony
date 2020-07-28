@@ -2,8 +2,14 @@
  * Messages sent out by the state module (following changes of state), and signature for
  * the reply functions.
  */
+
+/** signature for reply functions */
+export type Reply = (data: any) => void
+
+/** message type */
 export type Message = typeof messages[number]
 
+/** array of messages */
 export const messages = [
   // system settings changed
   'languageChanged',
@@ -63,6 +69,3 @@ export const messages = [
   'selectAll',
   'error'
 ] as const
-
-// signature for reply functions
-export type Reply = (data: any) => void

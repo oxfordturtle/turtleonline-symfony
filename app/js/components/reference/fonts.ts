@@ -1,7 +1,7 @@
 /**
  * Fonts reference table.
  */
-import { fonts, Font } from '../../definitions/fonts'
+import { fonts, Font } from '../../machine/fonts'
 import { fill, tr, td } from '../../tools/elements'
 import state from '../../state/index'
 

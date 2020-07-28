@@ -1,7 +1,7 @@
 /*
  * The program usage component.
  */
-import highlight from '../../compile/highlight'
+import highlight from '../../compiler/highlight'
 import state from '../../state/index'
 import { fill, fragment, tr, th, td, code } from '../../tools/elements'
 

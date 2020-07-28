@@ -6,7 +6,7 @@ import BASIC from './basic'
 import Pascal from './pascal'
 import Python from './python'
 import { Token } from './token'
-import { Language } from '../../definitions/languages'
+import { Language } from '../../state/languages'
 
 export default function (code: string, language: Language): Token[] {
   const tokenizers = { BASIC, Pascal, Python }

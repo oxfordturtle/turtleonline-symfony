@@ -1,7 +1,7 @@
 /*
  * The program lexemes component.
  */
-import highlight from '../../compile/highlight'
+import highlight from '../../compiler/highlight'
 import state from '../../state/index'
 import { fill, tr, td, code } from '../../tools/elements'
 

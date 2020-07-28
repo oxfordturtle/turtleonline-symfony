@@ -3,8 +3,8 @@
  */
 import state from './state/index'
 import * as machine from './machine/index'
-import { languages, Language } from './definitions/languages'
-import { CompilerError } from './definitions/errors'
+import { languages, Language } from './state/languages'
+import CompilerError from './compiler/error'
 
 // general site components
 import './components/actions'

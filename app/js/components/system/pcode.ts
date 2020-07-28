@@ -1,7 +1,7 @@
 /*
  * The program pcode component.
  */
-import { PCode, pcodeArgs } from '../../definitions/pcodes'
+import { PCode, pcodeArgs } from '../../machine/pcodes'
 import state from '../../state/index'
 import { fill, div, li } from '../../tools/elements'
 

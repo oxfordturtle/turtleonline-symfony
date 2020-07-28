@@ -2,7 +2,7 @@ import state from '../state/index'
 import * as machine from '../machine/index'
 import { fill, i } from '../tools/elements'
 import { toggleMenu, openMenu, closeMenu, selectTab } from './view'
-import { SystemError } from '../definitions/errors'
+import SystemError from '../state/error'
 
 const notImplemented = new SystemError('This feature has not yet been implemented in the online system.')
 

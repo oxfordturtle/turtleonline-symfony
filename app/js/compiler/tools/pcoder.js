@@ -1,7 +1,7 @@
 /*
 assorted functions for generating the pcode
 */
-import { PCode } from '../../definitions/pcodes'
+import { PCode } from '../../machine/pcodes'
 import * as find from './find'
 
 // machine constants

@@ -197,10 +197,10 @@ class Memory {
     this.stack.push(this.heapTemp + 1)
     this.heapTemp += 1
     this.main[this.heapTemp] = string.length
-    stringArray.forEach((code) => {
+    for (const code of stringArray) {
       this.heapTemp += 1
       this.main[this.heapTemp] = code
-    })
+    }
     this.heapMax = Math.max(this.heapTemp, this.heapMax)
   }
 
@@ -209,7 +209,7 @@ class Memory {
     const length = this.main[address]
     const start = address + 1
     const charArray = this.main.slice(start, start + length)
-    const string = charArray.reduce((a, b) => a + String.fromCharCode(b), '')
+    const string = charArray.map(c => String.fromCharCode(c)).join('')
     if (address + length + 1 > this.heapPerm) {
       this.heapTemp = address + length
     }

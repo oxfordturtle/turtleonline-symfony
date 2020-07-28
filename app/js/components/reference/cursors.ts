@@ -1,8 +1,8 @@
 /**
  * Cursors reference table.
  */
-import { cursors, Cursor } from '../../definitions/cursors'
-import { fill, tr, td } from '../../tools/elements'
+import { cursors, Cursor } from '../../machine/cursors'
+import { fill, tr } from '../../tools/elements'
 import state from '../../state/index'
 
 // get relevant elements

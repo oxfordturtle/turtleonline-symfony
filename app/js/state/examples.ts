@@ -1,15 +1,19 @@
 /*
  * Details of example programs.
+ *
+ * Example program code is stored in the /public/examples directory, to be
+ * fetched as needed.
  */
-import { Names } from './languages'
-let index = 0
+import { Language } from './languages'
 
+/** Example class */
 export class Example {
   readonly groupId: string
   readonly id: string
-  readonly names: Names
+  readonly names: Record<Language, string>
 
-  constructor (groupId: string, id: string, names: Names|string) {
+  /** constructor */
+  constructor (groupId: string, id: string, names: Record<Language, string>|string) {
     this.groupId = groupId
     this.id = id
     this.names = (typeof names === 'string')
@@ -18,20 +22,23 @@ export class Example {
   }
 }
 
+/** Example group class */
 export class Group {
   readonly index: number
   readonly id: string
   readonly title: string
   readonly examples: Example[]
 
-  constructor (id: string, title: string) {
-    this.index = index++
+  /** constructor */
+  constructor (index: number, id: string, title: string) {
+    this.index = index
     this.id = id
     this.title = title
     this.examples = examples.filter(x => x.groupId === id)
   }
 }
 
+/** array of examples */
 export const examples: Example[] = [
   // examples 0 - CSAC (not to be shown in the menu)
   new Example('CSAC', 'LifeStart', 'Initialising Conway’s Game of Life'),
@@ -165,16 +172,17 @@ export const examples: Example[] = [
   new Example('Logic&CS', 'Syllogisms', 'Syllogism testing program')
 ]
 
+/** array of example groups */
 export const groups: Group[] = [
-  new Group('CSAC', 'other CSAC programs'),
-  new Group('Drawing', 'drawing and counting loops'),
-  new Group('Procedures', 'procedures and simple recursion'),
-  new Group('Further', 'further commands and structures'),
-  new Group('Movement', 'smooth movement and bouncing'),
-  new Group('Files', 'file and directory handling'),
-  new Group('Interaction', 'user input, interaction and games'),
-  new Group('Cellular', 'cellular models'),
-  new Group('Models', 'other models'),
-  new Group('Fractals', 'self-similarity and chaos'),
-  new Group('Logic&CS', 'computer science and logic')
+  new Group(0, 'CSAC', 'other CSAC programs'),
+  new Group(1, 'Drawing', 'drawing and counting loops'),
+  new Group(2, 'Procedures', 'procedures and simple recursion'),
+  new Group(3, 'Further', 'further commands and structures'),
+  new Group(4, 'Movement', 'smooth movement and bouncing'),
+  new Group(5, 'Files', 'file and directory handling'),
+  new Group(6, 'Interaction', 'user input, interaction and games'),
+  new Group(7, 'Cellular', 'cellular models'),
+  new Group(8, 'Models', 'other models'),
+  new Group(9, 'Fractals', 'self-similarity and chaos'),
+  new Group(10, 'Logic&CS', 'computer science and logic')
 ]

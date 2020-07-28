@@ -1,12 +1,12 @@
 /*
  * An array of commands. Used by the compiler, the usage analyser, and the help component.
  */
-import { Names } from './languages'
+import { Language } from '../state/languages'
 import { Type } from './types'
-import { PCode } from './pcodes'
+import { PCode } from '../machine/pcodes'
 
 export class Command {
-  readonly names: Names
+  readonly names: Record<Language, string>
   readonly code: number[]
   readonly parameters: Parameter[]
   readonly returns: Type|null
@@ -15,7 +15,7 @@ export class Command {
   readonly description: string
 
   constructor (
-    names: Names,
+    names: Record<Language, string>,
     code: number[], parameters: Parameter[], returns: Type|null,
     category: number,
     level: number,

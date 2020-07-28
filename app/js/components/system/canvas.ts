@@ -1,9 +1,9 @@
 /*
  * The machine canvas component.
  */
-import { cursors } from '../../definitions/cursors'
-import { fonts } from '../../definitions/fonts'
-import { Turtle } from '../../definitions/turtle'
+import { cursors } from '../../machine/cursors'
+import { fonts } from '../../machine/fonts'
+import { Turtle } from '../../machine/turtle'
 import { send, on } from '../../machine/index'
 
 // get relevant elements

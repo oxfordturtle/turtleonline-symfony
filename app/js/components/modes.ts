@@ -1,7 +1,6 @@
 /**
  * System mode toggling.
  */
-import { Mode } from '../definitions/modes'
 import state from '../state/index'
 
 // register to keep in sync with system state

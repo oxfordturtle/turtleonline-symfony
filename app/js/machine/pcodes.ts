@@ -2,7 +2,7 @@
  * Machine PCodes.
  */
 
-// record of PCodes
+/** record of PCodes */
 export enum PCode {
   // 0x00s - basic stack operations, conversion operators
   null = 0x00,
@@ -208,7 +208,7 @@ export enum PCode {
   wrln = 0xe9
 }
 
-// number of code arguments (used by the assembler)
+/** returns the number of code arguments of the given PCode (used by the assembler) */
 export function pcodeArgs (pcode: PCode): number {
   switch (pcode) {
     case PCode.lstr:
