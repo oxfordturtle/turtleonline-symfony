@@ -25,6 +25,7 @@ export const messages = [
   'autoCompileOnLoadChanged',
   'autoRunOnLoadChanged',
   'autoFormatOnLoadChanged',
+  'alwaysSaveSettingsChanged',
   // help page properties changed
   'commandsCategoryIndexChanged',
   'showSimpleCommandsChanged',
@@ -36,6 +37,7 @@ export const messages = [
   'filenameChanged',
   'codeChanged',
   'lexemesChanged',
+  'commentsChanged',
   'routinesChanged',
   'usageChanged',
   'pcodeChanged',
@@ -61,6 +63,7 @@ export const messages = [
   'separateMemoryControlStackChanged',
   'separateSubroutineRegisterStackChanged',
   // other messages (not involving state change)
+  'systemReady',
   'toggleMenu',
   'openMenu',
   'closeMenu',

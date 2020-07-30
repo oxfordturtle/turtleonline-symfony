@@ -7,14 +7,25 @@
  *
  * the compiler also generates command and structure usage data from the lexemes and subroutines
  */
+import { Language } from '../state/languages'
 import analyser from './analyser/index'
 import lexer from './lexer/index'
 import parser from './parser/index'
 import coder from './coder/index'
+import { Lexeme } from './lexer/lexeme'
+import Comment from './lexer/comment'
 
-export default function (code, language) {
+type Result = {
+  lexemes: Lexeme[],
+  comments: Comment[],
+  routines: any,
+  pcode: any,
+  usage: any
+}
+
+export default function (code: string, language: Language): Result {
   // get lexemes from the code
-  const lexemes = lexer(code, language)
+  const { lexemes, comments } = lexer(code, language)
 
   // get routines from the lexemes
   const routines = parser(lexemes, language)
@@ -26,5 +37,5 @@ export default function (code, language) {
   const usage = analyser(lexemes, routines.slice(1), language)
 
   // return usage and pcode
-  return { lexemes, routines, pcode, usage }
+  return { lexemes, comments, routines, pcode, usage }
 }

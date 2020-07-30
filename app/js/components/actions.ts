@@ -245,19 +245,8 @@ for (const element of document.querySelectorAll('[data-action]')) {
 
     // options actions
     case 'saveSettings':
-      fetch('/status').then(function (response) {
-        response.json().then(function (data) {
-          if (data) {
-            element.addEventListener('click', function (): void {
-              // state.saveSettings()
-              state.send('error', notImplemented)
-            })
-          } else {
-            element.addEventListener('click', function (): void {
-              state.send('error', new SystemError('You must be logged in to save your settings.'))
-            })
-          }
-        })
+      element.addEventListener('click', function (): void {
+        state.saveSettings()
       })
       break
 

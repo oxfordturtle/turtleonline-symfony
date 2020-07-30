@@ -68,7 +68,18 @@ if (turtle) {
   if (turtle.dataset.file) {
     state.openRemoteFile(turtle.dataset.file)
   }
+
+  state.on('systemReady', function () {
+    turtle.classList.remove('hidden')
+  })
 }
+
+// maybe save settings before pageunload
+window.addEventListener('beforeunload', function () {
+  if (state.alwaysSaveSettings) {
+    state.saveSettings()
+  }
+})
 
 // register to handle state and machine errors
 state.on('error', function (error: Error): void {

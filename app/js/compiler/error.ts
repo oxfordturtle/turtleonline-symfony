@@ -1,10 +1,12 @@
 /*
  * Compiler error object.
  */
-export default class CompilerError extends Error {
-  readonly lexeme: any|null
+import { Lexeme } from './lexer/lexeme'
 
-  constructor (message: string, lexeme: any|null = null) {
+export default class CompilerError extends Error {
+  readonly lexeme: Lexeme|null
+
+  constructor (message: string, lexeme: Lexeme|null = null) {
     if (lexeme) {
       message = message.replace('{lex}', `"${lexeme.content}"`)
     }

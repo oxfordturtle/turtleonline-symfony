@@ -177,6 +177,15 @@ class User implements UserInterface
   private $receivingEmails;
 
   /**
+   * The user's default system settings.
+   *
+   * @var string|null
+   * @ORM\Column(type="text", nullable=true)
+   * @Groups("json")
+   */
+  private $systemSettings;
+
+  /**
    * The user's activity logs.
    *
    * @var ActivityLog[]
@@ -206,6 +215,7 @@ class User implements UserInterface
     $this->over13 = true;
     $this->guardianFullname = null;
     $this->receivingEmails = true;
+    $this->systemSettings = null;
     $this->logs = new ArrayCollection();
   }
 
@@ -545,6 +555,28 @@ class User implements UserInterface
   public function setGuardianFullname(?string $guardianFullname): self
   {
     $this->guardianFullname = $guardianFullname;
+    return $this;
+  }
+
+  /**
+   * Get the user's default system settings.
+   *
+   * @return array|null
+   */
+  public function getSystemSettings(): ?array
+  {
+    return $this->systemSettings ? json_decode($this->systemSettings, true) : $this->systemSettings;
+  }
+
+  /**
+   * Set the user's default system settings.
+   *
+   * @param array $systemSettings
+   * @return self
+   */
+  public function setSystemSettings(array $systemSettings): self
+  {
+    $this->systemSettings = json_encode($systemSettings);
     return $this;
   }
 

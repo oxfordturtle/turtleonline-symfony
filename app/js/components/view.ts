@@ -32,7 +32,7 @@ export function openMenu (id: string): void {
         break
       case 'site': // fallthrough
       case 'documentation':
-        //closeMenu('user')
+        closeMenu('user')
         break
     }
 
@@ -69,6 +69,11 @@ export function closeMenu (id: string): void {
     // close the menu
     menu.classList.remove('open')
     a.classList.remove('open')
+
+    // if it's a system sub menu, also close the system menu
+    if (menu.classList.contains('system-sub-menu')) {
+      document.querySelector('.system-menu').classList.remove('open')
+    }
 
     // maybe swap caret up/down
     const caret = a.querySelector('.fa-caret-up')

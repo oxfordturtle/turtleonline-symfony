@@ -12,10 +12,12 @@ import File from './file'
 import { Language, languages } from './languages'
 import { Message, Reply } from './messages'
 import { Mode } from './modes'
-import { defaults } from './properties'
+import { Property, defaults } from './properties'
 import { load, save } from './storage'
 import compile from '../compiler/index'
 import lexer from '../compiler/lexer/index'
+import { Lexeme } from '../compiler/lexer/lexeme'
+import Comment from '../compiler/lexer/comment'
 import { Options as CompilerOptions } from '../compiler/options'
 import * as machine from '../machine/index'
 import { Options as MachineOptions } from '../machine/options'
@@ -25,6 +27,8 @@ import { input } from '../tools/elements'
 class State {
   // record of callbacks to execute on state change
   #replies: Partial<Record<Message, Reply[]>>
+  // whether user's saved settings have been loaded in this session
+  #savedSettingsHaveBeenLoaded: boolean
   // system settings
   #language: Language
   #mode: Mode
@@ -39,6 +43,7 @@ class State {
   #autoCompileOnLoad: boolean
   #autoRunOnLoad: boolean
   #autoFormatOnLoad: boolean
+  #alwaysSaveSettings: boolean
   // help page properties
   #commandsCategoryIndex: number
   #showSimpleCommands: boolean
@@ -47,7 +52,8 @@ class State {
   // file memory
   #files: File[]
   #currentFileIndex: number
-  #lexemes: any[]
+  #lexemes: Lexeme[]
+  #comments: Comment[]
   #usage: any[]
   #routines: any[]
   #pcode: number[][]
@@ -77,6 +83,8 @@ class State {
   constructor () {
     // record of callbacks to execute on state change
     this.#replies = {}
+    // whether user's saved settings have been loaded in this session
+    this.#savedSettingsHaveBeenLoaded = load('savedSettingsHaveBeenLoaded')
     // system settings
     this.#language = load('language')
     this.#mode = load('mode')
@@ -91,6 +99,7 @@ class State {
     this.#autoCompileOnLoad = load('autoCompileOnLoad')
     this.#autoRunOnLoad = load('autoRunOnLoad')
     this.#autoFormatOnLoad = load('autoFormatOnLoad')
+    this.#alwaysSaveSettings = load('alwaysSaveSettings')
     // help page properties
     this.#commandsCategoryIndex = load('commandsCategoryIndex')
     this.#showSimpleCommands = load('showSimpleCommands')
@@ -98,11 +107,9 @@ class State {
     this.#showAdvancedCommands = load('showAdvancedCommands')
     // file memory
     this.#files = load('files')
-    if (this.#files.length === 0) {
-      this.#files.push(new File(this.language))
-    }
     this.#currentFileIndex = load('currentFileIndex')
     this.#lexemes = load('lexemes')
+    this.#comments = load('comments')
     this.#usage = load('usage')
     this.#routines = load('routines')
     this.#pcode = load('pcode')
@@ -135,7 +142,22 @@ class State {
   }
 
   // initialise the app (i.e. send all property changed messages)
-  init (): void {
+  async init (): Promise<void> {
+    const response = await fetch('/status')
+    const user = await response.json()
+    if (user) {
+      if (!this.savedSettingsHaveBeenLoaded) {
+        await this.loadSavedSettings()
+      }
+    } else {
+      this.savedSettingsHaveBeenLoaded = false
+      this.alwaysSaveSettings = false
+    }
+    if (this.#files.length === 0) {
+      this.#files.push(new File(this.language))
+    } else if (this.#files.length === 1 && this.file.code === '') {
+      this.file.language = this.language
+    }
     // system settings
     this.send('languageChanged')
     this.send('modeChanged')
@@ -150,6 +172,7 @@ class State {
     this.send('autoCompileOnLoadChanged')
     this.send('autoRunOnLoadChanged')
     this.send('autoFormatOnLoadChanged')
+    this.send('alwaysSaveSettingsChanged')
     // help page properties
     this.send('commandsCategoryIndexChanged')
     this.send('showSimpleCommandsChanged')
@@ -159,6 +182,7 @@ class State {
     this.send('filesChanged')
     this.send('currentFileIndexChanged')
     this.send('lexemesChanged')
+    this.send('commentsChanged')
     this.send('usageChanged')
     this.send('routinesChanged')
     this.send('pcodeChanged')
@@ -183,7 +207,12 @@ class State {
     this.send('separateReturnStackChanged')
     this.send('separateMemoryControlStackChanged')
     this.send('separateSubroutineRegisterStackChanged')
+    // all good
+    this.send('systemReady')
   }
+
+  // get whether user's saved settings have been loaded in this session
+  get savedSettingsHaveBeenLoaded (): boolean { return this.#savedSettingsHaveBeenLoaded }
 
   // getters for system settings
   get language (): Language { return this.#language }
@@ -199,6 +228,7 @@ class State {
   get autoCompileOnLoad (): boolean { return this.#autoCompileOnLoad }
   get autoRunOnLoad (): boolean { return this.#autoRunOnLoad }
   get autoFormatOnLoad (): boolean { return this.#autoFormatOnLoad }
+  get alwaysSaveSettings (): boolean { return this.#alwaysSaveSettings }
 
   // getters for help page properties
   get commandsCategoryIndex (): number { return this.#commandsCategoryIndex }
@@ -212,7 +242,8 @@ class State {
   get file (): File { return this.files[this.currentFileIndex] }
   get filename (): string { return this.files[this.currentFileIndex].name }
   get code (): string { return this.files[this.currentFileIndex].code }
-  get lexemes (): any[] { return this.#lexemes }
+  get lexemes (): Lexeme[] { return this.#lexemes }
+  get comments (): Comment[] { return this.#comments }
   get routines (): any[] { return this.#routines }
   get pcode (): number[][] { return this.#pcode }
   get usage (): any[] { return this.#usage }
@@ -270,6 +301,12 @@ class State {
     }
   }
 
+  // set whether user's saved settings have been loaded in this session
+  set savedSettingsHaveBeenLoaded (savedSettingsHaveBeenLoaded: boolean) {
+    this.#savedSettingsHaveBeenLoaded = savedSettingsHaveBeenLoaded
+    save('savedSettingsHaveBeenLoaded', savedSettingsHaveBeenLoaded)
+  }
+
   // setters for system settings
   set language (language: Language) {
     const previousLanguage = this.language
@@ -287,6 +324,12 @@ class State {
     this.file.compiled = false
     save('files', this.files)
     this.send('codeChanged') // update the syntax highlighting
+
+    // if the file is empty, update its language
+    if (this.code === '') {
+      this.file.language = language
+      this.send('filesChanged')
+    }
 
     // maybe load corresponding example
     if (this.files) { // false when language is set on first page load
@@ -370,6 +413,12 @@ class State {
     this.send('autoFormatOnLoadChanged')
   }
 
+  set alwaysSaveSettings (alwaysSaveSettings: boolean) {
+    this.#alwaysSaveSettings = alwaysSaveSettings
+    save('alwaysSaveSettings', alwaysSaveSettings)
+    this.send('alwaysSaveSettingsChanged')
+  }
+
   // setters for help page properties
   set commandsCategoryIndex (commandsCategoryIndex: number) {
     this.#commandsCategoryIndex = commandsCategoryIndex
@@ -420,9 +469,11 @@ class State {
               if (response.ok) {
                 response.text().then(content => {
                   const json = JSON.parse(content)
+                  const { lexemes, comments } = lexer(json.code, this.language)
                   this.pcode = json.pcode
                   this.usage = json.usage
-                  this.lexemes = lexer(json.code, this.language)
+                  this.lexemes = lexemes
+                  this.comments = comments
                   this.file.compiled = true
                 })
               }
@@ -458,10 +509,16 @@ class State {
     this.send('codeChanged')
   }
 
-  set lexemes (lexemes: any[]) {
+  set lexemes (lexemes: Lexeme[]) {
     this.#lexemes = lexemes
     save('lexemes', lexemes)
     this.send('lexemesChanged')
+  }
+
+  set comments (comments: Comment[]) {
+    this.#comments = comments
+    save('comments', comments)
+    this.send('commentsChanged')
   }
 
   set routines (routines: any[]) {
@@ -612,7 +669,106 @@ class State {
   selectAll (): void {}
 
   // save settings (requires login)
-  saveSettings (): void {}
+  async saveSettings (): Promise<void> {
+    const response = await fetch('/status')
+    const user = response.ok ? await response.json() : null
+    if (user) {
+      const settings: Partial<Record<Property, any>> = {
+        // system settings
+        language: this.language,
+        mode: this.mode,
+        editorFontFamily: this.editorFontFamily,
+        editorFontSize: this.editorFontSize,
+        outputFontFamily: this.outputFontFamily,
+        outputFontSize: this.outputFontSize,
+        includeCommentsInExamples: this.includeCommentsInExamples,
+        loadCorrespondingExample: this.loadCorrespondingExample,
+        assembler: this.assembler,
+        decimal: this.decimal,
+        autoCompileOnLoad: this.autoCompileOnLoad,
+        autoRunOnLoad: this.autoRunOnLoad,
+        autoFormatOnLoad: this.autoFormatOnLoad,
+        alwaysSaveSettings: this.alwaysSaveSettings,
+        // machine runtime options
+        showCanvasOnRun: this.showCanvasOnRun,
+        showOutputOnWrite: this.showOutputOnWrite,
+        showMemoryOnDump: this.showMemoryOnDump,
+        drawCountMax: this.drawCountMax,
+        codeCountMax: this.codeCountMax,
+        smallSize: this.smallSize,
+        stackSize: this.stackSize,
+        traceOnRun: this.traceOnRun,
+        activateHCLR: this.activateHCLR,
+        preventStackCollision: this.preventStackCollision,
+        rangeCheckArrays: this.rangeCheckArrays,
+        // compiler options
+        canvasStartSize: this.canvasStartSize,
+        setupDefaultKeyBuffer: this.setupDefaultKeyBuffer,
+        turtleAttributesAsGlobals: this.turtleAttributesAsGlobals,
+        initialiseLocals: this.initialiseLocals,
+        allowCSTR: this.allowCSTR,
+        separateReturnStack: this.separateReturnStack,
+        separateMemoryControlStack: this.separateMemoryControlStack,
+        separateSubroutineRegisterStack: this.separateSubroutineRegisterStack
+      }
+      const response = await fetch('/account/update-settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(settings)
+      })
+      if (response.ok) {
+        this.send('closeMenu', 'system')
+      } else {
+        this.send('error', new SystemError('Your settings could not be saved. Please try again later.'))
+      }
+    } else {
+      this.send('error', new SystemError('You must be logged in to save your settings.'))
+    }
+  }
+
+  async loadSavedSettings (): Promise<void> {
+    const response = await fetch('/status')
+    const user = response.ok ? await response.json() : null
+    if (user && user.systemSettings) {
+      this.savedSettingsHaveBeenLoaded = true
+      // system settings
+      this.language = user.systemSettings.language
+      this.mode = user.systemSettings.mode
+      this.editorFontFamily = user.systemSettings.editorFontFamily
+      this.editorFontSize = user.systemSettings.editorFontSize
+      this.outputFontFamily = user.systemSettings.outputFontFamily
+      this.outputFontSize = user.systemSettings.outputFontSize
+      this.includeCommentsInExamples = user.systemSettings.includeCommentsInExamples
+      this.loadCorrespondingExample = user.systemSettings.loadCorrespondingExample
+      this.assembler = user.systemSettings.assembler
+      this.decimal = user.systemSettings.decimal
+      this.autoCompileOnLoad = user.systemSettings.autoCompileOnLoad
+      this.autoRunOnLoad = user.systemSettings.autoRunOnLoad
+      this.autoFormatOnLoad = user.systemSettings.autoFormatOnLoad
+      this.alwaysSaveSettings = user.systemSettings.alwaysSaveSettings
+      // machine runtime options
+      this.showCanvasOnRun = user.systemSettings.showCanvasOnRun
+      this.showOutputOnWrite = user.systemSettings.showOutputOnWrite
+      this.showMemoryOnDump = user.systemSettings.showMemoryOnDump
+      this.drawCountMax = user.systemSettings.drawCountMax
+      this.codeCountMax = user.systemSettings.codeCountMax
+      this.smallSize = user.systemSettings.smallSize
+      this.stackSize = user.systemSettings.stackSize
+      this.traceOnRun = user.systemSettings.traceOnRun
+      this.activateHCLR = user.systemSettings.activateHCLR
+      this.preventStackCollision = user.systemSettings.preventStackCollision
+      this.rangeCheckArrays = user.systemSettings.rangeCheckArrays
+      // compiler options
+      this.canvasStartSize = user.systemSettings.canvasStartSize
+      this.setupDefaultKeyBuffer = user.systemSettings.setupDefaultKeyBuffer
+      this.turtleAttributesAsGlobals = user.systemSettings.turtleAttributesAsGlobals
+      this.initialiseLocals = user.systemSettings.initialiseLocals
+      this.allowCSTR = user.systemSettings.allowCSTR
+      this.separateReturnStack = user.systemSettings.separateReturnStack
+      this.separateMemoryControlStack = user.systemSettings.separateMemoryControlStack
+      this.separateSubroutineRegisterStack = user.systemSettings.separateSubroutineRegisterStack
+    }
+  }
 
   // reset default settings
   resetDefaults (): void {
@@ -630,6 +786,7 @@ class State {
     this.autoCompileOnLoad = defaults.autoCompileOnLoad
     this.autoRunOnLoad = defaults.autoRunOnLoad
     this.autoFormatOnLoad = defaults.autoFormatOnLoad
+    this.alwaysSaveSettings = defaults.alwaysSaveSettings
     // machine runtime options
     this.showCanvasOnRun = defaults.showCanvasOnRun
     this.showOutputOnWrite = defaults.showOutputOnWrite
@@ -651,6 +808,8 @@ class State {
     this.separateReturnStack = defaults.separateReturnStack
     this.separateMemoryControlStack = defaults.separateMemoryControlStack
     this.separateSubroutineRegisterStack = defaults.separateSubroutineRegisterStack
+    // close the system menu
+    this.send('closeMenu', 'system')
   }
 
   // add a file to the files array (and update current file index)
@@ -733,8 +892,10 @@ class State {
     }
     this.addFile(file)
     if (json) {
+      const { lexemes, comments } = lexer(json.code.trim(), this.language)
       this.usage = json.usage
-      this.lexemes = lexer(json.code.trim(), this.language)
+      this.lexemes = lexemes
+      this.comments = comments
       this.pcode = json.pcode
       this.file.compiled = true
     }
@@ -793,11 +954,12 @@ class State {
 
   compileCurrentFile (): void {
     try {
-      const { lexemes, pcode, usage } = compile(this.file.code, this.language)
+      const { lexemes, comments, pcode, usage } = compile(this.file.code, this.language)
       this.file.language = this.language
       this.file.compiled = true
       this.files = this.files // to update the session storage
       this.lexemes = lexemes
+      this.comments = comments
       this.pcode = pcode
       this.usage = usage
     } catch (error) {

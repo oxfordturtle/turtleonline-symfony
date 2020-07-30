@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block main %}
-  <div id="turtle" class="system"{% if app.request.query.get('l') is defined %} data-language="{{ app.request.query.get('l') }}"{% endif %}{% if app.request.query.get('x') is defined %} data-example="{{ app.request.query.get('x') }}"{% endif %}{% if app.request.query.get('f') is defined %} data-file="{{ app.request.query.get('f') }}"{% endif %}{% if app.request.query.get('fullscreen') is defined %} data-fullscreen="{{ app.request.query.get('fullscreen') }}"{% endif %}>
+  <div id="turtle" class="system hidden"{% if app.request.query.get('l') is defined %} data-language="{{ app.request.query.get('l') }}"{% endif %}{% if app.request.query.get('x') is defined %} data-example="{{ app.request.query.get('x') }}"{% endif %}{% if app.request.query.get('f') is defined %} data-file="{{ app.request.query.get('f') }}"{% endif %}{% if app.request.query.get('fullscreen') is defined %} data-fullscreen="{{ app.request.query.get('fullscreen') }}"{% endif %}>
     <header class="system-header">
       <button aria-label="system menu" data-action="toggleMenu" data-arg="system"><i class="fa fa-bars" aria-hidden="true"></i></button>
       {% include 'system/controls.html.twig' %}

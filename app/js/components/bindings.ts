@@ -152,6 +152,16 @@ for (const element of document.querySelectorAll('[data-binding]')) {
       })
       break
 
+    case 'alwaysSaveSettings':
+      disableInputIfNotLoggedIn(element)
+      element.addEventListener('change', function (): void {
+        state.alwaysSaveSettings = (element as HTMLInputElement).checked
+      })
+      state.on('alwaysSaveSettingsChanged', function (): void {
+        (element as HTMLInputElement).checked = state.alwaysSaveSettings
+      })
+      break
+  
     // help page settings
     case 'commandsCategoryIndex':
       fillCommandsCategory(element as HTMLSelectElement)
@@ -427,7 +437,7 @@ function fillCommandsCategory (input: HTMLSelectElement): void {
 function fillFile (input: HTMLSelectElement): void {
   fill(input, state.files.map((file, index) => option({
     value: index.toString(10),
-    content: `${(index + 1).toString(10)} [${file.language}]`,
+    content: `${(index + 1).toString(10).padStart(2, '0')} [${file.language}] ${file.name || '[no name]'}`,
     selected: (state.currentFileIndex === index) ? 'selected' : undefined
   })))
 }
@@ -437,4 +447,15 @@ function disableInput (input: Element): void {
   input.parentElement.addEventListener('click', function () {
     state.send('error', new SystemError('This option cannot yet be modified in the online system.'))
   })
+}
+
+async function disableInputIfNotLoggedIn (input: Element): Promise<void> {
+  const response = await fetch('/status')
+  const user = response.ok ? await response.json() : null
+  if (user === null) {
+    input.setAttribute('disabled', 'disabled')
+    input.parentElement.addEventListener('click', function () {
+      state.send('error', new SystemError('You must be logged in to change this setting.'))
+    })
+  }
 }

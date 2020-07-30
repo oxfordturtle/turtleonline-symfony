@@ -1,5 +1,5 @@
 /*
- * An array of commands. Used by the compiler, the usage analyser, and the help component.
+ * An array of commands.
  */
 import { Language } from '../state/languages'
 import { Type } from './types'

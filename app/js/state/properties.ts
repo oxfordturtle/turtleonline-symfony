@@ -7,6 +7,8 @@ export type Property = typeof properties[number]
 
 /** array of property names */
 export const properties = [
+  // whether user's saved settings have been loaded in this session
+  'savedSettingsHaveBeenLoaded',
   // system settings
   'language',
   'mode',
@@ -21,6 +23,7 @@ export const properties = [
   'autoCompileOnLoad',
   'autoRunOnLoad',
   'autoFormatOnLoad',
+  'alwaysSaveSettings',
   // help page properties
   'commandsCategoryIndex',
   'showSimpleCommands',
@@ -31,6 +34,7 @@ export const properties = [
   'currentFileIndex',
   'filename',
   'lexemes',
+  'comments',
   'usage',
   'routines',
   'pcode',
@@ -59,6 +63,8 @@ export const properties = [
 
 /** default values */
 export const defaults: Record<Property, any> = {
+  // whether user's saved settings have been loaded in this session
+  'savedSettingsHaveBeenLoaded': false,
   // system settings
   'language': 'Pascal',
   'mode': 'normal',
@@ -73,6 +79,7 @@ export const defaults: Record<Property, any> = {
   'autoCompileOnLoad': false,
   'autoRunOnLoad': false,
   'autoFormatOnLoad': false,
+  'alwaysSaveSettings': false,
   // help page properties
   'commandsCategoryIndex': 0,
   'showSimpleCommands': true,
@@ -83,6 +90,7 @@ export const defaults: Record<Property, any> = {
   'currentFileIndex': 0,
   'filename': '',
   'lexemes': [],
+  'comments': [],
   'usage': [],
   'routines': [],
   'pcode': [],

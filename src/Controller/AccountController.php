@@ -13,6 +13,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -155,5 +156,23 @@ class AccountController extends AbstractController
     return $this->render('account/delete.html.twig', [
       'deleteUserForm' => $deleteUserForm->createView()
     ]);
+  }
+
+  /**
+   * Route for updating default system settings.
+   *
+   * @Route("/update-settings", name="update_settings", methods={"POST"})
+   * @param Request $request
+   * @param UserManager $userManager
+   * @return Response
+   */
+  public function updateSettings(
+    Request $request,
+    UserManager $userManager
+  ): JsonResponse {
+    $settings = json_decode($request->getContent(), true);
+    $this->getUser()->setSystemSettings($settings);
+    $userManager->saveUser($this->getUser());
+    return new JsonResponse(['success' => true]);
   }
 }
