@@ -40,7 +40,7 @@ export default function (code: string, language: Language): { lexemes: Lexeme[],
         break
 
       case 'comment':
-        comments.push(new Comment(tokens[index], line, character))
+        comments.push(new Comment(tokens[index], line, character, language))
         character += tokens[index].content.length
         break
 
