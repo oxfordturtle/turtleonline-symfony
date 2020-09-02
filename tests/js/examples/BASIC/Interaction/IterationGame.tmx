@@ -1,0 +1,129 @@
+{
+  "format":1,
+  "language":"BASIC",
+  "version":13,
+  "name":"Iteration game (Collatz sequence)",
+  "author":"Peter Millican",
+  "date":"31/08/2020",
+  "time":"11:18:30",
+  "code":"REM IterationGame\n\nKEYECHO(FALSE)\nREPEAT\n  BLANK(WHITE)\n  SETXY(50, 20)\n  COLOUR(BLUE)\n  PRINT(\"Type in a starting integer (>1):\", 4, 36)\n  SETXY(800, 20)\n  COLOUR(BLACK)\n  REPEAT\n    RESET(\\KEYBUFFER)\n    REPEAT\n      BOX(200, 60, WHITE, FALSE)\n      PRINT(GET$(0), 4, 36)\n      PAUSE(100)\n    UNTIL ABS(?KEY) = \\RETURN\n    RESET(?KEY)\n    s$ = GETLINE$\n    first% = VALDEF(s$, -1)\n  UNTIL first% > 1\n  latest% = first%\n  count% = 0\n  COLOUR(BLUE)\n  REPEAT\n    SETXY((count% MOD 10) * 100 + 20, (count% DIV 10) * 45 + 300)\n    PRINT(STR$(latest%), 4, 24)\n    IF latest% MOD 2 = 0 THEN\n      latest% = latest% / 2\n    ELSE\n      latest% = 3 * latest% + 1\n    ENDIF\n    INC(count%)\n    COLOUR(GREEN)\n  UNTIL latest% = 1\n  SETXY((count% MOD 10) * 100 + 20, (count% DIV 10) * 45 + 300)\n  COLOUR(RED)\n  PRINT(STR$(latest%), 4, 24)\n  SETXY(100, 100)\n  PRINT(\"That took \" + STR$(count%) + \" iterations to reach 1\", 4, 36)\n  COLOUR(BLACK)\n  SETXY(250, 200)\n  PRINT(\"[Press a key to continue]\", 4, 30)\n  REPEAT\n  UNTIL ?KEY > 0\n  RESET(?KEY)\nUNTIL FALSE\nEND",
+  "usage":[
+    {
+      "category": "Turtle: absolute movement",
+      "expressions":[
+        {"name":"SETXY", "level":1, "count":6, "lines":"6 9 26 36 39 42"}
+      ],
+      "total":6
+    },
+    {
+      "category": "Turtle: drawing shapes",
+      "expressions":[
+        {"name":"BOX", "level":2, "count":1, "lines":"14"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Other Turtle commands",
+      "expressions":[
+        {"name":"COLOUR", "level":1, "count":6, "lines":"7 10 24 34 37 41"}
+      ],
+      "total":6
+    },
+    {
+      "category": "Canvas operations",
+      "expressions":[
+        {"name":"BLANK", "level":1, "count":1, "lines":"5"}
+      ],
+      "total":1
+    },
+    {
+      "category": "General arithmetic functions",
+      "expressions":[
+        {"name":"ABS", "level":1, "count":1, "lines":"17"},
+        {"name":"INC", "level":1, "count":1, "lines":"33"}
+      ],
+      "total":2
+    },
+    {
+      "category": "String operations",
+      "expressions":[
+        {"name":"PRINT", "level":1, "count":6, "lines":"8 15 27 38 40 43"}
+      ],
+      "total":6
+    },
+    {
+      "category": "Type conversion routines",
+      "expressions":[
+        {"name":"STR$", "level":1, "count":3, "lines":"27 38 40"},
+        {"name":"VALDEF", "level":1, "count":1, "lines":"20"}
+      ],
+      "total":4
+    },
+    {
+      "category": "Input and timing routines",
+      "expressions":[
+        {"name":"GETLINE$", "level":1, "count":1, "lines":"19"},
+        {"name":"PAUSE", "level":1, "count":1, "lines":"16"},
+        {"name":"GET$", "level":2, "count":1, "lines":"15"},
+        {"name":"KEYECHO", "level":2, "count":1, "lines":"3"},
+        {"name":"RESET", "level":3, "count":3, "lines":"12 18 46"}
+      ],
+      "total":7
+    },
+    {
+      "category": "Command structures",
+      "expressions":[
+        {"name":"IF", "level":1, "count":1, "lines":"28"},
+        {"name":"ELSE", "level":1, "count":1, "lines":"30"},
+        {"name":"REPEAT", "level":2, "count":5, "lines":"4 11 13 25 44"}
+      ],
+      "total":7
+    }
+  ],
+  "pcode":[
+    [112,12,1,1,112,0,123,112,6,2,123,4,112,44,124,112,56,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [116,21,119,19],
+    [112,33,119,20],
+    [112,0,165],
+    [112,16777215,96],
+    [112,50,112,20,88],
+    [112,255,87],
+    [118,32,84,121,112,101,32,105,110,32,97,32,115,116,97,114,116,105,110,103,32,105,110,116,101,103,101,114,32,40,62,49,41,58,112,4,112,36,168,142],
+    [112,800,112,20,88],
+    [112,0,87],
+    [112,0,161],
+    [112,200,112,60,112,16777215,112,0,111],
+    [112,0,163,112,4,112,36,168,142],
+    [112,100,174],
+    [112,-9,160,24,112,13,32,129,13],
+    [112,-9,161],
+    [113,19,164,2,126,142],
+    [113,19,112,1,23,13,119,54],
+    [113,54,112,1,35,129,12],
+    [113,54,119,55],
+    [112,0,119,56],
+    [112,255,87],
+    [113,56,112,10,31,112,100,28,112,20,26,113,56,112,10,30,112,45,28,112,300,26,88],
+    [113,55,11,112,4,112,24,168,142],
+    [113,55,112,2,31,112,0,32,129,29],
+    [113,55,112,2,29,119,55],
+    [128,30],
+    [112,3,113,55,28,112,1,26,119,55],
+    [116,56,1,122,4,2,123],
+    [112,2263842,87],
+    [113,55,112,1,32,129,24],
+    [113,56,112,10,31,112,100,28,112,20,26,113,56,112,10,30,112,45,28,112,300,26,88],
+    [112,16711680,87],
+    [113,55,11,112,4,112,24,168,142],
+    [112,100,112,100,88],
+    [118,10,84,104,97,116,32,116,111,111,107,32,113,56,11,64,118,22,32,105,116,101,114,97,116,105,111,110,115,32,116,111,32,114,101,97,99,104,32,49,64,112,4,112,36,168,142],
+    [112,0,87],
+    [112,250,112,200,88],
+    [118,25,91,80,114,101,115,115,32,97,32,107,101,121,32,116,111,32,99,111,110,116,105,110,117,101,93,112,4,112,30,168,142],
+    [112,-9,160,112,0,35,129,41],
+    [112,-9,161],
+    [112,0,129,6],
+    [130]
+  ]
+}

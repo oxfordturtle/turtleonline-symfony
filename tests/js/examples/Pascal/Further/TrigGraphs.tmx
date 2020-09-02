@@ -1,0 +1,188 @@
+{
+  "format":1,
+  "language":"Pascal",
+  "version":13,
+  "name":"Trigonometric graphs",
+  "author":"Peter Millican",
+  "date":"31/08/2020",
+  "time":"11:16:42",
+  "code":"PROGRAM TrigGraphs;\nCONST xOrigin = 500;\n      yOrigin = 500;\n      halfWidth = 400;\n      yScale = 200;\n      radians = false; {make TRUE for x-axis in radians}\n\n  {draws the graph axes}\n  Procedure drawAxes;\n  Begin\n    thickness(3);\n    {draw the y axis}\n    setxy(xOrigin - halfWidth, yOrigin);\n    drawxy(halfWidth * 2, 0);\n    {draw the x axis}\n    setxy(xOrigin, 0);\n    drawxy(0, 1000);\n    {draw a circle at the origin}\n    setxy(xOrigin, yOrigin);\n    circle(15);\n    {draw lines at y=1 and y=-1}\n    thickness(2);\n    setxy(xOrigin - halfWidth, yOrigin - yScale);\n    drawxy(halfWidth * 2, 0);\n    setxy(xOrigin - halfWidth, yOrigin + yScale);\n    drawxy(halfWidth * 2, 0);\n    setxy(xOrigin + halfWidth + 10, yOrigin - yScale - 18);\n    print('+1', 0, 20);\n    setxy(xOrigin + halfWidth + 10, yOrigin + yScale - 18);\n    print('-1', 0, 20);\n    {print x axis labels}\n    if radians then\n      begin\n        setxy(xOrigin - halfWidth - 44, yOrigin - 4);\n        print('-p', 29, 28);\n        setxy(xOrigin - halfWidth div 2 - 2, yOrigin - 4);\n        print('-p/2', 29, 28);\n        setxy(xOrigin + halfWidth div 2 - 50, yOrigin - 4);\n        print('p/2', 29, 28);\n        setxy(xOrigin + halfWidth, yOrigin - 4);\n        print('p', 29, 28)\n      end\n    else\n      begin\n        setxy(xOrigin - halfWidth - 64, yOrigin + 2);\n        print('-180', 0, 24);\n        setxy(xOrigin - halfWidth div 2 - 2, yOrigin + 2);\n        print('-90', 0, 24);\n        setxy(xOrigin + halfWidth div 2 - 36, yOrigin + 2);\n        print('90', 0, 24);\n        setxy(xOrigin + halfWidth, yOrigin + 2);\n        print('180', 0, 24)\n      end\n  End;\n\n  {plots a sine curve}\n  Procedure plotSineCurve;\n  Var degrees, x, y: integer;\n  Begin\n    for degrees := -180 to 180 do\n      begin\n        x := xOrigin + divmult(degrees, 180, halfWidth);\n        y := yOrigin - sin(degrees, 1, yScale);\n        setxy(x, y)\n      end;\n    polyline(361)\n  End;\n\n  {plots a cosine curve}\n  Procedure plotCosineCurve;\n  Var degrees, x, y: integer;\n  Begin\n    for degrees := -180 to 180 do\n      begin\n        x := xOrigin + divmult(degrees, 180, halfWidth);\n        y := yOrigin - cos(degrees, 1, yScale);\n        setxy(x, y)\n      end;\n    polyline(361)\n  End;\n\n  {plots a tan curve}\n  Procedure plotTanCurve;\n  Var degrees, x, y: integer;\n  Begin\n    for degrees := -180 to 180 do\n      if degrees = -90 then\n        polyline(90)\n      else\n      if degrees = 90 then\n        polyline(179)\n      else\n        begin\n          x := xOrigin + divmult(degrees, 180, halfWidth);\n          y := yOrigin - tan(degrees, 1, yScale);\n          setxy(x, y)\n        end;\n    polyline(90)\n  End;\n\nBEGIN\n  {draw axes}\n  drawAxes;\n  noupdate;\n  thickness(4);\n  {plot a sine curve in green}\n  colour(green);\n  setxy(250, 700);\n  print('sine', 16, 40);\n  plotSineCurve;\n  {plot a cosine curve in red}\n  colour(red);\n  setxy(30, 700);\n  print('cosine', 16, 40);\n  plotCosineCurve;\n  {plot a tan curve in blue}\n  colour(blue);\n  setxy(140, 920);\n  print('tangent', 16, 40);\n  plotTanCurve\nEND.",
+  "usage":[
+    {
+      "category": "Turtle: relative movement",
+      "expressions":[
+        {"name":"drawxy", "level":2, "count":4, "lines":"14 17 24 26"}
+      ],
+      "total":4
+    },
+    {
+      "category": "Turtle: absolute movement",
+      "expressions":[
+        {"name":"setxy", "level":1, "count":21, "lines":"13 16 19 23 25 27 29 34 36 38 40 45 47 49 51 64 77 96 108 113 118"}
+      ],
+      "total":21
+    },
+    {
+      "category": "Turtle: drawing shapes",
+      "expressions":[
+        {"name":"circle", "level":1, "count":1, "lines":"20"},
+        {"name":"polyline", "level":2, "count":5, "lines":"66 79 88 91 98"}
+      ],
+      "total":6
+    },
+    {
+      "category": "Other Turtle commands",
+      "expressions":[
+        {"name":"colour", "level":1, "count":3, "lines":"107 112 117"},
+        {"name":"thickness", "level":1, "count":3, "lines":"11 22 105"}
+      ],
+      "total":6
+    },
+    {
+      "category": "Canvas operations",
+      "expressions":[
+        {"name":"noupdate", "level":1, "count":1, "lines":"104"}
+      ],
+      "total":1
+    },
+    {
+      "category": "General arithmetic functions",
+      "expressions":[
+        {"name":"divmult", "level":3, "count":3, "lines":"62 75 94"}
+      ],
+      "total":3
+    },
+    {
+      "category": "Trig / exp / log functions",
+      "expressions":[
+        {"name":"cos", "level":2, "count":1, "lines":"76"},
+        {"name":"sin", "level":2, "count":1, "lines":"63"},
+        {"name":"tan", "level":2, "count":1, "lines":"95"}
+      ],
+      "total":3
+    },
+    {
+      "category": "String operations",
+      "expressions":[
+        {"name":"print", "level":1, "count":13, "lines":"28 30 35 37 39 41 46 48 50 52 109 114 119"}
+      ],
+      "total":13
+    },
+    {
+      "category": "Command structures",
+      "expressions":[
+        {"name":"if", "level":1, "count":3, "lines":"32 87 90"},
+        {"name":"else", "level":1, "count":3, "lines":"43 89 92"},
+        {"name":"for", "level":1, "count":3, "lines":"60 73 86"},
+        {"name":"procedure", "level":2, "count":4, "lines":"9 57 70 83"}
+      ],
+      "total":13
+    },
+    {
+      "category": "Subroutine calls",
+      "expressions":[
+        {"name":"drawaxes", "level":0, "count":1, "lines":"103"},
+        {"name":"plotsinecurve", "level":0, "count":1, "lines":"110"},
+        {"name":"plotcosinecurve", "level":0, "count":1, "lines":"115"},
+        {"name":"plottancurve", "level":0, "count":1, "lines":"120"}
+      ],
+      "total":4
+    }
+  ],
+  "pcode":[
+    [112,16,1,1,112,0,123,112,6,2,123,4,112,6,124,112,22,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [128,79],
+    [133,1],
+    [112,3,85],
+    [112,500,112,400,27,112,500,88],
+    [112,400,112,2,28,112,0,90],
+    [112,500,112,0,88],
+    [112,0,112,1000,90],
+    [112,500,112,500,88],
+    [112,15,107],
+    [112,2,85],
+    [112,500,112,400,27,112,500,112,200,27,88],
+    [112,400,112,2,28,112,0,90],
+    [112,500,112,400,27,112,500,112,200,26,88],
+    [112,400,112,2,28,112,0,90],
+    [112,500,112,400,26,112,10,26,112,500,112,200,27,112,18,27,88],
+    [118,2,43,49,112,0,112,20,168,142],
+    [112,500,112,400,26,112,10,26,112,500,112,200,26,112,18,27,88],
+    [118,2,45,49,112,0,112,20,168,142],
+    [112,0,129,31],
+    [112,500,112,400,27,112,44,27,112,500,112,4,27,88],
+    [118,2,45,112,112,29,112,28,168,142],
+    [112,500,112,400,112,2,30,27,112,2,27,112,500,112,4,27,88],
+    [118,4,45,112,47,50,112,29,112,28,168,142],
+    [112,500,112,400,112,2,30,26,112,50,27,112,500,112,4,27,88],
+    [118,3,112,47,50,112,29,112,28,168,142],
+    [112,500,112,400,26,112,500,112,4,27,88],
+    [112,112,9,112,29,112,28,168,142],
+    [128,39],
+    [112,500,112,400,27,112,64,27,112,500,112,2,26,88],
+    [118,4,45,49,56,48,112,0,112,24,168,142],
+    [112,500,112,400,112,2,30,27,112,2,27,112,500,112,2,26,88],
+    [118,3,45,57,48,112,0,112,24,168,142],
+    [112,500,112,400,112,2,30,26,112,36,27,112,500,112,2,26,88],
+    [118,2,57,48,112,0,112,24,168,142],
+    [112,500,112,400,26,112,500,112,2,26,88],
+    [118,3,49,56,48,112,0,112,24,168,142],
+    [134,132],
+    [133,2],
+    [139,13,3],
+    [112,180,23],
+    [120,13,1,112,180],
+    [114,13,1,37,129,49],
+    [112,500,114,13,1,112,180,112,400,48,26,120,13,2],
+    [112,500,114,13,1,112,1,112,200,57,27,120,13,3],
+    [114,13,2,114,13,3,88],
+    [114,13,1,4,128,43],
+    [112,361,105],
+    [140,13,134,132],
+    [133,3],
+    [139,14,3],
+    [112,180,23],
+    [120,14,1,112,180],
+    [114,14,1,37,129,60],
+    [112,500,114,14,1,112,180,112,400,48,26,120,14,2],
+    [112,500,114,14,1,112,1,112,200,58,27,120,14,3],
+    [114,14,2,114,14,3,88],
+    [114,14,1,4,128,54],
+    [112,361,105],
+    [140,14,134,132],
+    [133,4],
+    [139,15,3],
+    [112,180,23],
+    [120,15,1,112,180],
+    [114,15,1,37,129,77],
+    [114,15,1,112,90,23,32,129,70],
+    [112,90,105],
+    [128,76],
+    [114,15,1,112,90,32,129,73],
+    [112,179,105],
+    [128,76],
+    [112,500,114,15,1,112,180,112,400,48,26,120,15,2],
+    [112,500,114,15,1,112,1,112,200,59,27,120,15,3],
+    [114,15,2,114,15,3,88],
+    [114,15,1,4,128,65],
+    [112,90,105],
+    [140,15,134,132],
+    [131,4],
+    [112,0,146],
+    [112,4,85],
+    [112,2263842,87],
+    [112,250,112,700,88],
+    [118,4,115,105,110,101,112,16,112,40,168,142],
+    [131,40],
+    [112,16711680,87],
+    [112,30,112,700,88],
+    [118,6,99,111,115,105,110,101,112,16,112,40,168,142],
+    [131,51],
+    [112,255,87],
+    [112,140,112,920,88],
+    [118,7,116,97,110,103,101,110,116,112,16,112,40,168,142],
+    [131,62],
+    [130]
+  ]
+}

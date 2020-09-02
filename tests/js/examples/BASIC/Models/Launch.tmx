@@ -1,0 +1,197 @@
+{
+  "format":1,
+  "language":"BASIC",
+  "version":13,
+  "name":"Launching a rocket into orbit",
+  "author":"Peter Millican",
+  "date":"31/08/2020",
+  "time":"11:18:37",
+  "code":"REM Launch\n\nCONST EARTHRADIUS% = 6371000\nCONST EARTHGM% = 398600442\nCONST INITDIRECTION% = 2000\nCONST INITTHRUST% = 20000\nCONST THRUSTTIME% = 500\nCONST ANGLEPRECISION% = 1296000\nCANVAS(-20000, -20000, 40000, 40000)\nANGLES(ANGLEPRECISION%)\nx% = 0\ny% = -EARTHRADIUS%\nxvel% = 0\nyvel% = 0\nd% = INITDIRECTION%\nt% = 0\nprevdiff% = 1\nthrust% = INITTHRUST%\nREPEAT\n  PROCdrawrocket\n  prevdist% = dist%\n  dist% = HYPOT(x%, y%, 1)\n  IF (dist% - prevdist%) * prevdiff% <= 0 THEN PROCreport\n  prevdiff% = dist% - prevdist%\n  gravity% = DIVMULT(EARTHGM%, DIVMULT(dist%, 1000000, dist%), 1000)\n  xgravity% = DIVMULT(gravity%, dist%, -x%)\n  ygravity% = DIVMULT(gravity%, dist%, -y%)\n  xthrust% = SIN(d%, 1, thrust%)\n  ythrust% = -COS(d%, 1, thrust%)\n  xvel% = xvel% + xgravity% + xthrust%\n  yvel% = yvel% + ygravity% + ythrust%\n  x% = x% + xvel% / 1000\n  y% = y% + yvel% / 1000\n  IF yvel% > 0 THEN\n    d% = ANGLEPRECISION% / 2 - ATN(xvel%, yvel%, 1)\n  ELSE\n    d% = ATN(xvel%, -yvel%, 1)\n  ENDIF\n  INC(t%)\n  IF t% = THRUSTTIME% THEN thrust% = 0\nUNTIL (0 = 1) OR (dist% < EARTHRADIUS%) OR (dist% > 40000000)\nIF dist% < EARTHRADIUS% THEN\n  COLOUR(YELLOW)\n  FOR explosion% = 100 TO 200\n    BLOT(explosion%)\n    PAUSE(3)\n  NEXT\n  COLOUR(BLACK)\n  BLOT(200)\nENDIF\nEND\n\nDEF PROCdrawrocket\n  NOUPDATE\n  BLANK(BLACK)\n  COLOUR(TEAL)\n  SETXY(0, 0)\n  BLOT(EARTHRADIUS% / 1000)\n  SETXY(x% / 1000, y% / 1000)\n  DIRECTION(d%)\n  THICKNESS(4)\n  COLOUR(SILVER)\n  FORWARD(200)\n  BACK(200)\n  IF thrust% > 0 THEN\n    THICKNESS(8)\n    COLOUR(YELLOW)\n    BACK(200)\n    FORWARD(200)\n  ENDIF\n  UPDATE\nENDPROC\n\nDEF PROCreport\n  WRITELN(\"\")\n  WRITELN(\"TIME = \" + STR$(t%))\n  WRITELN(\" Xposition = \" + STR$(x%) + \" metres\")\n  WRITELN(\" Yposition = \" + STR$(y%) + \" metres\")\n  WRITELN(\" Height = \" + QSTR$(dist% - EARTHRADIUS%, 1000, 2) + \" km\")\n  WRITELN(\" Direction = \" + QSTR$(d%, 3600, 1) + \" degrees\")\n  WRITELN(\" Thrust = \" + QSTR$(thrust%, 1000, 1) + \" newtons per kg\")\n  WRITELN(\"  Xthrust = \" + QSTR$(xthrust%, 1000, 1) + \" newtons per kg\")\n  WRITELN(\"  Ythrust = \" + QSTR$(ythrust%, 1000, 1) + \" newtons per kg\")\n  WRITELN(\" Gravity = \" + QSTR$(gravity%, 1000, 1) + \" newtons per kg\")\n  WRITELN(\"  Xgravity = \" + QSTR$(xgravity%, 1000, 1) + \" newtons per kg\")\n  WRITELN(\"  Ygravity = \" + QSTR$(ygravity%, 1000, 1) + \" newtons per kg\")\n  WRITELN(\" Xvelocity = \" + QSTR$(xvel%, 1000, 1) + \" metres per s\")\n  WRITELN(\" Yvelocity = \" + QSTR$(yvel%, 1000, 1) + \" metres per s\")\nENDPROC",
+  "usage":[
+    {
+      "category": "Turtle: relative movement",
+      "expressions":[
+        {"name":"BACK", "level":1, "count":2, "lines":"64 68"},
+        {"name":"FORWARD", "level":1, "count":2, "lines":"63 69"}
+      ],
+      "total":4
+    },
+    {
+      "category": "Turtle: absolute movement",
+      "expressions":[
+        {"name":"DIRECTION", "level":1, "count":1, "lines":"60"},
+        {"name":"SETXY", "level":1, "count":2, "lines":"57 59"},
+        {"name":"ANGLES", "level":2, "count":1, "lines":"10"}
+      ],
+      "total":4
+    },
+    {
+      "category": "Turtle: drawing shapes",
+      "expressions":[
+        {"name":"BLOT", "level":1, "count":3, "lines":"58 45 49"}
+      ],
+      "total":3
+    },
+    {
+      "category": "Other Turtle commands",
+      "expressions":[
+        {"name":"COLOUR", "level":1, "count":5, "lines":"56 62 67 43 48"},
+        {"name":"THICKNESS", "level":1, "count":2, "lines":"61 66"}
+      ],
+      "total":7
+    },
+    {
+      "category": "Canvas operations",
+      "expressions":[
+        {"name":"BLANK", "level":1, "count":1, "lines":"55"},
+        {"name":"NOUPDATE", "level":1, "count":1, "lines":"54"},
+        {"name":"UPDATE", "level":1, "count":1, "lines":"71"},
+        {"name":"CANVAS", "level":2, "count":1, "lines":"9"}
+      ],
+      "total":4
+    },
+    {
+      "category": "General arithmetic functions",
+      "expressions":[
+        {"name":"INC", "level":1, "count":1, "lines":"39"},
+        {"name":"HYPOT", "level":2, "count":1, "lines":"22"},
+        {"name":"DIVMULT", "level":3, "count":4, "lines":"25 25 26 27"}
+      ],
+      "total":6
+    },
+    {
+      "category": "Trig / exp / log functions",
+      "expressions":[
+        {"name":"COS", "level":2, "count":1, "lines":"29"},
+        {"name":"SIN", "level":2, "count":1, "lines":"28"},
+        {"name":"ATN", "level":3, "count":2, "lines":"35 37"}
+      ],
+      "total":4
+    },
+    {
+      "category": "String operations",
+      "expressions":[
+        {"name":"WRITELN", "level":1, "count":14, "lines":"75 76 77 78 79 80 81 82 83 84 85 86 87 88"}
+      ],
+      "total":14
+    },
+    {
+      "category": "Type conversion routines",
+      "expressions":[
+        {"name":"STR$", "level":1, "count":3, "lines":"76 77 78"},
+        {"name":"QSTR$", "level":2, "count":10, "lines":"79 80 81 82 83 84 85 86 87 88"}
+      ],
+      "total":13
+    },
+    {
+      "category": "Input and timing routines",
+      "expressions":[
+        {"name":"PAUSE", "level":1, "count":1, "lines":"46"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Command structures",
+      "expressions":[
+        {"name":"IF", "level":1, "count":5, "lines":"65 23 34 40 42"},
+        {"name":"ELSE", "level":1, "count":1, "lines":"36"},
+        {"name":"FOR", "level":1, "count":1, "lines":"44"},
+        {"name":"REPEAT", "level":2, "count":1, "lines":"19"},
+        {"name":"DEF PROC", "level":2, "count":2, "lines":"53 74"}
+      ],
+      "total":10
+    },
+    {
+      "category": "Subroutine calls",
+      "expressions":[
+        {"name":"PROCdrawrocket", "level":0, "count":1, "lines":"20"},
+        {"name":"PROCreport", "level":0, "count":1, "lines":"23"}
+      ],
+      "total":2
+    }
+  ],
+  "pcode":[
+    [112,14,1,1,112,0,123,112,6,2,123,4,112,22,124,112,36,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [128,39],
+    [133,1],
+    [112,0,146],
+    [112,0,96],
+    [112,32896,87],
+    [112,0,112,0,88],
+    [112,6371000,112,1000,29,108],
+    [113,21,112,1000,29,113,22,112,1000,29,88],
+    [113,25,83],
+    [112,4,85],
+    [112,12632256,87],
+    [112,200,91],
+    [112,200,92],
+    [113,28,112,0,35,129,21],
+    [112,8,85],
+    [112,16776960,87],
+    [112,200,92],
+    [112,200,91],
+    [112,-1,146],
+    [134,132],
+    [133,2],
+    [118,0,169,170,142],
+    [118,7,84,73,77,69,32,61,32,113,26,11,64,169,170,142],
+    [118,13,32,88,112,111,115,105,116,105,111,110,32,61,32,113,21,11,64,118,7,32,109,101,116,114,101,115,64,169,170,142],
+    [118,13,32,89,112,111,115,105,116,105,111,110,32,61,32,113,22,11,64,118,7,32,109,101,116,114,101,115,64,169,170,142],
+    [118,10,32,72,101,105,103,104,116,32,61,32,113,30,112,6371000,27,112,1000,112,2,14,64,118,3,32,107,109,64,169,170,142],
+    [118,13,32,68,105,114,101,99,116,105,111,110,32,61,32,113,25,112,3600,112,1,14,64,118,8,32,100,101,103,114,101,101,115,64,169,170,142],
+    [118,10,32,84,104,114,117,115,116,32,61,32,113,28,112,1000,112,1,14,64,118,15,32,110,101,119,116,111,110,115,32,112,101,114,32,107,103,64,169,170,142],
+    [118,12,32,32,88,116,104,114,117,115,116,32,61,32,113,34,112,1000,112,1,14,64,118,15,32,110,101,119,116,111,110,115,32,112,101,114,32,107,103,64,169,170,142],
+    [118,12,32,32,89,116,104,114,117,115,116,32,61,32,113,35,112,1000,112,1,14,64,118,15,32,110,101,119,116,111,110,115,32,112,101,114,32,107,103,64,169,170,142],
+    [118,11,32,71,114,97,118,105,116,121,32,61,32,113,31,112,1000,112,1,14,64,118,15,32,110,101,119,116,111,110,115,32,112,101,114,32,107,103,64,169,170,142],
+    [118,13,32,32,88,103,114,97,118,105,116,121,32,61,32,113,32,112,1000,112,1,14,64,118,15,32,110,101,119,116,111,110,115,32,112,101,114,32,107,103,64,169,170,142],
+    [118,13,32,32,89,103,114,97,118,105,116,121,32,61,32,113,33,112,1000,112,1,14,64,118,15,32,110,101,119,116,111,110,115,32,112,101,114,32,107,103,64,169,170,142],
+    [118,13,32,88,118,101,108,111,99,105,116,121,32,61,32,113,23,112,1000,112,1,14,64,118,13,32,109,101,116,114,101,115,32,112,101,114,32,115,64,169,170,142],
+    [118,13,32,89,118,101,108,111,99,105,116,121,32,61,32,113,24,112,1000,112,1,14,64,118,13,32,109,101,116,114,101,115,32,112,101,114,32,115,64,169,170,142],
+    [134,132],
+    [112,20000,23,112,20000,23,112,40000,112,40000,144],
+    [112,1296000,84],
+    [112,0,119,21],
+    [112,6371000,23,119,22],
+    [112,0,119,23],
+    [112,0,119,24],
+    [112,2000,119,25],
+    [112,0,119,26],
+    [112,1,119,27],
+    [112,20000,119,28],
+    [131,4],
+    [113,30,119,29],
+    [113,21,113,22,112,1,50,119,30],
+    [113,30,113,29,27,113,27,28,112,0,36,129,54],
+    [131,23],
+    [113,30,113,29,27,119,27],
+    [112,398600442,113,30,112,1000000,113,30,48,112,1000,48,119,31],
+    [113,31,113,30,113,21,23,48,119,32],
+    [113,31,113,30,113,22,23,48,119,33],
+    [113,25,112,1,113,28,57,119,34],
+    [113,25,112,1,113,28,58,23,119,35],
+    [113,23,113,32,26,113,34,26,119,23],
+    [113,24,113,33,26,113,35,26,119,24],
+    [113,21,113,23,112,1000,29,26,119,21],
+    [113,22,113,24,112,1000,29,26,119,22],
+    [113,24,112,0,35,129,67],
+    [112,1296000,112,2,29,113,23,113,24,112,1,62,27,119,25],
+    [128,68],
+    [113,23,113,24,23,112,1,62,119,25],
+    [116,26,1,122,4,2,123],
+    [113,26,112,500,32,129,71],
+    [112,0,119,28],
+    [112,0,112,1,32,113,30,112,6371000,34,18,113,30,112,40000000,35,18,129,49],
+    [113,30,112,6371000,34,129,82],
+    [112,16776960,87],
+    [112,100],
+    [119,36,112,200],
+    [113,36,37,129,80],
+    [113,36,108],
+    [112,3,174],
+    [113,36,4,128,75],
+    [112,0,87],
+    [112,200,108],
+    [130]
+  ]
+}

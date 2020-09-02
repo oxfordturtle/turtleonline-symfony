@@ -1,0 +1,158 @@
+{
+  "format":1,
+  "language":"BASIC",
+  "version":13,
+  "name":"Snake (classic game)",
+  "author":"Peter Millican",
+  "date":"31/08/2020",
+  "time":"11:18:31",
+  "code":"REM SnakeGame\n\nCONST BOARDSIZE% = 30\nCONST SNAKECOLOUR% = PURPLE\nCONST APPLECOLOUR% = GREEN\nCANVAS(0, 0, BOARDSIZE%, BOARDSIZE%)\nRESOLUTION(BOARDSIZE%, BOARDSIZE%)\nANGLES(4)\nBLANK(LIGHTBLUE)\nCURSOR(0)\nCOLOUR(SNAKECOLOUR%)\nTHICKNESS(1)\nPENUP\nFORWARD(1)\nsnakelength% = 2\nPROCnewapple\ncrash% = FALSE\nREPEAT\n  NOUPDATE\n  IF (ABS(?KEY) = \\UP) AND (turtd% <> 2) THEN DIRECTION(0)\n  IF (ABS(?KEY) = \\RIGHT) AND (turtd% <> 3) THEN DIRECTION(1)\n  IF (ABS(?KEY) = \\DOWN) AND (turtd% <> 0) THEN DIRECTION(2)\n  IF (ABS(?KEY) = \\LEFT) AND (turtd% <> 1) THEN DIRECTION(3)\n  FORWARD(1)\n  IF (turtx% < 0) OR (turtx% >= BOARDSIZE%) OR (turty% < 0) OR (turty% >= BOARDSIZE%) THEN crash% = TRUE\n  IF PIXCOL(turtx%, turty%) = SNAKECOLOUR% THEN crash% = TRUE\n  IF PIXCOL(turtx%, turty%) = APPLECOLOUR% THEN\n    INC(snakelength%)\n    PIXSET(turtx%, turty%, SNAKECOLOUR%)\n    PROCnewapple\n  ENDIF\n  COLOUR(LIGHTBLUE)\n  POLYLINE(snakelength% + 2)\n  COLOUR(SNAKECOLOUR%)\n  POLYLINE(snakelength%)\n  UPDATE\n  PAUSE(250 - (snakelength% * 3))\nUNTIL crash%\nRESOLUTION(1000, 1000)\nBLANK(LILAC)\nSETXY(BOARDSIZE% / 4, 2 * BOARDSIZE% / 5)\nPRINT(\"Score \" + STR$(snakelength% - 2), 20, 100)\nEND\n\nDEF PROCnewapple\n  LOCAL x%, y%\n  REPEAT\n    x% = RND(BOARDSIZE%) - 1\n    y% = RND(BOARDSIZE%) - 1\n  UNTIL (PIXCOL(x%, y%) <> SNAKECOLOUR%)\n  PIXSET(x%, y%, APPLECOLOUR%)\nENDPROC",
+  "usage":[
+    {
+      "category": "Turtle: relative movement",
+      "expressions":[
+        {"name":"FORWARD", "level":1, "count":2, "lines":"14 24"}
+      ],
+      "total":2
+    },
+    {
+      "category": "Turtle: absolute movement",
+      "expressions":[
+        {"name":"DIRECTION", "level":1, "count":4, "lines":"20 21 22 23"},
+        {"name":"SETXY", "level":1, "count":1, "lines":"41"},
+        {"name":"ANGLES", "level":2, "count":1, "lines":"8"}
+      ],
+      "total":6
+    },
+    {
+      "category": "Turtle: drawing shapes",
+      "expressions":[
+        {"name":"POLYLINE", "level":2, "count":2, "lines":"33 35"}
+      ],
+      "total":2
+    },
+    {
+      "category": "Other Turtle commands",
+      "expressions":[
+        {"name":"COLOUR", "level":1, "count":3, "lines":"11 32 34"},
+        {"name":"PENUP", "level":1, "count":1, "lines":"13"},
+        {"name":"THICKNESS", "level":1, "count":1, "lines":"12"}
+      ],
+      "total":5
+    },
+    {
+      "category": "Canvas operations",
+      "expressions":[
+        {"name":"BLANK", "level":1, "count":2, "lines":"9 40"},
+        {"name":"NOUPDATE", "level":1, "count":1, "lines":"19"},
+        {"name":"UPDATE", "level":1, "count":1, "lines":"36"},
+        {"name":"CANVAS", "level":2, "count":1, "lines":"6"},
+        {"name":"RESOLUTION", "level":2, "count":2, "lines":"7 39"},
+        {"name":"PIXCOL", "level":3, "count":3, "lines":"50 26 27"},
+        {"name":"PIXSET", "level":3, "count":2, "lines":"51 29"}
+      ],
+      "total":12
+    },
+    {
+      "category": "General arithmetic functions",
+      "expressions":[
+        {"name":"ABS", "level":1, "count":4, "lines":"20 21 22 23"},
+        {"name":"INC", "level":1, "count":1, "lines":"28"},
+        {"name":"RND", "level":2, "count":2, "lines":"48 49"}
+      ],
+      "total":7
+    },
+    {
+      "category": "String operations",
+      "expressions":[
+        {"name":"PRINT", "level":1, "count":1, "lines":"42"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Type conversion routines",
+      "expressions":[
+        {"name":"STR$", "level":1, "count":1, "lines":"42"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Input and timing routines",
+      "expressions":[
+        {"name":"PAUSE", "level":1, "count":1, "lines":"37"},
+        {"name":"CURSOR", "level":2, "count":1, "lines":"10"}
+      ],
+      "total":2
+    },
+    {
+      "category": "Command structures",
+      "expressions":[
+        {"name":"IF", "level":1, "count":7, "lines":"20 21 22 23 25 26 27"},
+        {"name":"REPEAT", "level":2, "count":2, "lines":"47 18"},
+        {"name":"DEF PROC", "level":2, "count":1, "lines":"45"}
+      ],
+      "total":10
+    },
+    {
+      "category": "Subroutine calls",
+      "expressions":[
+        {"name":"PROCnewapple", "level":0, "count":2, "lines":"16 30"}
+      ],
+      "total":2
+    }
+  ],
+  "pcode":[
+    [112,13,1,1,112,0,123,112,6,2,123,4,112,8,124,112,21,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [128,11],
+    [133,1],
+    [139,12,2],
+    [112,30,7,4,112,1,27,120,12,1],
+    [112,30,7,4,112,1,27,120,12,2],
+    [114,12,1,114,12,2,99,112,8388736,33,129,6],
+    [114,12,1,114,12,2,112,2263842,100],
+    [140,12,134,132],
+    [112,0,112,0,112,30,112,30,144],
+    [112,30,112,30,145],
+    [112,4,84],
+    [112,10075135,96],
+    [112,0,171],
+    [112,8388736,87],
+    [112,1,85],
+    [112,0,86],
+    [112,1,91],
+    [112,2,119,20],
+    [131,4],
+    [112,0,119,21],
+    [112,0,146],
+    [112,-9,160,24,112,38,32,113,16,112,2,33,17,129,26],
+    [112,0,83],
+    [112,-9,160,24,112,39,32,113,16,112,3,33,17,129,28],
+    [112,1,83],
+    [112,-9,160,24,112,40,32,113,16,112,0,33,17,129,30],
+    [112,2,83],
+    [112,-9,160,24,112,37,32,113,16,112,1,33,17,129,32],
+    [112,3,83],
+    [112,1,91],
+    [113,14,112,0,34,113,14,112,30,37,18,113,15,112,0,34,18,113,15,112,30,37,18,129,35],
+    [112,-1,119,21],
+    [113,14,113,15,99,112,8388736,32,129,37],
+    [112,-1,119,21],
+    [113,14,113,15,99,112,2263842,32,129,41],
+    [116,20,1,122,4,2,123],
+    [113,14,113,15,112,8388736,100],
+    [131,4],
+    [112,10075135,87],
+    [113,20,112,2,26,105],
+    [112,8388736,87],
+    [113,20,105],
+    [112,-1,146],
+    [112,250,113,20,112,3,28,27,174],
+    [113,21,129,23],
+    [112,1000,112,1000,145],
+    [112,11572223,96],
+    [112,30,112,4,29,112,2,112,30,28,112,5,29,88],
+    [118,6,83,99,111,114,101,32,113,20,112,2,27,11,64,112,20,112,100,168,142],
+    [130]
+  ]
+}

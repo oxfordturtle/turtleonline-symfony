@@ -1,0 +1,108 @@
+{
+  "format":1,
+  "language":"BASIC",
+  "version":13,
+  "name":"Fibonacci recursion and iteration [dynamic programming]",
+  "author":"Peter Millican",
+  "date":"31/08/2020",
+  "time":"11:18:46",
+  "code":"REM Fibonaccis\n\nCONST LASTNUM% = 25\nDIM fibsave%(LASTNUM%)\nOUTPUT(TRUE, CREAM, TRUE)\nWRITELN(\"First, by recursion:\")\nTIMESET(0)\nFOR count% = 1 TO LASTNUM%\n  WRITELN(\"fib(\" + STR$(count%) + \") = \" + STR$(FNfibrec(count%)))\nNEXT\nWRITELN(\"Time taken: \" + QSTR$(TIME, 1000, 2) + \" seconds\")\nWRITELN(\"\")\nWRITELN(\"Then, by iteration:\")\nTIMESET(0)\nFOR count% = 1 TO LASTNUM%\n  WRITELN(\"fib(\" + STR$(count%) + \") = \" + STR$(FNfibiter(count%)))\nNEXT\nWRITELN(\"Time taken: \" + QSTR$(TIME, 1000, 2) + \" seconds\")\nEND\n\nDEF FNfibrec(n%)\n  IF (n% = 1) OR (n% = 2) THEN\n    result% = 1\n  ELSE\n    result% = FNfibrec(n% - 1) + FNfibrec(n% - 2)\n  ENDIF\n= result%\n\nDEF FNfibiter(n%)\n  IF (n% = 1) OR (n% = 2) THEN\n    fibsave%(n%) = 1\n  ELSE\n    fibsave%(n%) = fibsave%(n% - 1) + fibsave%(n% - 2)\n  ENDIF\n= fibsave%(n%)",
+  "usage":[
+    {
+      "category": "Other Turtle commands",
+      "expressions":[
+        {"name":"OUTPUT", "level":2, "count":1, "lines":"5"}
+      ],
+      "total":1
+    },
+    {
+      "category": "String operations",
+      "expressions":[
+        {"name":"WRITELN", "level":1, "count":7, "lines":"6 9 11 12 13 16 18"}
+      ],
+      "total":7
+    },
+    {
+      "category": "Type conversion routines",
+      "expressions":[
+        {"name":"STR$", "level":1, "count":4, "lines":"9 9 16 16"},
+        {"name":"QSTR$", "level":2, "count":2, "lines":"11 18"}
+      ],
+      "total":6
+    },
+    {
+      "category": "Input and timing routines",
+      "expressions":[
+        {"name":"TIME", "level":2, "count":2, "lines":"11 18"},
+        {"name":"TIMESET", "level":2, "count":2, "lines":"7 14"}
+      ],
+      "total":4
+    },
+    {
+      "category": "Command structures",
+      "expressions":[
+        {"name":"IF", "level":1, "count":2, "lines":"22 30"},
+        {"name":"ELSE", "level":1, "count":2, "lines":"24 32"},
+        {"name":"FOR", "level":1, "count":2, "lines":"8 15"},
+        {"name":"DEF FN", "level":3, "count":2, "lines":"21 29"}
+      ],
+      "total":8
+    },
+    {
+      "category": "Subroutine calls",
+      "expressions":[
+        {"name":"FNfibrec", "level":0, "count":3, "lines":"25 25 9"},
+        {"name":"FNfibiter", "level":0, "count":1, "lines":"16"}
+      ],
+      "total":4
+    }
+  ],
+  "pcode":[
+    [112,15,1,1,112,0,123,112,6,2,123,4,112,36,124,112,51,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [116,23,119,22],
+    [112,26,119,23],
+    [128,26],
+    [133,1],
+    [139,12,2],
+    [120,12,2],
+    [114,12,2,112,1,32,114,12,2,112,2,32,18,129,12],
+    [112,1,119,51],
+    [128,15],
+    [114,12,2,112,1,27,131,6],
+    [114,14,1,114,12,2,112,2,27,131,6],
+    [114,14,1,26,119,51],
+    [113,51,120,12,1],
+    [113,12,119,14,140,12,134,132],
+    [133,2],
+    [139,13,2],
+    [120,13,2],
+    [114,13,2,112,1,32,114,13,2,112,2,32,18,129,23],
+    [113,22,114,13,2,2,127,26,4,112,1,2,123],
+    [128,24],
+    [113,22,114,13,2,2,127,26,4,113,22,114,13,2,112,1,27,2,127,26,4,122,113,22,114,13,2,112,2,27,2,127,26,4,122,26,2,123],
+    [113,22,114,13,2,2,127,26,4,122,120,13,1],
+    [113,13,119,14,140,13,134,132],
+    [112,-1,112,16777147,112,-1,166],
+    [118,20,70,105,114,115,116,44,32,98,121,32,114,101,99,117,114,115,105,111,110,58,169,170,142],
+    [112,0,173],
+    [112,1],
+    [119,50,112,25],
+    [113,50,37,129,35],
+    [118,4,102,105,98,40,113,50,11,64,118,4,41,32,61,32,64,113,50,131,6],
+    [114,14,1,11,64,169,170,142],
+    [113,50,4,128,30],
+    [118,12,84,105,109,101,32,116,97,107,101,110,58,32,172,112,1000,112,2,14,64,118,8,32,115,101,99,111,110,100,115,64,169,170,142],
+    [118,0,169,170,142],
+    [118,19,84,104,101,110,44,32,98,121,32,105,116,101,114,97,116,105,111,110,58,169,170,142],
+    [112,0,173],
+    [112,1],
+    [119,50,112,25],
+    [113,50,37,129,45],
+    [118,4,102,105,98,40,113,50,11,64,118,4,41,32,61,32,64,113,50,131,17],
+    [114,14,1,11,64,169,170,142],
+    [113,50,4,128,40],
+    [118,12,84,105,109,101,32,116,97,107,101,110,58,32,172,112,1000,112,2,14,64,118,8,32,115,101,99,111,110,100,115,64,169,170,142],
+    [130]
+  ]
+}

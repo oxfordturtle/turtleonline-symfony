@@ -1,33 +1,23 @@
 /*
  * The Virtual Turtle Machine.
  */
-import { colours } from './colours'
-import { PCode } from './pcodes'
 import memory from './memory'
 import { Options } from './options'
-import MachineError from './error'
+import { colours } from '../constants/colours'
+import { PCode } from '../constants/pcodes'
+import { MachineError } from '../tools/error'
+import { on, send } from '../tools/hub'
 
 // the canvas and its 2d drawing context
 // the canvas element will send this to the machine when it's ready
-let canvas, context
+let canvas: HTMLCanvasElement
+let context: CanvasRenderingContext2D
 
-// function for "sending" signals to this module
-export function send (signal, data) {
-  switch (signal) {
-    case 'canvasContextReady':
-      canvas = data.canvas
-      context = data.context
-      context.imageSmoothingEnabled = false
-      globalThis.context = context
-      break
-  }
-}
-
-// function for registering callbacks on the record of outgoing messages
-// (unlike the state module, only allow one callback for each message)
-export function on (message, callback) {
-  replies[message] = callback
-}
+on('canvasContextReady', function (data: { canvas: HTMLCanvasElement, context: CanvasRenderingContext2D }) {
+  canvas = data.canvas
+  context = data.context
+  context.imageSmoothingEnabled = false
+})
 
 // get machine status
 export function isRunning () {
@@ -45,15 +35,15 @@ export function dump () {
 
 // reset machine components
 export function reset () {
-  reply('resolution', { width: 1000, height: 1000 })
-  reply('console', { clear: true, colour: '#FFFFFF' })
-  reply('output', { clear: true, colour: '#FFFFFF' })
-  reply('turtxChanged', 500)
-  reply('turtyChanged', 500)
-  reply('turtdChanged', 0)
-  reply('turtaChanged', 360)
-  reply('turttChanged', 2)
-  reply('turtcChanged', '#000')
+  send('resolution', { width: 1000, height: 1000 })
+  send('console', { clear: true, colour: '#FFFFFF' })
+  send('output', { clear: true, colour: '#FFFFFF' })
+  send('turtxChanged', 500)
+  send('turtyChanged', 500)
+  send('turtdChanged', 0)
+  send('turtaChanged', 360)
+  send('turttChanged', 2)
+  send('turtcChanged', '#000')
 }
 
 // run the machine
@@ -62,7 +52,7 @@ export function run (pcode: number[][], options: Options) {
   reset()
   // optionally show the canvas
   if (options.showCanvasOnRun) {
-    reply('showCanvas')
+    send('selectTab', 'canvas')
   }
   // setup the virtual canvas
   // N.B. pcode for every program does most of this anyway; reconsider?
@@ -73,7 +63,7 @@ export function run (pcode: number[][], options: Options) {
   vcanvas.width = 1000
   vcanvas.height = 1000
   vcanvas.doubled = false
-  reply('canvas', { startx: 0, starty: 0, sizex: 1000, sizey: 1000 })
+  send('canvas', { startx: 0, starty: 0, sizex: 1000, sizey: 1000 })
   // setup machine memory
   memory.init(options)
   // setup the machine status
@@ -93,7 +83,7 @@ export function run (pcode: number[][], options: Options) {
   canvas.addEventListener('mouseup', releaseClickXY)
   canvas.addEventListener('touchend', releaseClickXY)
   // send the started signal (via the main state module)
-  reply('played')
+  send('played')
   // execute the first block of code (which will in turn trigger execution of the next block)
   execute(pcode, 0, 0, options)
 }
@@ -117,37 +107,25 @@ export function halt () {
     canvas.removeEventListener('mouseup', releaseClickXY)
     canvas.removeEventListener('touchend', releaseClickXY)
     // reset the canvas cursor
-    reply('cursor', 1)
+    send('cursor', 1)
     // reset the machine status
     status.running = false
     status.paused = false
     // send the stopped signal (via the main state module)
-    reply('halted')
+    send('halted')
   }
 }
 
 // play the machine
 export function play () {
   status.paused = false
-  reply('unpaused')
+  send('unpaused')
 }
 
 // pause the machine
 export function pause () {
   status.paused = true
-  reply('paused')
-}
-
-// record of replies (callbacks to execute when sending signals out); the main state module
-// specifies these functions, because they require things in scope from that module
-const replies = {}
-
-// function for executing any registered callbacks following a state change
-function reply (message: any, data: any = null) {
-  // execute the callback registered for this message (if any)
-  if (replies[message]) {
-    replies[message](data)
-  }
+  send('paused')
 }
 
 // the machine status
@@ -182,7 +160,7 @@ function storeKey (event) {
           memory.main[buffer + 2] -= 1 // go back one
         }
         if (memory.keyecho) {
-          reply('backspace')
+          send('backspace')
         }
       }
       // put buffer length in keys array
@@ -236,7 +214,7 @@ function putInBuffer (event) {
       }
       // maybe show in the console
       if (memory.keyecho) {
-        reply('log', String.fromCharCode(pressedKey))
+        send('log', String.fromCharCode(pressedKey))
       }
     }
   }
@@ -903,30 +881,30 @@ function execute (pcode, line, code, options) {
           memory.turtx = Math.round(a)
           memory.turty = Math.round(b)
           memory.turtd = 0
-          reply('turtxChanged', memory.turtx)
-          reply('turtyChanged', memory.turty)
-          reply('turtdChanged', memory.turtd)
+          send('turtxChanged', memory.turtx)
+          send('turtyChanged', memory.turty)
+          send('turtdChanged', memory.turtd)
           memory.coords.push([memory.turtx, memory.turty])
           break
 
         case PCode.setx:
           a = memory.stack.pop()
           memory.turtx = a
-          reply('turtxChanged', a)
+          send('turtxChanged', a)
           memory.coords.push([memory.turtx, memory.turty])
           break
 
         case PCode.sety:
           a = memory.stack.pop()
           memory.turty = a
-          reply('turtyChanged', a)
+          send('turtyChanged', a)
           memory.coords.push([memory.turtx, memory.turty])
           break
 
         case PCode.setd:
           a = memory.stack.pop() % memory.turta
           memory.turtd = a
-          reply('turtdChanged', a)
+          send('turtdChanged', a)
           break
 
         case PCode.angl:
@@ -943,8 +921,8 @@ function execute (pcode, line, code, options) {
           b = Math.round(a + memory.turtd * a / memory.turta)
           memory.turtd = b % a
           memory.turta = a
-          reply('turtdChanged', b % a)
-          reply('turtaChanged', a)
+          send('turtdChanged', b % a)
+          send('turtaChanged', a)
           break
 
         case PCode.thik:
@@ -957,13 +935,13 @@ function execute (pcode, line, code, options) {
           } else { // leave pen status as it is
             memory.turtt = d ? -b : b
           }
-          reply('turttChanged', memory.turtt)
+          send('turttChanged', memory.turtt)
           break
 
         case PCode.colr:
           a = memory.stack.pop()
           memory.turtc = a
-          reply('turtcChanged', hex(a))
+          send('turtcChanged', hex(a))
           break
 
         case PCode.pen:
@@ -971,7 +949,7 @@ function execute (pcode, line, code, options) {
           b = Math.abs(memory.turtt) // current thickness
           c = a ? b : -b // positive or negative depending on whether pen is down or up
           memory.turtt = c
-          reply('turttChanged', c)
+          send('turttChanged', c)
           break
 
         case PCode.toxy:
@@ -979,8 +957,8 @@ function execute (pcode, line, code, options) {
           a = memory.stack.pop()
           memory.turtx = a
           memory.turty = b
-          reply('turtxChanged', a)
-          reply('turtyChanged', b)
+          send('turtxChanged', a)
+          send('turtyChanged', b)
           memory.coords.push([a, b])
           break
 
@@ -989,8 +967,8 @@ function execute (pcode, line, code, options) {
           a = memory.stack.pop() + memory.turtx
           memory.turtx = a
           memory.turty = b
-          reply('turtxChanged', a)
-          reply('turtyChanged', b)
+          send('turtxChanged', a)
+          send('turtyChanged', b)
           memory.coords.push([a, b])
           break
 
@@ -998,15 +976,15 @@ function execute (pcode, line, code, options) {
           b = memory.stack.pop() + memory.turty
           a = memory.stack.pop() + memory.turtx
           if (memory.turtt > 0) {
-            reply('line', { turtle: turtle(), x: turtx(a), y: turty(b) })
+            send('line', { turtle: turtle(), x: turtx(a), y: turty(b) })
             if (memory.update) {
               drawCount += 1
             }
           }
           memory.turtx = a
           memory.turty = b
-          reply('turtxChanged', a)
-          reply('turtyChanged', b)
+          send('turtxChanged', a)
+          send('turtyChanged', b)
           memory.coords.push([a, b])
           break
 
@@ -1022,15 +1000,15 @@ function execute (pcode, line, code, options) {
           a = Math.round(a * c)
           a += memory.turtx
           if (memory.turtt > 0) {
-            reply('line', { turtle: turtle(), x: turtx(a), y: turty(b) })
+            send('line', { turtle: turtle(), x: turtx(a), y: turty(b) })
             if (memory.update) {
               drawCount += 1
             }
           }
           memory.turtx = a
           memory.turty = b
-          reply('turtxChanged', a)
-          reply('turtyChanged', b)
+          send('turtxChanged', a)
+          send('turtyChanged', b)
           memory.coords.push([a, b])
           break
 
@@ -1046,28 +1024,28 @@ function execute (pcode, line, code, options) {
           a = -Math.round(a * c)
           a += memory.turtx
           if (memory.turtt > 0) {
-            reply('line', { turtle: turtle(), x: turtx(a), y: turty(b) })
+            send('line', { turtle: turtle(), x: turtx(a), y: turty(b) })
             if (memory.update) {
               drawCount += 1
             }
           }
           memory.turtx = a
           memory.turty = b
-          reply('turtxChanged', a)
-          reply('turtyChanged', b)
+          send('turtxChanged', a)
+          send('turtyChanged', b)
           memory.coords.push([a, b])
           break
 
         case PCode.left:
           a = (memory.turtd - memory.stack.pop()) % memory.turta
           memory.turtd = a
-          reply('turtdChanged', a)
+          send('turtdChanged', a)
           break
 
         case PCode.rght:
           a = (memory.turtd + memory.stack.pop()) % memory.turta
           memory.turtd = a
-          reply('turtdChanged', a)
+          send('turtdChanged', a)
           break
 
         case PCode.turn:
@@ -1093,13 +1071,13 @@ function execute (pcode, line, code, options) {
           }
           c = Math.round(c * memory.turta / Math.PI / 2) % memory.turta
           memory.turtd = c
-          reply('turtdChanged', a)
+          send('turtdChanged', a)
           break
 
         // 0x60s - colour operators, shapes and fills
         case PCode.blnk:
           a = memory.stack.pop()
-          reply('blank', hex(a))
+          send('blank', hex(a))
           if (memory.update) {
             drawCount += 1
           }
@@ -1109,7 +1087,7 @@ function execute (pcode, line, code, options) {
           c = memory.stack.pop()
           b = memory.stack.pop()
           a = memory.stack.pop()
-          reply('flood', { x: a, y: b, c1: c, c2: 0, boundary: false })
+          send('flood', { x: a, y: b, c1: c, c2: 0, boundary: false })
           if (memory.update) {
             drawCount += 1
           }
@@ -1120,7 +1098,7 @@ function execute (pcode, line, code, options) {
           c = memory.stack.pop()
           b = memory.stack.pop()
           a = memory.stack.pop()
-          reply('flood', { x: a, y: b, c1: c, c2: d, boundayr: true })
+          send('flood', { x: a, y: b, c1: c, c2: d, boundayr: true })
           if (memory.update) {
             drawCount += 1
           }
@@ -1137,7 +1115,7 @@ function execute (pcode, line, code, options) {
           c = memory.stack.pop()
           b = memory.stack.pop()
           a = memory.stack.pop()
-          reply('pixset', { x: turtx(a), y: turty(b), c, doubled: vcanvas.doubled })
+          send('pixset', { x: turtx(a), y: turty(b), c, doubled: vcanvas.doubled })
           if (memory.update) {
             drawCount += 1
           }
@@ -1174,7 +1152,7 @@ function execute (pcode, line, code, options) {
           c = memory.stack.pop()
           b = memory.coords.length
           a = (c > b) ? 0 : b - c
-          reply('poly', { turtle: turtle(), coords: memory.coords.slice(a, b).map(vcoords), fill: false })
+          send('poly', { turtle: turtle(), coords: memory.coords.slice(a, b).map(vcoords), fill: false })
           if (memory.update) {
             drawCount += 1
           }
@@ -1184,7 +1162,7 @@ function execute (pcode, line, code, options) {
           c = memory.stack.pop()
           b = memory.coords.length
           a = (c > b) ? 0 : b - c
-          reply('poly', { turtle: turtle(), coords: memory.coords.slice(a, b).map(vcoords), fill: true })
+          send('poly', { turtle: turtle(), coords: memory.coords.slice(a, b).map(vcoords), fill: true })
           if (memory.update) {
             drawCount += 1
           }
@@ -1192,7 +1170,7 @@ function execute (pcode, line, code, options) {
 
         case PCode.circ:
           a = memory.stack.pop()
-          reply('arc', { turtle: turtle(), x: turtx(a + vcanvas.startx), y: turty(a + vcanvas.starty), fill: false })
+          send('arc', { turtle: turtle(), x: turtx(a + vcanvas.startx), y: turty(a + vcanvas.starty), fill: false })
           if (memory.update) {
             drawCount += 1
           }
@@ -1200,7 +1178,7 @@ function execute (pcode, line, code, options) {
 
         case PCode.blot:
           a = memory.stack.pop()
-          reply('arc', { turtle: turtle(), x: turtx(a + vcanvas.startx), y: turty(a + vcanvas.starty), fill: true })
+          send('arc', { turtle: turtle(), x: turtx(a + vcanvas.startx), y: turty(a + vcanvas.starty), fill: true })
           if (memory.update) {
             drawCount += 1
           }
@@ -1209,7 +1187,7 @@ function execute (pcode, line, code, options) {
         case PCode.elps:
           b = memory.stack.pop()
           a = memory.stack.pop()
-          reply('arc', { turtle: turtle(), x: turtx(a + vcanvas.startx), y: turty(b + vcanvas.starty), fill: false })
+          send('arc', { turtle: turtle(), x: turtx(a + vcanvas.startx), y: turty(b + vcanvas.starty), fill: false })
           if (memory.update) {
             drawCount += 1
           }
@@ -1218,7 +1196,7 @@ function execute (pcode, line, code, options) {
         case PCode.eblt:
           b = memory.stack.pop()
           a = memory.stack.pop()
-          reply('arc', { turtle: turtle(), x: turtx(a + vcanvas.startx), y: turty(b + vcanvas.starty), fill: true })
+          send('arc', { turtle: turtle(), x: turtx(a + vcanvas.startx), y: turty(b + vcanvas.starty), fill: true })
           if (memory.update) {
             drawCount += 1
           }
@@ -1229,7 +1207,7 @@ function execute (pcode, line, code, options) {
           c = memory.stack.pop() // fill colour
           b = memory.turty + memory.stack.pop() // end y coordinate
           a = memory.turtx + memory.stack.pop() // end x coordinate
-          reply('box', { turtle: turtle(), x: turtx(a), y: turty(b), fill: hex(c), border: d })
+          send('box', { turtle: turtle(), x: turtx(a), y: turty(b), fill: hex(c), border: d })
           if (memory.update) {
             drawCount += 1
           }
@@ -1461,13 +1439,13 @@ function execute (pcode, line, code, options) {
           vcanvas.sizex = memory.stack.pop()
           vcanvas.starty = memory.stack.pop()
           vcanvas.startx = memory.stack.pop()
-          reply('canvas', vcanvas)
+          send('canvas', vcanvas)
           memory.turtx = Math.round(vcanvas.startx + (vcanvas.sizex / 2))
           memory.turty = Math.round(vcanvas.starty + (vcanvas.sizey / 2))
           memory.turtd = 0
-          reply('turtxChanged', memory.turtx)
-          reply('turtyChanged', memory.turty)
-          reply('turtdChanged', memory.turtd)
+          send('turtxChanged', memory.turtx)
+          send('turtyChanged', memory.turty)
+          send('turtdChanged', memory.turtd)
           memory.coords.push([memory.turtx, memory.turty])
           drawCount = options.drawCountMax // force update
           break
@@ -1484,8 +1462,8 @@ function execute (pcode, line, code, options) {
           }
           vcanvas.width = a
           vcanvas.height = b
-          reply('resolution', { width: a, height: b })
-          reply('blank', '#FFFFFF')
+          send('resolution', { width: a, height: b })
+          send('blank', '#FFFFFF')
           drawCount = options.drawCountMax // force update
           break
 
@@ -1520,9 +1498,9 @@ function execute (pcode, line, code, options) {
           break
 
         case PCode.dump:
-          reply('memoryDumped', dump())
+          send('memoryDumped', dump())
           if (options.showMemory) {
-            reply('showMemory')
+            send('selectTab', 'memory')
           }
           break
 
@@ -1625,44 +1603,44 @@ function execute (pcode, line, code, options) {
           c = (memory.stack.pop() !== 0)
           b = memory.stack.pop()
           a = (memory.stack.pop() !== 0)
-          reply('output', { clear: a, colour: hex(b) })
+          send('output', { clear: a, colour: hex(b) })
           if (c) {
-            reply('showOutput')
+            send('selectTab', 'output')
           } else {
-            reply('showCanvas')
+            send('selectTab', 'canvas')
           }
           break
 
         case PCode.cons:
           b = memory.stack.pop()
           a = (memory.stack.pop() !== 0)
-          reply('console', { clear: a, colour: hex(b) })
+          send('console', { clear: a, colour: hex(b) })
           break
 
         case PCode.prnt:
           c = memory.stack.pop()
           b = memory.stack.pop()
           a = memory.getHeapString(memory.stack.pop())
-          reply('print', { turtle: turtle(), string: a, font: b, size: c })
+          send('print', { turtle: turtle(), string: a, font: b, size: c })
           break
 
         case PCode.writ:
           a = memory.getHeapString(memory.stack.pop())
-          reply('write', a)
-          reply('log', a)
+          send('write', a)
+          send('log', a)
           if (options.showOutput) {
-            reply('showOutput')
+            send('selectTab', 'output')
           }
           break
 
         case PCode.newl:
-          reply('write', '\n')
-          reply('log', '\n')
+          send('write', '\n')
+          send('log', '\n')
           break
 
         case PCode.curs:
           a = memory.stack.pop()
-          reply('cursor', a)
+          send('cursor', a)
           break
 
         case PCode.time:
@@ -1741,7 +1719,7 @@ function execute (pcode, line, code, options) {
       }
     }
   } catch (error) {
-    reply('error', error)
+    send('error', error)
   }
   // setTimeout (with no delay) instead of direct recursion means the function will return and the
   // canvas will be updated

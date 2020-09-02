@@ -1,10 +1,10 @@
 /*
  * The machine canvas component.
  */
-import { cursors } from '../../machine/cursors'
-import { fonts } from '../../machine/fonts'
+import { cursors } from '../../constants/cursors'
+import { fonts } from '../../constants/fonts'
 import { Turtle } from '../../machine/turtle'
-import { send, on } from '../../machine/index'
+import { on, send } from '../../tools/hub'
 
 // get relevant elements
 const canvas = document.querySelector('[data-component="canvas"]') as HTMLCanvasElement

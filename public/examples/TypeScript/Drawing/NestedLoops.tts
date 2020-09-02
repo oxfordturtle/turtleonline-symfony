@@ -1,0 +1,19 @@
+var blotCount: number;
+var circleCount: number;
+
+penup();
+for (blotCount = 0; blotCount = blotCount + 1; blotCount < 10) {
+  // draw a black blot
+  forward(260);
+  colour(black);
+  blot(150);
+  // set colour based on blotCount
+  colour(rgb(blotCount + 1));
+  // draw 25 circles of increasing radius
+  for (circleCount = 0; circleCount = circleCount + 1; circleCount < 25) {
+    circle((circleCount + 1) * 8);
+  }
+  // reposition turtle for the next iteration
+  back(260);
+  right(36);
+}

@@ -1,15 +1,16 @@
 /**
  * Keycodes reference table.
  */
-import { inputs, Input } from '../../compiler/inputs'
+import { inputs, Input } from '../../constants/inputs'
 import { fill, tr, td, code } from '../../tools/elements'
 import state from '../../state/index'
+import { on } from '../../tools/hub'
 
 // get relevant elements
 const keycodesTableBody = document.querySelector('[data-component="keycodesTableBody"]') as HTMLElement
 
 if (keycodesTableBody) {
-  state.on('languageChanged', updateTable)
+  on('languageChanged', updateTable)
 }
 
 function updateTable (): void {

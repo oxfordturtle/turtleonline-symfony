@@ -1,7 +1,7 @@
 /*
  * The turtle properties display (shown above the canvas).
  */
-import { on } from '../../machine/index'
+import { on } from '../../tools/hub'
 
 // get relevant elements
 const turtX = document.querySelector('[data-component="turtxDisplay"]') as HTMLSpanElement

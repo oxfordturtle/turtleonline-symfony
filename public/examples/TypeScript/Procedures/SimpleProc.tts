@@ -1,0 +1,13 @@
+// draws a prong
+function prong() {
+  forward(400);
+  blot(20);
+  back(400);
+}
+
+// draw several random coloured prongs
+while (turtd != 299) {
+  randcol(10);
+  prong();
+  right(61);
+}

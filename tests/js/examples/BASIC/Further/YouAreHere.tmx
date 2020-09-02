@@ -1,0 +1,71 @@
+{
+  "format":1,
+  "language":"BASIC",
+  "version":13,
+  "name":"Text and arrow (using PRINT)",
+  "author":"Peter Millican",
+  "date":"31/08/2020",
+  "time":"11:18:27",
+  "code":"REM YouAreHere\n\nCOLOUR(RED)\nBLOT(20)\nCOLOUR(VIOLET)\nPRINT(\"You are here\", 4, 36)\nSETXY(790, 540)\nCOLOUR(BLUE)\nDRAWXY(40, 0)\nDRAWXY(28, -28)\nDRAWXY(0, -40)\nDRAWXY(-28, -28)\nDRAWXY(-40, 0)\nSETXY(500, 500)\nSETXY(530, 480)\nSETXY(535, 505)\nSETXY(500, 500)\nPOLYLINE(5)\nPOLYGON(3)\nEND",
+  "usage":[
+    {
+      "category": "Turtle: relative movement",
+      "expressions":[
+        {"name":"DRAWXY", "level":2, "count":5, "lines":"9 10 11 12 13"}
+      ],
+      "total":5
+    },
+    {
+      "category": "Turtle: absolute movement",
+      "expressions":[
+        {"name":"SETXY", "level":1, "count":5, "lines":"7 14 15 16 17"}
+      ],
+      "total":5
+    },
+    {
+      "category": "Turtle: drawing shapes",
+      "expressions":[
+        {"name":"BLOT", "level":1, "count":1, "lines":"4"},
+        {"name":"POLYGON", "level":2, "count":1, "lines":"19"},
+        {"name":"POLYLINE", "level":2, "count":1, "lines":"18"}
+      ],
+      "total":3
+    },
+    {
+      "category": "Other Turtle commands",
+      "expressions":[
+        {"name":"COLOUR", "level":1, "count":3, "lines":"3 5 8"}
+      ],
+      "total":3
+    },
+    {
+      "category": "String operations",
+      "expressions":[
+        {"name":"PRINT", "level":1, "count":1, "lines":"6"}
+      ],
+      "total":1
+    }
+  ],
+  "pcode":[
+    [112,12,1,1,112,0,123,112,6,2,123,4,112,6,124,112,18,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [112,16711680,87],
+    [112,20,108],
+    [112,9055202,87],
+    [118,12,89,111,117,32,97,114,101,32,104,101,114,101,112,4,112,36,168,142],
+    [112,790,112,540,88],
+    [112,255,87],
+    [112,40,112,0,90],
+    [112,28,112,28,23,90],
+    [112,0,112,40,23,90],
+    [112,28,23,112,28,23,90],
+    [112,40,23,112,0,90],
+    [112,500,112,500,88],
+    [112,530,112,480,88],
+    [112,535,112,505,88],
+    [112,500,112,500,88],
+    [112,5,105],
+    [112,3,106],
+    [130]
+  ]
+}

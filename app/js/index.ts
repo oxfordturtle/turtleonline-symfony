@@ -2,9 +2,12 @@
  * Javscript entry point.
  */
 import state from './state/index'
-import * as machine from './machine/index'
-import { languages, Language } from './state/languages'
-import CompilerError from './compiler/error'
+import { languages, Language } from './constants/languages'
+import { on } from './tools/hub'
+
+import lexify from  './lexer/lexify'
+import parser from './parser/parser'
+import coder from './coder/coder'
 
 // general site components
 import './components/actions'
@@ -50,6 +53,10 @@ if ('serviceWorker' in navigator) {
 // add state to globals (for playing around in the console)
 globalThis.state = state
 
+globalThis.lexify = lexify
+globalThis.parser = parser
+globalThis.coder = coder
+
 // look for the turtle element
 const turtle = document.getElementById('turtle') as HTMLDivElement
 
@@ -69,7 +76,7 @@ if (turtle) {
     state.openRemoteFile(turtle.dataset.file)
   }
 
-  state.on('systemReady', function () {
+  on('systemReady', function () {
     turtle.classList.remove('hidden')
   })
 }
@@ -82,19 +89,10 @@ window.addEventListener('beforeunload', function () {
 })
 
 // register to handle state and machine errors
-state.on('error', function (error: Error): void {
+on('error', function (error: Error): void {
   let message = error.message
-  //if (error instanceof CompilerError && error.lexeme) {
-  if ((error as any).lexeme) {
-    message += `\n("${(error as any).lexeme.content}", line ${(error as any).lexeme.line})`
-  }
   console.error(error)
   window.alert(message)
-})
-
-machine.on('error', function (error: Error): void {
-  console.error(error)
-  window.alert(error.message)
 })
 
 // initialise the page

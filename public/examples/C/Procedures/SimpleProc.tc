@@ -1,0 +1,15 @@
+// draws a prong
+void prong () {
+  forward(400);
+  blot(20);
+  back(400);
+}
+
+void main () {
+  // draw several random coloured prongs
+  do {
+    randcol(10);
+    prong();
+    right(61);
+  } while (turtd != 0);
+}

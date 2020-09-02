@@ -1,10 +1,10 @@
 /*
  * The program code component.
  */
-import highlight from '../../compiler/highlight'
+import highlight from '../../lexer/highlight'
 import state from '../../state/index'
 import { fill, li } from '../../tools/elements'
-
+import { on } from '../../tools/hub'
 
 const editor = document.querySelector('[data-component="editor"]') as HTMLElement
 
@@ -53,19 +53,19 @@ if (editor) {
   })
 
   // register to keep in sync with the application state
-  state.on('codeChanged', updateCodeDisplay)
+  on('codeChanged', updateCodeDisplay)
 
-  state.on('editorFontFamilyChanged', function (): void {
+  on('editorFontFamilyChanged', function (): void {
     editor.style.fontFamily = state.editorFontFamily
     updateCodeDisplay()
   })
 
-  state.on('editorFontSizeChanged', function (): void {
+  on('editorFontSizeChanged', function (): void {
     editor.style.fontSize = `${state.editorFontSize.toString(10)}px`
     updateCodeDisplay()
   })
 
-  state.on('selectAll', function () {
+  on('selectAll', function () {
     textarea.select()
   })
 

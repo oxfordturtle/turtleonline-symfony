@@ -1,0 +1,85 @@
+{
+  "format":1,
+  "language":"BASIC",
+  "version":13,
+  "name":"Flashlights (using Booleans)",
+  "author":"Peter Millican",
+  "date":"31/08/2020",
+  "time":"11:18:27",
+  "code":"REM Flashlights\n\nBLOT(1000)\nTHICKNESS(8)\nREPEAT\n  SETX(RND(8) * 111)\n  SETY(RND(8) * 111)\n  PROCdrawit(RND(2) = 1)\nUNTIL FALSE\nEND\n\nDEF PROCdrawit(doblot%)\n  IF doblot% THEN\n    RNDCOL(10)\n    BLOT(25)\n  ELSE\n    COLOUR(BLACK)\n    BLOT(30)\n    RNDCOL(10)\n    CIRCLE(25)\n  ENDIF\nENDPROC",
+  "usage":[
+    {
+      "category": "Turtle: absolute movement",
+      "expressions":[
+        {"name":"SETX", "level":1, "count":1, "lines":"6"},
+        {"name":"SETY", "level":1, "count":1, "lines":"7"}
+      ],
+      "total":2
+    },
+    {
+      "category": "Turtle: drawing shapes",
+      "expressions":[
+        {"name":"BLOT", "level":1, "count":3, "lines":"15 18 3"},
+        {"name":"CIRCLE", "level":1, "count":1, "lines":"20"}
+      ],
+      "total":4
+    },
+    {
+      "category": "Other Turtle commands",
+      "expressions":[
+        {"name":"COLOUR", "level":1, "count":1, "lines":"17"},
+        {"name":"RNDCOL", "level":1, "count":2, "lines":"14 19"},
+        {"name":"THICKNESS", "level":1, "count":1, "lines":"4"}
+      ],
+      "total":4
+    },
+    {
+      "category": "General arithmetic functions",
+      "expressions":[
+        {"name":"RND", "level":2, "count":3, "lines":"6 7 8"}
+      ],
+      "total":3
+    },
+    {
+      "category": "Command structures",
+      "expressions":[
+        {"name":"IF", "level":1, "count":1, "lines":"13"},
+        {"name":"ELSE", "level":1, "count":1, "lines":"16"},
+        {"name":"REPEAT", "level":2, "count":1, "lines":"5"},
+        {"name":"DEF PROC", "level":2, "count":1, "lines":"12"}
+      ],
+      "total":4
+    },
+    {
+      "category": "Subroutine calls",
+      "expressions":[
+        {"name":"PROCdrawit", "level":0, "count":1, "lines":"8"}
+      ],
+      "total":1
+    }
+  ],
+  "pcode":[
+    [112,13,1,1,112,0,123,112,6,2,123,4,112,6,124,112,19,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [128,16],
+    [133,1],
+    [139,12,1],
+    [120,12,1],
+    [114,12,1,129,11],
+    [112,10,7,4,101,87],
+    [112,25,108],
+    [128,15],
+    [112,0,87],
+    [112,30,108],
+    [112,10,7,4,101,87],
+    [112,25,107],
+    [140,12,134,132],
+    [112,1000,108],
+    [112,8,85],
+    [112,8,7,4,112,111,28,81],
+    [112,8,7,4,112,111,28,82],
+    [112,2,7,4,112,1,32,131,4],
+    [112,0,129,18],
+    [130]
+  ]
+}

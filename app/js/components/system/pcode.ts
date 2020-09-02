@@ -1,16 +1,17 @@
 /*
  * The program pcode component.
  */
-import { PCode, pcodeArgs } from '../../machine/pcodes'
+import { PCode, pcodeArgs } from '../../constants/pcodes'
 import state from '../../state/index'
 import { fill, div, li } from '../../tools/elements'
+import { on } from '../../tools/hub'
 
 // the pcode display
 const list = document.querySelector('[data-component="pcodeList"]') as HTMLElement
 
 if (list) {
 // register to keep in sync with the application state
-state.on('pcodeChanged', function () {
+on('pcodeChanged', function () {
   fill(list, state.pcode.map(pcodeListItem))
 })
 

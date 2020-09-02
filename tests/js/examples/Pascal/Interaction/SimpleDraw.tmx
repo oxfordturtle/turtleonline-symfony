@@ -1,0 +1,90 @@
+{
+  "format":1,
+  "language":"Pascal",
+  "version":13,
+  "name":"Drawing to the mouse",
+  "author":"Peter Millican",
+  "date":"31/08/2020",
+  "time":"11:16:45",
+  "code":"PROGRAM SimpleDraw;\n\n  Procedure palette;\n  Var col: integer;\n  Begin\n    for col := 1 to 10 do\n      begin\n        setxy(col * 100 - 50, 950);\n        colour(rgb(col));\n        blot(50)\n      end\n  End;\n\nBEGIN\n  palette;\n  home;\n  thickness(10);\n  blot(2);\n  repeat\n    repeat\n    until (?lmouse > 0) or (?rmouse > 0);\n    if ?mousey > 900 then\n      colour(rgb(?mousex div 100 + 1))\n    else\n    if ?lmouse > 0 then\n      drawxy(?mousex - turtx, ?mousey - turty)\n    else\n      setxy(?mousex, ?mousey)\n  until false\nEND.",
+  "usage":[
+    {
+      "category": "Turtle: relative movement",
+      "expressions":[
+        {"name":"drawxy", "level":2, "count":1, "lines":"26"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Turtle: absolute movement",
+      "expressions":[
+        {"name":"home", "level":1, "count":1, "lines":"16"},
+        {"name":"setxy", "level":1, "count":2, "lines":"8 28"}
+      ],
+      "total":3
+    },
+    {
+      "category": "Turtle: drawing shapes",
+      "expressions":[
+        {"name":"blot", "level":1, "count":2, "lines":"10 18"}
+      ],
+      "total":2
+    },
+    {
+      "category": "Other Turtle commands",
+      "expressions":[
+        {"name":"colour", "level":1, "count":2, "lines":"9 23"},
+        {"name":"thickness", "level":1, "count":1, "lines":"17"},
+        {"name":"rgb", "level":3, "count":2, "lines":"9 23"}
+      ],
+      "total":5
+    },
+    {
+      "category": "Command structures",
+      "expressions":[
+        {"name":"if", "level":1, "count":2, "lines":"22 25"},
+        {"name":"else", "level":1, "count":2, "lines":"24 27"},
+        {"name":"for", "level":1, "count":1, "lines":"6"},
+        {"name":"repeat", "level":2, "count":2, "lines":"19 20"},
+        {"name":"procedure", "level":2, "count":1, "lines":"3"}
+      ],
+      "total":8
+    },
+    {
+      "category": "Subroutine calls",
+      "expressions":[
+        {"name":"palette", "level":0, "count":1, "lines":"15"}
+      ],
+      "total":1
+    }
+  ],
+  "pcode":[
+    [112,13,1,1,112,0,123,112,6,2,123,4,112,6,124,112,19,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [128,14],
+    [133,1],
+    [139,12,1],
+    [112,1],
+    [120,12,1,112,10],
+    [114,12,1,37,129,13],
+    [114,12,1,112,100,28,112,50,27,112,950,88],
+    [114,12,1,101,87],
+    [112,50,108],
+    [114,12,1,4,128,7],
+    [140,12,134,132],
+    [131,4],
+    [80],
+    [112,10,85],
+    [112,2,108],
+    [112,-1,160,112,0,35,112,-2,160,112,0,35,18,129,18],
+    [112,-8,160,112,900,35,129,22],
+    [112,-7,160,112,100,30,112,1,26,101,87],
+    [128,26],
+    [112,-1,160,112,0,35,129,25],
+    [112,-7,160,113,14,27,112,-8,160,113,15,27,90],
+    [128,26],
+    [112,-7,160,112,-8,160,88],
+    [112,0,129,18],
+    [130]
+  ]
+}

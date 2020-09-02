@@ -1,0 +1,172 @@
+{
+  "format":1,
+  "language":"BASIC",
+  "version":13,
+  "name":"Logistic equation",
+  "author":"Peter Millican",
+  "date":"31/08/2020",
+  "time":"11:18:45",
+  "code":"REM Logistic\n\nCONST MAXPOP% = 100000\nCONST MAXGEN% = 100\nCONST LMARGIN% = 105\nCONST RMARGIN% = 40\nCONST TMARGIN% = 150\nCONST BMARGIN% = 200\nCONST OUTPUT% = FALSE\nCANVAS(-LMARGIN%, -TMARGIN%, 1000 + LMARGIN% + RMARGIN%, 1000 + TMARGIN% + BMARGIN%)\nRESOLUTION(1000 + LMARGIN% + RMARGIN%, 1000 + TMARGIN% + BMARGIN%)\nTHICKNESS(3)\nr% = 30\nREPEAT\n  NOUPDATE\n  BLANK(WHITE)\n  PROCaxes\n  PROCmenu\n  COLOUR(BLUE)\n  pop% = RND(MAXPOP% - 9) + 9\n  IF OUTPUT% THEN\n    WRITELN(\"\")\n    WRITELN(\"r = \" + QSTR$(r%, 10, 1) + \" Initial population = \" + STR$(pop%))\n  ENDIF\n  SETXY(0, 1000 - DIVMULT(pop%, MAXPOP%, 1000))\n  FOR gen% = 1 TO MAXGEN%\n    pop% = DIVMULT(pop%, 10 * MAXPOP%, r% * (MAXPOP% - pop%))\n    SETXY(DIVMULT(gen%, MAXGEN%, 1000), 1000 - DIVMULT(pop%, MAXPOP%, 1000))\n    POLYLINE(2)\n    IF OUTPUT% THEN\n      WRITE(STR$(pop%) + \" \")\n      IF gen% MOD 10 = 0 THEN WRITELN(\"\")\n    ENDIF\n  NEXT\n  UPDATE\n  REPEAT\n  UNTIL (?LMOUSE > 0) AND (?CLICKY < (100 - TMARGIN%)) AND (?CLICKX >= 130) AND (?CLICKX < 1030)\n  r% = ((?CLICKX - 130) DIV 90) + ((?CLICKY + TMARGIN% + 100) DIV 50) * 10 + 1\nUNTIL 0 = 1\nEND\n\nDEF PROCaxes\n  LOCAL i%\n  COLOUR(BLACK)\n  FOR i% = 0 TO 10\n    SETXY(i% * 100 - 25, 1000)\n    PRINT(STR$(i% * MAXGEN% / 10), 4, 20)\n  NEXT\n  FOR i% = 1 TO 10\n    SETXY(-LMARGIN% + 5, 1000 - i% * 100 - 20)\n    PRINT(STR$(i% * MAXPOP% / 10), 4, 20)\n  NEXT\n  SETXY(0, 0)\n  DRAWXY(0, 1000)\n  DRAWXY(1000, 0)\n  COLOUR(RED)\n  SETXY(0, 1060)\n  PRINT(\"Population over \" + STR$(MAXGEN%) + \" generations, where P (population/\" + STR$(MAXPOP%) + \")\", 4, 25)\n  SETXY(0, 1110)\n  PRINT(\"is determined by the logistic equation P' = rP(1 - P), with r = \" + QSTR$(r%, 10, 1), 4, 25)\nENDPROC\n\nDEF PROCmenu\n  LOCAL i%\n  COLOUR(BLACK)\n  SETXY(10, -TMARGIN% + 20)\n  PRINT(\"Set r:\", 4, 25)\n  FOR i% = 21 TO 40\n    SETXY(((i% - 1) MOD 10) * 90 + 130, ((i% - 1) DIV 10) * 50 - 100 - TMARGIN%)\n    IF i% = r% THEN\n      BOX(90, 50, RED, TRUE)\n    ELSE\n      BOX(90, 50, CREAM, TRUE)\n    ENDIF\n    PRINT(\"  \" + QSTR$(i%, 10, 1), 4, 25)\n  NEXT\nENDPROC",
+  "usage":[
+    {
+      "category": "Turtle: relative movement",
+      "expressions":[
+        {"name":"DRAWXY", "level":2, "count":2, "lines":"54 55"}
+      ],
+      "total":2
+    },
+    {
+      "category": "Turtle: absolute movement",
+      "expressions":[
+        {"name":"SETXY", "level":1, "count":9, "lines":"46 50 53 57 59 66 69 25 28"}
+      ],
+      "total":9
+    },
+    {
+      "category": "Turtle: drawing shapes",
+      "expressions":[
+        {"name":"BOX", "level":2, "count":2, "lines":"71 73"},
+        {"name":"POLYLINE", "level":2, "count":1, "lines":"29"}
+      ],
+      "total":3
+    },
+    {
+      "category": "Other Turtle commands",
+      "expressions":[
+        {"name":"COLOUR", "level":1, "count":4, "lines":"44 56 65 19"},
+        {"name":"THICKNESS", "level":1, "count":1, "lines":"12"}
+      ],
+      "total":5
+    },
+    {
+      "category": "Canvas operations",
+      "expressions":[
+        {"name":"BLANK", "level":1, "count":1, "lines":"16"},
+        {"name":"NOUPDATE", "level":1, "count":1, "lines":"15"},
+        {"name":"UPDATE", "level":1, "count":1, "lines":"35"},
+        {"name":"CANVAS", "level":2, "count":1, "lines":"10"},
+        {"name":"RESOLUTION", "level":2, "count":1, "lines":"11"}
+      ],
+      "total":5
+    },
+    {
+      "category": "General arithmetic functions",
+      "expressions":[
+        {"name":"RND", "level":2, "count":1, "lines":"20"},
+        {"name":"DIVMULT", "level":3, "count":4, "lines":"25 27 28 28"}
+      ],
+      "total":5
+    },
+    {
+      "category": "String operations",
+      "expressions":[
+        {"name":"PRINT", "level":1, "count":6, "lines":"47 51 58 60 67 75"},
+        {"name":"WRITE", "level":1, "count":1, "lines":"31"},
+        {"name":"WRITELN", "level":1, "count":3, "lines":"22 23 32"}
+      ],
+      "total":10
+    },
+    {
+      "category": "Type conversion routines",
+      "expressions":[
+        {"name":"STR$", "level":1, "count":6, "lines":"47 51 58 58 23 31"},
+        {"name":"QSTR$", "level":2, "count":3, "lines":"60 75 23"}
+      ],
+      "total":9
+    },
+    {
+      "category": "Command structures",
+      "expressions":[
+        {"name":"IF", "level":1, "count":4, "lines":"70 21 30 32"},
+        {"name":"ELSE", "level":1, "count":1, "lines":"72"},
+        {"name":"FOR", "level":1, "count":4, "lines":"45 49 68 26"},
+        {"name":"REPEAT", "level":2, "count":2, "lines":"14 36"},
+        {"name":"DEF PROC", "level":2, "count":2, "lines":"42 63"}
+      ],
+      "total":13
+    },
+    {
+      "category": "Subroutine calls",
+      "expressions":[
+        {"name":"PROCaxes", "level":0, "count":1, "lines":"17"},
+        {"name":"PROCmenu", "level":0, "count":1, "lines":"18"}
+      ],
+      "total":2
+    }
+  ],
+  "pcode":[
+    [112,14,1,1,112,0,123,112,6,2,123,4,112,9,124,112,23,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [128,44],
+    [133,1],
+    [139,12,1],
+    [112,0,87],
+    [112,0],
+    [120,12,1,112,10],
+    [114,12,1,37,129,13],
+    [114,12,1,112,100,28,112,25,27,112,1000,88],
+    [114,12,1,112,100,28,112,10,29,11,112,4,112,20,168,142],
+    [114,12,1,4,128,8],
+    [112,1],
+    [120,12,1,112,10],
+    [114,12,1,37,129,19],
+    [112,105,23,112,5,26,112,1000,114,12,1,112,100,28,27,112,20,27,88],
+    [114,12,1,112,100000,28,112,10,29,11,112,4,112,20,168,142],
+    [114,12,1,4,128,14],
+    [112,0,112,0,88],
+    [112,0,112,1000,90],
+    [112,1000,112,0,90],
+    [112,16711680,87],
+    [112,0,112,1060,88],
+    [118,16,80,111,112,117,108,97,116,105,111,110,32,111,118,101,114,32,112,100,11,64,118,34,32,103,101,110,101,114,97,116,105,111,110,115,44,32,119,104,101,114,101,32,80,32,40,112,111,112,117,108,97,116,105,111,110,47,64,112,100000,11,64,118,1,41,64,112,4,112,25,168,142],
+    [112,0,112,1110,88],
+    [118,64,105,115,32,100,101,116,101,114,109,105,110,101,100,32,98,121,32,116,104,101,32,108,111,103,105,115,116,105,99,32,101,113,117,97,116,105,111,110,32,80,39,32,61,32,114,80,40,49,32,45,32,80,41,44,32,119,105,116,104,32,114,32,61,32,113,21,112,10,112,1,14,64,112,4,112,25,168,142],
+    [140,12,134,132],
+    [133,2],
+    [139,13,1],
+    [112,0,87],
+    [112,10,112,150,23,112,20,26,88],
+    [118,6,83,101,116,32,114,58,112,4,112,25,168,142],
+    [112,21],
+    [120,13,1,112,40],
+    [114,13,1,37,129,43],
+    [114,13,1,112,1,27,112,10,31,112,90,28,112,130,26,114,13,1,112,1,27,112,10,30,112,50,28,112,100,27,112,150,27,88],
+    [114,13,1,113,21,32,129,40],
+    [112,90,112,50,112,16711680,112,-1,111],
+    [128,41],
+    [112,90,112,50,112,16777147,112,-1,111],
+    [118,2,32,32,114,13,1,112,10,112,1,14,64,112,4,112,25,168,142],
+    [114,13,1,4,128,34],
+    [140,13,134,132],
+    [112,105,23,112,150,23,112,1000,112,105,26,112,40,26,112,1000,112,150,26,112,200,26,144],
+    [112,1000,112,105,26,112,40,26,112,1000,112,150,26,112,200,26,145],
+    [112,3,85],
+    [112,30,119,21],
+    [112,0,146],
+    [112,16777215,96],
+    [131,4],
+    [131,28],
+    [112,255,87],
+    [112,100000,112,9,27,7,4,112,9,26,119,22],
+    [112,0,129,57],
+    [118,0,169,170,142],
+    [118,4,114,32,61,32,113,21,112,10,112,1,14,64,118,22,32,73,110,105,116,105,97,108,32,112,111,112,117,108,97,116,105,111,110,32,61,32,64,113,22,11,64,169,170,142],
+    [112,0,112,1000,113,22,112,100000,112,1000,48,27,88],
+    [112,1],
+    [119,23,112,100],
+    [113,23,37,129,69],
+    [113,22,112,10,112,100000,28,113,21,112,100000,113,22,27,28,48,119,22],
+    [113,23,112,100,112,1000,48,112,1000,113,22,112,100000,112,1000,48,27,88],
+    [112,2,105],
+    [112,0,129,68],
+    [113,22,11,118,1,32,64,169,142],
+    [113,23,112,10,31,112,0,32,129,68],
+    [118,0,169,170,142],
+    [113,23,4,128,59],
+    [112,-1,146],
+    [112,-1,160,112,0,35,112,-6,160,112,100,112,150,27,34,17,112,-5,160,112,130,37,17,112,-5,160,112,1030,34,17,129,70],
+    [112,-5,160,112,130,27,112,90,30,112,-6,160,112,150,26,112,100,26,112,50,30,112,10,28,26,112,1,26,119,21],
+    [112,0,112,1,32,129,48],
+    [130]
+  ]
+}

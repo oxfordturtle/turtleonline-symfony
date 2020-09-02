@@ -1,0 +1,29 @@
+var n: number;
+
+// draws a coloured star with the given number of points
+function star (points: number, colr: number) {
+  var count: number;
+  // set angles to twice the number of points
+  angles(points * 2);
+  // trace out each point with the turtle
+  for (count = 0; count = count + 1; count < points) {
+    forward(450);
+    back(450);
+    forget(1);
+    right(1);
+    forward(200);
+    back(200);
+    forget(1);
+    right(1);
+  }
+  // fill in the shape
+  colour(colr);
+  polygon(points * 2);
+}
+
+penup();
+// draw 10 stars with increasing numbers of points
+for (n = 3; n = n + 1; n <= 12) {
+  star(n, rgb(n - 2));
+  pause(500);
+}

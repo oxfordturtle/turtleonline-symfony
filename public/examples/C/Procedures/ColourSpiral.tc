@@ -1,0 +1,22 @@
+// draws a line and turns right
+void lineTurn () {
+  forward(lineLength);
+  right(60);
+}
+
+void main () {
+  int lineLength;
+  // make the canvas black
+  blank(black);
+  // position the turtle
+  forward(15);
+  // set line thickness and initial length
+  thickness(27);
+  lineLength = 20;
+  // repeatedly call the lineTurn procedure and increase lineLength
+  while (lineLength <= 500) {
+    randcol(40);
+    lineTurn();
+    lineLength = lineLength + 10
+  }
+}

@@ -1,0 +1,93 @@
+{illustrates file handling commands}
+PROGRAM FileCommands;
+CONST testFile1 = 'testFile1.txt';
+      testFile2 = 'testFile2.txt';
+      enquire = 0;
+      delete = 1;
+      create = 2;
+      recreate = 3;
+      tNotify = 4;
+      fNotify = 16;
+      tOnEntry = 64;
+      tOnExit = 128;
+
+  {shows the result of the given command}
+  Procedure showResult(value: boolean; commandText: string);
+  Begin
+    if value then
+      writeln(uppercase(commandText) + ' returns TRUE')
+    else
+      writeln(uppercase(commandText) + ' returns FALSE')
+  End;
+
+  {checks for the given file and shows results}
+  Procedure checkFileAndDisplay(filename: string);
+  Var code: integer;
+  Begin
+    code := create + tNotify + fNotify;
+    writeln('Code on entry = $' + hexstr(code, 2));
+    writeln('The initial CHECKFILE command will invoke a message window ...');
+    code := checkfile(filename, code);
+    writeln('Code on exit = $' + hexstr(code, 2));
+    if (code and tOnEntry) > 0 then
+      writeln('File existed on entry')
+    else
+      writeln('No file on entry');
+    if (code and tOnExit) > 0 then
+      writeln('File existed on exit')
+    else
+      writeln('No file on exit');
+    writeln('');
+  End;
+
+  {tries to delete a file and shows results}
+  Procedure deleteFileAndDisplay(filename: string);
+  Begin
+    showresult(deletefile(testFile1), 'deletefile(' + testFile1 + ')');
+    showresult(fileexists(testFile1), 'fileexists(' + testFile1 + ')');
+    writeln('');
+  End;
+
+BEGIN
+  output(true, cream, true);
+  checkFileAndDisplay(testFile1);
+  showresult(fileexists(testFile1), 'fileexists(' + testFile1 + ')');
+  writeln('');
+  deleteFileAndDisplay(testFile1);
+
+  if checkfile(testFile1, create) > 127 then
+    writeln('File "' + testFile1 + '" has been created')
+  else
+    writeln('File "' + testFile1 + '" could not be created');
+  showresult(fileexists(testFile1), 'fileexists(' + testFile1 + ')');
+  showresult(fileexists(testFile2), 'fileexists(' + testFile2 + ')');
+  writeln('');
+
+  if copyfile(testFile1, testFile2) then
+    writeln('File "' + testFile1 + '" has been copied to "' + testFile2 + '"')
+  else
+    writeln('File "' + testFile1 + '" could not be copied to "' + testFile2 + '"');
+  showresult(fileexists(testFile1), 'fileexists(' + testFile1 + ')');
+  showresult(fileexists(testFile2), 'fileexists(' + testFile2 + ')');
+  writeln('');
+
+  if checkfile(testFile1, delete) < 128 then
+    writeln('File "' + testFile1 + '" has been deleted')
+  else
+    writeln('File "' + testFile1 + '" could not be deleted');
+  showresult(fileexists(testFile1), 'fileexists(' + testFile1 + ')');
+  writeln('');
+
+  deleteFileAndDisplay(testFile1);
+
+  showresult(fileexists(testFile2), 'fileexists(' + testFile2 + ')');
+  if renamefile(testFile2, testFile1) then
+    writeln('File "' + testFile2 + '" has been renamed "' + testFile1 + '"')
+  else
+    writeln('File "' + testFile2 + '" could not be renamed"' + testFile1 + '"');
+  showresult(fileexists(testFile1), 'fileexists(' + testFile1 + ')');
+  showresult(fileexists(testFile2), 'fileexists(' + testFile2 + ')');
+  writeln('');
+
+  deleteFileAndDisplay(testFile1);
+END.

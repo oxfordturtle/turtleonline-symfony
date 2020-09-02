@@ -1,0 +1,64 @@
+{
+  "format":1,
+  "language":"BASIC",
+  "version":13,
+  "name":"Olympic rings (using a variable)",
+  "author":"Peter Millican",
+  "date":"31/08/2020",
+  "time":"11:18:26",
+  "code":"REM OlympicRings\n\nringsize% = 130\nTHICKNESS(20)\nPENUP\nFORWARD(50)\nCIRCLE(ringsize%)\nLEFT(90)\nFORWARD(300)\nCOLOUR(BLUE)\nCIRCLE(ringsize%)\nBACK(600)\nCOLOUR(RED)\nCIRCLE(ringsize%)\nFORWARD(150)\nRIGHT(90)\nBACK(125)\nCOLOUR(LIME)\nCIRCLE(ringsize%)\nLEFT(90)\nFORWARD(300)\nCOLOUR(YELLOW)\nCIRCLE(ringsize%)\nEND",
+  "usage":[
+    {
+      "category": "Turtle: relative movement",
+      "expressions":[
+        {"name":"BACK", "level":1, "count":2, "lines":"12 17"},
+        {"name":"FORWARD", "level":1, "count":4, "lines":"6 9 15 21"},
+        {"name":"LEFT", "level":1, "count":2, "lines":"8 20"},
+        {"name":"RIGHT", "level":1, "count":1, "lines":"16"}
+      ],
+      "total":9
+    },
+    {
+      "category": "Turtle: drawing shapes",
+      "expressions":[
+        {"name":"CIRCLE", "level":1, "count":5, "lines":"7 11 14 19 23"}
+      ],
+      "total":5
+    },
+    {
+      "category": "Other Turtle commands",
+      "expressions":[
+        {"name":"COLOUR", "level":1, "count":4, "lines":"10 13 18 22"},
+        {"name":"PENUP", "level":1, "count":1, "lines":"5"},
+        {"name":"THICKNESS", "level":1, "count":1, "lines":"4"}
+      ],
+      "total":6
+    }
+  ],
+  "pcode":[
+    [112,12,1,1,112,0,123,112,6,2,123,4,112,7,124,112,19,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [112,130,119,19],
+    [112,20,85],
+    [112,0,86],
+    [112,50,91],
+    [113,19,107],
+    [112,90,93],
+    [112,300,91],
+    [112,255,87],
+    [113,19,107],
+    [112,600,92],
+    [112,16711680,87],
+    [113,19,107],
+    [112,150,91],
+    [112,90,94],
+    [112,125,92],
+    [112,65280,87],
+    [113,19,107],
+    [112,90,93],
+    [112,300,91],
+    [112,16776960,87],
+    [113,19,107],
+    [130]
+  ]
+}

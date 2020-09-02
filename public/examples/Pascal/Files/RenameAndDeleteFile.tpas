@@ -1,0 +1,59 @@
+PROGRAM RenameAndDeleteFile;
+VAR origfname: string;
+    newfname: string;
+    handle: integer;
+    i: integer;
+
+  Procedure readfile(fname: string);
+  Var s: string[255];
+  Begin
+    handle := openfile(fname, 1);
+    if handle > 0 then
+      begin
+        writeln('Contents read from ' + fname + ':');
+        while not(eof(handle)) do
+          begin
+            s := freadln(handle);
+            writeln('  ' + s)
+          end;
+        closefile(handle)
+      end
+    else
+      writeln('  ' + fname + ' could not be opened for reading')
+  End;
+
+BEGIN
+  origfname := 'TestFile.txt';
+  newfname := 'TestRename.txt';
+  output(true, cream, true);
+  for i := 1 to 3 do
+    begin
+      writeln('LOOP ' + str(i) + ' ...');
+      writeln('');
+      writeln('ABOUT TO TRY TO READ ' + origfname + ' ...');
+      readfile(origfname);
+      writeln('');
+      writeln('ABOUT TO TRY TO READ ' + newfname + ' ...');
+      readfile(newfname);
+      writeln('');
+      if i = 1 then
+        begin
+          writeln('RENAMING ' + origfname + ' TO ' + newfname);
+          if renamefile(origfname, newfname) then
+            writeln('  succeeded')
+          else
+            writeln('  failed');
+          writeln('')
+        end
+      else
+      if i = 2 then
+        begin
+          writeln('DELETING ' + newfname);
+          if deletefile(newfname) then
+            writeln('  file no longer exists')
+          else
+            writeln('  failed');
+          writeln('')
+        end
+    end
+END.

@@ -1,0 +1,79 @@
+PROGRAM Hanoi;
+CONST numdisks = 6;
+      delay = 500;
+VAR pile: array[1..3] of string;
+    x, y, top: array[1..3] of integer;
+    count: integer;
+
+  Procedure setup(startdisk: integer);
+  Var d, p: integer;
+  Begin
+    x[1] := 250;
+    x[2] := 500;
+    x[3] := 750;
+    y[1] := 800;
+    y[2] := 500;
+    y[3] := 800;
+    for p := 1 to 3 do
+      begin
+        pile[p] := '';
+        top[p] := y[p] - numdisks * 20 - 40
+      end;
+    for d := 1 to numdisks do
+      pile[startdisk] := pile[startdisk] + chr(d + 48);
+    writeln(pad(' ', ' ', -32) + '   PILE 1   PILE 2   PILE 3');
+    writeln('');
+    write(pad('Starting position:', ' ', -32));
+    writeln(pad(pile[1], ' ', 9) + pad(pile[2], ' ', 9) + pad(pile[3], ' ', 9));
+    writeln('')
+  End;
+
+  Procedure draw;
+  Var p, i: integer;
+  Begin
+    for p := 1 to 3 do
+      begin
+        setxy(x[p], y[p]);
+        for i := length(pile[p]) downto 1 do
+          begin
+            movexy(0, -20);
+            colour(rgb(ord(pile[p, i]) - 47));
+            ellblot((ord(pile[p, i]) - 47) * 20, (ord(pile[p, i]) - 47) * 10)
+          end;
+        colour(black);
+        setxy(x[p], top[p]);
+        polyline(2)
+      end
+  End;
+
+  Procedure movedisk(n, start, finish: integer);
+  Begin
+    pile[finish] := pile[start, 1] + pile[finish];
+    pile[start] := delete(pile[start], 1, 1);
+    blank(white);
+    draw;
+    inc(count);
+    write(pad(str(count), ' ', 4) + '. Move disk ' + str(n) + ' from ' + str(start) + ' to ' +
+     str(finish) + ':  ');
+    writeln(pad(pile[1], ' ', 9) + pad(pile[2], ' ', 9) + pad(pile[3], ' ', 9));
+    pause(delay)
+  End;
+
+  Procedure movepile(n, start, finish: integer);
+  Begin
+    if n > 0 then
+      begin
+        movepile(n - 1, start, 6 - start - finish);
+        movedisk(n, start, finish);
+        movepile(n - 1, 6 - start - finish, finish)
+      end
+  End;
+
+BEGIN
+  setup(1);
+  thickness(10);
+  draw;
+  pause(1000);
+  count := 0;
+  movepile(numdisks, 1, 3)
+END.

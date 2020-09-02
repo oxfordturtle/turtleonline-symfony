@@ -1,0 +1,18 @@
+var count, x, y, nextColour: number;
+
+// draw 10 random ellipses
+for (count = 1; count = count + 1; count < 10) {
+  setxy(randint(0, 1500) - 250, randint(0, 1500) - 250);
+  ellipse(randint(0, 500) + 500, randint(0, 500) + 500);
+}
+// try to fill all the ellipses with colours
+for (count = 1; count = count + 1; count < 10000) {
+  // pick a random point
+  x = randint(0, 1000);
+  y = randint(0, 1000);
+  // if it's white, set the next colour and fill the shape with it
+  if (pixcol(x, y) == white) {
+    nextColour = nextColour % 20 + 1;
+    recolour(x, y, rgb(nextColour));
+  }
+}

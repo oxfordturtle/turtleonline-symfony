@@ -1,0 +1,68 @@
+CONST SUBDIR$ = "testsubdir"
+CONST ENQUIRE% = 0
+CONST DELETE% = 1
+CONST CREATE% = 2
+CONST RECREATE% = 3
+CONST TNOTIFY% = 4
+CONST FNOTIFY% = 16
+CONST TONENTRY% = 64
+CONST TONEXIT% = 128
+CONST TODO% = CREATE%
+OUTPUT(TRUE, CREAM, TRUE)
+code% = TODO% + TNOTIFY% + FNOTIFY%
+WRITELN("code% on entry = $" + HEX$(code%, 2))
+code% = CHECKDIR(SUBDIR$, code%)
+WRITELN("code% on exit = $" + HEX$(code%, 2))
+IF (code% AND TONENTRY%) > 0 THEN
+  WRITELN("Subdirectory existed on entry")
+ELSE
+  WRITELN("No subdirectory on entry")
+ENDIF
+IF (code% AND TONEXIT%) > 0 THEN
+  WRITELN("Subdirectory existed on exit")
+ELSE
+  WRITELN("No subdirectory on exit")
+ENDIF
+WRITELN("")
+PROCshowresult(MKDIR(SUBDIR$), "mkdir(" + SUBDIR$ + ")")
+PROCshowresult(DIREXISTS(SUBDIR$), "direxists(" + SUBDIR$ + ")")
+WRITELN("")
+PROCshowresult(MKDIR(SUBDIR$), "mkdir(" + SUBDIR$ + ")")
+PROCshowresult(DIREXISTS(SUBDIR$), "direxists(" + SUBDIR$ + ")")
+WRITELN("")
+PROCshowresult(RMDIR(SUBDIR$), "rmdir(" + SUBDIR$ + ")")
+PROCshowresult(DIREXISTS(SUBDIR$), "direxists(" + SUBDIR$ + ")")
+WRITELN("")
+PROCshowresult(RMDIR(SUBDIR$), "rmdir(" + SUBDIR$ + ")")
+PROCshowresult(DIREXISTS(SUBDIR$), "direxists(" + SUBDIR$ + ")")
+WRITELN("")
+PROCshowresult(MKDIR(SUBDIR$), "mkdir(" + SUBDIR$ + ")")
+PROCshowresult(DIREXISTS(SUBDIR$), "direxists(" + SUBDIR$ + ")")
+WRITELN("")
+PROCshowresult(MKDIR(SUBDIR$), "mkdir(" + SUBDIR$ + ")")
+PROCshowresult(DIREXISTS(SUBDIR$), "direxists(" + SUBDIR$ + ")")
+WRITELN("")
+IF CHECKFILE(SUBDIR$ + "\A_File.txt", 2) > 127 THEN
+  WRITELN("File has been created")
+ELSE
+  WRITELN("File could not be created")
+ENDIF
+PROCshowresult(RMDIR(SUBDIR$), "rmdir(" + SUBDIR$ + ")")
+PROCshowresult(DIREXISTS(SUBDIR$), "direxists(" + SUBDIR$ + ")")
+WRITELN("")
+IF CHECKFILE(SUBDIR$ + "\A_File.txt", 1) < 128 THEN
+  WRITELN("File has been deleted")
+ELSE
+  WRITELN("File could not be deleted")
+ENDIF
+PROCshowresult(RMDIR(SUBDIR$), "rmdir(" + SUBDIR$ + ")")
+PROCshowresult(DIREXISTS(SUBDIR$), "direxists(" + SUBDIR$ + ")")
+END
+
+DEF  PROCshowresult(b%, n$)
+  IF b% THEN
+    WRITELN(UCASE$(n$) + " returns TRUE")
+  ELSE
+    WRITELN(UCASE$(n$) + " returns FALSE")
+  ENDIF
+ENDPROC

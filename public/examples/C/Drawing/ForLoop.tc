@@ -1,0 +1,13 @@
+void main () {
+  int count;
+  for (count = 0; count < 200; count = count + 1) {
+    // move forward and right
+    forward(count + 1 / 3);
+    right(5);
+    // draw a red circle with a black outline
+    colour(red);
+    blot(200);
+    colour(black);
+    circle(200);
+  }
+}

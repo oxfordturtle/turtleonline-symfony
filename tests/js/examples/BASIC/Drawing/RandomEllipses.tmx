@@ -1,0 +1,81 @@
+{
+  "format":1,
+  "language":"BASIC",
+  "version":13,
+  "name":"Random ellipses pattern",
+  "author":"Peter Millican",
+  "date":"31/08/2020",
+  "time":"11:18:27",
+  "code":"REM RandomEllipses\n\nFOR count% = 1 TO 10\n  x% = RND(1500) - 250\n  y% = RND(1500) - 250\n  rx% = RND(500) + 500\n  ry% = RND(500) + 500\n  SETXY(x%, y%)\n  ELLIPSE(rx%, ry%)\nNEXT\nnextcol% = 0\nFOR count% = 1 TO 10000\n  x% = RND(1000)\n  y% = RND(1000)\n  IF PIXCOL(x%, y%) = WHITE THEN\n    nextcol% = nextcol% MOD 20 + 1\n    RECOLOUR(x%, y%, RGB(nextcol%))\n  ENDIF\nNEXT\nEND",
+  "usage":[
+    {
+      "category": "Turtle: absolute movement",
+      "expressions":[
+        {"name":"SETXY", "level":1, "count":1, "lines":"8"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Turtle: drawing shapes",
+      "expressions":[
+        {"name":"ELLIPSE", "level":1, "count":1, "lines":"9"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Other Turtle commands",
+      "expressions":[
+        {"name":"RGB", "level":3, "count":1, "lines":"17"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Canvas operations",
+      "expressions":[
+        {"name":"PIXCOL", "level":3, "count":1, "lines":"15"},
+        {"name":"RECOLOUR", "level":3, "count":1, "lines":"17"}
+      ],
+      "total":2
+    },
+    {
+      "category": "General arithmetic functions",
+      "expressions":[
+        {"name":"RND", "level":2, "count":6, "lines":"4 5 6 7 13 14"}
+      ],
+      "total":6
+    },
+    {
+      "category": "Command structures",
+      "expressions":[
+        {"name":"IF", "level":1, "count":1, "lines":"15"},
+        {"name":"FOR", "level":1, "count":2, "lines":"3 12"}
+      ],
+      "total":3
+    }
+  ],
+  "pcode":[
+    [112,12,1,1,112,0,123,112,6,2,123,4,112,12,124,112,24,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [112,1],
+    [119,19,112,10],
+    [113,19,37,129,13],
+    [112,1500,7,4,112,250,27,119,20],
+    [112,1500,7,4,112,250,27,119,21],
+    [112,500,7,4,112,500,26,119,22],
+    [112,500,7,4,112,500,26,119,23],
+    [113,20,113,21,88],
+    [113,22,113,23,109],
+    [113,19,4,128,4],
+    [112,0,119,24],
+    [112,1],
+    [119,19,112,10000],
+    [113,19,37,129,23],
+    [112,1000,7,4,119,20],
+    [112,1000,7,4,119,21],
+    [113,20,113,21,99,112,16777215,32,129,22],
+    [113,24,112,20,31,112,1,26,119,24],
+    [113,20,113,21,113,24,101,97],
+    [113,19,4,128,15],
+    [130]
+  ]
+}

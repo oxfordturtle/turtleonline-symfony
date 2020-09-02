@@ -1,7 +1,7 @@
 /*
  * The machine output component.
  */
-import { on } from '../../machine/index'
+import { on } from '../../tools/hub'
 
 // get relevant elements
 const output = document.querySelector('[data-component="output"]') as HTMLPreElement

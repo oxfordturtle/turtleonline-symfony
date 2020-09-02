@@ -1,5 +1,11 @@
 {
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/oxfordturtle/turtleonline"
+  },
+  "license": "MIT",
   "scripts": {
+    "test": "jest",
     "build-js": "webpack --config webpack.config.js --mode production",
     "watch-js": "webpack --watch --config webpack.config.js --mode development",
     "build-css-site": "node-sass app/css/screen.scss --output public/css --output-style compressed",
@@ -12,9 +18,12 @@
     "watch": "concurrently \"yarn watch-js\" \"yarn watch-css-site\" \"yarn watch-css-email\""
   },
   "devDependencies": {
+    "@types/jest": "^26.0.8",
     "concurrently": "^5.2.*",
+    "jest": "^26.2.2",
     "node-sass": "^4.14.*",
     "source-map-loader": "^1.0.*",
+    "ts-jest": "^26.1.4",
     "ts-loader": "^8.0.*",
     "typescript": "^3.9.*",
     "webpack": "^4.43.*",

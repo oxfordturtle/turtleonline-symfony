@@ -1,0 +1,105 @@
+{
+  "format":1,
+  "language":"Pascal",
+  "version":13,
+  "name":"Analogue clock (nested Repeat loops)",
+  "author":"Peter Millican",
+  "date":"31/08/2020",
+  "time":"11:16:41",
+  "code":"PROGRAM Clock;\nVAR hours: integer;\n    minutes: integer;\n\n  {draws hour and minute hands on a clock face}\n  Procedure showHands(hours, minutes: integer);\n  Begin\n    {rub out previous hands}\n    colour(white);\n    blot(360);\n    {draw the hour hand and return to centre}\n    colour(red);\n    direction(hours * 30);\n    thickness(10);\n    forward(250);\n    back(250);\n    {draw minute hand and return to centre}\n    direction(minutes * 6);\n    thickness(6);\n    forward(350);\n    back(350)\n  End;\n\nBEGIN\n  {draw a black circle for the clock face}\n  thickness(10);\n  circle(400);\n  {initialise hours and minutes to zero}\n  hours := 0;\n  minutes := 0;\n  {repeatedly through the hours ...}\n  repeat\n    {repeatedly through the minutes ...}\n    repeat\n      {draw both hands in the appropriate place}\n      showHands(hours, minutes);\n      {pause 1/10 second [so clock goes 600 times too fast]}\n      pause(100);\n      {count through the minutes until it reaches 60}\n      inc(minutes)\n    until minutes = 60;\n    {reinitialise minutes, and count through hours until 12}\n    minutes := 0;\n    inc(hours)\n  until hours = 12;\n  {show final position}\n  showHands(hours, minutes)\nEND.",
+  "usage":[
+    {
+      "category": "Turtle: relative movement",
+      "expressions":[
+        {"name":"back", "level":1, "count":2, "lines":"16 21"},
+        {"name":"forward", "level":1, "count":2, "lines":"15 20"}
+      ],
+      "total":4
+    },
+    {
+      "category": "Turtle: absolute movement",
+      "expressions":[
+        {"name":"direction", "level":1, "count":2, "lines":"13 18"}
+      ],
+      "total":2
+    },
+    {
+      "category": "Turtle: drawing shapes",
+      "expressions":[
+        {"name":"blot", "level":1, "count":1, "lines":"10"},
+        {"name":"circle", "level":1, "count":1, "lines":"27"}
+      ],
+      "total":2
+    },
+    {
+      "category": "Other Turtle commands",
+      "expressions":[
+        {"name":"colour", "level":1, "count":2, "lines":"9 12"},
+        {"name":"thickness", "level":1, "count":3, "lines":"14 19 26"}
+      ],
+      "total":5
+    },
+    {
+      "category": "General arithmetic functions",
+      "expressions":[
+        {"name":"inc", "level":1, "count":2, "lines":"40 44"}
+      ],
+      "total":2
+    },
+    {
+      "category": "Input and timing routines",
+      "expressions":[
+        {"name":"pause", "level":1, "count":1, "lines":"38"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Command structures",
+      "expressions":[
+        {"name":"repeat", "level":2, "count":2, "lines":"32 34"},
+        {"name":"procedure", "level":2, "count":1, "lines":"6"}
+      ],
+      "total":3
+    },
+    {
+      "category": "Subroutine calls",
+      "expressions":[
+        {"name":"showhands", "level":0, "count":2, "lines":"36 47"}
+      ],
+      "total":2
+    }
+  ],
+  "pcode":[
+    [112,13,1,1,112,0,123,112,6,2,123,4,112,8,124,112,21,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [128,19],
+    [133,1],
+    [139,12,2],
+    [120,12,2,120,12,1],
+    [112,16777215,87],
+    [112,360,108],
+    [112,16711680,87],
+    [114,12,1,112,30,28,83],
+    [112,10,85],
+    [112,250,91],
+    [112,250,92],
+    [114,12,2,112,6,28,83],
+    [112,6,85],
+    [112,350,91],
+    [112,350,92],
+    [140,12,134,132],
+    [112,10,85],
+    [112,400,107],
+    [112,0,119,20],
+    [112,0,119,21],
+    [113,20,113,21,131,4],
+    [112,100,174],
+    [116,21,1,122,4,2,123],
+    [113,21,112,60,32,129,23],
+    [112,0,119,21],
+    [116,20,1,122,4,2,123],
+    [113,20,112,12,32,129,23],
+    [113,20,113,21,131,4],
+    [130]
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "format":1,
+  "language":"BASIC",
+  "version":13,
+  "name":"Procedure with parameter",
+  "author":"Peter Millican",
+  "date":"31/08/2020",
+  "time":"11:18:27",
+  "code":"REM ParameterProc\n\nFOR count% = 360 TO 1 STEP -1\n  RNDCOL(10)\n  PROCprong(count% + 100)\n  RIGHT(61)\nNEXT\nEND\n\nDEF PROCprong(len%)\n  FORWARD(len%)\n  BLOT(len% / 20)\n  BACK(len%)\nENDPROC",
+  "usage":[
+    {
+      "category": "Turtle: relative movement",
+      "expressions":[
+        {"name":"BACK", "level":1, "count":1, "lines":"13"},
+        {"name":"FORWARD", "level":1, "count":1, "lines":"11"},
+        {"name":"RIGHT", "level":1, "count":1, "lines":"6"}
+      ],
+      "total":3
+    },
+    {
+      "category": "Turtle: drawing shapes",
+      "expressions":[
+        {"name":"BLOT", "level":1, "count":1, "lines":"12"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Other Turtle commands",
+      "expressions":[
+        {"name":"RNDCOL", "level":1, "count":1, "lines":"4"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Command structures",
+      "expressions":[
+        {"name":"FOR", "level":1, "count":1, "lines":"3"},
+        {"name":"DEF PROC", "level":2, "count":1, "lines":"10"}
+      ],
+      "total":2
+    },
+    {
+      "category": "Subroutine calls",
+      "expressions":[
+        {"name":"PROCprong", "level":0, "count":1, "lines":"5"}
+      ],
+      "total":1
+    }
+  ],
+  "pcode":[
+    [112,13,1,1,112,0,123,112,6,2,123,4,112,7,124,112,20,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [128,11],
+    [133,1],
+    [139,12,1],
+    [120,12,1],
+    [114,12,1,91],
+    [114,12,1,112,20,29,108],
+    [114,12,1,92],
+    [140,12,134,132],
+    [112,360],
+    [119,20,112,1],
+    [113,20,36,129,18],
+    [112,10,7,4,101,87],
+    [113,20,112,100,26,131,4],
+    [112,61,94],
+    [113,20,5,128,12],
+    [130]
+  ]
+}

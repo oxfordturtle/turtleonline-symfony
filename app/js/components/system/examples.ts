@@ -1,4 +1,4 @@
-import { Example, Group, groups } from '../../state/examples'
+import { Example, Group, groups } from '../../constants/examples'
 import { fill, a, span, i, div } from '../../tools/elements'
 import state from '../../state/index'
 import { closeMenu, toggleMenu } from '../view'

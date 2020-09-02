@@ -1,0 +1,95 @@
+REM illustrates file handling commands
+CONST testFile1$ = "testFile1$.txt"
+CONST testFile2$ = "testFile2$.txt"
+CONST enquire% = 0
+CONST delete% = 1
+CONST create% = 2
+CONST recreate% = 3
+CONST tNotify% = 4
+CONST fNotify% = 16
+CONST tOnEntry% = 64
+CONST tOnExit% = 128
+
+OUTPUT(TRUE, CREAM, TRUE)
+PROCcheckFileAndDisplay(testFile1$)
+PROCshowResult(FILEEXISTS(testFile1$), "FILEEXISTS(" + testFile1$ + ")")
+WRITELN("")
+PROCdeleteFileAndDisplay(testFile1$)
+
+IF CHECKFILE(testFile1$, create%) > 127 THEN
+  WRITELN("File "" + testFile1$ + "" has been created")
+ELSE
+  WRITELN("File "" + testFile1$ + "" could not be created")
+ENDIF
+PROCshowResult(FILEEXISTS(testFile1$), "FILEEXISTS(" + testFile1$ + ")")
+PROCshowResult(FILEEXISTS(testFile2$), "FILEEXISTS(" + testFile2$ + ")")
+WRITELN("")
+
+IF COPYFILE(testFile1$, testFile2$) THEN
+  WRITELN("File "" + testFile1$ + "" has been copied to "" + testFile2$ + """)
+ELSE
+  WRITELN("File "" + testFile1$ + "" could not be copied to "" + testFile2$ + """)
+ENDIF
+PROCshowResult(FILEEXISTS(testFile1$), "FILEEXISTS(" + testFile1$ + ")")
+PROCshowResult(FILEEXISTS(testFile2$), "FILEEXISTS(" + testFile2$ + ")")
+WRITELN("")
+
+IF CHECKFILE(testFile1$, delete%) < 128 THEN
+  WRITELN("File "" + testFile1$ + "" has been deleted")
+ELSE
+  WRITELN("File "" + testFile1$ + "" could not be deleted")
+ENDIF
+PROCshowResult(FILEEXISTS(testFile1$), "FILEEXISTS(" + testFile1$ + ")")
+WRITELN("")
+
+PROCdeleteFileAndDisplay(testFile1$)
+
+PROCshowResult(FILEEXISTS(testFile2$), "FILEEXISTS(" + testFile2$ + ")")
+IF RENAMEFILE(testFile2$, testFile1$) THEN
+  WRITELN("File "" + testFile2$ + "" has been renamed "" + testFile1$ + """)
+ELSE
+  WRITELN("File "" + testFile2$ + "" could not be renamed"" + testFile1$ + """)
+ENDIF
+PROCshowResult(FILEEXISTS(testFile1$), "FILEEXISTS(" + testFile1$ + ")")
+PROCshowResult(FILEEXISTS(testFile2$), "FILEEXISTS(" + testFile2$ + ")")
+WRITELN("")
+
+PROCdeleteFileAndDisplay(testFile1$)
+END
+
+REM shows the result of the given command
+DEF PROCshowResult(value%, commandText$)
+  IF value% THEN
+    WRITELN(UCASE$(commandText$) + " returns TRUE")
+  ELSE
+    WRITELN(UCASE$(commandText$) + " returns FALSE")
+  ENDIF
+ENDPROC
+
+REM checks for the given file and shows results
+DEF PROCcheckFileAndDisplay(filename$)
+  LOCAL code%
+  code% = create% + tNotify% + fNotify%
+  WRITELN("Code on entry = $" + HEX$(code%, 2))
+  WRITELN("The initial CHECKFILE command will invoke a message window ...")
+  code% = CHECKFILE(filename$, code%)
+  WRITELN("Code on exit = $" + HEX$(code%, 2))
+  IF (code% AND tOnEntry%) > 0 THEN
+    WRITELN("File existed on entry")
+  ELSE
+    WRITELN("No file on entry")
+  ENDIF
+  IF (code% AND tOnExit%) > 0 THEN
+    WRITELN("File existed on exit")
+  ELSE
+    WRITELN("No file on exit")
+  ENDIF
+  WRITELN("")
+ENDPROC
+
+REM tries to delete a file and shows results
+DEF PROCdeleteFileAndDisplay(filename$)
+  PROCshowResult(DELETEFILE(testFile1$), "DELETEFILE(" + testFile1$ + ")")
+  PROCshowResult(FILEEXISTS(testFile1$), "FILEEXISTS(" + testFile1$ + ")")
+  WRITELN("")
+ENDPROC

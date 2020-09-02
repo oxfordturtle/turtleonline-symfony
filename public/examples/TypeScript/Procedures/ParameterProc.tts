@@ -1,0 +1,15 @@
+var count: number;
+
+// draws a prong of the given size
+function prong (size: number) {
+  forward(size);
+  blot(size / 20);
+  back(size);
+}
+
+// draw 360 prongs of decreasing size
+for (count = 360; count = count - 1; count > 0) {
+  randcol(10);
+  prong(count + 100);
+  right(61);
+}

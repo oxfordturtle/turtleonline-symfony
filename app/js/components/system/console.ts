@@ -1,7 +1,7 @@
 /*
  * The machine console component.
  */
-import { on } from '../../machine/index'
+import { on } from '../../tools/hub'
 
 // get relevant elements
 const console = document.querySelector('[data-component="console"]') as HTMLPreElement

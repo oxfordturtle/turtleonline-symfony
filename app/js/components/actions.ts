@@ -1,8 +1,9 @@
 import state from '../state/index'
 import * as machine from '../machine/index'
 import { fill, i } from '../tools/elements'
+import { on, send } from '../tools/hub'
 import { toggleMenu, openMenu, closeMenu, selectTab } from './view'
-import SystemError from '../state/error'
+import { SystemError } from '../tools/error'
 
 const notImplemented = new SystemError('This feature has not yet been implemented in the online system.')
 
@@ -14,7 +15,7 @@ for (const element of document.querySelectorAll('[data-action]')) {
         (element as HTMLButtonElement).blur()
         for (const arg of (element as HTMLElement).dataset.arg?.split(',')) toggleMenu(arg)
       })
-      state.on('toggleMenu', toggleMenu)
+      on('toggleMenu', toggleMenu)
       break
 
     case 'openMenu':
@@ -22,7 +23,7 @@ for (const element of document.querySelectorAll('[data-action]')) {
         (element as HTMLElement).blur()
         for (const arg of (element as HTMLElement).dataset.arg?.split(',')) openMenu(arg)
       })
-      state.on('openMenu', openMenu)
+      on('openMenu', openMenu)
       break
 
     case 'closeMenu':
@@ -30,7 +31,7 @@ for (const element of document.querySelectorAll('[data-action]')) {
         (element as HTMLElement).blur()
         for (const arg of (element as HTMLElement).dataset.arg?.split(',')) closeMenu(arg)
       })
-      state.on('closeMenu', closeMenu)
+      on('closeMenu', closeMenu)
       break
 
     case 'selectTab':
@@ -38,7 +39,7 @@ for (const element of document.querySelectorAll('[data-action]')) {
         (element as HTMLSelectElement).blur()
         selectTab((element as HTMLSelectElement).value)
       })
-      state.on('selectTab', selectTab)
+      on('selectTab', selectTab)
       break
 
     case 'maximize':
@@ -80,7 +81,7 @@ for (const element of document.querySelectorAll('[data-action]')) {
 
     case 'saveExportFile':
       element.addEventListener('click', function () {
-        state.send('error', notImplemented)
+        send('error', notImplemented)
       })
       break
 
@@ -92,31 +93,31 @@ for (const element of document.querySelectorAll('[data-action]')) {
 
     case 'copyCanvasGraphic':
       element.addEventListener('click', function () {
-        state.send('error', notImplemented)
+        send('error', notImplemented)
       })
       break
 
     case 'saveCanvasGraphic':
       element.addEventListener('click', function () {
-        state.send('error', notImplemented)
+        send('error', notImplemented)
       })
       break
 
     case 'printProgram':
       element.addEventListener('click', function () {
-        state.send('error', notImplemented)
+        send('error', notImplemented)
       })
       break
 
     case 'printOutputText':
       element.addEventListener('click', function () {
-        state.send('error', notImplemented)
+        send('error', notImplemented)
       })
       break
 
     case 'printConsoleText':
       element.addEventListener('click', function () {
-        state.send('error', notImplemented)
+        send('error', notImplemented)
       })
       break
 
@@ -159,13 +160,13 @@ for (const element of document.querySelectorAll('[data-action]')) {
 
     case 'findAndReplace':
       element.addEventListener('click', function () {
-        state.send('error', notImplemented)
+        send('error', notImplemented)
       })
       break
 
     case 'autoFormat':
       element.addEventListener('click', function () {
-        state.send('error', notImplemented)
+        send('error', notImplemented)
       })
       break
 
@@ -190,13 +191,13 @@ for (const element of document.querySelectorAll('[data-action]')) {
 
     case 'savePCodeJson':
       element.addEventListener('click', function () {
-        state.send('error', notImplemented)
+        send('error', notImplemented)
       })
       break
 
     case 'savePCodeBinary':
       element.addEventListener('click', function () {
-        state.send('error', notImplemented)
+        send('error', notImplemented)
       })
       break
 
@@ -232,14 +233,14 @@ for (const element of document.querySelectorAll('[data-action]')) {
 
     case 'viewMachineOptions':
       element.addEventListener('click', function (): void {
-        state.send('selectTab', 'options')
+        send('selectTab', 'options')
         closeMenu('system')
       })
       break
 
     case 'loadAndRunPCode':
       element.addEventListener('click', function (): void {
-        state.send('error', notImplemented)
+        send('error', notImplemented)
       })
       break
 

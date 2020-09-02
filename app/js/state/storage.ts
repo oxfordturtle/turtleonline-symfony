@@ -1,7 +1,7 @@
 /**
  * Session storage tools.
  */
-import { Property, defaults } from './properties'
+import { Property, defaults } from '../constants/properties'
 
 /** load a property from local/session storage */
 export function load (property: Property): any {

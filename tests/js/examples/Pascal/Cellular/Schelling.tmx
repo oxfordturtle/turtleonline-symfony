@@ -1,0 +1,123 @@
+{
+  "format":1,
+  "language":"Pascal",
+  "version":13,
+  "name":"Schelling's segregation model",
+  "author":"Peter Millican",
+  "date":"31/08/2020",
+  "time":"11:16:51",
+  "code":"PROGRAM Schelling;\nCONST width = 50;\n      height = 50;\n      empty = green;\nVAR test, tryi, tryj: integer;\n    this, i, j: integer;\n\n  Function happy(x, y, c: integer): boolean;\n  Var like, unlike, neighbour, i, j: integer;\n  Begin\n    like := 0;\n    unlike := 0;\n    for i := -1 to 1 do\n      for j := -1 to 1 do\n        if (i <> 0) or (j <> 0) then\n          begin\n            neighbour := pixcol(x + i, y + j);\n            if neighbour <> empty then\n              begin\n                if neighbour = c then\n                  inc(like)\n                else\n                  inc(unlike)\n              end\n          end;\n    result := (like >= unlike - 1)\n  End;\n\nBEGIN\n  canvas(-1, -1, width + 2, height + 2);\n  resolution(width + 2, height + 2);\n  noupdate;\n  blank(empty);\n  for i := 0 to width - 1 do\n    for j := 0 to height - 1 do\n      begin\n        test := random(25);\n        if test = 0 then\n          pixset(i, j, empty)\n        else\n          begin\n            if (i + j) mod 2 = 0 then\n              pixset(i, j, red)\n            else\n              pixset(i, j, blue)\n          end\n      end;\n  pause(2000);\n  while ?key <> \\escape do\n    begin\n      noupdate;\n      repeat\n        tryi := random(width);\n        tryj := random(height);\n        this := pixcol(tryi, tryj)\n      until (this <> empty) and (not(happy(tryi, tryj, this)));\n      pixset(tryi, tryj, empty);\n      repeat\n        tryi := random(width);\n        tryj := random(height)\n      until (pixcol(tryi, tryj) = empty) and happy(tryi, tryj, this);\n      pixset(tryi, tryj, this);\n      update\n    end\nEND.",
+  "usage":[
+    {
+      "category": "Canvas operations",
+      "expressions":[
+        {"name":"blank", "level":1, "count":1, "lines":"33"},
+        {"name":"noupdate", "level":1, "count":2, "lines":"32 51"},
+        {"name":"update", "level":1, "count":1, "lines":"63"},
+        {"name":"canvas", "level":2, "count":1, "lines":"30"},
+        {"name":"resolution", "level":2, "count":1, "lines":"31"},
+        {"name":"pixcol", "level":3, "count":3, "lines":"17 55 61"},
+        {"name":"pixset", "level":3, "count":5, "lines":"39 43 45 57 62"}
+      ],
+      "total":14
+    },
+    {
+      "category": "General arithmetic functions",
+      "expressions":[
+        {"name":"inc", "level":1, "count":2, "lines":"21 23"},
+        {"name":"random", "level":2, "count":5, "lines":"37 53 54 59 60"}
+      ],
+      "total":7
+    },
+    {
+      "category": "Input and timing routines",
+      "expressions":[
+        {"name":"pause", "level":1, "count":1, "lines":"48"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Command structures",
+      "expressions":[
+        {"name":"if", "level":1, "count":5, "lines":"15 18 20 38 42"},
+        {"name":"else", "level":1, "count":3, "lines":"22 40 44"},
+        {"name":"for", "level":1, "count":4, "lines":"13 14 34 35"},
+        {"name":"repeat", "level":2, "count":2, "lines":"52 58"},
+        {"name":"while", "level":2, "count":1, "lines":"49"},
+        {"name":"function", "level":3, "count":1, "lines":"8"}
+      ],
+      "total":16
+    },
+    {
+      "category": "Subroutine calls",
+      "expressions":[
+        {"name":"happy", "level":0, "count":2, "lines":"56 61"}
+      ],
+      "total":2
+    }
+  ],
+  "pcode":[
+    [112,14,1,1,112,0,123,112,6,2,123,4,112,12,124,112,26,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [128,26],
+    [133,1],
+    [139,12,9],
+    [120,12,4,120,12,3,120,12,2],
+    [112,0,120,12,5],
+    [112,0,120,12,6],
+    [112,1,23],
+    [120,12,8,112,1],
+    [114,12,8,37,129,24],
+    [112,1,23],
+    [120,12,9,112,1],
+    [114,12,9,37,129,23],
+    [114,12,8,112,0,33,114,12,9,112,0,33,18,129,22],
+    [114,12,2,114,12,8,26,114,12,3,114,12,9,26,99,120,12,7],
+    [114,12,7,112,2263842,33,129,22],
+    [114,12,7,114,12,4,32,129,21],
+    [117,12,5,1,122,4,2,123],
+    [128,22],
+    [117,12,6,1,122,4,2,123],
+    [114,12,9,4,128,13],
+    [114,12,8,4,128,10],
+    [114,12,5,114,12,6,112,1,27,37,120,12,1],
+    [113,12,119,13,140,12,134,132],
+    [112,1,23,112,1,23,112,50,112,2,26,112,50,112,2,26,144],
+    [112,50,112,2,26,112,50,112,2,26,145],
+    [112,0,146],
+    [112,2263842,96],
+    [112,0],
+    [119,25,112,50,112,1,27],
+    [113,25,37,129,46],
+    [112,0],
+    [119,26,112,50,112,1,27],
+    [113,26,37,129,45],
+    [112,25,7,119,21],
+    [113,21,112,0,32,129,40],
+    [113,25,113,26,112,2263842,100],
+    [128,44],
+    [113,25,113,26,26,112,2,31,112,0,32,129,43],
+    [113,25,113,26,112,16711680,100],
+    [128,44],
+    [113,25,113,26,112,255,100],
+    [113,26,4,128,34],
+    [113,25,4,128,31],
+    [112,2000,174],
+    [112,-9,160,112,27,33,129,62],
+    [112,0,146],
+    [112,50,7,119,22],
+    [112,50,7,119,23],
+    [113,22,113,23,99,119,24],
+    [113,24,112,2263842,33,113,22,113,23,113,24,131,4],
+    [114,13,1,16,17,129,49],
+    [113,22,113,23,112,2263842,100],
+    [112,50,7,119,22],
+    [112,50,7,119,23],
+    [113,22,113,23,99,112,2263842,32,113,22,113,23,113,24,131,4],
+    [114,13,1,17,129,55],
+    [113,22,113,23,113,24,100],
+    [112,-1,146],
+    [128,47],
+    [130]
+  ]
+}

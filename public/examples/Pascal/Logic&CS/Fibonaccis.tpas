@@ -1,0 +1,42 @@
+PROGRAM Fibonaccis;
+CONST lastnum = 25;
+VAR count: integer;
+    fibSave: array[1..lastnum] of integer;
+
+  {calculates the nth Fibonacci number recursively}
+  Function fibRecursive(n: integer): integer;
+  Begin
+    if (n = 1) or (n = 2) then
+      result := 1
+    else
+      result := fibRecursive(n - 1) + fibRecursive(n - 2)
+  End;
+
+  {calculates the nth Fibonacci number iteratively, using the fibSave array}
+  {N.B. assumes the values for n-1 and n-2 have already been calculated}
+  Function fibIterative(n: integer): integer;
+  Begin
+    if (n = 1) or (n = 2) then
+      fibSave[n] := 1
+    else
+      fibSave[n] := fibSave[n - 1] + fibSave[n - 2];
+    result := fibSave[n]
+  End;
+
+BEGIN
+  {set up and show the output}
+  output(true, cream, true);
+  {calculate and display the Fibonacci series recursively (slow)}
+  writeln('First, by recursion:');
+  timeset(0);
+  for count := 1 to lastnum do
+    writeln('fib(' + str(count) + ') = ' + str(fibRecursive(count)));
+  writeln('Time taken: ' + qstr(time, 1000, 2) + ' seconds');
+  writeln('');
+  {calculate and display the Fibonacci series iteratively (fast)}
+  writeln('Then, by iteration:');
+  timeset(0);
+  for count := 1 to lastnum do
+    writeln('fib(' + str(count) + ') = ' + str(fibIterative(count)));
+  writeln('Time taken: ' + qstr(time, 1000, 2) + ' seconds')
+END.

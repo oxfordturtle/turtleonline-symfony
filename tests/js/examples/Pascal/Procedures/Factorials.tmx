@@ -1,0 +1,72 @@
+{
+  "format":1,
+  "language":"Pascal",
+  "version":13,
+  "name":"Recursive factorials [FUNCTION, OUTPUT]",
+  "author":"Peter Millican",
+  "date":"31/08/2020",
+  "time":"11:16:41",
+  "code":"PROGRAM Factorials;\nVAR n: integer;\n\n  {calculates n! recursively - both the}\n  {parameter n and the result are integers}\n  Function factorial(n: integer): integer;\n  Begin\n    if n = 0 then\n      result := 1\n    else\n      result := n * factorial(n - 1)\n  End;\n\nBEGIN\n  output(true, cream, true);\n  for n := 1 to 10 do\n    writeln(str(n) + '! = ' + str(factorial(n)))\nEND.",
+  "usage":[
+    {
+      "category": "Other Turtle commands",
+      "expressions":[
+        {"name":"output", "level":2, "count":1, "lines":"15"}
+      ],
+      "total":1
+    },
+    {
+      "category": "String operations",
+      "expressions":[
+        {"name":"writeln", "level":1, "count":1, "lines":"17"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Type conversion routines",
+      "expressions":[
+        {"name":"str", "level":1, "count":2, "lines":"17 17"}
+      ],
+      "total":2
+    },
+    {
+      "category": "Command structures",
+      "expressions":[
+        {"name":"if", "level":1, "count":1, "lines":"8"},
+        {"name":"else", "level":1, "count":1, "lines":"10"},
+        {"name":"for", "level":1, "count":1, "lines":"16"},
+        {"name":"function", "level":3, "count":1, "lines":"6"}
+      ],
+      "total":4
+    },
+    {
+      "category": "Subroutine calls",
+      "expressions":[
+        {"name":"factorial", "level":0, "count":2, "lines":"11 17"}
+      ],
+      "total":2
+    }
+  ],
+  "pcode":[
+    [112,14,1,1,112,0,123,112,6,2,123,4,112,7,124,112,21,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [128,13],
+    [133,1],
+    [139,12,2],
+    [120,12,2],
+    [114,12,2,112,0,32,129,10],
+    [112,1,120,12,1],
+    [128,12],
+    [114,12,2,114,12,2,112,1,27,131,4],
+    [114,13,1,28,120,12,1],
+    [113,12,119,13,140,12,134,132],
+    [112,-1,112,16777147,112,-1,166],
+    [112,1],
+    [119,21,112,10],
+    [113,21,37,129,20],
+    [113,21,11,118,4,33,32,61,32,64,113,21,131,4],
+    [114,13,1,11,64,169,170],
+    [113,21,4,142,128,15],
+    [130]
+  ]
+}

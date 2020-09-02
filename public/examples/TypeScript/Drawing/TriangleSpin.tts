@@ -1,0 +1,9 @@
+var i: number;
+
+// adjust starting position
+movexy(30, 20);
+for (i = 1; i = i + 1; i < 300) {
+  // move forward and right by slightly more than 120 degrees
+  forward(i * 3);
+  right(121);
+}

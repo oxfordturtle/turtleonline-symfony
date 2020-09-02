@@ -1,0 +1,55 @@
+{
+  "format":1,
+  "language":"Pascal",
+  "version":13,
+  "name":"Sierpinski triangle (by random dots)",
+  "author":"Peter Millican",
+  "date":"31/08/2020",
+  "time":"11:17:58",
+  "code":"PROGRAM SierpinskiDots;\nVAR x: array[0..2] of integer;\n    y: array[0..2] of integer;\n    thisx, thisy, thisc: integer;\nBEGIN\n  x[0] := 400;\n  y[0] := 138;\n  x[1] := 843;\n  y[1] := 650;\n  x[2] := 179;\n  y[2] := 778;\n  thisx := random(200) + 400;\n  thisy := random(200) + 400;\n  repeat\n    thisc := random(3);\n    thisx := (thisx + x[thisc]) / 2;\n    thisy := (thisy + y[thisc]) / 2;\n    pixset(thisx, thisy, purple)\n  until 0 = 1\nEND.",
+  "usage":[
+    {
+      "category": "Canvas operations",
+      "expressions":[
+        {"name":"pixset", "level":3, "count":1, "lines":"18"}
+      ],
+      "total":1
+    },
+    {
+      "category": "General arithmetic functions",
+      "expressions":[
+        {"name":"random", "level":2, "count":3, "lines":"12 13 15"}
+      ],
+      "total":3
+    },
+    {
+      "category": "Command structures",
+      "expressions":[
+        {"name":"repeat", "level":2, "count":1, "lines":"14"}
+      ],
+      "total":1
+    }
+  ],
+  "pcode":[
+    [112,12,1,1,112,0,123,112,6,2,123,4,112,19,124,112,31,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [116,20,119,19],
+    [112,3,119,20],
+    [116,25,119,24],
+    [112,3,119,25],
+    [113,19,112,0,2,127,26,4,112,400,2,123],
+    [113,24,112,0,2,127,26,4,112,138,2,123],
+    [113,19,112,1,2,127,26,4,112,843,2,123],
+    [113,24,112,1,2,127,26,4,112,650,2,123],
+    [113,19,112,2,2,127,26,4,112,179,2,123],
+    [113,24,112,2,2,127,26,4,112,778,2,123],
+    [112,200,7,112,400,26,119,29],
+    [112,200,7,112,400,26,119,30],
+    [112,3,7,119,31],
+    [113,29,113,19,113,31,2,127,26,4,122,26,112,2,29,119,29],
+    [113,30,113,24,113,31,2,127,26,4,122,26,112,2,29,119,30],
+    [113,29,113,30,112,8388736,100],
+    [112,0,112,1,32,129,15],
+    [130]
+  ]
+}

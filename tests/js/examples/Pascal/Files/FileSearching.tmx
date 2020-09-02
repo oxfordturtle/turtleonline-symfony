@@ -1,0 +1,91 @@
+{
+  "format":1,
+  "language":"Pascal",
+  "version":13,
+  "name":"File searching",
+  "author":"Peter Millican",
+  "date":"31/08/2020",
+  "time":"11:16:46",
+  "code":"PROGRAM FileSearching;\nVAR dhandle: integer;\n    thisdir: string;\n\n  Procedure showdir(d: string);\n  Var fhandle: integer;\n      thisfile: string;\n  Begin\n    if d = '' then\n      writeln('Base directory:')\n    else\n      writeln('Directory \"' + d + '\":');\n    chdir(d);\n    fhandle := 0;\n    thisfile := findfirst('*.*', fhandle);\n    if thisfile = '' then\n      writeln('  <no files>')\n    else\n      while thisfile <> '' do\n        begin\n          writeln('  ' + thisfile);\n          thisfile := findnext(fhandle)\n        end;\n    writeln('')\n  End;\n\nBEGIN\n  output(true, cream, true);\n  writeln('Turtle directories (up to first level) and their files ...');\n  writeln('');\n  showdir('');\n  dhandle := 0;\n  thisdir := finddir('*.*', dhandle);\n  while thisdir <> '' do\n    begin\n      showdir(thisdir);\n      thisdir := findnext(dhandle)\n    end\nEND.",
+  "usage":[
+    {
+      "category": "Other Turtle commands",
+      "expressions":[
+        {"name":"output", "level":2, "count":1, "lines":"28"}
+      ],
+      "total":1
+    },
+    {
+      "category": "String operations",
+      "expressions":[
+        {"name":"writeln", "level":1, "count":7, "lines":"10 12 17 21 24 29 30"}
+      ],
+      "total":7
+    },
+    {
+      "category": "File processing",
+      "expressions":[
+        {"name":"chdir", "level":2, "count":1, "lines":"13"},
+        {"name":"finddir", "level":3, "count":1, "lines":"33"},
+        {"name":"findfirst", "level":3, "count":1, "lines":"15"},
+        {"name":"findnext", "level":3, "count":2, "lines":"22 37"}
+      ],
+      "total":5
+    },
+    {
+      "category": "Command structures",
+      "expressions":[
+        {"name":"if", "level":1, "count":2, "lines":"9 16"},
+        {"name":"else", "level":1, "count":2, "lines":"11 18"},
+        {"name":"while", "level":2, "count":2, "lines":"19 34"},
+        {"name":"procedure", "level":2, "count":1, "lines":"5"}
+      ],
+      "total":7
+    },
+    {
+      "category": "Subroutine calls",
+      "expressions":[
+        {"name":"showdir", "level":0, "count":2, "lines":"31 36"}
+      ],
+      "total":2
+    }
+  ],
+  "pcode":[
+    [112,13,1,1,112,0,123,112,6,2,123,4,112,42,124,112,55,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [116,23,119,21],
+    [112,33,119,22],
+    [128,26],
+    [133,1],
+    [139,12,71],
+    [117,12,2,1,1,4,120,12,1,112,33,2,123,4,126],
+    [117,12,39,120,12,37,112,33,120,12,38],
+    [114,12,1,118,0,40,142,129,13],
+    [118,15,66,97,115,101,32,100,105,114,101,99,116,111,114,121,58,169,170],
+    [128,14],
+    [118,11,68,105,114,101,99,116,111,114,121,32,34,114,12,1,64,118,2,34,58,64,169,170,142],
+    [114,12,1,176],
+    [112,0,120,12,36],
+    [114,12,37,118,3,42,46,42,117,12,36,1,122,3,188,2,3,123,2,126,142],
+    [114,12,37,118,0,40,142,129,20],
+    [118,12,32,32,60,110,111,32,102,105,108,101,115,62,169,170],
+    [128,24],
+    [114,12,37,118,0,41,142,129,24],
+    [118,2,32,32,114,12,37,64,169,170,142],
+    [114,12,37,114,12,36,190,2,126,142],
+    [128,20],
+    [118,0,169,170,142],
+    [140,12,134,132],
+    [112,-1,112,16777147,112,-1,166],
+    [118,58,84,117,114,116,108,101,32,100,105,114,101,99,116,111,114,105,101,115,32,40,117,112,32,116,111,32,102,105,114,115,116,32,108,101,118,101,108,41,32,97,110,100,32,116,104,101,105,114,32,102,105,108,101,115,32,46,46,46,169,170,142],
+    [118,0,169,170,142],
+    [118,0,142,131,6],
+    [112,0,119,20],
+    [113,21,118,3,42,46,42,116,20,1,122,3,189,2,3,123,2,126,142],
+    [113,21,118,0,41,142,129,36],
+    [113,21,131,6],
+    [113,21,113,20,190,2,126,142],
+    [128,32],
+    [130]
+  ]
+}

@@ -1,8 +1,8 @@
 /*
  * The machine memory component.
  */
-import state from '../../state/index'
 import { fill, td, th, tr } from '../../tools/elements'
+import { on } from '../../tools/hub'
 
 // the memory table bodies
 const stackTableBody = document.querySelector('[data-component="memoryStackTableBody"]') as HTMLElement
@@ -10,7 +10,7 @@ const heapTableBody = document.querySelector('[data-component="memoryHeapTableBo
 
 if (stackTableBody && heapTableBody) {
   // register to keep in sync with system state
-  state.on('memoryDumped', function (memory: { stack: number[], heap: number[], heapBase: number }): void {
+  on('memoryDumped', function (memory: { stack: number[], heap: number[], heapBase: number }): void {
     const stackSplit = []
     const heapSplit = []
     while (memory.stack.length > 0) {

@@ -1,15 +1,15 @@
 /**
  * Cursors reference table.
  */
-import { cursors, Cursor } from '../../machine/cursors'
+import { cursors, Cursor } from '../../constants/cursors'
 import { fill, tr } from '../../tools/elements'
-import state from '../../state/index'
+import { on } from '../../tools/hub'
 
 // get relevant elements
 const cursorsTableBody = document.querySelector('[data-component="cursorsTableBody"]') as HTMLElement
 
 if (cursorsTableBody) {
-  state.on('languageChanged', updateTable)
+  on('languageChanged', updateTable)
 }
 
 function updateTable (): void {

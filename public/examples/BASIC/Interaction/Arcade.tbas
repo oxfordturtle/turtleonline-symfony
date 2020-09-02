@@ -1,0 +1,168 @@
+CONST TARGETS% = 10
+REM set initial face coordinates and speed
+faceY% = -100
+faceY% = 625
+faceXspeed% = 5
+faceYspeed% = 0
+REM initialise hits to zero
+hits% = 0
+REM hide default cursor
+CURSOR(0)
+REM until all targets have been hit...
+WHILE hits% < TARGETS%
+  NOUPDATE
+  REM draw background
+  PROCbackground
+  REM draw face at current location
+  SETXY(faceY%, faceY%)
+  PROCface
+  REM draw one bottle for each target hit so far
+  FOR i% = 1 TO hits%
+    PROCbottle(50 * i% - 35, 740)
+  NEXT
+  REM draw foreground
+  PROCforeground
+  REM draw gunsight
+  PROCgunsight
+  UPDATE
+  REM move to next face position
+  faceY% = faceY% + faceXspeed%
+  faceY% = faceY% + faceYspeed%
+  REM loop round at canvas edges
+  IF faceY% > 1100 THEN faceY% = -100
+  IF faceY% < -100 THEN faceY% = 1100
+  IF (faceY% < 100) OR (faceY% > 625) THEN faceYspeed% = faceYspeed% * -1
+  REM if a mouse click is detected on the face...
+  IF ((?LMOUSE > 0) AND (((?MOUSEX - faceY%) * (?MOUSEX - faceY%)) + ((?MOUSEY - faceY%) * (?MOUSEY - faceY%)) < 10000)) THEN
+    REM create a new target
+    faceY% = -100
+    faceXspeed% = RND(5) + 1
+    faceYspeed% = RND(9) - 5
+    faceY% = RND(550) + 49
+    REM increment number of hits
+    INC(hits%)
+  ENDIF
+ENDWHILE
+REM print end of game message
+BLANK(BLACK)
+SETXY(200, 450)
+COLOUR(GREEN)
+PRINT("  Well done!  ", 4, 75)
+END
+
+REM draws a bottle at the given coordinates
+DEF PROCbottle(x%, y%)
+  SETXY(x%, y%)
+  COLOUR(CYAN)
+  MOVEXY(0, -15)
+  THICKNESS(40)
+  DRAWXY(0, -50)
+  THICKNESS(10)
+  DRAWXY(0, -40)
+  THICKNESS(2)
+  MOVEXY(-20, 90)
+  MOVEXY(40, 0)
+  MOVEXY(0, -20)
+  MOVEXY(-40, 0)
+  COLOUR(PURPLE)
+  POLYGON(4)
+  MOVEXY(20, 35)
+ENDPROC
+
+REM draws the scene background
+DEF PROCbackground
+  BLANK(COFFEE)
+  PROCbottle(100, 500)
+  PROCbottle(200, 500)
+  PROCbottle(450, 500)
+  PROCbottle(500, 500)
+  PROCbottle(565, 500)
+  PROCbottle(865, 500)
+  COLOUR(DARKBROWN)
+  THICKNESS(20)
+  SETXY(0, 125)
+  DRAWXY(1000, 0)
+  SETXY(0, 325)
+  DRAWXY(1000, 0)
+  SETXY(0, 525)
+  DRAWXY(1000, 0)
+  COLOUR(BROWN)
+  THICKNESS(30)
+  SETXY(0, 100)
+  DRAWXY(1000, 0)
+  SETXY(0, 300)
+  DRAWXY(1000, 0)
+  SETXY(0, 500)
+  DRAWXY(1000, 0)
+ENDPROC
+
+REM draws the scene foreground
+DEF PROCforeground
+  COLOUR(BROWN)
+  THICKNESS(272)
+  SETXY(0, 863)
+  DRAWXY(1000, 0)
+END
+
+REM draws a hat
+DEF PROChat
+  SETXY(faceY%, faceY% - 80)
+  COLOUR(DARKGREY)
+  ELLBLOT(90, 30)
+  THICKNESS(2)
+  COLOUR(BLACK)
+  ELLIPSE(90, 30)
+  MOVEXY(-70, 0)
+  THICKNESS(4)
+  DRAWXY(35, -70)
+  DRAWXY(70, 0)
+  DRAWXY(35, 70)
+  COLOUR(DARKGREY)
+  THICKNESS(1)
+  POLYGON(4)
+ENDPROC
+
+REM draws a face
+DEF PROCface
+  THICKNESS(1)
+  COLOUR(&FF8899)
+  BLOT(100)
+  COLOUR(WHITE)
+  SETXY(faceY% - 20, faceY% - 20)
+  BLOT(10)
+  COLOUR(BLACK)
+  BLOT(4)
+  THICKNESS(4)
+  MOVEXY(0, -22)
+  COLOUR(&663300)
+  DRAWXY(15, 15)
+  THICKNESS(1)
+  COLOUR(WHITE)
+  SETXY(faceY% + 20, faceY% - 20)
+  BLOT(10)
+  COLOUR(BLACK)
+  BLOT(4)
+  THICKNESS(4)
+  MOVEXY(0, -22)
+  COLOUR(&663300)
+  DRAWXY(-15, 15)
+  PROChat
+  SETXY(faceY%, faceY% + 13)
+  COLOUR(RED)
+  BLOT(10)
+  MOVEXY(0, 32)
+  ELLBLOT(30, 6)
+  COLOUR(WHITE)
+  ELLBLOT(20, 4)
+ENDPROC
+
+REM draws black crosshairs
+DEF PROCgunsight
+  COLOUR(BLACK)
+  THICKNESS(6)
+  SETXY(?MOUSEX - 50, ?MOUSEY)
+  DRAWXY(100, 0)
+  SETXY(?MOUSEX, ?MOUSEY - 50)
+  DRAWXY(0, 100)
+  THICKNESS(2)
+ENDPROC

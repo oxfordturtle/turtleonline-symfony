@@ -1,12 +1,14 @@
-# NestedLoops
-
 penup()
-for countblot in range(0, 10, 1):
+for blotCount in range(0, 10, 1):
+  # draw a black blot
   forward(260)
   colour(black)
   blot(150)
-  colour(rgb(countblot + 1))
-  for countcirc in range(0, 25, 1):
-    circle((countcirc + 1) * 8)
+  # set colour based on blotCount
+  colour(rgb(blotCount + 1))
+  # draw 25 circles of increasing radius
+  for circleCount in range(0, 25, 1):
+    circle((circleCount + 1) * 8)
+  # reposition turtle for the next iteration
   back(260)
   right(36)

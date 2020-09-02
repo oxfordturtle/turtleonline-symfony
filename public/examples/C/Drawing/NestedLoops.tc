@@ -1,0 +1,20 @@
+void main () {
+  int blotCount, circleCount;
+  thickness(4);
+  penup;
+  for (blotCount = 0; blotCount < 10; blotCount = blotCount + 1) {
+    // draw a black blot
+    forward(260);
+    colour(black);
+    blot(150);
+    // set colour based on blotCount
+    colour(rgb(blotCount));
+    // draw 25 circles of increasing radius
+    for (circleCount = 0; circleCount < 25; circleCount = circleCount + 1) {
+      circle((circleCount + 1) * 8);
+    }
+    // reposition the turtle for the next iteration
+    back(260);
+    right(36);
+  }
+}

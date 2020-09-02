@@ -1,0 +1,99 @@
+{
+  "format":1,
+  "language":"BASIC",
+  "version":13,
+  "name":"Stars (using ANGLES and FORGET)",
+  "author":"Peter Millican",
+  "date":"31/08/2020",
+  "time":"11:18:27",
+  "code":"REM Stars\n\nPENUP\nFOR n% = 3 TO 12\n  PROCstar(n%, RGB(n% - 2))\n  PAUSE(500)\nNEXT\nEND\n\nDEF PROCstar(points%, col%)\n  LOCAL count%\n  ANGLES(points% * 2)\n  FOR count% = 1 TO points%\n    FORWARD(450)\n    BACK(450)\n    FORGET(1)\n    RIGHT(1)\n    FORWARD(200)\n    BACK(200)\n    FORGET(1)\n    RIGHT(1)\n  NEXT\n  COLOUR(col%)\n  POLYGON(points% * 2)\nENDPROC",
+  "usage":[
+    {
+      "category": "Turtle: relative movement",
+      "expressions":[
+        {"name":"BACK", "level":1, "count":2, "lines":"15 19"},
+        {"name":"FORWARD", "level":1, "count":2, "lines":"14 18"},
+        {"name":"RIGHT", "level":1, "count":2, "lines":"17 21"}
+      ],
+      "total":6
+    },
+    {
+      "category": "Turtle: absolute movement",
+      "expressions":[
+        {"name":"ANGLES", "level":2, "count":1, "lines":"12"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Turtle: drawing shapes",
+      "expressions":[
+        {"name":"FORGET", "level":2, "count":2, "lines":"16 20"},
+        {"name":"POLYGON", "level":2, "count":1, "lines":"24"}
+      ],
+      "total":3
+    },
+    {
+      "category": "Other Turtle commands",
+      "expressions":[
+        {"name":"COLOUR", "level":1, "count":1, "lines":"23"},
+        {"name":"PENUP", "level":1, "count":1, "lines":"3"},
+        {"name":"RGB", "level":3, "count":1, "lines":"5"}
+      ],
+      "total":3
+    },
+    {
+      "category": "Input and timing routines",
+      "expressions":[
+        {"name":"PAUSE", "level":1, "count":1, "lines":"6"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Command structures",
+      "expressions":[
+        {"name":"FOR", "level":1, "count":2, "lines":"13 4"},
+        {"name":"DEF PROC", "level":2, "count":1, "lines":"10"}
+      ],
+      "total":3
+    },
+    {
+      "category": "Subroutine calls",
+      "expressions":[
+        {"name":"PROCstar", "level":0, "count":1, "lines":"5"}
+      ],
+      "total":1
+    }
+  ],
+  "pcode":[
+    [112,13,1,1,112,0,123,112,6,2,123,4,112,7,124,112,20,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [128,23],
+    [133,1],
+    [139,12,3],
+    [120,12,2,120,12,1],
+    [114,12,1,112,2,28,84],
+    [112,1],
+    [120,12,3,114,12,1],
+    [114,12,3,37,129,20],
+    [112,450,91],
+    [112,450,92],
+    [112,1,104],
+    [112,1,94],
+    [112,200,91],
+    [112,200,92],
+    [112,1,104],
+    [112,1,94],
+    [114,12,3,4,128,9],
+    [114,12,2,87],
+    [114,12,1,112,2,28,106],
+    [140,12,134,132],
+    [112,0,86],
+    [112,3],
+    [119,20,112,12],
+    [113,20,37,129,30],
+    [113,20,113,20,112,2,27,101,131,4],
+    [112,500,174],
+    [113,20,4,128,25],
+    [130]
+  ]
+}

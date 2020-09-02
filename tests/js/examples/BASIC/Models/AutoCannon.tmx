@@ -1,0 +1,215 @@
+{
+  "format":1,
+  "language":"BASIC",
+  "version":13,
+  "name":"Firing a cannon (automatic)",
+  "author":"Peter Millican",
+  "date":"31/08/2020",
+  "time":"11:18:37",
+  "code":"REM AutoCannon\n\nCONST GUNLENGTH% = 1000\nCONST DISTANCECOL% = GREEN\nCONST TIMECOL% = RED\nCANVAS(0, 0, 10500, 10000)\nPROCgraphaxes\nturtd% = 45\nTHICKNESS(20)\nFOR n% = 0 TO 90\n  PROCaim(n%)\n  WRITE(\"Elevation: \" + STR$(90 - turtd%))\n  PROCfire(COS(90 - turtd%, 1, 96), SIN(90 - turtd%, 1, -96), 1, 9950)\n  WRITE(\"  Distance: \" + STR$(turtx%))\n  WRITELN(\"  Time: \" + STR$(steps%))\n  PROCplot(90 - turtd%, turtx%, DISTANCECOL%)\n  PROCplot(90 - turtd%, steps% * 50, TIMECOL%)\nNEXT\nEND\n\nDEF PROCgraphaxes\n  LOCAL n%\n  THICKNESS(5)\n  SETXY(9700, 600)\n  DRAWXY(0, 3900)\n  DRAWXY(-9000, 0)\n  DRAWXY(0, -3900)\n  FOR n% = 0 TO 90\n    IF n% MOD 5 = 0 THEN\n      SETXY(650 + n% * 100, 4600)\n      PRINT(STR$(n%), 2, 16)\n    ENDIF\n  NEXT\n  FOR n% = 0 TO 9\n    SETXY(100, 4350 - n% * 400)\n    PRINT(STR$(n% * 1000), 2, 16)\n  NEXT\n  FOR n% = 0 TO 9\n    SETXY(9900, 4380 - n% * 400)\n    PRINT(STR$(n% * 20), 2, 16)\n  NEXT\n  SETXY(4000, 4900)\n  PRINT(\"Angle of elevation\", 2, 24)\n  COLOUR(DISTANCECOL%)\n  SETXY(0, 100)\n  PRINT(\"Distance\", 2, 24)\n  COLOUR(TIMECOL%)\n  SETXY(9600, 100)\n  PRINT(\"Time\", 2, 24)\nENDPROC\n\nDEF PROCplot(x%, y%, col%)\n  SETXY(700 + x% * 100, 4500 - y% * 2 / 5)\n  COLOUR(col%)\n  BLOT(40)\nENDPROC\n\nDEF PROCaim(elevation%)\n  NOUPDATE\n  SETXY(0, 10000)\n  COLOUR(CREAM)\n  BLOT(1600)\n  COLOUR(YELLOWGREEN)\n  BLOT(1400)\n  COLOUR(MAROON)\n  SETXY(250, 9750)\n  BLOT(250)\n  DIRECTION(90 - elevation%)\n  FORWARD(GUNLENGTH%)\n  SETXY(250, 9750)\n  COLOUR(RED)\n  BLOT(100)\n  UPDATE\nENDPROC\n\nDEF PROCfire(xvel%, yvel%, gravity%, floor%)\n  SETXY(250, 9750)\n  steps% = 0\n  REPEAT\n    INC(steps%)\n    IF PIXCOL(turtx%, turty%) = BLACK THEN\n      COLOUR(WHITE)\n      BLOT(80)\n    ENDIF\n    MOVEXY(xvel%, yvel%)\n    yvel% = yvel% + gravity%\n    IF turty% > floor% THEN turty% = floor%\n    IF (PIXCOL(turtx%, turty%) = WHITE) OR (turty% = floor%) THEN\n      COLOUR(BLACK)\n      BLOT(75)\n    ENDIF\n    UPDATE\n    PAUSE(10)\n    NOUPDATE\n  UNTIL turty% = floor%\nENDPROC",
+  "usage":[
+    {
+      "category": "Turtle: relative movement",
+      "expressions":[
+        {"name":"FORWARD", "level":1, "count":1, "lines":"69"},
+        {"name":"DRAWXY", "level":2, "count":3, "lines":"25 26 27"},
+        {"name":"MOVEXY", "level":2, "count":1, "lines":"85"}
+      ],
+      "total":5
+    },
+    {
+      "category": "Turtle: absolute movement",
+      "expressions":[
+        {"name":"DIRECTION", "level":1, "count":1, "lines":"68"},
+        {"name":"SETXY", "level":1, "count":12, "lines":"24 30 35 39 42 45 48 53 60 66 70 77"}
+      ],
+      "total":13
+    },
+    {
+      "category": "Turtle: drawing shapes",
+      "expressions":[
+        {"name":"BLOT", "level":1, "count":7, "lines":"55 62 64 67 72 83 90"}
+      ],
+      "total":7
+    },
+    {
+      "category": "Other Turtle commands",
+      "expressions":[
+        {"name":"COLOUR", "level":1, "count":9, "lines":"44 47 54 61 63 65 71 82 89"},
+        {"name":"THICKNESS", "level":1, "count":2, "lines":"23 9"}
+      ],
+      "total":11
+    },
+    {
+      "category": "Canvas operations",
+      "expressions":[
+        {"name":"NOUPDATE", "level":1, "count":2, "lines":"59 94"},
+        {"name":"UPDATE", "level":1, "count":2, "lines":"73 92"},
+        {"name":"CANVAS", "level":2, "count":1, "lines":"6"},
+        {"name":"PIXCOL", "level":3, "count":2, "lines":"81 88"}
+      ],
+      "total":7
+    },
+    {
+      "category": "General arithmetic functions",
+      "expressions":[
+        {"name":"INC", "level":1, "count":1, "lines":"80"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Trig / exp / log functions",
+      "expressions":[
+        {"name":"COS", "level":2, "count":1, "lines":"13"},
+        {"name":"SIN", "level":2, "count":1, "lines":"13"}
+      ],
+      "total":2
+    },
+    {
+      "category": "String operations",
+      "expressions":[
+        {"name":"PRINT", "level":1, "count":6, "lines":"31 36 40 43 46 49"},
+        {"name":"WRITE", "level":1, "count":2, "lines":"12 14"},
+        {"name":"WRITELN", "level":1, "count":1, "lines":"15"}
+      ],
+      "total":9
+    },
+    {
+      "category": "Type conversion routines",
+      "expressions":[
+        {"name":"STR$", "level":1, "count":6, "lines":"31 36 40 12 14 15"}
+      ],
+      "total":6
+    },
+    {
+      "category": "Input and timing routines",
+      "expressions":[
+        {"name":"PAUSE", "level":1, "count":1, "lines":"93"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Command structures",
+      "expressions":[
+        {"name":"IF", "level":1, "count":4, "lines":"29 81 87 88"},
+        {"name":"FOR", "level":1, "count":4, "lines":"28 34 38 10"},
+        {"name":"REPEAT", "level":2, "count":1, "lines":"79"},
+        {"name":"DEF PROC", "level":2, "count":4, "lines":"21 52 58 76"}
+      ],
+      "total":13
+    },
+    {
+      "category": "Subroutine calls",
+      "expressions":[
+        {"name":"PROCgraphaxes", "level":0, "count":1, "lines":"7"},
+        {"name":"PROCaim", "level":0, "count":1, "lines":"11"},
+        {"name":"PROCfire", "level":0, "count":1, "lines":"13"},
+        {"name":"PROCplot", "level":0, "count":2, "lines":"16 17"}
+      ],
+      "total":5
+    }
+  ],
+  "pcode":[
+    [112,16,1,1,112,0,123,112,6,2,123,4,112,8,124,112,24,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [128,86],
+    [133,1],
+    [139,12,1],
+    [112,5,85],
+    [112,9700,112,600,88],
+    [112,0,112,3900,90],
+    [112,9000,23,112,0,90],
+    [112,0,112,3900,23,90],
+    [112,0],
+    [120,12,1,112,90],
+    [114,12,1,37,129,18],
+    [114,12,1,112,5,31,112,0,32,129,17],
+    [112,650,114,12,1,112,100,28,26,112,4600,88],
+    [114,12,1,11,112,2,112,16,168,142],
+    [114,12,1,4,128,12],
+    [112,0],
+    [120,12,1,112,9],
+    [114,12,1,37,129,24],
+    [112,100,112,4350,114,12,1,112,400,28,27,88],
+    [114,12,1,112,1000,28,11,112,2,112,16,168,142],
+    [114,12,1,4,128,19],
+    [112,0],
+    [120,12,1,112,9],
+    [114,12,1,37,129,30],
+    [112,9900,112,4380,114,12,1,112,400,28,27,88],
+    [114,12,1,112,20,28,11,112,2,112,16,168,142],
+    [114,12,1,4,128,25],
+    [112,4000,112,4900,88],
+    [118,18,65,110,103,108,101,32,111,102,32,101,108,101,118,97,116,105,111,110,112,2,112,24,168,142],
+    [112,2263842,87],
+    [112,0,112,100,88],
+    [118,8,68,105,115,116,97,110,99,101,112,2,112,24,168,142],
+    [112,16711680,87],
+    [112,9600,112,100,88],
+    [118,4,84,105,109,101,112,2,112,24,168,142],
+    [140,12,134,132],
+    [133,2],
+    [139,13,3],
+    [120,13,3,120,13,2,120,13,1],
+    [112,700,114,13,1,112,100,28,26,112,4500,114,13,2,112,2,28,112,5,29,27,88],
+    [114,13,3,87],
+    [112,40,108],
+    [140,13,134,132],
+    [133,3],
+    [139,14,1],
+    [120,14,1],
+    [112,0,146],
+    [112,0,112,10000,88],
+    [112,16777147,87],
+    [112,1600,108],
+    [112,11193395,87],
+    [112,1400,108],
+    [112,8388608,87],
+    [112,250,112,9750,88],
+    [112,250,108],
+    [112,90,114,14,1,27,83],
+    [112,1000,91],
+    [112,250,112,9750,88],
+    [112,16711680,87],
+    [112,100,108],
+    [112,-1,146],
+    [140,14,134,132],
+    [133,4],
+    [139,15,4],
+    [120,15,4,120,15,3,120,15,2,120,15,1],
+    [112,250,112,9750,88],
+    [112,0,119,24],
+    [116,24,1,122,4,2,123],
+    [113,17,113,18,99,112,0,32,129,74],
+    [112,16777215,87],
+    [112,80,108],
+    [114,15,1,114,15,2,89],
+    [114,15,2,114,15,3,26,120,15,2],
+    [113,18,114,15,4,35,129,78],
+    [114,15,4,119,18],
+    [113,17,113,18,99,112,16777215,32,113,18,114,15,4,32,18,129,81],
+    [112,0,87],
+    [112,75,108],
+    [112,-1,146],
+    [112,10,174],
+    [112,0,146],
+    [113,18,114,15,4,32,129,70],
+    [140,15,134,132],
+    [112,0,112,0,112,10500,112,10000,144],
+    [131,4],
+    [112,45,119,19],
+    [112,20,85],
+    [112,0],
+    [119,23,112,90],
+    [113,23,37,129,101],
+    [113,23,131,46],
+    [118,11,69,108,101,118,97,116,105,111,110,58,32,112,90,113,19,27,11,64,169,142],
+    [112,90,113,19,27,112,1,112,96,58,112,90,113,19,27,112,1,112,96,23,57,112,1,112,9950,131,65],
+    [118,12,32,32,68,105,115,116,97,110,99,101,58,32,113,17,11,64,169,142],
+    [118,8,32,32,84,105,109,101,58,32,113,24,11,64,169,170,142],
+    [112,90,113,19,27,113,17,112,2263842,131,39],
+    [112,90,113,19,27,113,24,112,50,28,112,16711680,131,39],
+    [113,23,4,128,91],
+    [130]
+  ]
+}

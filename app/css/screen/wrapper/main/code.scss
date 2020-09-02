@@ -1,52 +1,30 @@
 .main code {
   .comment {
-    color: gray;
+    color: blue;
   }
-  .string {
-    color: seagreen;
-  }
-  .operator {
-    color: steelblue;
-  }
-  .punctuation {}
-  .binary,
-  .octal,
-  .decimal,
-  .hexadecimal {
-    color: peru;
-  }
-  .type {
-    color: firebrick;
-  }
+
   .keyword {
     color: firebrick;
     font-weight: bold;
   }
-  .command,
-  .custom {
-    color: purple;
+
+  .character, .string {
+    color: seagreen;
   }
-  .turtle,
-  .variable {
+
+  .keycode, .query {
     font-weight: bold;
   }
-  .constant {
-    color: steelblue;
-  }
-  .keycode {
-    color: steelblue;
-  }
-  .query {
+
+  .turtle, .variable {
     font-weight: bold;
   }
-  .identifier {}
-  .unterminated-comment,
-  .unterminated-string,
-  .bad-binary,
-  .bad-octal,
-  .bad-hexadecimal,
-  .bad-decimal,
-  .illegal {
+
+  .colour {
+    border-bottom: .125em solid transparent;
+  }
+
+  .illegal, .error {
     background: rgba(200, 0, 0, .2);
   }
 }

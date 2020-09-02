@@ -1,0 +1,195 @@
+{
+  "format":1,
+  "language":"Pascal",
+  "version":13,
+  "name":"Logistic spider",
+  "author":"Peter Millican",
+  "date":"31/08/2020",
+  "time":"11:18:04",
+  "code":"PROGRAM LogisticSpider;\nCONST maxpop = 100000;\n      maxgen = 100;\n      lmargin = 60;\n      rmargin = 40;\n      tmargin = 150;\n      bmargin = 200;\n      output = true;\nVAR gen, pop: integer;\n    r: integer;\n\n  Procedure axes;\n  Var i: integer;\n  Begin\n    colour(black);\n    for i := 0 to 10 do\n      begin\n        setxy(i * 100 - 25, 1000);\n        print(qstr(i, 10, 1), 4, 20)\n      end;\n    for i := 1 to 10 do\n      begin\n        setxy(-lmargin + 5, 1000 - i * 100 - 20);\n        print(qstr(i, 10, 1), 4, 20)\n      end;\n    setxy(0, 0);\n    drawxy(0, 1000);\n    drawxy(1000, 0);\n    colour(red);\n    setxy(0, 1060);\n    print('Population over ' + str(maxgen) + ' generations, where P (population/' + str(maxpop)\n     + ')', 4, 25);\n    setxy(0, 1110);\n    print('is determined by the logistic equation P'' = rP(1 - P), with r = ' + qstr(r, 10, 1),\n     4, 25)\n  End;\n\n  Procedure menu;\n  Var i: integer;\n  Begin\n    colour(black);\n    setxy(10, -tmargin + 20);\n    print('Set k:', 4, 25);\n    for i := 21 to 40 do\n      begin\n        setxy(((i - 1) mod 10) * 90 + 130, ((i - 1) div 10) * 50 - 100 - tmargin);\n        if i = r then\n          box(90, 50, red, true)\n        else\n          box(90, 50, cream, true);\n        print('  ' + qstr(i, 10, 1), 4, 25)\n      end\n  End;\n\n  Procedure curve;\n  Var i, pop, nextpop: integer;\n  Begin\n    noupdate;\n    colour(black);\n    setxy(0, 1000);\n    drawxy(1000, -1000);\n    colour(blue);\n    setxy(0, 1000);\n    for i := 1 to 1000 do\n      begin\n        pop := divmult(i, 1000, maxpop);\n        nextpop := divmult(pop, 10 * maxpop, r * (maxpop - pop));\n        setxy(divmult(pop, maxpop, 1000), 1000 - divmult(nextpop, maxpop, 1000));\n        polyline(2)\n      end;\n    update\n  End;\n\nBEGIN\n  canvas(-lmargin, -tmargin, 1000 + lmargin + rmargin, 1000 + tmargin + bmargin);\n  resolution(1000 + lmargin + rmargin, 1000 + tmargin + bmargin);\n  thickness(3);\n  r := 30;\n  repeat\n    noupdate;\n    blank(white);\n    axes;\n    menu;\n    curve;\n    pop := random(maxpop - 9) + 10;\n    if output then\n      begin\n        writeln('');\n        writeln('r = ' + qstr(r, 10, 1) + '; Initial population = ' + str(pop))\n      end;\n    setxy(divmult(pop, maxpop, 1000), 1000);\n    for gen := 1 to maxgen do\n      begin\n        pop := divmult(pop, 10 * maxpop, r * (maxpop - pop));\n        colour(mixcols(lightgreen, green, maxgen - gen, gen));\n        drawxy(0, 1000 - divmult(pop, maxpop, 1000) - turty);\n        drawxy(divmult(pop, maxpop, 1000) - turtx, 0);\n        if output then\n          begin\n            write(str(pop) + ' ');\n            if gen mod 10 = 0 then\n              writeln('')\n          end\n      end;\n    blot(3);\n    update;\n    repeat\n    until (?lmouse > 0) and (?clicky < (100 - tmargin)) and (?clickx >= 130) and (?clickx < 1030);\n    r := ((?clickx - 130) div 90) + ((?clicky + tmargin + 100) div 50) * 10 + 1\n  until 0 = 1\nEND.",
+  "usage":[
+    {
+      "category": "Turtle: relative movement",
+      "expressions":[
+        {"name":"drawxy", "level":2, "count":5, "lines":"27 28 61 96 97"}
+      ],
+      "total":5
+    },
+    {
+      "category": "Turtle: absolute movement",
+      "expressions":[
+        {"name":"setxy", "level":1, "count":11, "lines":"18 23 26 30 33 42 46 60 63 68 91"}
+      ],
+      "total":11
+    },
+    {
+      "category": "Turtle: drawing shapes",
+      "expressions":[
+        {"name":"blot", "level":1, "count":1, "lines":"105"},
+        {"name":"box", "level":2, "count":2, "lines":"48 50"},
+        {"name":"polyline", "level":2, "count":1, "lines":"69"}
+      ],
+      "total":4
+    },
+    {
+      "category": "Other Turtle commands",
+      "expressions":[
+        {"name":"colour", "level":1, "count":6, "lines":"15 29 41 59 62 95"},
+        {"name":"thickness", "level":1, "count":1, "lines":"77"},
+        {"name":"mixcols", "level":3, "count":1, "lines":"95"}
+      ],
+      "total":8
+    },
+    {
+      "category": "Canvas operations",
+      "expressions":[
+        {"name":"blank", "level":1, "count":1, "lines":"81"},
+        {"name":"noupdate", "level":1, "count":2, "lines":"58 80"},
+        {"name":"update", "level":1, "count":2, "lines":"71 106"},
+        {"name":"canvas", "level":2, "count":1, "lines":"75"},
+        {"name":"resolution", "level":2, "count":1, "lines":"76"}
+      ],
+      "total":7
+    },
+    {
+      "category": "General arithmetic functions",
+      "expressions":[
+        {"name":"random", "level":2, "count":1, "lines":"85"},
+        {"name":"divmult", "level":3, "count":8, "lines":"66 67 68 68 91 94 96 97"}
+      ],
+      "total":9
+    },
+    {
+      "category": "String operations",
+      "expressions":[
+        {"name":"print", "level":1, "count":6, "lines":"19 24 31 34 43 51"},
+        {"name":"write", "level":1, "count":1, "lines":"100"},
+        {"name":"writeln", "level":1, "count":3, "lines":"88 89 102"}
+      ],
+      "total":10
+    },
+    {
+      "category": "Type conversion routines",
+      "expressions":[
+        {"name":"str", "level":1, "count":4, "lines":"31 31 89 100"},
+        {"name":"qstr", "level":2, "count":5, "lines":"19 24 34 51 89"}
+      ],
+      "total":9
+    },
+    {
+      "category": "Command structures",
+      "expressions":[
+        {"name":"if", "level":1, "count":4, "lines":"47 86 98 101"},
+        {"name":"else", "level":1, "count":1, "lines":"49"},
+        {"name":"for", "level":1, "count":5, "lines":"16 21 44 64 92"},
+        {"name":"repeat", "level":2, "count":2, "lines":"79 107"},
+        {"name":"procedure", "level":2, "count":3, "lines":"12 38 55"}
+      ],
+      "total":15
+    },
+    {
+      "category": "Subroutine calls",
+      "expressions":[
+        {"name":"axes", "level":0, "count":1, "lines":"82"},
+        {"name":"menu", "level":0, "count":1, "lines":"83"},
+        {"name":"curve", "level":0, "count":1, "lines":"84"}
+      ],
+      "total":3
+    }
+  ],
+  "pcode":[
+    [112,15,1,1,112,0,123,112,6,2,123,4,112,9,124,112,24,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [128,62],
+    [133,1],
+    [139,12,1],
+    [112,0,87],
+    [112,0],
+    [120,12,1,112,10],
+    [114,12,1,37,129,13],
+    [114,12,1,112,100,28,112,25,27,112,1000,88],
+    [114,12,1,112,10,112,1,14,112,4,112,20,168,142],
+    [114,12,1,4,128,8],
+    [112,1],
+    [120,12,1,112,10],
+    [114,12,1,37,129,19],
+    [112,60,23,112,5,26,112,1000,114,12,1,112,100,28,27,112,20,27,88],
+    [114,12,1,112,10,112,1,14,112,4,112,20,168,142],
+    [114,12,1,4,128,14],
+    [112,0,112,0,88],
+    [112,0,112,1000,90],
+    [112,1000,112,0,90],
+    [112,16711680,87],
+    [112,0,112,1060,88],
+    [118,16,80,111,112,117,108,97,116,105,111,110,32,111,118,101,114,32,112,100,11,64,118,34,32,103,101,110,101,114,97,116,105,111,110,115,44,32,119,104,101,114,101,32,80,32,40,112,111,112,117,108,97,116,105,111,110,47,64,112,100000,11,64,112,41,9,64,112,4,112,25,168,142],
+    [112,0,112,1110,88],
+    [118,64,105,115,32,100,101,116,101,114,109,105,110,101,100,32,98,121,32,116,104,101,32,108,111,103,105,115,116,105,99,32,101,113,117,97,116,105,111,110,32,80,39,32,61,32,114,80,40,49,32,45,32,80,41,44,32,119,105,116,104,32,114,32,61,32,113,24,112,10,112,1,14,64,112,4,112,25,168,142],
+    [140,12,134,132],
+    [133,2],
+    [139,13,1],
+    [112,0,87],
+    [112,10,112,150,23,112,20,26,88],
+    [118,6,83,101,116,32,107,58,112,4,112,25,168,142],
+    [112,21],
+    [120,13,1,112,40],
+    [114,13,1,37,129,43],
+    [114,13,1,112,1,27,112,10,31,112,90,28,112,130,26,114,13,1,112,1,27,112,10,30,112,50,28,112,100,27,112,150,27,88],
+    [114,13,1,113,24,32,129,40],
+    [112,90,112,50,112,16711680,112,-1,111],
+    [128,41],
+    [112,90,112,50,112,16777147,112,-1,111],
+    [118,2,32,32,114,13,1,112,10,112,1,14,64,112,4,112,25,168,142],
+    [114,13,1,4,128,34],
+    [140,13,134,132],
+    [133,3],
+    [139,14,3],
+    [112,0,146],
+    [112,0,87],
+    [112,0,112,1000,88],
+    [112,1000,112,1000,23,90],
+    [112,255,87],
+    [112,0,112,1000,88],
+    [112,1],
+    [120,14,1,112,1000],
+    [114,14,1,37,129,60],
+    [114,14,1,112,1000,112,100000,48,120,14,2],
+    [114,14,2,112,10,112,100000,28,113,24,112,100000,114,14,2,27,28,48,120,14,3],
+    [114,14,2,112,100000,112,1000,48,112,1000,114,14,3,112,100000,112,1000,48,27,88],
+    [112,2,105],
+    [114,14,1,4,128,53],
+    [112,-1,146],
+    [140,14,134,132],
+    [112,60,23,112,150,23,112,1000,112,60,26,112,40,26,112,1000,112,150,26,112,200,26,144],
+    [112,1000,112,60,26,112,40,26,112,1000,112,150,26,112,200,26,145],
+    [112,3,85],
+    [112,30,119,24],
+    [112,0,146],
+    [112,16777215,96],
+    [131,4],
+    [131,28],
+    [131,44],
+    [112,100000,112,9,27,7,112,10,26,119,23],
+    [112,-1,129,75],
+    [118,0,169,170,142],
+    [118,4,114,32,61,32,113,24,112,10,112,1,14,64,118,23,59,32,73,110,105,116,105,97,108,32,112,111,112,117,108,97,116,105,111,110,32,61,32,64,113,23,11,64,169,170,142],
+    [113,23,112,100000,112,1000,48,112,1000,88],
+    [112,1],
+    [119,22,112,100],
+    [113,22,37,129,88],
+    [113,23,112,10,112,100000,28,113,24,112,100000,113,23,27,28,48,119,23],
+    [112,10025880,112,2263842,112,100,113,22,27,113,22,102,87],
+    [112,0,112,1000,113,23,112,100000,112,1000,48,27,113,17,27,90],
+    [113,23,112,100000,112,1000,48,113,16,27,112,0,90],
+    [112,-1,129,87],
+    [113,23,11,112,32,9,64,169,142],
+    [113,22,112,10,31,112,0,32,129,87],
+    [118,0,169,170,142],
+    [113,22,4,128,77],
+    [112,3,108],
+    [112,-1,146],
+    [112,-1,160,112,0,35,112,-6,160,112,100,112,150,27,34,17,112,-5,160,112,130,37,17,112,-5,160,112,1030,34,17,129,90],
+    [112,-5,160,112,130,27,112,90,30,112,-6,160,112,150,26,112,100,26,112,50,30,112,10,28,26,112,1,26,119,24],
+    [112,0,112,1,32,129,66],
+    [130]
+  ]
+}

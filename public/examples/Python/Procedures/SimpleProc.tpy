@@ -5,10 +5,7 @@ def prong():
   blot(20)
   back(400)
 
-randcol(10)
-prong()
-right(61)
-while turtd != 0:
+while turtd != 299:
   randcol(10)
   prong()
   right(61)

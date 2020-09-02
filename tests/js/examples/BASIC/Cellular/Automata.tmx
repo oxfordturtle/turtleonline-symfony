@@ -1,0 +1,147 @@
+{
+  "format":1,
+  "language":"BASIC",
+  "version":13,
+  "name":"One-dimensional cellular automata",
+  "author":"Peter Millican",
+  "date":"31/08/2020",
+  "time":"11:18:34",
+  "code":"REM Automata\n\nCONST WIDTH% = 100\nCONST HEIGHT% = 100\nDIM cellcol%(1)\nDIM nextstate%(7)\nCANVAS(0, 0, WIDTH%, HEIGHT%)\nRESOLUTION(WIDTH%, HEIGHT%)\ncellcol%(0) = &FFFFFE\ncellcol%(1) = &000001\nFOR n% = 4 TO 45\n  rule% = n% * 4 + 2\n  PROCsetup(rule%)\n  NOUPDATE\n  BLANK(WHITE)\n  FOR x% = 0 TO WIDTH% - 1\n    PIXSET(x%, 0, cellcol%(RND(2) - 1))\n  NEXT\n  FOR generation% = 1 TO HEIGHT% - 1\n    PROCnextgen(generation%)\n  NEXT\n  SETXY(0, HEIGHT% - 15)\n  BOX(25 + LEN(STR$(rule%)) * 7, 14, CREAM, FALSE)\n  PRINT(\"Rule \" + STR$(rule%), 4, 8)\n  UPDATE\n  PAUSE(500)\nNEXT\nEND\n\nDEF PROCsetup(rulecode%)\n  LOCAL nhood%\n  FOR nhood% = 0 TO 7\n    nextstate%(nhood%) = rulecode% MOD 2\n    rulecode% = rulecode% DIV 2\n  NEXT\nENDPROC\n\nDEF PROCnextgen(g%)\n  LOCAL x%, xmod%, thispix%\n  LOCAL n1%, n2%, n3%\n  FOR x% = -1 TO WIDTH%\n    xmod% = (x% + WIDTH%) MOD WIDTH%\n    thispix% = PIXCOL(xmod%, g% - 1) AND 1\n    n3% = n2% * 2 + thispix%\n    n2% = n1% * 2 + thispix%\n    n1% = thispix%\n    IF x% > 0 THEN\n      PIXSET(x% - 1, g%, cellcol%(nextstate%(n3%)))\n    ENDIF\n  NEXT\nENDPROC",
+  "usage":[
+    {
+      "category": "Turtle: absolute movement",
+      "expressions":[
+        {"name":"SETXY", "level":1, "count":1, "lines":"22"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Turtle: drawing shapes",
+      "expressions":[
+        {"name":"BOX", "level":2, "count":1, "lines":"23"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Canvas operations",
+      "expressions":[
+        {"name":"BLANK", "level":1, "count":1, "lines":"15"},
+        {"name":"NOUPDATE", "level":1, "count":1, "lines":"14"},
+        {"name":"UPDATE", "level":1, "count":1, "lines":"25"},
+        {"name":"CANVAS", "level":2, "count":1, "lines":"7"},
+        {"name":"RESOLUTION", "level":2, "count":1, "lines":"8"},
+        {"name":"PIXCOL", "level":3, "count":1, "lines":"43"},
+        {"name":"PIXSET", "level":3, "count":2, "lines":"48 17"}
+      ],
+      "total":8
+    },
+    {
+      "category": "General arithmetic functions",
+      "expressions":[
+        {"name":"RND", "level":2, "count":1, "lines":"17"}
+      ],
+      "total":1
+    },
+    {
+      "category": "String operations",
+      "expressions":[
+        {"name":"PRINT", "level":1, "count":1, "lines":"24"},
+        {"name":"LEN", "level":2, "count":1, "lines":"23"}
+      ],
+      "total":2
+    },
+    {
+      "category": "Type conversion routines",
+      "expressions":[
+        {"name":"STR$", "level":1, "count":2, "lines":"23 24"}
+      ],
+      "total":2
+    },
+    {
+      "category": "Input and timing routines",
+      "expressions":[
+        {"name":"PAUSE", "level":1, "count":1, "lines":"26"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Command structures",
+      "expressions":[
+        {"name":"IF", "level":1, "count":1, "lines":"47"},
+        {"name":"FOR", "level":1, "count":5, "lines":"32 41 11 16 19"},
+        {"name":"DEF PROC", "level":2, "count":2, "lines":"30 38"}
+      ],
+      "total":8
+    },
+    {
+      "category": "Subroutine calls",
+      "expressions":[
+        {"name":"PROCsetup", "level":0, "count":1, "lines":"13"},
+        {"name":"PROCnextgen", "level":0, "count":1, "lines":"20"}
+      ],
+      "total":2
+    }
+  ],
+  "pcode":[
+    [112,14,1,1,112,0,123,112,6,2,123,4,112,24,124,112,38,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [116,22,119,21],
+    [112,2,119,22],
+    [116,26,119,25],
+    [112,8,119,26],
+    [128,33],
+    [133,1],
+    [139,12,2],
+    [120,12,1],
+    [112,0],
+    [120,12,2,112,7],
+    [114,12,2,37,129,17],
+    [113,25,114,12,2,2,127,26,4,114,12,1,112,2,31,2,123],
+    [114,12,1,112,2,30,120,12,1],
+    [114,12,2,4,128,12],
+    [140,12,134,132],
+    [133,2],
+    [139,13,7],
+    [120,13,1],
+    [112,1,23],
+    [120,13,2,112,100],
+    [114,13,2,37,129,32],
+    [114,13,2,112,100,26,112,100,31,120,13,3],
+    [114,13,3,114,13,1,112,1,27,99,112,1,17,120,13,4],
+    [114,13,6,112,2,28,114,13,4,26,120,13,7],
+    [114,13,5,112,2,28,114,13,4,26,120,13,6],
+    [114,13,4,120,13,5],
+    [114,13,2,112,0,35,129,31],
+    [114,13,2,112,1,27,114,13,1,113,21,113,25,114,13,7,2,127,26,4,122,2,127,26,4,122,100],
+    [114,13,2,4,128,22],
+    [140,13,134,132],
+    [112,0,112,0,112,100,112,100,144],
+    [112,100,112,100,145],
+    [113,21,112,0,2,127,26,4,112,16777214,2,123],
+    [113,21,112,1,2,127,26,4,112,1,2,123],
+    [112,4],
+    [119,35,112,45],
+    [113,35,37,129,60],
+    [113,35,112,4,28,112,2,26,119,36],
+    [113,36,131,8],
+    [112,0,146],
+    [112,16777215,96],
+    [112,0],
+    [119,37,112,100,112,1,27],
+    [113,37,37,129,49],
+    [113,37,112,0,113,21,112,2,7,4,112,1,27,2,127,26,4,122,100],
+    [113,37,4,128,45],
+    [112,1],
+    [119,38,112,100,112,1,27],
+    [113,38,37,129,54],
+    [113,38,131,18],
+    [113,38,4,128,50],
+    [112,0,112,100,112,15,27,88],
+    [112,25,113,36,11,65,112,7,28,26,112,14,112,16777147,112,0,111,142],
+    [118,5,82,117,108,101,32,113,36,11,64,112,4,112,8,168,142],
+    [112,-1,146],
+    [112,500,174],
+    [113,35,4,128,38],
+    [130]
+  ]
+}

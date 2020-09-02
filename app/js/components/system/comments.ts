@@ -1,19 +1,19 @@
-import Comment from '../../compiler/lexer/comment'
+import { Lexeme } from '../../lexer/lexeme'
 import state from '../../state/index'
 import { fill, tr, td } from '../../tools/elements'
+import { on } from '../../tools/hub'
 
 const commentsTableBody = document.querySelector('[data-component="commentsTableBody"]') as HTMLElement
 
 if (commentsTableBody) {
-  state.on('commentsChanged', function (): void {
+  on('lexemesChanged', function (): void {
     fill(commentsTableBody, state.comments.map(commentTableRow))
   })
 }
 
-function commentTableRow (comment: Comment): HTMLTableRowElement {
+function commentTableRow (comment: Lexeme): HTMLTableRowElement {
   return tr({ content: [
     td({ content: comment.line.toString(10) }),
-    td({ content: comment.index.toString(10) }),
-    td({ content: comment.content })
+    td({ content: comment.value })
   ] })
 }

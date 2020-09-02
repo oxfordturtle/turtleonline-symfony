@@ -1,0 +1,65 @@
+{
+  "format":1,
+  "language":"Pascal",
+  "version":13,
+  "name":"Simple procedure [REPEAT, TURTD]",
+  "author":"Peter Millican",
+  "date":"31/08/2020",
+  "time":"11:16:40",
+  "code":"PROGRAM SimpleProc;\n\n  {draws a single \"prong\" and then returns}\n  Procedure prong;\n  Begin\n    forward(400);\n    blot(20);\n    back(400)\n  End;\n\nBEGIN\n  {repeatedly draws prongs in random colours}\n  repeat\n    randcol(10);\n    prong;\n    {right turn gives impression of motion}\n    right(61)\n  {until Turtle is pointing north again}\n  until turtd = 0\nEND.",
+  "usage":[
+    {
+      "category": "Turtle: relative movement",
+      "expressions":[
+        {"name":"back", "level":1, "count":1, "lines":"8"},
+        {"name":"forward", "level":1, "count":1, "lines":"6"},
+        {"name":"right", "level":1, "count":1, "lines":"17"}
+      ],
+      "total":3
+    },
+    {
+      "category": "Turtle: drawing shapes",
+      "expressions":[
+        {"name":"blot", "level":1, "count":1, "lines":"7"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Other Turtle commands",
+      "expressions":[
+        {"name":"randcol", "level":1, "count":1, "lines":"14"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Command structures",
+      "expressions":[
+        {"name":"repeat", "level":2, "count":1, "lines":"13"},
+        {"name":"procedure", "level":2, "count":1, "lines":"4"}
+      ],
+      "total":2
+    },
+    {
+      "category": "Subroutine calls",
+      "expressions":[
+        {"name":"prong", "level":0, "count":1, "lines":"15"}
+      ],
+      "total":1
+    }
+  ],
+  "pcode":[
+    [112,13,1,1,112,0,123,112,6,2,123,4,112,6,124,112,19,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [128,9],
+    [133,1],
+    [112,400,91],
+    [112,20,108],
+    [112,400,92],
+    [134,132],
+    [112,10,7,4,101,87],
+    [131,4],
+    [112,61,94],
+    [113,16,112,0,32,129,9],
+    [130]
+  ]
+}

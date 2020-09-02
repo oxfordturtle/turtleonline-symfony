@@ -1,0 +1,10 @@
+def main () {
+  int i;
+  // adjust starting position
+  movexy(30, 20);
+  for (i = 0; i < 300; i = i + 1) {
+    // move forward and right by slightly more than 120 degrees
+    forward(i * 3);
+    right(121);
+  }
+}

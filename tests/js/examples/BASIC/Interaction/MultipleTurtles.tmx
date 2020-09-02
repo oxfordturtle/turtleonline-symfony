@@ -1,0 +1,182 @@
+{
+  "format":1,
+  "language":"BASIC",
+  "version":13,
+  "name":"Multiple turtles and varying ANGLES",
+  "author":"Peter Millican",
+  "date":"31/08/2020",
+  "time":"11:18:31",
+  "code":"REM MultipleTurtles\n\nCONST NUMTURTLES% = 5\nCONST X% = 0\nCONST Y% = 1\nCONST D% = 2\nCONST A% = 3\nCONST T% = 4\nCONST C% = 5\nDIM turtles%(NUMTURTLES%, C%)\nCANVAS(0, 0, 100000, 100000)\nSETXY(2500, 80000)\nPRINT(\"Click on a circle to alter the ANGLES setting\", 0, 36)\nSETXY(2500, 86000)\nPRINT(\"of the corresponding turtle. Its direction will\", 0, 36)\nSETXY(2500, 92000)\nPRINT(\"then change to the closest possible angle.\", 0, 36)\nFOR i% = 1 TO NUMTURTLES%\n  SETXY(10000, 70000)\n  DIRECTION(35 + i% * 10)\n  FORWARD(110000)\nNEXT\nPROCmenu\nPROCsetupturtles\nREPEAT\n  FOR i% = 1 TO NUMTURTLES%\n    NEWTURTLE(turtles%(i%))\n    FORWARD(100)\n  NEXT\n  PAUSE(50)\n  IF ?CLICK > 128 THEN PROChandleclick\nUNTIL ?KEY = \\ESCAPE\nEND\n\nDEF PROCsetupturtles\n  LOCAL i%\n  FOR i% = 1 TO NUMTURTLES%\n    turtles%(i%, X%) = 10000\n    turtles%(i%, Y%) = 70000\n    turtles%(i%, D%) = 35 + i% * 10\n    turtles%(i%, A%) = 360\n    turtles%(i%, T%) = 5 + i%\n    turtles%(i%, C%) = RGB(i%)\n  NEXT\nENDPROC\n\nDEF PROCmenu\n  LOCAL i%\n  FOR i% = 1 TO NUMTURTLES%\n    SETXY(5000, i% * 10000)\n    COLOUR(RGB(i%))\n    BLOT(5000)\n  NEXT\nENDPROC\n\nDEF PROChandleclick\n  LOCAL col%, i%, thist%\n  col% = PIXCOL(?MOUSEX, ?MOUSEY)\n  thist% = 0\n  FOR i% = 1 TO NUMTURTLES%\n    IF col% = RGB(i%) THEN thist% = i%\n  NEXT\n  IF thist% > 0 THEN\n    NEWTURTLE(turtles%(thist%))\n    WRITE(\"Turtle \" + STR$(thist%) + \" changing direction,\")\n    WRITE(\"  from \" + STR$(turtles%(thist%, D%)) + \"/\" + STR$(turtles%(thist%, A%)))\n    ANGLES(RND(46) + 46)\n    WRITELN(\"  to \" + STR$(turtles%(thist%, D%)) + \"/\" + STR$(turtles%(thist%, A%)))\n    PAUSE(200)\n  ENDIF\nENDPROC",
+  "usage":[
+    {
+      "category": "Turtle: relative movement",
+      "expressions":[
+        {"name":"FORWARD", "level":1, "count":2, "lines":"21 28"}
+      ],
+      "total":2
+    },
+    {
+      "category": "Turtle: absolute movement",
+      "expressions":[
+        {"name":"DIRECTION", "level":1, "count":1, "lines":"20"},
+        {"name":"SETXY", "level":1, "count":5, "lines":"50 12 14 16 19"},
+        {"name":"ANGLES", "level":2, "count":1, "lines":"67"}
+      ],
+      "total":7
+    },
+    {
+      "category": "Turtle: drawing shapes",
+      "expressions":[
+        {"name":"BLOT", "level":1, "count":1, "lines":"52"}
+      ],
+      "total":1
+    },
+    {
+      "category": "Other Turtle commands",
+      "expressions":[
+        {"name":"COLOUR", "level":1, "count":1, "lines":"51"},
+        {"name":"NEWTURTLE", "level":3, "count":2, "lines":"64 27"},
+        {"name":"RGB", "level":3, "count":3, "lines":"43 51 61"}
+      ],
+      "total":6
+    },
+    {
+      "category": "Canvas operations",
+      "expressions":[
+        {"name":"CANVAS", "level":2, "count":1, "lines":"11"},
+        {"name":"PIXCOL", "level":3, "count":1, "lines":"58"}
+      ],
+      "total":2
+    },
+    {
+      "category": "General arithmetic functions",
+      "expressions":[
+        {"name":"RND", "level":2, "count":1, "lines":"67"}
+      ],
+      "total":1
+    },
+    {
+      "category": "String operations",
+      "expressions":[
+        {"name":"PRINT", "level":1, "count":3, "lines":"13 15 17"},
+        {"name":"WRITE", "level":1, "count":2, "lines":"65 66"},
+        {"name":"WRITELN", "level":1, "count":1, "lines":"68"}
+      ],
+      "total":6
+    },
+    {
+      "category": "Type conversion routines",
+      "expressions":[
+        {"name":"STR$", "level":1, "count":5, "lines":"65 66 66 68 68"}
+      ],
+      "total":5
+    },
+    {
+      "category": "Input and timing routines",
+      "expressions":[
+        {"name":"PAUSE", "level":1, "count":2, "lines":"69 30"}
+      ],
+      "total":2
+    },
+    {
+      "category": "Command structures",
+      "expressions":[
+        {"name":"IF", "level":1, "count":3, "lines":"61 63 31"},
+        {"name":"FOR", "level":1, "count":5, "lines":"37 49 60 18 26"},
+        {"name":"REPEAT", "level":2, "count":1, "lines":"25"},
+        {"name":"DEF PROC", "level":2, "count":3, "lines":"35 47 56"}
+      ],
+      "total":12
+    },
+    {
+      "category": "Subroutine calls",
+      "expressions":[
+        {"name":"PROCmenu", "level":0, "count":1, "lines":"23"},
+        {"name":"PROCsetupturtles", "level":0, "count":1, "lines":"24"},
+        {"name":"PROChandleclick", "level":0, "count":1, "lines":"31"}
+      ],
+      "total":3
+    }
+  ],
+  "pcode":[
+    [112,15,1,1,112,0,123,112,6,2,123,4,112,57,124,112,72,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [116,23,119,22],
+    [112,6,119,23,116,30,119,24],
+    [112,6,119,30,116,37,119,25],
+    [112,6,119,37,116,44,119,26],
+    [112,6,119,44,116,51,119,27],
+    [112,6,119,51,116,58,119,28],
+    [112,6,119,58,116,65,119,29],
+    [112,6,119,65],
+    [128,53],
+    [133,1],
+    [139,12,1],
+    [112,1],
+    [120,12,1,112,5],
+    [114,12,1,37,129,24],
+    [113,22,114,12,1,2,127,26,4,122,112,0,2,127,26,4,112,10000,2,123],
+    [113,22,114,12,1,2,127,26,4,122,112,1,2,127,26,4,112,70000,2,123],
+    [113,22,114,12,1,2,127,26,4,122,112,2,2,127,26,4,112,35,114,12,1,112,10,28,26,2,123],
+    [113,22,114,12,1,2,127,26,4,122,112,3,2,127,26,4,112,360,2,123],
+    [113,22,114,12,1,2,127,26,4,122,112,4,2,127,26,4,112,5,114,12,1,26,2,123],
+    [113,22,114,12,1,2,127,26,4,122,112,5,2,127,26,4,114,12,1,101,2,123],
+    [114,12,1,4,128,15],
+    [140,12,134,132],
+    [133,2],
+    [139,13,1],
+    [112,1],
+    [120,13,1,112,5],
+    [114,13,1,37,129,34],
+    [112,5000,114,13,1,112,10000,28,88],
+    [114,13,1,101,87],
+    [112,5000,108],
+    [114,13,1,4,128,28],
+    [140,13,134,132],
+    [133,3],
+    [139,14,3],
+    [112,-7,160,112,-8,160,99,120,14,1],
+    [112,0,120,14,3],
+    [112,1],
+    [120,14,2,112,5],
+    [114,14,2,37,129,45],
+    [114,14,1,114,14,2,101,32,129,44],
+    [114,14,2,120,14,3],
+    [114,14,2,4,128,40],
+    [114,14,3,112,0,35,129,52],
+    [113,22,114,14,3,2,127,26,4,122,112,0,123],
+    [118,7,84,117,114,116,108,101,32,114,14,3,11,64,118,20,32,99,104,97,110,103,105,110,103,32,100,105,114,101,99,116,105,111,110,44,64,169,142],
+    [118,7,32,32,102,114,111,109,32,113,22,114,14,3,2,127,26,4,122,112,2,2,127,26,4,122,11,64,118,1,47,64,113,22,114,14,3,2,127,26,4,122,112,3,2,127,26,4,122,11,64,169,142],
+    [112,46,7,4,112,46,26,84],
+    [118,5,32,32,116,111,32,113,22,114,14,3,2,127,26,4,122,112,2,2,127,26,4,122,11,64,118,1,47,64,113,22,114,14,3,2,127,26,4,122,112,3,2,127,26,4,122,11,64,169,170,142],
+    [112,200,174],
+    [140,14,134,132],
+    [112,0,112,0,112,100000,112,100000,144],
+    [112,2500,112,80000,88],
+    [118,45,67,108,105,99,107,32,111,110,32,97,32,99,105,114,99,108,101,32,116,111,32,97,108,116,101,114,32,116,104,101,32,65,78,71,76,69,83,32,115,101,116,116,105,110,103,112,0,112,36,168,142],
+    [112,2500,112,86000,88],
+    [118,47,111,102,32,116,104,101,32,99,111,114,114,101,115,112,111,110,100,105,110,103,32,116,117,114,116,108,101,46,32,73,116,115,32,100,105,114,101,99,116,105,111,110,32,119,105,108,108,112,0,112,36,168,142],
+    [112,2500,112,92000,88],
+    [118,42,116,104,101,110,32,99,104,97,110,103,101,32,116,111,32,116,104,101,32,99,108,111,115,101,115,116,32,112,111,115,115,105,98,108,101,32,97,110,103,108,101,46,112,0,112,36,168,142],
+    [112,1],
+    [119,72,112,5],
+    [113,72,37,129,67],
+    [112,10000,112,70000,88],
+    [112,35,113,72,112,10,28,26,83],
+    [112,110000,91],
+    [113,72,4,128,61],
+    [131,25],
+    [131,12],
+    [112,1],
+    [119,72,112,5],
+    [113,72,37,129,75],
+    [113,22,113,72,2,127,26,4,122,112,0,123],
+    [112,100,91],
+    [113,72,4,128,70],
+    [112,50,174],
+    [112,-4,160,112,128,35,129,78],
+    [131,35],
+    [112,-9,160,112,27,32,129,69],
+    [130]
+  ]
+}

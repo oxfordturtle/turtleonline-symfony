@@ -1,0 +1,91 @@
+{
+  "format":1,
+  "language":"BASIC",
+  "version":13,
+  "name":"File searching",
+  "author":"Peter Millican",
+  "date":"31/08/2020",
+  "time":"11:18:32",
+  "code":"REM FileSearching\n\nOUTPUT(TRUE, CREAM, TRUE)\nWRITELN(\"Turtle directories (up to first level) and their files ...\")\nWRITELN(\"\")\nPROCshowFiles(\"\")\ndirHandle% = 0\ndirName$ = FINDDIR(\"*.*\", dirHandle%)\nWHILE dirName$ <> \"\"\n  PROCshowFiles(dirName$)\n  dirName$ = FINDNEXT(dirHandle%)\nENDWHILE\nEND\n\nDEF PROCshowFiles(dirName$)\n  LOCAL fileHandle%, fileName$\n  IF dirName$ = \"\" THEN\n    WRITELN(\"Base directory:\")\n  ELSE\n    WRITELN(\"Directory \"\"\" + dirName$ + \"\"\":\")\n  ENDIF\n  CHDIR(dirName$)\n  fileHandle% = 0\n  fileName$ = FINDFIRST(\"*.*\", fileHandle%)\n  IF fileName$ = \"\" THEN\n    WRITELN(\"  <no files>\")\n  ELSE\n    WHILE fileName$ <> \"\"\n      WRITELN(\"  \" + fileName$)\n      fileName$ = FINDNEXT(fileHandle%)\n    ENDWHILE\n  ENDIF\n  WRITELN(\"\")\nENDPROC",
+  "usage":[
+    {
+      "category": "Other Turtle commands",
+      "expressions":[
+        {"name":"OUTPUT", "level":2, "count":1, "lines":"3"}
+      ],
+      "total":1
+    },
+    {
+      "category": "String operations",
+      "expressions":[
+        {"name":"WRITELN", "level":1, "count":7, "lines":"18 20 26 29 33 4 5"}
+      ],
+      "total":7
+    },
+    {
+      "category": "File processing",
+      "expressions":[
+        {"name":"CHDIR", "level":2, "count":1, "lines":"22"},
+        {"name":"FINDDIR", "level":3, "count":1, "lines":"8"},
+        {"name":"FINDFIRST", "level":3, "count":1, "lines":"24"},
+        {"name":"FINDNEXT", "level":3, "count":2, "lines":"30 11"}
+      ],
+      "total":5
+    },
+    {
+      "category": "Command structures",
+      "expressions":[
+        {"name":"IF", "level":1, "count":2, "lines":"17 25"},
+        {"name":"ELSE", "level":1, "count":2, "lines":"19 27"},
+        {"name":"WHILE", "level":2, "count":2, "lines":"28 9"},
+        {"name":"DEF PROC", "level":2, "count":1, "lines":"15"}
+      ],
+      "total":7
+    },
+    {
+      "category": "Subroutine calls",
+      "expressions":[
+        {"name":"PROCshowFiles", "level":0, "count":2, "lines":"6 10"}
+      ],
+      "total":2
+    }
+  ],
+  "pcode":[
+    [112,13,1,1,112,0,123,112,6,2,123,4,112,42,124,112,55,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [116,23,119,21],
+    [112,33,119,22],
+    [128,26],
+    [133,1],
+    [139,12,71],
+    [117,12,2,1,1,4,120,12,1,112,33,2,123,4,126],
+    [117,12,39,120,12,37,112,33,120,12,38],
+    [114,12,1,118,0,40,142,129,13],
+    [118,15,66,97,115,101,32,100,105,114,101,99,116,111,114,121,58,169,170,142],
+    [128,14],
+    [118,11,68,105,114,101,99,116,111,114,121,32,34,114,12,1,64,118,2,34,58,64,169,170,142],
+    [114,12,1,176],
+    [112,0,120,12,36],
+    [114,12,37,118,3,42,46,42,117,12,36,1,122,3,188,2,3,123,2,126,142],
+    [114,12,37,118,0,40,142,129,20],
+    [118,12,32,32,60,110,111,32,102,105,108,101,115,62,169,170,142],
+    [128,24],
+    [114,12,37,118,0,41,142,129,24],
+    [118,2,32,32,114,12,37,64,169,170,142],
+    [114,12,37,114,12,36,190,2,126,142],
+    [128,20],
+    [118,0,169,170,142],
+    [140,12,134,132],
+    [112,-1,112,16777147,112,-1,166],
+    [118,58,84,117,114,116,108,101,32,100,105,114,101,99,116,111,114,105,101,115,32,40,117,112,32,116,111,32,102,105,114,115,116,32,108,101,118,101,108,41,32,97,110,100,32,116,104,101,105,114,32,102,105,108,101,115,32,46,46,46,169,170,142],
+    [118,0,169,170,142],
+    [118,0,142,131,6],
+    [112,0,119,20],
+    [113,21,118,3,42,46,42,116,20,1,122,3,189,2,3,123,2,126,142],
+    [113,21,118,0,41,142,129,36],
+    [113,21,131,6],
+    [113,21,113,20,190,2,126,142],
+    [128,32],
+    [130]
+  ]
+}

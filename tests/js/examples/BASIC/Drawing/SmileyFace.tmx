@@ -1,0 +1,69 @@
+{
+  "format":1,
+  "language":"BASIC",
+  "version":13,
+  "name":"Smiley face (using PENUP and ELLBLOT)",
+  "author":"Peter Millican",
+  "date":"31/08/2020",
+  "time":"11:18:26",
+  "code":"REM SmileyFace\n\nCOLOUR(PEACH)\nBLOT(200)\nCOLOUR(DARKRED)\nBLOT(140)\nFORWARD(30)\nCOLOUR(PEACH)\nBLOT(150)\nBACK(60)\nCOLOUR(ROYAL)\nBLOT(30)\nPENUP\nFORWARD(90)\nLEFT(90)\nFORWARD(80)\nCOLOUR(WHITE)\nELLBLOT(30, 20)\nCOLOUR(EMERALD)\nBLOT(18)\nCOLOUR(BLACK)\nBLOT(8)\nBACK(160)\nCOLOUR(WHITE)\nELLBLOT(30, 20)\nCOLOUR(EMERALD)\nBLOT(18)\nCOLOUR(BLACK)\nBLOT(8)\nEND",
+  "usage":[
+    {
+      "category": "Turtle: relative movement",
+      "expressions":[
+        {"name":"BACK", "level":1, "count":2, "lines":"10 23"},
+        {"name":"FORWARD", "level":1, "count":3, "lines":"7 14 16"},
+        {"name":"LEFT", "level":1, "count":1, "lines":"15"}
+      ],
+      "total":6
+    },
+    {
+      "category": "Turtle: drawing shapes",
+      "expressions":[
+        {"name":"BLOT", "level":1, "count":8, "lines":"4 6 9 12 20 22 27 29"},
+        {"name":"ELLBLOT", "level":1, "count":2, "lines":"18 25"}
+      ],
+      "total":10
+    },
+    {
+      "category": "Other Turtle commands",
+      "expressions":[
+        {"name":"COLOUR", "level":1, "count":10, "lines":"3 5 8 11 17 19 21 24 26 28"},
+        {"name":"PENUP", "level":1, "count":1, "lines":"13"}
+      ],
+      "total":11
+    }
+  ],
+  "pcode":[
+    [112,12,1,1,112,0,123,112,6,2,123,4,112,6,124,112,18,138],
+    [80,112,2,85,112,360,84,112,32,162,112,1,123,141,112,0,1,112,1000,1,1,1,145,144],
+    [112,16764080,87],
+    [112,200,108],
+    [112,11674146,87],
+    [112,140,108],
+    [112,30,91],
+    [112,16764080,87],
+    [112,150,108],
+    [112,60,92],
+    [112,4286945,87],
+    [112,30,108],
+    [112,0,86],
+    [112,90,91],
+    [112,90,93],
+    [112,80,91],
+    [112,16777215,87],
+    [112,30,112,20,110],
+    [112,51543,87],
+    [112,18,108],
+    [112,0,87],
+    [112,8,108],
+    [112,160,92],
+    [112,16777215,87],
+    [112,30,112,20,110],
+    [112,51543,87],
+    [112,18,108],
+    [112,0,87],
+    [112,8,108],
+    [130]
+  ]
+}
