@@ -179,6 +179,11 @@ export class Subroutine extends Routine {
     this.parent = parent
     this.type = type
   }
+
+  /** subroutine memory address */
+  get address (): number {
+    return this.index + this.program.baseOffset
+  }
 }
 
 /** subroutine type definition */

@@ -1,44 +1,31 @@
 /**
  * Coder for Turtle BASIC.
  *
- * This function compiles a "command structure" for Turtle BASIC. A command
- * structure is either a single command (i.e. a variable assignment or a
- * procedure call) or some more complex structure (conditional, loop) containing
- * a series of such commands; in the latter case, the exported function calls
- * itself recusrively, allowing for structures of arbitrary complexity.
- *
- * A program or subroutine is a sequence of command structures; this function
- * comiles a single one, returning the pcode and the index of the next lexeme -
- * the function calling this function (in the main coder module) loops through
- * the lexemes until all command structures have been compiled.
+ * This function compiles a statement for Turtle BASIC. A statement is either a
+ * single command (i.e. a variable assignment or a procedure call) or some more
+ * complex structure (conditional, loop) containing a series of such commands;
+ * in the latter case, the exported function calls itself recusrively, allowing
+ * for structures of arbitrary complexity.
  */
-import * as molecules from './molecules'
-import * as pcoder from './pcoder'
-import { Options } from './options'
-import { CompilerError } from '../tools/error'
-import { Routine, Variable } from '../parser/routine'
-import { Lexeme } from '../lexer/lexeme'
-import { PCode } from '../constants/pcodes'
+import { simpleStatement, variableAssignment, expression } from '../atoms'
+import { Options } from '../options'
+import * as pcoder from '../../pcoder/misc'
+import { CompilerError } from '../../tools/error'
+import { Routine, Variable } from '../../parser/routine'
+import { Lexeme } from '../../lexer/lexeme'
+import { PCode } from '../../constants/pcodes'
 
+/** working variable */
 type WIP = { lex: number, pcode: number[][] }
 
+/** parses and compiles a statement */
 export default function coder (routine: Routine, lex: number, startLine: number, options: Options, oneLine: boolean = false): WIP {
   let wip: WIP
 
   switch (routine.lexemes[lex].type) {
     // identifiers (variable assignment or procedure call)
     case 'identifier':
-      // variable assignment
-      if (routine.lexemes[lex + 1] && (routine.lexemes[lex + 1].content === '=')) {
-        if (routine.findConstant(routine.lexemes[lex].content)) {
-          throw new CompilerError('Constant {lex} cannot be assigned a new value.', routine.lexemes[lex])
-        }
-        wip = molecules.variableAssignment(routine, routine.lexemes[lex].content, lex + 2, options)
-        break
-      }
-
-      // otherwise it should be a procedure call
-      wip = molecules.procedureCall(routine, lex, options)
+      wip = simpleStatement(routine, lex, options)
       break
 
     // keywords
@@ -66,7 +53,8 @@ export default function coder (routine: Routine, lex: number, startLine: number,
 
         // function return value
         case '=':
-          wip = molecules.variableAssignment(routine, '!result', lex + 1, options)
+          const variable = routine.findVariable('!result')
+          wip = variableAssignment(routine, variable, lex + 1, options)
           break
 
         default:
@@ -89,7 +77,7 @@ export default function coder (routine: Routine, lex: number, startLine: number,
   return wip
 }
 
-// compile conditional
+/** parses and compiles a conditional statement */
 function compileIf (routine: Routine, lex: number, startLine: number, options: Options): WIP {
   // values we need to generate the IF code
   let test: number[][]
@@ -104,7 +92,7 @@ function compileIf (routine: Routine, lex: number, startLine: number, options: O
   if (!routine.lexemes[lex]) {
     throw new CompilerError('"IF" must be followed by a boolean expression.', routine.lexemes[lex - 1])
   }
-  wip = molecules.expression(routine, lex, null, 'boolean', options)
+  wip = expression(routine, lex, null, { variableType: 'boolean', arrayDimensions: 0 }, options)
   lex = wip.lex
   test = wip.pcode
 
@@ -158,7 +146,7 @@ function compileIf (routine: Routine, lex: number, startLine: number, options: O
   return { lex, pcode: pcoder.conditional(startLine, test, ifCode, elseCode, options) }
 }
 
-// compile for loop
+/** parses and compiles a for loop */
 function compileFor (routine: Routine, lex: number, startLine: number, options: Options): WIP {
   // values we need to generate the IF code
   let variable: Variable
@@ -203,7 +191,7 @@ function compileFor (routine: Routine, lex: number, startLine: number, options: 
   if (!routine.lexemes[lex]) {
     throw new CompilerError('"FOR" loop variable must be assigned an initial value.', routine.lexemes[lex - 1])
   }
-  wip = molecules.expression(routine, lex, null, 'integer', options)
+  wip = expression(routine, lex, null, { variableType: 'integer', arrayDimensions: 0 }, options)
   lex = wip.lex
   initial = wip.pcode[0]
 
@@ -220,7 +208,7 @@ function compileFor (routine: Routine, lex: number, startLine: number, options: 
   if (!routine.lexemes[lex]) {
     throw new CompilerError('"TO" must be followed by an integer (or integer constant).', routine.lexemes[lex - 1])
   }
-  wip = molecules.expression(routine, lex, null, 'integer', options)
+  wip = expression(routine, lex, null, { variableType: 'integer', arrayDimensions: 0 }, options)
   lex = wip.lex
   final = wip.pcode[0]
 
@@ -267,7 +255,7 @@ function compileFor (routine: Routine, lex: number, startLine: number, options: 
   }
 }
 
-// compile repeat loop
+/** parses and compiles a repeat loop */
 function compileRepeat (routine: Routine, lex: number, startLine: number, options: Options): WIP {
   // values we need to generate the REPEAT code
   let test: number[][]
@@ -292,7 +280,7 @@ function compileRepeat (routine: Routine, lex: number, startLine: number, option
   if (!routine.lexemes[lex]) {
     throw new CompilerError('"UNTIL" must be followed by a boolean expression.', routine.lexemes[lex - 1])
   }
-  wip = molecules.expression(routine, lex, null, 'boolean', options)
+  wip = expression(routine, lex, null, { variableType: 'boolean', arrayDimensions: 0 }, options)
   lex = wip.lex
   test = wip.pcode
 
@@ -300,7 +288,7 @@ function compileRepeat (routine: Routine, lex: number, startLine: number, option
   return { lex, pcode: pcoder.repeatLoop(startLine, test, innerCode, options) }
 }
 
-// compile while loop
+/** parses and compiles a while loop */
 function compileWhile (routine: Routine, lex: number, startLine: number, options: Options): WIP {
   // values we need to generate the WHILE code
   let test: number[][]
@@ -313,7 +301,7 @@ function compileWhile (routine: Routine, lex: number, startLine: number, options
   if (!routine.lexemes[lex]) {
     throw new CompilerError('"WHILE" must be followed by a boolean expression.', routine.lexemes[lex - 1])
   }
-  wip = molecules.expression(routine, lex, null, 'boolean', options)
+  wip = expression(routine, lex, null, { variableType: 'boolean', arrayDimensions: 0 }, options)
   lex = wip.lex
   test = wip.pcode
 
@@ -333,7 +321,7 @@ function compileWhile (routine: Routine, lex: number, startLine: number, options
   return { lex, pcode: pcoder.whileLoop(startLine, test, innerCode, options) }
 }
 
-// generate the pcode for a block of commands
+/** parses and compiles a block of statements */
 function block (routine: Routine, lex: number, startLine: number, startKeyword: string, options: Options): WIP {
   let pcode: number[][] = []
   let end: boolean = false
@@ -365,7 +353,7 @@ function block (routine: Routine, lex: number, startLine: number, startKeyword: 
   return { lex, pcode }
 }
 
-// check for the ending to a block, and throw an error if it doesn't match the beginning
+/** checks for the ending to a block, and throws an error if it doesn't match the beginning */
 function blockEndCheck (start: string, lexeme: Lexeme, options: Options): boolean {
   switch (lexeme.content) {
     case 'ELSE':

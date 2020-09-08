@@ -1,11 +1,12 @@
-/*
-evaluate a sequence of lexemes (to get the value of a constant)
-*/
+/**
+ * Evaluates a sequence of lexemes (to get the value of a constant).
+ */
 import { Program } from './routine'
 import { colours } from '../constants/colours'
 import { Lexeme } from '../lexer/lexeme'
 import { CompilerError } from '../tools/error'
 
+/** evaluates a sequence of lexemes as an expression */
 export default function (identifier: Lexeme, lexemes: Lexeme[], program: Program): number|string {
   try {
     // generate JavaScript expression from the lexemes
@@ -39,7 +40,7 @@ export default function (identifier: Lexeme, lexemes: Lexeme[], program: Program
   }
 }
 
-// JavaScript string equivalent of a Turtle language lexeme
+/** gets JavaScript string equivalent of a Turtle language lexeme */
 function toJsString (lexeme: Lexeme): string {
   switch (lexeme.type) {
     case 'boolean':

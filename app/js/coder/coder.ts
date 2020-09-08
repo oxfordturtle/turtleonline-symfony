@@ -10,13 +10,13 @@
  * those results together, and wraps them up in the appropriate routine start
  * and end code.
  */
-import * as pcoder from './pcoder'
-import BASIC from './basic'
-import C from './c'
-import Pascal from './pascal'
-import Python from './python'
-import TypeScript from './typescript'
+import BASIC from './coders/basic'
+import C from './coders/c'
+import Pascal from './coders/pascal'
+import Python from './coders/python'
+import TypeScript from './coders/typescript'
 import { Options } from './options'
+import * as pcoder from '../pcoder/pcoder'
 import { Routine, Program, Subroutine } from '../parser/routine'
 import { PCode, pcodeArgs } from '../constants/pcodes'
 
@@ -130,8 +130,8 @@ export default function coder (routines: Routine[], options: Options = null): nu
 /** calculates the length of pcode at the start of the program */
 function programStartLength (program: Program, subroutines: Subroutine[], options: Options): number {
   return (subroutines.length > 0)
-    ? pcoder.programStartCode(program, options).length + 1 // + 1 for jump line past subroutines
-    : pcoder.programStartCode(program, options).length
+    ? pcoder.programStart(program, options).length + 1 // + 1 for jump line past subroutines
+    : pcoder.programStart(program, options).length
 }
 
 /** generates the pcode for subroutines (or an empty array if there aren't any) */
@@ -142,7 +142,7 @@ function compileSubroutines (routines: Subroutine[], startLine: number, options:
   let index = 0
   while (index < routines.length) {
     routines[index].startLine = startLine
-    const offset = pcoder.subroutineStartCode(routines[index], options).length
+    const offset = pcoder.subroutineStart(routines[index], options).length
     const innerCode = compileInnerCode(routines[index], startLine + offset, options)
     const subroutineCode = pcoder.subroutine(routines[index], innerCode, options)
     pcode = pcode.concat(subroutineCode)

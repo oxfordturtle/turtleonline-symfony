@@ -12,12 +12,12 @@
  * the function calling this function (in the main coder module) loops through
  * the lexemes until all command structures have been compiled.
  */
-import * as molecules from './molecules'
-import { Options } from './options'
-import * as pcoder from './pcoder'
-import { PCode } from '../constants/pcodes'
-import { CompilerError } from '../tools/error'
-import { Routine, Variable } from '../parser/routine'
+import * as molecules from '../_old/molecules'
+import { Options } from '../options'
+import * as pcoder from '../../pcoder/misc'
+import { PCode } from '../../constants/pcodes'
+import { CompilerError } from '../../tools/error'
+import { Routine, Variable } from '../../parser/routine'
 
 type Result = { lex: number, pcode: number[][] }
 

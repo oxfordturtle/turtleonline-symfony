@@ -7,10 +7,10 @@
  * the program (and any subroutine) code themselves are just stored for
  * subsequent handling by the pcoder.
  */
-import { Routine, Subroutine, Program, Constant, Variable, VariableType, SubroutineType } from './routine'
-import evaluate from './evaluate'
-import { Lexeme } from '../lexer/lexeme'
-import { CompilerError } from '../tools/error'
+import { Routine, Subroutine, Program, Constant, Variable, VariableType, SubroutineType } from '../routine'
+import evaluate from '../evaluate'
+import { Lexeme } from '../../lexer/lexeme'
+import { CompilerError } from '../../tools/error'
 
 /** fsm states */
 type State =
