@@ -15,13 +15,15 @@ function mode (): void {
 
   // show/hide elements according to mode
   for (const element of modeElements) {
-    const modes = element.dataset.mode.split(',')
-    if (modes.includes(state.mode) || element.id === 'turtle') {
-      element.classList.remove('hidden')
-    } else {
-      element.classList.add('hidden')
-      if (element.classList.contains('system-tab-pane') && element.classList.contains('active')) {
-        send('selectTab', 'canvas')
+    if (element.dataset.mode) {
+      const modes = element.dataset.mode.split(',')
+      if (modes.includes(state.mode) || element.id === 'turtle') {
+        element.classList.remove('hidden')
+      } else {
+        element.classList.add('hidden')
+        if (element.classList.contains('system-tab-pane') && element.classList.contains('active')) {
+          send('selectTab', 'canvas')
+        }
       }
     }
   }

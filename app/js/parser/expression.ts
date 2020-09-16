@@ -42,12 +42,14 @@ export class CommandCall {
   }
 
   get type (): Type {
-    return this.command.returns
+    // give procedures a 'boolint' type; this shouldn't do any harm, and means
+    // we don't have to worry about nulls; but should probably tweak this ??
+    return this.command.returns || 'boolint'
   }
 }
 
 export class CompoundExpression {
-  readonly left?: Expression // left hand side optional (for unary operators 'not' and 'minus')
+  readonly left: Expression|null // left hand side optional (for unary operators 'not' and 'minus')
   readonly right: Expression
   readonly operator: PCode
 

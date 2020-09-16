@@ -40,8 +40,11 @@ function isUsed (language: Language, lexemes: Lexeme[], expression: Expression) 
   const name = (expression instanceof Command)
     ? (expression as Command).names[language]
     : (expression as Keyword|Subroutine).name
+  if (!name) {
+    return false
+  }
   const uses = (language === 'Pascal')
-    ? lexemes.filter(lexeme => lexeme.content.toLowerCase() === name?.toLowerCase())
+    ? lexemes.filter(lexeme => lexeme.content && lexeme.content.toLowerCase() === name.toLowerCase())
     : lexemes.filter(lexeme => lexeme.content === name)
   return uses.length > 0
 }
@@ -49,10 +52,10 @@ function isUsed (language: Language, lexemes: Lexeme[], expression: Expression) 
 // generate usage expression object
 function usageExpression (language: Language, lexemes: Lexeme[], expression: Expression): UsageExpression {
   const name = (expression instanceof Command)
-    ? (expression as Command).names[language]
+    ? (expression as Command).names[language] as string
     : (expression as Keyword|Subroutine).name
   const uses = (language === 'Pascal')
-    ? lexemes.filter(lexeme => lexeme.content.toLowerCase() === name?.toLowerCase())
+    ? lexemes.filter(lexeme => lexeme.content && lexeme.content.toLowerCase() === name.toLowerCase())
     : lexemes.filter(lexeme => lexeme.content === name)
   uses.sort((a, b) => a.line - b.line)
   return {

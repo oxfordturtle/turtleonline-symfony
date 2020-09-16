@@ -33,7 +33,7 @@ export default function tokenize (code: string, language: Language): Token[] {
       identifier(code, language) ||
       illegal(code, language)
     tokens.push(lexeme)
-    code = code.slice(lexeme.content.length)
+    code = code.slice(lexeme.content?.length)
   }
   return tokens
 }
@@ -66,7 +66,7 @@ function comment (code: string, language: Language): Token|false {
       const start = code[0] === '{'
       const end = code.match(/}/)
       if (start && end) {
-        return new Token('comment', null, true, code.slice(0, end.index + 1), language)
+        return new Token('comment', null, true, code.slice(0, end.index as number + 1), language)
       }
       if (start) {
         return new Token('comment', null, false, code.split('\n')[0], language)
@@ -131,7 +131,8 @@ function string (code: string, language: Language): Token|false {
     case 'BASIC':
       // single quoted strings are not allowed
       if (code[0] === '\'') {
-        const content = code.match(/'(.*?)'/) ? code.match(/'(.*?)'/)[0] : code
+        const test = code.match(/'(.*?)'/)
+        const content = test ? test[0] : code
         return new Token('string', 'single', false, content, language)
       }
       // awkward cases
@@ -141,7 +142,7 @@ function string (code: string, language: Language): Token|false {
       const startBASIC = code[0] === '"'
       const endBASIC = code.match(/[^"](")([^"]|$)/)
       if (startBASIC && endBASIC) {
-        return new Token('string', 'double', true, code.slice(0, endBASIC.index + 2), language)
+        return new Token('string', 'double', true, code.slice(0, endBASIC.index as number + 2), language)
       }
       if (startBASIC) {
         return new Token('string', 'double', false, code.split('\n')[0], language)
@@ -160,13 +161,13 @@ function string (code: string, language: Language): Token|false {
       const end1Pascal = code.match(/[^'](')([^']|$)/)
       const end2Pascal = code.match(/[^"](")([^"]|$)/)
       if (start1Pascal && end1Pascal) {
-        return new Token('string', 'single', true, code.slice(0, end1Pascal.index + 2), language)
+        return new Token('string', 'single', true, code.slice(0, end1Pascal.index as number + 2), language)
       }
       if (start1Pascal) {
         return new Token('string', 'single', false, code.split('\n')[0], language)
       }
       if (start2Pascal && end2Pascal) {
-        return new Token('string', 'double', true, code.slice(0, end2Pascal.index + 2), language)
+        return new Token('string', 'double', true, code.slice(0, end2Pascal.index as number + 2), language)
       }
       if (start2Pascal) {
         return new Token('string', 'double', false, code.split('\n')[0], language)
@@ -181,13 +182,13 @@ function string (code: string, language: Language): Token|false {
       const end1Python = code.match(/[^\\](')/)
       const end2Python = code.match(/[^\\](")/)
       if (start1Python && end1Python) {
-        return new Token('string', 'single', true, code.slice(0, end1Python.index + 2), language)
+        return new Token('string', 'single', true, code.slice(0, end1Python.index as number + 2), language)
       }
       if (start1Python) {
         return new Token('string', 'single', false, code.split('\n')[0], language)
       }
       if (start2Python && end2Python) {
-        return new Token('string', 'double', true, code.slice(0, end2Python.index + 2), language)
+        return new Token('string', 'double', true, code.slice(0, end2Python.index as number + 2), language)
       }
       if (start2Python) {
         return new Token('string', 'double', false, code.split('\n')[0], language)

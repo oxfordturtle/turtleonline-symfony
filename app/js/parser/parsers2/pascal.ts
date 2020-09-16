@@ -47,7 +47,7 @@ function statement (routine: Routine): Statement {
 
     // keywords
     case 'keyword':
-      switch (routine.lexemes[routine.lex].content.toLowerCase()) {
+      switch ((routine.lexemes[routine.lex].content as string).toLowerCase()) {
         // start of IF structure
         case 'if':
           routine.lex += 1
@@ -87,8 +87,8 @@ function statement (routine: Routine): Statement {
   const noSemiBefore = ['else', 'end', ';', 'until']
   if (routine.lexemes[routine.lex]) {
     if (routine.lexemes[routine.lex].content !== ';') {
-      if (noSemiAfter.indexOf(routine.lexemes[routine.lex - 1].content.toLowerCase()) === -1) {
-        if (noSemiBefore.indexOf(routine.lexemes[routine.lex].content.toLowerCase()) === -1) {
+      if (noSemiAfter.indexOf(routine.lexemes[routine.lex - 1].content?.toLowerCase() as string) === -1) {
+        if (noSemiBefore.indexOf(routine.lexemes[routine.lex].content?.toLowerCase() as string) === -1) {
           throw new CompilerError('Semicolon needed after command.', routine.lexemes[routine.lex])
         }
       }
@@ -118,7 +118,7 @@ function ifStatement (routine: Routine): IfStatement {
   if (!routine.lexemes[routine.lex]) {
     throw new CompilerError('"IF ..." must be followed by "THEN".', routine.lexemes[routine.lex - 1])
   }
-  if (routine.lexemes[routine.lex].content.toLowerCase() !== 'then') {
+  if (routine.lexemes[routine.lex].content?.toLowerCase() !== 'then') {
     throw new CompilerError('"IF ..." must be followed by "THEN".', routine.lexemes[routine.lex])
   }
   routine.lex += 1
@@ -127,7 +127,7 @@ function ifStatement (routine: Routine): IfStatement {
   if (!routine.lexemes[routine.lex]) {
     throw new CompilerError('No commands found after "IF ... THEN".', routine.lexemes[routine.lex - 1])
   }
-  if (routine.lexemes[routine.lex].content.toLowerCase() === 'begin') {
+  if (routine.lexemes[routine.lex].content?.toLowerCase() === 'begin') {
     routine.lex += 1
     ifStatement.ifStatements.push(...block(routine, 'begin'))
   } else {
@@ -135,13 +135,13 @@ function ifStatement (routine: Routine): IfStatement {
   }
 
   // happy with an "else" here (but it's optional)
-  if (routine.lexemes[routine.lex] && routine.lexemes[routine.lex].content.toLowerCase() === 'else') {
+  if (routine.lexemes[routine.lex] && routine.lexemes[routine.lex].content?.toLowerCase() === 'else') {
     // expecting a command or a block of commands
     routine.lex += 1
     if (!routine.lexemes[routine.lex]) {
       throw new CompilerError('No commands found after "ELSE".', routine.lexemes[routine.lex - 1])
     }
-    if (routine.lexemes[routine.lex].content.toLowerCase() === 'begin') {
+    if (routine.lexemes[routine.lex].content?.toLowerCase() === 'begin') {
       routine.lex += 1
       ifStatement.elseStatements.push(...block(routine, 'begin'))
     } else {
@@ -167,7 +167,7 @@ function forStatement (routine: Routine): ForStatement {
   if (routine.lexemes[routine.lex].type !== 'identifier') {
     throw new CompilerError('"FOR" must be followed by an integer variable.', routine.lexemes[routine.lex])
   }
-  const variable = routine.findVariable(routine.lexemes[routine.lex].content)
+  const variable = routine.findVariable(routine.lexemes[routine.lex].content as string)
   if (!variable) {
     throw new CompilerError('Variable {lex} has not been declared.', routine.lexemes[routine.lex])
   }
@@ -186,7 +186,7 @@ function forStatement (routine: Routine): ForStatement {
   if (!routine.lexemes[routine.lex]) {
     throw new CompilerError('"FOR ... := ..." must be followed by "TO" or "DOWNTO".', routine.lexemes[routine.lex - 1])
   }
-  const toOrDownTo = routine.lexemes[routine.lex].content.toLowerCase()
+  const toOrDownTo = routine.lexemes[routine.lex].content?.toLowerCase()
   if (toOrDownTo !== 'to' && toOrDownTo !== 'downto') {
     throw new CompilerError('"FOR ... := ..." must be followed by "TO" or "DOWNTO".', routine.lexemes[routine.lex])
   }
@@ -223,7 +223,7 @@ function forStatement (routine: Routine): ForStatement {
   if (!routine.lexemes[routine.lex]) {
     throw new CompilerError('No commands found after "FOR" loop initialisation.', routine.lexemes[routine.lex - 1])
   }
-  if (routine.lexemes[routine.lex].content.toLowerCase() === 'begin') {
+  if (routine.lexemes[routine.lex].content?.toLowerCase() === 'begin') {
     routine.lex += 1
     forStatement.statements.push(...block(routine, 'begin'))
   } else {
@@ -276,7 +276,7 @@ function whileStatement (routine: Routine): WhileStatement {
   if (!routine.lexemes[routine.lex]) {
     throw new CompilerError('No commands found after "WHILE" loop initialisation.', routine.lexemes[routine.lex])
   }
-  if (routine.lexemes[routine.lex].content.toLowerCase() === 'begin') {
+  if (routine.lexemes[routine.lex].content?.toLowerCase() === 'begin') {
     routine.lex += 1
     whileStatement.statements.push(...block(routine, 'begin'))
   } else {

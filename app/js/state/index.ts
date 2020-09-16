@@ -116,7 +116,7 @@ class State {
     this.#files = load('files')
     this.#currentFileIndex = load('currentFileIndex')
     this.#lexemes = []
-    this.#program = null
+    this.#program = new Program(this.#language, '')
     this.#usage = []
     this.#pcode = []
     // machine runtime options
@@ -462,7 +462,7 @@ class State {
       this.compileCurrentFile()
     } else {
       this.lexemes = []
-      this.program = null
+      this.program = new Program(this.language, '')
       this.usage = []
       this.pcode = []
     }
@@ -898,12 +898,14 @@ class State {
     const fileInput = input({
       type: 'file',
       on: ['change', function () {
-        const file = fileInput.files[0]
-        const fr = new FileReader()
-        fr.onload = function () {
-          state.openFile(file.name, fr.result as string)
+        if (fileInput.files) {
+          const file = fileInput.files[0]
+          const fr = new FileReader()
+          fr.onload = function () {
+            state.openFile(file.name, fr.result as string)
+          }
+          fr.readAsText(file)
         }
-        fr.readAsText(file)
       }]
     })
     fileInput.click()
@@ -917,18 +919,19 @@ class State {
     const example = examples.find(x => x.id === exampleId)
     if (!example) {
       send('error', new SystemError(`Unknown example "${exampleId}".`))
+    } else {
+      const filename = `${example.id}.${extensions[this.language]}`
+      window.fetch(`/examples/${this.language}/${example.groupId}/${filename}`)
+        .then(response => {
+          if (response.ok) {
+            response.text().then(content => {
+              this.openFile(filename, content.trim(), exampleId)
+            })
+          } else {
+            send('error', new SystemError(`Example "${exampleId}" is not available for Turtle ${this.language}.`))
+          }
+        })
     }
-    const filename = `${example.id}.${extensions[this.language]}`
-    window.fetch(`/examples/${this.language}/${example.groupId}/${filename}`)
-      .then(response => {
-        if (response.ok) {
-          response.text().then(content => {
-            this.openFile(filename, content.trim(), exampleId)
-          })
-        } else {
-          send('error', new SystemError(`Example "${exampleId}" is not available for Turtle ${this.language}.`))
-        }
-      })
   }
 
   saveLocalFile () {

@@ -115,7 +115,7 @@ function programStart (program: Program, options: Options): number[][] {
 /** generates pcode for setting up a global variable */
 function setupGlobalVariable (variable: Variable, indexOffset: number = 0): number[][] {
   const program = variable.routine.program
-  const pcode = []
+  const pcode: number[][] = []
 
   if (variable.isArray) {
     const index = indexOffset + variable.index
@@ -157,7 +157,7 @@ function setupGlobalVariable (variable: Variable, indexOffset: number = 0): numb
 
 /** generates pcode for all subroutines */
 function compileSubroutines (subroutines: Subroutine[], startLine: number, options: Options): number[][] {
-  const pcode = []
+  const pcode: number[][] = []
 
   // generate the pcode for each subroutine in turn, concatenating the results
   for (const subroutine of subroutines) {
@@ -184,7 +184,7 @@ function compileSubroutines (subroutines: Subroutine[], startLine: number, optio
 
 /** creates pcode for the body of a routine */
 function compileInnerCode (routine: Routine, startLine: number, options: Options): number[][] {
-  const pcode = []
+  const pcode: number[][] = []
   for (const stmt of routine.statements) {
     pcode.push(...statement(stmt, routine.program, startLine + pcode.length, options))
   }
@@ -314,7 +314,9 @@ function backpatchBASIC (program: Program, pcode: number[][]): void {
     for (let j = 0; j < pcode[i].length; j += 1) {
       if (pcode[i][j - 1] && pcode[i][j - 1] === PCode.subr) {
         const subroutine = program.allSubroutines.find(x => x.index === pcode[i][j])
-        pcode[i][j] = subroutine.startLine
+        if (subroutine) {
+          pcode[i][j] = subroutine.startLine
+        }
       }
     }
   }
@@ -347,10 +349,10 @@ function addHCLR (pcode: number[][]): void {
     PCode.fnxt
   ]
   for (const line of pcode) {
-    let heapStringMade = false
-    let heapStringNeeded = false
-    let lastJumpIndex = null
-    let i = 0
+    let heapStringMade: boolean = false
+    let heapStringNeeded: boolean = false
+    let lastJumpIndex: number|null = null
+    let i: number = 0
     while (i < line.length) {
       if (heapStringCodes.indexOf(line[i]) >= 0) {
         heapStringMade = true

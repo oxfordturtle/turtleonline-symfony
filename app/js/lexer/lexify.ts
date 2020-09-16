@@ -60,7 +60,7 @@ export default function lexify (code: string, language: Language): Lexeme[] {
 
     switch (tokens[index].type) {
       case 'spaces':
-        character += tokens[index].content.length
+        character += (tokens[index].content as string).length
         break
 
       case 'newline':
@@ -85,7 +85,7 @@ export default function lexify (code: string, language: Language): Lexeme[] {
         // indents are significant in Python
         if (language === 'Python') {
           indent = (tokens[index + 1] && tokens[index + 1].type === 'spaces')
-            ? tokens[index + 1].content.length
+            ? (tokens[index + 1].content as string).length
             : 0
           if (indent > indents[indents.length - 1]) {
             indents.push(indent)
@@ -104,7 +104,7 @@ export default function lexify (code: string, language: Language): Lexeme[] {
 
       default:
         lexemes.push(new Lexeme(tokens[index], line, character))
-        character += tokens[index].content.length
+        character += tokens[index].content?.length || 0
         break
     }
 

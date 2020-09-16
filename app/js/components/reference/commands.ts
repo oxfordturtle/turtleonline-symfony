@@ -33,7 +33,7 @@ function updateTable (): void {
 function commandTableRow (command: Command): HTMLTableRowElement {
   return tr({ content: [
     td({ content: [
-      code({ content: highlight(command.names[state.language], state.language) })
+      code({ content: highlight(command.names[state.language] as string, state.language) })
     ] }),
     td({ content: command.parameters.map(x => `<code>${highlight(x.name, state.language)}</code> (${x.type})`).join('<br>') }),
     td({ content: command.returns || '-' }),

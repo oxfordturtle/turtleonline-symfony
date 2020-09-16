@@ -40,13 +40,16 @@ type WIP = {
 
 /** parses lexemes as a pascal program */
 export default function pascal (lexemes: Lexeme[]): Program {
+  // dummy program to start with (will be overwritten later)
+  const prog = new Program('Pascal', 'dummy')
+
   // initialise the working variables
   let wip: WIP = {
-    program: null,
+    program: prog,
     routineStack: [],
-    routine: null,
+    routine: prog,
     routineCount: 0,
-    parent: null,
+    parent: prog,
     begins: 0,
     lex: 0,
     state: 'program'
@@ -103,7 +106,7 @@ function program (wip: WIP, lexemes: Lexeme[]): void {
   if (!keyword) {
     throw new CompilerError('Program must start with keyword "PROGRAM".')
   }
-  if (keyword.content.toLowerCase() !== 'program') {
+  if (keyword.content?.toLowerCase() !== 'program') {
     throw new CompilerError('Program must start with keyword "PROGRAM".', keyword)
   }
   if (!identifier) {
@@ -118,7 +121,7 @@ function program (wip: WIP, lexemes: Lexeme[]): void {
 
   // create the program and move on
   wip.lex += 2
-  wip.program = new Program('Pascal', identifier.content)
+  wip.program = new Program('Pascal', identifier.content as string)
   wip.routine = wip.program
   wip.routineStack.push(wip.routine)
 
@@ -135,7 +138,7 @@ function crossroads(wip: WIP, lexemes: Lexeme[]): void {
   if (!lexemes[wip.lex]) {
     throw new CompilerError('Expected "BEGIN", constant/variable definitions, or subroutine definitions.', lexemes[wip.lex - 1])
   }
-  switch (lexemes[wip.lex].content.toLowerCase()) {
+  switch (lexemes[wip.lex]?.content?.toLowerCase()) {
     case 'const':
       if (wip.routine.variables.length > 0) {
         throw new CompilerError('Constants must be defined before any variables.', lexemes[wip.lex])
@@ -157,7 +160,7 @@ function crossroads(wip: WIP, lexemes: Lexeme[]): void {
 
     case 'function': // fallthrough
     case 'procedure':
-      wip.state = lexemes[wip.lex].content.toLowerCase() as State
+      wip.state = lexemes[wip.lex]?.content?.toLowerCase() as State
       wip.lex += 1
       break
 
@@ -189,7 +192,7 @@ function constant (wip: WIP, lexemes: Lexeme[]): void {
   if (identifier.content === wip.routine.program.name) {
     throw new CompilerError('Constant name {lex} is already the name of the program.', identifier)
   }
-  if (wip.program.findConstant(identifier.content)) {
+  if (wip.program.findConstant(identifier.content as string)) {
     throw new CompilerError('{lex} is already the name of a constant.', identifier)
   }
   if (!assignment) {
@@ -200,10 +203,10 @@ function constant (wip: WIP, lexemes: Lexeme[]): void {
   }
 
   // get all the lexemes up to the first semicolon
-  const valueLexemes = []
+  const valueLexemes: Lexeme[] = []
   wip.lex += 2
   while (lexemes[wip.lex] && lexemes[wip.lex].content !== ';') {
-    valueLexemes.push(lexemes[wip.lex])
+    valueLexemes.push(lexemes[wip.lex] as Lexeme)
     wip.lex += 1
   }
   const value = evaluate(identifier, valueLexemes, wip.routine.program)
@@ -211,7 +214,7 @@ function constant (wip: WIP, lexemes: Lexeme[]): void {
   const type = (typeof value === 'number') ? 'boolint' : 'string'
 
   // create the constant and add it to the routine
-  const constant = new Constant('Pascal', identifier.content, type, value)
+  const constant = new Constant('Pascal', identifier.content as string, type, value)
   wip.routine.program.constants.push(constant)
 
   // semicolon check
@@ -230,7 +233,7 @@ function constant (wip: WIP, lexemes: Lexeme[]): void {
 
 /** parses lexemes at variable declarations */
 function variables (wip: WIP, lexemes: Lexeme[], isParameter: boolean = false, isReferenceParameter: boolean = false): void {
-  const variables = []
+  const variables: Variable[] = []
 
   // gather the variable names
   let more = true
@@ -245,15 +248,15 @@ function variables (wip: WIP, lexemes: Lexeme[], isParameter: boolean = false, i
     if (lexemes[wip.lex].subtype === 'turtle') {
       throw new CompilerError('{lex} is the name of a predefined Turtle property, and cannot be used as a variable name.', lexemes[wip.lex])
     }
-    if (lexemes[wip.lex].content.toLowerCase() === wip.routine.program.name.toLowerCase()) {
+    if (lexemes[wip.lex]?.content?.toLowerCase() === wip.routine.program.name.toLowerCase()) {
       throw new CompilerError('{lex} is already the name of the program.', lexemes[wip.lex])
     }
-    if (wip.routine.isDuplicate(lexemes[wip.lex].content)) {
+    if (wip.routine.isDuplicate(lexemes[wip.lex].content as string)) {
       throw new CompilerError('{lex} is already the name of a constant, variable, or subroutine.', lexemes[wip.lex])
     }
 
     // create the variable and add it to the array of variables
-    variables.push(new Variable(lexemes[wip.lex].content, wip.routine, isParameter, isReferenceParameter))
+    variables.push(new Variable(lexemes[wip.lex].content as string, wip.routine, isParameter, isReferenceParameter))
 
     // check there is something next
     if (!lexemes[wip.lex + 1]) {
@@ -306,11 +309,11 @@ function variableType(wip: WIP, lexemes: Lexeme[], variables: Variable[]): void 
   }
 
   // do different things based on content
-  switch (lexemes[wip.lex].content.toLowerCase()) {
+  switch (lexemes[wip.lex]?.content?.toLowerCase()) {
     case 'boolean': // fallthrough
     case 'integer':
       for (const variable of variables) {
-        variable.type = lexemes[wip.lex].content.toLowerCase() as Type
+        variable.type = lexemes[wip.lex]?.content?.toLowerCase() as Type
       }
       wip.lex += 1
       break
@@ -366,7 +369,7 @@ function variableType(wip: WIP, lexemes: Lexeme[], variables: Variable[]): void 
         if (lexemes[wip.lex].content === '[') {
           throw new CompilerError('Array reference parameters cannot be given a size specification.', lexemes[wip.lex])
         }
-        if (lexemes[wip.lex].content.toLowerCase() !== 'of') {
+        if (lexemes[wip.lex].content?.toLowerCase() !== 'of') {
           throw new CompilerError('Array parameter must be followed by "of", and then the type of the elements of the array.', lexemes[wip.lex])
         }
         wip.lex += 1
@@ -399,11 +402,11 @@ function variableType(wip: WIP, lexemes: Lexeme[], variables: Variable[]): void 
           // expecting integer start value
           switch (start.type) {
             case 'identifier':
-              let variable = wip.routine.findVariable(start.content)
+              let variable = wip.routine.findVariable(start.content as string)
               if (variable) {
                 throw new CompilerError('Array index cannot be a variable.', end)
               }
-              let constant = wip.routine.findConstant(start.content)
+              let constant = wip.routine.findConstant(start.content as string)
               if (!constant) {
                 throw new CompilerError('Constant {lex} has not been defined.', start)
               }
@@ -416,7 +419,7 @@ function variableType(wip: WIP, lexemes: Lexeme[], variables: Variable[]): void 
               startIndex = constant.value as number
               break
             case 'integer':
-              if (start.value < 0) {
+              if (start.value as number < 0) {
                 throw new CompilerError('Array start index cannot be negative.', start)
               }
               startIndex = start.value as number
@@ -436,11 +439,11 @@ function variableType(wip: WIP, lexemes: Lexeme[], variables: Variable[]): void 
           // expecting end value
           switch (end.type) {
             case 'identifier':
-              let variable = wip.routine.findVariable(end.content)
+              let variable = wip.routine.findVariable(end.content as string)
               if (variable) {
                 throw new CompilerError('Array index cannot be a variable.', end)
               }
-              let constant = wip.routine.findConstant(end.content)
+              let constant = wip.routine.findConstant(end.content as string)
               if (!constant) {
                 throw new CompilerError('Constant {lex} has not been defined.', end)
               }
@@ -453,7 +456,7 @@ function variableType(wip: WIP, lexemes: Lexeme[], variables: Variable[]): void 
               endIndex = constant.value as number
               break
             case 'integer':
-              if (end.value < 0) {
+              if (end.value as number < 0) {
                 throw new CompilerError('Array start index cannot be negative.', end)
               }
               endIndex = end.value as number
@@ -492,7 +495,7 @@ function variableType(wip: WIP, lexemes: Lexeme[], variables: Variable[]): void 
         if (!lexemes[wip.lex]) {
           throw new CompilerError('"array[n..m]" must be followed by "of".', lexemes[wip.lex - 1])
         }
-        if (lexemes[wip.lex].content.toLowerCase() !== 'of') {
+        if (lexemes[wip.lex].content?.toLowerCase() !== 'of') {
           throw new CompilerError('"array[n..m]" must be followed by "of".', lexemes[wip.lex])
         }
         wip.lex += 1
@@ -525,15 +528,15 @@ function subroutine (wip: WIP, lexemes: Lexeme[]): void {
   if (identifier.subtype === 'turtle') {
     throw new CompilerError('{lex} is the name of a predefined Turtle property, and cannot be used as a subroutine name.', identifier)
   }
-  if (identifier.content.toLowerCase() === wip.routine.program.name.toLowerCase()) {
+  if (identifier.content?.toLowerCase() === wip.routine.program.name.toLowerCase()) {
     throw new CompilerError('Subroutine name {lex} is already the name of the program.', identifier)
   }
-  if (parent.isDuplicate(identifier.content)) {
+  if (parent.isDuplicate(identifier.content as string)) {
     throw new CompilerError('{lex} is already the name of a constant, variable, or subroutine in the current scope.', identifier)
   }
 
   // create the routine object
-  wip.routine = new Subroutine(parent, identifier.content, wip.state as SubroutineType)
+  wip.routine = new Subroutine(parent, identifier.content as string, wip.state as SubroutineType)
   wip.routineCount += 1
   wip.routine.index = wip.routineCount
   parent.subroutines.push(wip.routine as Subroutine)
@@ -610,8 +613,8 @@ function begin (wip: WIP, lexemes: Lexeme[]): void {
   // expecting routine commands
   wip.begins = 1
   while (wip.begins > 0 && lexemes[wip.lex]) {
-    if (lexemes[wip.lex].content.toLowerCase() === 'begin') wip.begins += 1
-    if (lexemes[wip.lex].content.toLowerCase() === 'end') wip.begins -= 1
+    if (lexemes[wip.lex].content?.toLowerCase() === 'begin') wip.begins += 1
+    if (lexemes[wip.lex].content?.toLowerCase() === 'end') wip.begins -= 1
     wip.routine.lexemes.push(lexemes[wip.lex])
     wip.lex += 1
   }

@@ -15,8 +15,7 @@
 import { simpleStatement, variableAssignment, expression, typeCheck } from './common'
 import { CompoundExpression, VariableValue, LiteralValue } from '../expression'
 import { Program, Routine } from '../routine'
-import { Statement, IfStatement, ForStatement, RepeatStatement, WhileStatement, VariableAssignment } from '../statement'
-import { Lexeme } from '../../lexer/lexeme'
+import { Statement, IfStatement, ForStatement, WhileStatement, PassStatement, VariableAssignment } from '../statement'
 import { PCode } from '../../constants/pcodes'
 import { CompilerError } from '../../tools/error'
 
@@ -86,6 +85,7 @@ function statement (routine: Routine): Statement {
         case 'pass':
           routine.lex += 1
           eosCheck(routine)
+          statement = new PassStatement()
           break
 
         // anything else is an error
@@ -210,7 +210,7 @@ function forStatement (routine: Routine): ForStatement {
   if (routine.lexemes[routine.lex].type !== 'identifier') {
     throw new CompilerError('{lex} is not a valid variable name.', routine.lexemes[routine.lex])
   }
-  const variable = routine.findVariable(routine.lexemes[routine.lex].content)
+  const variable = routine.findVariable(routine.lexemes[routine.lex].content as string)
   if (!variable) {
     throw new CompilerError('Variable {lex} could not be found.', routine.lexemes[routine.lex])
   }

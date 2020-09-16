@@ -5,9 +5,8 @@ import { Property, defaults } from '../constants/properties'
 
 /** load a property from local/session storage */
 export function load (property: Property): any {
-  return (sessionStorage.getItem(property) === null)
-    ? defaults[property]
-    : JSON.parse(sessionStorage.getItem(property))
+  const fromStorage = sessionStorage.getItem(property)
+  return (fromStorage !== null) ? JSON.parse(fromStorage) : defaults[property]
 }
 
 /** save a property to local/session storage */

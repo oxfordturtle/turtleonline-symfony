@@ -18,11 +18,15 @@ export function openMenu (id: string): void {
 
   if (a && menu) {
     // close all sibling menus
-    const siblingMenus = a.parentElement.querySelectorAll(':scope > [data-menu]').length > 1
-      ? a.parentElement.querySelectorAll('[data-menu]')
-      : a.parentElement.parentElement.querySelectorAll('[data-menu]')
-    for (const siblingMenu of siblingMenus) {
-      closeMenu((siblingMenu as HTMLElement).dataset.menu)
+    if (a.parentElement) {
+      const siblingMenus = a.parentElement.querySelectorAll(':scope > [data-menu]').length > 1
+        ? a.parentElement.querySelectorAll('[data-menu]')
+        : a.parentElement.parentElement?.querySelectorAll('[data-menu]')
+      if (siblingMenus) {
+        for (const siblingMenu of siblingMenus) {
+          closeMenu((siblingMenu as HTMLElement).dataset.menu as string)
+        }
+      }
     }
 
     // close other menu-specific menus
@@ -42,7 +46,7 @@ export function openMenu (id: string): void {
 
     // if it's a system sub menu, also open the system menu
     if (menu.classList.contains('system-sub-menu')) {
-      document.querySelector('.system-menu').classList.add('open')
+      document.querySelector('.system-menu')?.classList.add('open')
     }
 
     // maybe swap caret up/down
@@ -63,7 +67,7 @@ export function closeMenu (id: string): void {
   if (a && menu) {
     // close all sub menus
     for (const subMenu of menu.querySelectorAll('[data-menu]')) {
-      closeMenu((subMenu as HTMLElement).dataset.menu)
+      closeMenu((subMenu as HTMLElement).dataset.menu as string)
     }
 
     // close the menu
@@ -72,7 +76,7 @@ export function closeMenu (id: string): void {
 
     // if it's a system sub menu, also close the system menu
     if (menu.classList.contains('system-sub-menu')) {
-      document.querySelector('.system-menu').classList.remove('open')
+      document.querySelector('.system-menu')?.classList.remove('open')
     }
 
     // maybe swap caret up/down
@@ -92,7 +96,11 @@ export function selectTab (id: string): void {
     }
   }
   for (const tabPane of document.querySelectorAll(`[data-tab="${id}"]`)) {
-    for (const sibling of tabPane.parentElement.children) sibling.classList.remove('active')
+    if (tabPane.parentElement) {
+      for (const sibling of tabPane.parentElement.children) {
+        sibling.classList.remove('active')
+      }
+    }
     tabPane.classList.add('active')
   }
 }

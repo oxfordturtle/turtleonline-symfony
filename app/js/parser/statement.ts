@@ -8,6 +8,7 @@ export type Statement =
   | ForStatement
   | RepeatStatement
   | WhileStatement
+  | PassStatement
 
 export class VariableAssignment {
   variable: Variable
@@ -41,3 +42,5 @@ export class WhileStatement {
   condition: Expression
   statements: Statement[] = []
 }
+
+export class PassStatement {}

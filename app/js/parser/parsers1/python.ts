@@ -33,19 +33,17 @@ type WIP = {
 
 /** parses lexemes as a python program */
 export default function python (lexemes: Lexeme[]): Program {
+  // create the program
+  const prog = new Program('Python', '!')
+
   // initialise the working variables
   let wip: WIP = {
-    program: null,
-    routineStack: [],
-    routine: null,
+    program: prog,
+    routineStack: [prog],
+    routine: prog,
     lex: 0,
     state: 'crossroads'
   }
-
-  // setup the program
-  wip.program = new Program('Python', '!')
-  wip.routine = wip.program
-  wip.routineStack.push(wip.routine)
 
   // loop through the lexemes
   while (wip.lex < lexemes.length) {
@@ -128,12 +126,12 @@ function identifier (wip: WIP, lexemes: Lexeme[]): void {
     }
 
     // check for duplicate
-    if (wip.routine.isDuplicate(lexemes[wip.lex].content)) {
+    if (wip.routine.isDuplicate(lexemes[wip.lex].content as string)) {
       throw new CompilerError('{lex} is already the name of a variable in the current scope.', lexemes[wip.lex])
     }
 
     // ok, create the variable, push the lexeme, and move on
-    const variable = new Variable(lexemes[wip.lex].content, wip.routine)
+    const variable = new Variable(lexemes[wip.lex].content as string, wip.routine)
     wip.routine.lexemes.push(lexemes[wip.lex])
     wip.lex += 1
 
@@ -154,8 +152,8 @@ function identifier (wip: WIP, lexemes: Lexeme[]): void {
   } else if (lexemes[wip.lex + 1] && lexemes[wip.lex + 1].content === 'in') {
     // range variable (must be an integer)
     if (lexemes[wip.lex].type === 'identifier') { // don't bother for turtle variables
-      if (!wip.routine.isDuplicate(lexemes[wip.lex].content)) {
-        let variable = new Variable(lexemes[wip.lex].content, wip.routine)
+      if (!wip.routine.isDuplicate(lexemes[wip.lex].content as string)) {
+        let variable = new Variable(lexemes[wip.lex].content as string, wip.routine)
         variable.type = 'integer'
         wip.routine.variables.push(variable)
       }
@@ -205,12 +203,12 @@ function def (wip: WIP, lexemes: Lexeme[]): void {
   if (lexemes[wip.lex].subtype === 'turtle') {
     throw new CompilerError('Subroutine cannot be given the name of a Turtle attribute.', lexemes[wip.lex])
   }
-  if (wip.routine.isDuplicate(lexemes[wip.lex].content)) {
+  if (wip.routine.isDuplicate(lexemes[wip.lex].content as string)) {
     throw new CompilerError('{lex} is already the name of a variable or subroutine in the current scope.', lexemes[wip.lex])
   }
 
   // define the subroutine
-  const subroutine = new Subroutine(wip.routine, lexemes[wip.lex].content, 'procedure')
+  const subroutine = new Subroutine(wip.routine, lexemes[wip.lex].content as string, 'procedure')
   wip.routine.subroutines.push(subroutine)
   wip.routineStack.push(subroutine)
   wip.routine = subroutine
@@ -297,9 +295,9 @@ function global (wip: WIP, lexemes: Lexeme[]): void {
       throw new CompilerError('{lex} is not a valid variable name.', lexemes[wip.lex])
     }
     if (wip.state === 'global') {
-      (wip.routine as Subroutine).globals.push(lexemes[wip.lex].content)
+      (wip.routine as Subroutine).globals.push(lexemes[wip.lex].content as string)
     } else {
-      (wip.routine as Subroutine).nonlocals.push(lexemes[wip.lex].content)
+      (wip.routine as Subroutine).nonlocals.push(lexemes[wip.lex].content as string)
     }
     wip.lex += 1
     if (lexemes[wip.lex].content === ',') wip.lex += 1
@@ -371,10 +369,10 @@ function parameter (wip: WIP, lexemes: Lexeme[]): void {
   if (lexemes[wip.lex].subtype === 'turtle') {
     throw new CompilerError('{lex} is the name of a Turtle variable, and cannot be used as a custom variable name.', lexemes[wip.lex])
   }
-  if (wip.routine.isDuplicate(lexemes[wip.lex].content)) {
+  if (wip.routine.isDuplicate(lexemes[wip.lex].content as string)) {
     throw new CompilerError('{lex} is already the name of a variable or subroutine in the current scope.', lexemes[wip.lex])
   }
-  const parameter = new Variable(lexemes[wip.lex].content, wip.routine, true)
+  const parameter = new Variable(lexemes[wip.lex].content as string, wip.routine, true)
   wip.lex += 1
 
   // expecting colon

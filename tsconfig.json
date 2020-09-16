@@ -3,6 +3,7 @@
     "outDir": "./public/",
     "sourceMap": true,
     "noImplicitAny": false,
+    "strictNullChecks": true,
     "module": "es6",
     "target": "es6",
     "lib": ["DOM", "DOM.Iterable", "ES2016", "ES2019"],

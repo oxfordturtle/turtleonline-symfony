@@ -30,23 +30,23 @@ export class Token {
       case 'comment':
         switch (language) {
           case 'BASIC':
-            this.value = this.content.slice(3).trim()
+            this.value = (this.content as string).slice(3).trim()
             break
           case 'C': // fallthrough
           case 'TypeScript':
-            this.value = this.content.slice(2).trim()
+            this.value = (this.content as string).slice(2).trim()
             break
           case 'Pascal':
-            this.value = this.content.slice(1, -1).trim()
+            this.value = (this.content as string).slice(1, -1).trim()
             break
           case 'Python':
-            this.value = this.content.slice(1).trim()
+            this.value = (this.content as string).slice(1).trim()
             break
         }
         break
 
       case 'operator':
-        switch (this.content.toLowerCase()) {
+        switch ((this.content as string).toLowerCase()) {
           case '+':
             this.value = PCode.plus
             break
@@ -127,13 +127,13 @@ export class Token {
       case 'string':
         switch (language) {
           case 'BASIC':
-            this.value = this.content.slice(1, -1).replace(/""/g, '"')
+            this.value = (this.content as string).slice(1, -1).replace(/""/g, '"')
             break
           case 'Pascal':
-            if (this.content[0] === '\'') {
-              this.value = this.content.slice(1, -1).replace(/''/g, '\'')
+            if ((this.content as string)[0] === '\'') {
+              this.value = (this.content as string).slice(1, -1).replace(/''/g, '\'')
             } else {
-              this.value = this.content.slice(1, -1).replace(/""/g, '"')
+              this.value = (this.content as string).slice(1, -1).replace(/""/g, '"')
             }
             if (this.value.length === 1) {
               this.type = 'character'
@@ -143,16 +143,16 @@ export class Token {
           case 'C': // fallthrough
           case 'Python': // fallthrough
           case 'TypeScript':
-            this.value = this.content.slice(1, -1).replace(/\\('|")/g, '$1')
+            this.value = (this.content as string).slice(1, -1).replace(/\\('|")/g, '$1')
             break
         }
         break
 
       case 'boolean':
         if (language === 'C' || language === 'Python') {
-          this.value = (this.content.toLowerCase() === 'true') ? 1 : 0
+          this.value = ((this.content as string).toLowerCase() === 'true') ? 1 : 0
         } else {
-          this.value = (this.content.toLowerCase() === 'true') ? -1 : 0
+          this.value = ((this.content as string).toLowerCase() === 'true') ? -1 : 0
         }
         break
 
@@ -160,21 +160,21 @@ export class Token {
         switch (this.subtype) {
           case 'binary':
             this.value = (language === 'Python')
-              ? parseInt(this.content.slice(2), 2)
-              : parseInt(this.content.slice(1), 2)
+              ? parseInt((this.content as string).slice(2), 2)
+              : parseInt((this.content as string).slice(1), 2)
             break
           case 'octal':
             this.value = (language === 'Python')
-              ? parseInt(this.content.slice(2), 8)
-              : parseInt(this.content.slice(1), 8)
+              ? parseInt((this.content as string).slice(2), 8)
+              : parseInt((this.content as string).slice(1), 8)
             break
           case 'decimal':
-            this.value = parseInt(this.content)
+            this.value = parseInt(this.content as string)
             break
           case 'hexadecimal':
             this.value = (language === 'Python')
-              ? parseInt(this.content.slice(2), 16)
-              : parseInt(this.content.slice(1), 16)
+              ? parseInt((this.content as string).slice(2), 16)
+              : parseInt((this.content as string).slice(1), 16)
             break
         }
         break
@@ -182,7 +182,7 @@ export class Token {
       case 'keycode': // fallthrough
       case 'query':
         const input = (language === 'Pascal')
-          ? inputs.find(x => x.names[language] === this.content.toLowerCase())
+          ? inputs.find(x => x.names[language] === (this.content as string).toLowerCase())
           : inputs.find(x => x.names[language] === this.content)
         this.value = input ? input.value : null
         break
@@ -190,10 +190,10 @@ export class Token {
       case 'identifier':
         switch (this.subtype) {
           case 'turtle':
-            this.value = ['x', 'y', 'd', 'a', 't', 'c'].indexOf(this.content[4].toLowerCase()) + 1
+            this.value = ['x', 'y', 'd', 'a', 't', 'c'].indexOf((this.content as string)[4].toLowerCase()) + 1
             break
           case 'colour':
-            this.value = colours.find(x => x.names[language] === this.content).value
+            this.value = colours.find(x => x.names[language] === this.content)?.value as number
             break
         }
         break

@@ -11,14 +11,14 @@ import { CompilerError } from '../../tools/error'
 /** parses lexemes as a simple statement */
 export function simpleStatement (routine: Routine): CommandCall|VariableAssignment {
   // look for a command
-  const command = routine.findCommand(routine.lexemes[routine.lex].content)
+  const command = routine.findCommand(routine.lexemes[routine.lex].content as string)
   if (command) {
     routine.lex += 1
     return commandCall(routine, command, 'procedure')
   }
 
   // look for a variable
-  const variable = routine.findVariable(routine.lexemes[routine.lex].content)
+  const variable = routine.findVariable(routine.lexemes[routine.lex].content as string)
   if (variable) {
     routine.lex += 1
     return variableAssignment(routine, variable)
@@ -217,12 +217,12 @@ function factor (routine: Routine): Expression {
     case 'string': // fallthrough
     case 'character':
       routine.lex += 1
-      return new LiteralValue(routine.lexemes[routine.lex - 1].type as Type, routine.lexemes[routine.lex - 1].value)
+      return new LiteralValue(routine.lexemes[routine.lex - 1].type as Type, routine.lexemes[routine.lex - 1].value as number|string)
 
     // input codes
     case 'keycode': // fallthrough
     case 'query':
-      const input = routine.findInput(routine.lexemes[routine.lex].content)
+      const input = routine.findInput(routine.lexemes[routine.lex].content as string)
       if (input) {
         routine.lex += 1
         result = new LiteralValue('integer', input.value)
@@ -234,14 +234,14 @@ function factor (routine: Routine): Expression {
     // identifiers
     case 'identifier':
       // look for a constant
-      const constant = routine.findConstant(routine.lexemes[routine.lex].content)
+      const constant = routine.findConstant(routine.lexemes[routine.lex].content as string)
       if (constant) {
         routine.lex += 1
         return new LiteralValue(constant.type, constant.value)
       }
 
       // look for a variable
-      const variable = routine.findVariable(routine.lexemes[routine.lex].content)
+      const variable = routine.findVariable(routine.lexemes[routine.lex].content as string)
       if (variable) {
         // TODO: array variable indexes
         routine.lex += 1
@@ -249,14 +249,14 @@ function factor (routine: Routine): Expression {
       }
 
       // look for a predefined colour constant
-      const colour = routine.findColour(routine.lexemes[routine.lex].content)
+      const colour = routine.findColour(routine.lexemes[routine.lex].content as string)
       if (colour) {
         routine.lex += 1
         return new LiteralValue('integer', colour.value)
       }
 
       // look for a command
-      const command = routine.findCommand(routine.lexemes[routine.lex].content)
+      const command = routine.findCommand(routine.lexemes[routine.lex].content as string)
       if (command) {
         routine.lex += 1
         return commandCall(routine, command, 'function')

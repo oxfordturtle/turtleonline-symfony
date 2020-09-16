@@ -7,6 +7,7 @@ import fs from 'fs'
 import { examples, Example } from '../../../app/js/constants/examples'
 import { Language, extensions } from '../../../app/js/constants/languages'
 import lexify from '../../../app/js/lexer/lexify'
+import { Lexeme } from '../../../app/js/lexer/lexeme'
 
 // run separate tests for each example
 for (const example of examples) {
@@ -40,18 +41,18 @@ function getComments (example: Example, language: Language): string[] {
     }
     if (example.id === 'BouncingFace') {
       const drawsEye = comments.splice(8, 1)
-      const drawHead = comments.pop()
+      const drawHead = comments.pop() as string
       const first2 = comments.splice(0, 2)
       comments.unshift(drawHead)
       comments.unshift(drawsEye[0])
       comments.unshift(...first2)
     }
     if (example.id === 'BouncingTriangle') {
-      const last = comments.pop()
+      const last = comments.pop() as string
       comments.unshift(last)
     }
     if (example.id === 'BouncingShapes') {
-      const last = comments.pop()
+      const last = comments.pop() as string
       comments.unshift(last)
     }
     if (example.id === 'GravitySteps') {
@@ -63,11 +64,11 @@ function getComments (example: Example, language: Language): string[] {
       comments.unshift(...last9)
     }
     if (example.id === 'ColourSpiral') {
-      const last = comments.pop()
+      const last = comments.pop() as string
       comments.unshift(last)
     }
     if (example.id === 'SimpleProc') {
-      const last = comments.pop()
+      const last = comments.pop() as string
       comments.unshift(last)
     }
     if (example.id === 'ParameterProc') {
@@ -75,9 +76,9 @@ function getComments (example: Example, language: Language): string[] {
       comments.unshift(...last2)
     }
     if (example.id === 'ResizableFace') {
-      const drawFace = comments.shift()
-      const drawsFace = comments.shift()
-      const drawsEye = comments.pop()
+      const drawFace = comments.shift() as string
+      const drawsFace = comments.shift() as string
+      const drawsEye = comments.pop() as string
       comments.push(drawFace)
       comments.unshift(drawsEye)
       comments.unshift(drawsFace)

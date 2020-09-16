@@ -29,8 +29,17 @@ export class Routine {
 
   /** gets this routine's program */
   get program (): Program {
-    if (this instanceof Program) return this
-    if (this instanceof Subroutine) return this.parent.program
+    if (this instanceof Program) {
+      return this
+    }
+
+    if (this instanceof Subroutine) {
+      return this.parent.program
+    }
+
+    // this will never happen, since all routines will be either programs or subroutines
+    // (TODO: modify things so that the compiler knows this...)
+    return new Program('BASIC', '')
   }
 
   /** gets all subroutines of this routine flattened into one array */

@@ -16,13 +16,17 @@ import {
 export default function expression (exp: Expression, program: Program, options: Options, reference: boolean = false): number[] {
   if (exp instanceof LiteralValue) {
     return literalValue(exp, program, options)
-  } else if (exp instanceof VariableValue) {
-    return variableValue(exp, program, options, reference)
-  } else if (exp instanceof CommandCall) {
-    return functionValue(exp, program, options)
-  } else if (exp instanceof CompoundExpression) {
-    return compoundExpression(exp, program, options)
   }
+  
+  if (exp instanceof VariableValue) {
+    return variableValue(exp, program, options, reference)
+  }
+  
+  if (exp instanceof CommandCall) {
+    return functionValue(exp, program, options)
+  }
+  
+  return compoundExpression(exp, program, options)
 }
 
 /** generates the pcode for loading a literal value onto the stack */
@@ -83,7 +87,7 @@ function variableValue (exp: VariableValue, program: Program, options: Options, 
 
 /** generates the pcode for loading the result of a function onto the stack */
 function functionValue (exp: CommandCall, program: Program, options: Options): number[] {
-  const pcode = []
+  const pcode: number[] = []
 
   // first: load arguments onto stack
   for (let index = 0; index < exp.command.parameters.length; index += 1) {

@@ -44,13 +44,13 @@ export default function (identifier: Lexeme, lexemes: Lexeme[], program: Program
 function toJsString (lexeme: Lexeme): string {
   switch (lexeme.type) {
     case 'boolean':
-      return lexeme.content.toLowerCase()
+      return (lexeme.content as string).toLowerCase()
 
     case 'integer':
-      return lexeme.content.replace(/^[$&]/, '0x') // fix hexadecimal values
+      return (lexeme.content as string).replace(/^[$&]/, '0x') // fix hexadecimal values
 
     case 'string':
-      return lexeme.content
+      return lexeme.content as string
 
     case 'identifier':
       return `constants['${lexeme.content}']`
@@ -113,15 +113,17 @@ function toJsString (lexeme: Lexeme): string {
 
         case 'xor':
           return '^'
+        
+        default:
+          throw new Error()
       }
       break
 
     case 'delimiter':
       if (lexeme.content === '(' || lexeme.content === ')') {
         return lexeme.content
-      } else {
-        throw new Error() // empty error (will be caught above anyway)
       }
+      throw new Error() // empty error (will be caught above anyway)
 
     default:
       throw new Error() // empty error (will be caught above anyway)

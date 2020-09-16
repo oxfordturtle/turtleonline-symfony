@@ -9,7 +9,7 @@ const replies: Partial<Record<Message, Reply[]>> = {}
 /** registers a function to call when message is sent */
 export function on (message: Message, callback: Reply) {
   if (replies[message]) {
-    replies[message].push(callback)
+    (replies[message] as Reply[]).push(callback)
   } else {
     replies[message] = [callback]
   }
@@ -19,7 +19,7 @@ export function on (message: Message, callback: Reply) {
 export function send (message: Message, data: any = null): void {
   // execute any callbacks registered for this message
   if (replies[message]) {
-    for (const reply of replies[message]) {
+    for (const reply of replies[message] as Reply[]) {
       reply(data)
     }
   }

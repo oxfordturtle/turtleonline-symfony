@@ -24,17 +24,30 @@ import {
 export default function statement (stmt: Statement, program: Program, startLine: number, options: Options): number[][] {
   if (stmt instanceof VariableAssignment) {
     return [variableAssignment(stmt, program, options)]
-  } else if (stmt instanceof CommandCall) {
+  }
+  
+  if (stmt instanceof CommandCall) {
     return [procedureCall(stmt, program, startLine, options)]
-  } else if (stmt instanceof IfStatement) {
+  }
+  
+  if (stmt instanceof IfStatement) {
     return ifStatement(stmt, program, startLine, options)
-  } else if (stmt instanceof ForStatement) {
+  }
+  
+  if (stmt instanceof ForStatement) {
     return forStatement(stmt, program, startLine, options)
-  } else if (stmt instanceof RepeatStatement) {
+  }
+  
+  if (stmt instanceof RepeatStatement) {
     return repeatStatement(stmt, program, startLine, options)
-  } else if (stmt instanceof WhileStatement) {
+  }
+  
+  if (stmt instanceof WhileStatement) {
     return whileStatement(stmt, program, startLine, options)
   }
+
+  // pass statement - do nothing
+  return []
 }
 
 /** generates the pcode for a variable assignment */
@@ -117,7 +130,7 @@ function localVariableAssignment (stmt: VariableAssignment, program: Program, op
 
 /** generates the pcode for a procedure call */
 function procedureCall (stmt: CommandCall, program: Program, startLine: number, options: Options): number[] {
-  const pcode = []
+  const pcode: number[] = []
 
   // first: load arguments onto the stack
   for (let index = 0; index < stmt.command.parameters.length; index += 1) {
@@ -149,14 +162,14 @@ function procedureCall (stmt: CommandCall, program: Program, startLine: number, 
 /** generates the pcode for an IF statement */
 function ifStatement (stmt: IfStatement, program: Program, startLine: number, options: Options): number[][] {
   // inner lines: pcode for all IF substatements
-  const ifPcode = []
+  const ifPcode: number[][] = []
   for (const subStmt of stmt.ifStatements) {
     const subStartLine = startLine + ifPcode.length + 1
     ifPcode.push(...statement(subStmt, program, subStartLine, options))
   }
 
   // more inner lines: pcode for all ELSE statements
-  const elsePcode = []
+  const elsePcode: number[][] = []
   for (const subStmt of stmt.elseStatements) {
     const subStartLine = startLine + ifPcode.length + elsePcode.length + 2
     elsePcode.push(...statement(subStmt, program, subStartLine, options))
@@ -186,7 +199,7 @@ function ifStatement (stmt: IfStatement, program: Program, startLine: number, op
 
 /** generates the pcode for a FOR statement */
 function forStatement (stmt: ForStatement, program: Program, startLine: number, options: Options): number[][] {
-  const pcode = []
+  const pcode: number[][] = []
 
   // middle lines: pcode for all substatements
   for (const subStmt of stmt.statements) {
@@ -210,7 +223,7 @@ function forStatement (stmt: ForStatement, program: Program, startLine: number, 
 
 /** generates the pcode for a REPEAT statement */
 function repeatStatement (stmt: RepeatStatement, program: Program, startLine: number, options: Options): number[][] {
-  const pcode = []
+  const pcode: number[][] = []
 
   // first lines: pcode for all substatements
   for (const subStmt of stmt.statements) {
@@ -228,7 +241,7 @@ function repeatStatement (stmt: RepeatStatement, program: Program, startLine: nu
 
 /** generates the pcode for a WHILE statement */
 function whileStatement (stmt: WhileStatement, program: Program, startLine: number, options: Options): number[][] {
-  const pcode = []
+  const pcode: number[][] = []
 
   // middle lines: pcode for all substatements
   for (const subStmt of stmt.statements) {

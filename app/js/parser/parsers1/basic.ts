@@ -41,18 +41,17 @@ type WIP = {
 
 /** parses lexemes as a BASIC program */
 export default function basic (lexemes: Lexeme[]): Program {
+  // create the program
+  const prog = new Program('BASIC', '!')
+
   // initialise the working variables
   let wip: WIP = {
-    program: null,
-    routine: null,
+    program: prog,
+    routine: prog,
     lex: 0,
     state: 'start',
     context: 'program'
   }
-
-  // setup the program and set it as the current routine
-  wip.program = new Program('BASIC', '!')
-  wip.routine = wip.program
 
   // loop through the lexemes
   while (wip.lex < lexemes.length) {
@@ -159,7 +158,7 @@ function constant (wip: WIP, lexemes: Lexeme[]): void {
   if (identifier.type !== 'identifier') {
     throw new CompilerError('{lex} is not a valid constant name.', lexemes[wip.lex])
   }
-  if (wip.routine.findConstant(identifier.content)) {
+  if (wip.routine.findConstant(identifier.content as string)) {
     throw new CompilerError('Duplicate constant name {lex}.', lexemes[wip.lex])
   }
   if (!assignment) {
@@ -170,13 +169,13 @@ function constant (wip: WIP, lexemes: Lexeme[]): void {
   }
 
   // determine constant type based on name
-  const type = identifier.content.slice(-1) === '$' ? 'string' : 'boolint'
+  const type = (identifier.content as string).slice(-1) === '$' ? 'string' : 'boolint'
 
   // get all the lexemes up to the first line break
-  const valueLexemes = []
+  const valueLexemes: Lexeme[] = []
   wip.lex += 1
   while (lexemes[wip.lex + 1] && lexemes[wip.lex + 1].type !== 'newline') {
-    valueLexemes.push(lexemes[wip.lex + 1])
+    valueLexemes.push(lexemes[wip.lex + 1] as Lexeme)
     wip.lex += 1
   }
   const value = evaluate(identifier, valueLexemes, wip.routine.program)
@@ -195,7 +194,7 @@ function constant (wip: WIP, lexemes: Lexeme[]): void {
   }
 
   // create the constant and add it to the routine
-  const constant = new Constant('BASIC', identifier.content, type, value)
+  const constant = new Constant('BASIC', identifier.content as string, type, value)
   wip.routine.program.constants.push(constant)
 
   // newline check
@@ -228,7 +227,7 @@ function dim (wip: WIP, lexemes: Lexeme[]): void {
   }
 
   // create the variable
-  const variable = new Variable(lexemes[wip.lex].content, wip.routine)
+  const variable = new Variable(lexemes[wip.lex].content as string, wip.routine)
   variable.type = variableType(lexemes[wip.lex])
 
   // expecting open bracket
@@ -244,7 +243,7 @@ function dim (wip: WIP, lexemes: Lexeme[]): void {
   // expecting dimensions separated by commas
   while (lexemes[wip.lex] && lexemes[wip.lex].content !== ')') {
     if (lexemes[wip.lex].type === 'identifier') {
-      const constant = wip.routine.findConstant(lexemes[wip.lex].content)
+      const constant = wip.routine.findConstant(lexemes[wip.lex].content as string)
       if (!constant) {
         throw new CompilerError('Array dimensions must be an integer or integer constant.', lexemes[wip.lex])
       }
@@ -256,7 +255,7 @@ function dim (wip: WIP, lexemes: Lexeme[]): void {
       }
       variable.arrayDimensions.push([0, constant.value])
     } else if (lexemes[wip.lex].type === 'integer') {
-      if (lexemes[wip.lex].value <= 0) {
+      if (lexemes[wip.lex].value as number <= 0) {
         throw new CompilerError('Dimension value must be greater than 0.', lexemes[wip.lex])
       }
       variable.arrayDimensions.push([0, lexemes[wip.lex].value as number])
@@ -315,8 +314,8 @@ function program (wip: WIP, lexemes: Lexeme[]): void {
     // otherwise make a note of any variables ...
     if (lexemes[wip.lex].type === 'identifier' && lexemes[wip.lex].subtype !== 'turtle') {
       if (lexemes[wip.lex + 1] && lexemes[wip.lex + 1].content === '=') {
-        if (!wip.program.isDuplicate(lexemes[wip.lex].content)) {
-          const variable = new Variable(lexemes[wip.lex].content, wip.program)
+        if (!wip.program.isDuplicate(lexemes[wip.lex].content as string)) {
+          const variable = new Variable(lexemes[wip.lex].content as string, wip.program)
           variable.type = variableType(lexemes[wip.lex])
           wip.program.variables.push(variable)
         }
@@ -354,7 +353,7 @@ function def (wip: WIP, lexemes: Lexeme[]): void {
   }
 
   // create the subroutine and add it to the routine arrays
-  wip.routine = new Subroutine(wip.program, lexemes[wip.lex].content, subroutineType(wip, lexemes))
+  wip.routine = new Subroutine(wip.program, lexemes[wip.lex].content as string, subroutineType(wip, lexemes))
   wip.program.subroutines.push(wip.routine as Subroutine)
   wip.routine.index = wip.program.subroutines.length
 
@@ -406,12 +405,12 @@ function parameters (wip: WIP, lexemes: Lexeme[]): void {
   if (lexemes[wip.lex].subtype === 'turtle') {
     throw new CompilerError('{lex} is the name of a Turtle property, and cannot be used as a parameter name.', lexemes[wip.lex])
   }
-  if (wip.routine.isDuplicate(lexemes[wip.lex].content)) {
+  if (wip.routine.isDuplicate(lexemes[wip.lex].content as string)) {
     throw new CompilerError('{lex} is already a parameter for this subroutine.', lexemes[wip.lex])
   }
 
   // otherwise create the variable and add it to the routine
-  const variable = new Variable(lexemes[wip.lex].content, wip.routine, true, isReferenceParameter)
+  const variable = new Variable(lexemes[wip.lex].content as string, wip.routine, true, isReferenceParameter)
   variable.type = variableType(lexemes[wip.lex])
   wip.routine.variables.push(variable)
   wip.lex += 1
@@ -476,19 +475,19 @@ function local (wip: WIP, lexemes: Lexeme[]): void {
   if (lexemes[wip.lex].subtype === 'turtle') {
     throw new CompilerError('{lex} is the name of a Turtle property, and cannot be used as a variable name.', lexemes[wip.lex])
   }
-  if (wip.routine.isDuplicate(lexemes[wip.lex].content)) {
+  if (wip.routine.isDuplicate(lexemes[wip.lex].content as string)) {
     throw new CompilerError('{lex} is already the name of a variable or subroutine in the current scope.', lexemes[wip.lex])
   }
 
   // create the variable and add it to the routine
   let variable: Variable
   if (wip.state === 'private') {
-    variable = new Variable(lexemes[wip.lex].content, wip.program)
+    variable = new Variable(lexemes[wip.lex].content as string, wip.program)
     variable.type = variableType(lexemes[wip.lex])
     variable.private = wip.routine as Subroutine // flag the variable as private to this routine
     wip.program.variables.push(variable)
   } else {
-    variable = new Variable(lexemes[wip.lex].content, wip.routine)
+    variable = new Variable(lexemes[wip.lex].content as string, wip.routine)
     variable.type = variableType(lexemes[wip.lex])
     wip.routine.variables.push(variable)
   }
@@ -530,8 +529,8 @@ function subroutine (wip: WIP, lexemes: Lexeme[]): void {
 
   // check for undefined variables, and add them to the main program
   if (lexemes[wip.lex].type === 'identifier' && lexemes[wip.lex + 1] && lexemes[wip.lex + 1].content === '=') {
-    if (!wip.program.isDuplicate(lexemes[wip.lex].content) && !wip.routine.isDuplicate(lexemes[wip.lex].content)) {
-      const variable = new Variable(lexemes[wip.lex].content, wip.program)
+    if (!wip.program.isDuplicate(lexemes[wip.lex].content as string) && !wip.routine.isDuplicate(lexemes[wip.lex].content as string)) {
+      const variable = new Variable(lexemes[wip.lex].content as string, wip.program)
       variable.type = variableType(lexemes[wip.lex])
       wip.program.variables.push(variable)
     }
@@ -588,7 +587,7 @@ function newline (wip: WIP, lexemes: Lexeme[]): void {
 
 /** gets the type of a variable from its name */
 function variableType (lexeme: Lexeme): Type {
-  switch (lexeme.content.slice(-1)) {
+  switch (lexeme.content?.slice(-1)) {
     case '$':
       return 'string'
 
@@ -602,14 +601,14 @@ function variableType (lexeme: Lexeme): Type {
 
 /** gets the type of a subroutine from its name */
 function subroutineType (wip: WIP, lexemes: Lexeme[]): SubroutineType {
-  if (lexemes[wip.lex].content.slice(0, 4) === 'PROC') return 'procedure'
-  if (lexemes[wip.lex].content.slice(0, 2) === 'FN') return 'function'
+  if (lexemes[wip.lex].content?.slice(0, 4) === 'PROC') return 'procedure'
+  if (lexemes[wip.lex].content?.slice(0, 2) === 'FN') return 'function'
   throw new CompilerError('"DEF" must be followed by a valid procedure or function name. (Procedure names must begin with "PROC", and function names must begin with "FN".)', lexemes[wip.lex])
 }
 
 /** gets the return type of a function from its name */
 function functionReturnType (lexeme: Lexeme): Type {
-  switch (lexeme.content.slice(-1)) {
+  switch (lexeme.content?.slice(-1)) {
     case '$':
       return 'string'
 

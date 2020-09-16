@@ -3,6 +3,7 @@
  */
 import memory from './memory'
 import { Options } from './options'
+import { Turtle } from './turtle'
 import { colours } from '../constants/colours'
 import { PCode } from '../constants/pcodes'
 import { MachineError } from '../tools/error'
@@ -337,7 +338,15 @@ function execute (pcode: number[][], line: number, code: number, options: Option
   // execute as much code as possible
   let drawCount: number = 0
   let codeCount: number = 0
-  let a, b, c, d, e, f, g // miscellanous variables for working things out on the fly
+  let n1: number|undefined
+  let n2: number|undefined
+  let n3: number|undefined
+  let n4: number|undefined
+  let bool1: boolean
+  let bool2 : boolean
+  let s1: string
+  let s2: string
+  let s3: string
   try {
     while (drawCount < options.drawCountMax && (codeCount <= options.codeCountMax)) {
       switch (pcode[line][code]) {
@@ -346,31 +355,51 @@ function execute (pcode: number[][], line: number, code: number, options: Option
           break
 
         case PCode.dupl:
-          a = memory.stack.pop()
-          memory.stack.push(a, a)
+          n1 = memory.stack.pop()
+          if (n1 !== undefined) {
+            memory.stack.push(n1, n1)
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          } 
           break
 
         case PCode.swap:
-          b = memory.stack.pop()
-          a = memory.stack.pop()
-          memory.stack.push(b, a)
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined) {
+            memory.stack.push(n2, n1)
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.rota:
-          c = memory.stack.pop()
-          b = memory.stack.pop()
-          a = memory.stack.pop()
-          memory.stack.push(b, c, a)
+          n3 = memory.stack.pop()
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined && n3 !== undefined) {
+            memory.stack.push(n2, n3, n1)
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.incr:
-          a = memory.stack.pop()
-          memory.stack.push(a + 1)
+          n1 = memory.stack.pop()
+          if (n1 !== undefined) {
+            memory.stack.push(n1 + 1)
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.decr:
-          a = memory.stack.pop()
-          memory.stack.push(a - 1)
+          n1 = memory.stack.pop()
+          if (n1 !== undefined) {
+            memory.stack.push(n1 - 1)
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.mxin:
@@ -378,508 +407,806 @@ function execute (pcode: number[][], line: number, code: number, options: Option
           break
 
         case PCode.rand:
-          a = memory.stack.pop()
-          memory.stack.push(Math.floor(memory.random() * Math.abs(a)))
+          n1 = memory.stack.pop()
+          if (n1 !== undefined) {
+            memory.stack.push(Math.floor(memory.random() * Math.abs(n1)))
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.hstr:
-          a = memory.getHeapString(memory.stack.pop())
-          memory.makeHeapString(a)
+          n1 = memory.stack.pop()
+          if (n1 !== undefined) {
+            s1 = memory.getHeapString(n1)
+            memory.makeHeapString(s1)
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.ctos:
-          a = memory.stack.pop()
-          memory.makeHeapString(String.fromCharCode(a))
+          n1 = memory.stack.pop()
+          if (n1 !== undefined) {
+            memory.makeHeapString(String.fromCharCode(n1))
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.sasc:
-          a = memory.getHeapString(memory.stack.pop())
-          if (a.length === 0) {
-            memory.stack.push(0)
+          n1 = memory.stack.pop()
+          if (n1 !== undefined) {
+            s1 = memory.getHeapString(n1)
+            if (s1.length === 0) {
+              memory.stack.push(0)
+            } else {
+              memory.stack.push(s1.charCodeAt(0))
+            }
           } else {
-            memory.stack.push(a.charCodeAt(0))
+            throw new MachineError('Stack operation called on empty stack.')
           }
           break
 
         case PCode.itos:
-          a = memory.stack.pop()
-          memory.makeHeapString(a.toString())
+          n1 = memory.stack.pop()
+          if (n1 !== undefined) {
+            memory.makeHeapString(n1.toString(10))
+          }  else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.hexs:
-          b = memory.stack.pop()
-          a = memory.stack.pop().toString(16).toUpperCase()
-          while (a.length < b) {
-            a = '0' + a
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined) {
+            s1 = n1.toString(16).toUpperCase()
+            while (s1.length < n2) {
+              s1 = '0' + s1
+            }
+            memory.makeHeapString(s1)
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
           }
-          memory.makeHeapString(a)
           break
 
         case PCode.sval:
-          c = memory.stack.pop()
-          b = memory.stack.pop()
-          a = memory.getHeapString(b)
-          if (a[0] === '#') {
-            d = isNaN(parseInt(a.slice(1), 16)) ? c : parseInt(a.slice(1), 16)
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined) {
+            s1 = memory.getHeapString(n1)
+            if (s1[0] === '#') {
+              n3 = isNaN(parseInt(s1.slice(1), 16)) ? n2 : parseInt(s1.slice(1), 16)
+            } else {
+              n3 = isNaN(parseInt(s1, 10)) ? n2 : parseInt(s1, 10)
+            }
+            memory.stack.push(n3)
           } else {
-            d = isNaN(parseInt(a, 10)) ? c : parseInt(a, 10)
+            throw new MachineError('Stack operation called on empty stack.')
           }
-          memory.stack.push(d)
           break
 
         case PCode.qtos:
-          d = memory.stack.pop()
-          c = memory.stack.pop()
-          b = memory.stack.pop()
-          a = (b / c)
-          memory.makeHeapString(a.toFixed(d))
+          n4 = memory.stack.pop()
+          n3 = memory.stack.pop()
+          n2 = memory.stack.pop()
+          if (n2 !== undefined && n3 !== undefined && n4 !== undefined) {
+            n1 = (n2 / n3)
+            memory.makeHeapString(n1.toFixed(n4))
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.qval:
-          c = memory.stack.pop()
-          b = memory.stack.pop()
-          a = memory.getHeapString(memory.stack.pop())
-          d = isNaN(parseFloat(a)) ? c : parseFloat(a)
-          memory.stack.push(Math.round(d * b))
+          n3 = memory.stack.pop()
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined && n3 !== undefined) {
+            s1 = memory.getHeapString(n1)
+            n4 = isNaN(parseFloat(s1)) ? n3 : parseFloat(s1)
+            memory.stack.push(Math.round(n4 * n2))
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         // 0x10s - Boolean operators, integer operators
         case PCode.not:
-          a = memory.stack.pop()
-          memory.stack.push(~a)
+          n1 = memory.stack.pop()
+          if (n1 !== undefined) {
+            memory.stack.push(~n1)
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.and:
-          b = memory.stack.pop()
-          a = memory.stack.pop()
-          memory.stack.push(a & b)
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined) {
+            memory.stack.push(n1 & n2)
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.or:
-          b = memory.stack.pop()
-          a = memory.stack.pop()
-          memory.stack.push(a | b)
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined) {
+            memory.stack.push(n1 | n2)
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.xor:
-          b = memory.stack.pop()
-          a = memory.stack.pop()
-          memory.stack.push(a ^ b)
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined) {
+            memory.stack.push(n1 ^ n2)
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.andl:
-          b = memory.stack.pop()
-          a = memory.stack.pop()
-          memory.stack.push(a && b)
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined) {
+            memory.stack.push(n1 && n2)
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.orl:
-          b = memory.stack.pop()
-          a = memory.stack.pop()
-          memory.stack.push(a || b)
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined) {
+            memory.stack.push(n1 || n2)
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.shft:
-          b = memory.stack.pop()
-          a = memory.stack.pop()
-          if (b < 0) {
-            memory.stack.push(a << -b)
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined) {
+            if (n2 < 0) {
+              memory.stack.push(n1 << -n2)
+            } else {
+              memory.stack.push(n1 >> n2)
+            }
           } else {
-            memory.stack.push(a >> b)
+            throw new MachineError('Stack operation called on empty stack.')
           }
           break
 
         case PCode.neg:
-          a = memory.stack.pop()
-          memory.stack.push(-a)
+          n1 = memory.stack.pop()
+          if (n1 !== undefined) {
+            memory.stack.push(-n1)
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.abs:
-          a = memory.stack.pop()
-          memory.stack.push(Math.abs(a))
+          n1 = memory.stack.pop()
+          if (n1 !== undefined) {
+            memory.stack.push(Math.abs(n1))
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.sign:
-          a = memory.stack.pop()
-          memory.stack.push(Math.sign(a))
+          n1 = memory.stack.pop()
+          if (n1 !== undefined) {
+            memory.stack.push(Math.sign(n1))
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.plus:
-          b = memory.stack.pop()
-          a = memory.stack.pop()
-          memory.stack.push(a + b)
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined) {
+            memory.stack.push(n1 + n2)
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.subt:
-          b = memory.stack.pop()
-          a = memory.stack.pop()
-          memory.stack.push(a - b)
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined) {
+            memory.stack.push(n1 - n2)
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.mult:
-          b = memory.stack.pop()
-          a = memory.stack.pop()
-          memory.stack.push(a * b)
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined) {
+            memory.stack.push(n1 * n2)
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.divr:
-          b = memory.stack.pop()
-          a = memory.stack.pop()
-          memory.stack.push(Math.round(a / b))
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined) {
+            memory.stack.push(Math.round(n1 / n2))
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.div:
-          b = memory.stack.pop()
-          a = memory.stack.pop()
-          memory.stack.push(Math.floor(a / b))
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined) {
+            memory.stack.push(Math.floor(n1 / n2))
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.mod:
-          b = memory.stack.pop()
-          a = memory.stack.pop()
-          memory.stack.push(a % b)
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined) {
+            memory.stack.push(n1 % n2)
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         // 0x20s - comparison operators
         case PCode.eqal:
-          b = memory.stack.pop()
-          a = memory.stack.pop()
-          memory.stack.push(a === b ? -1 : 0)
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined) {
+            memory.stack.push(n1 === n2 ? -1 : 0)
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.noeq:
-          b = memory.stack.pop()
-          a = memory.stack.pop()
-          memory.stack.push(a !== b ? -1 : 0)
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined) {
+            memory.stack.push(n1 !== n2 ? -1 : 0)
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.less:
-          b = memory.stack.pop()
-          a = memory.stack.pop()
-          memory.stack.push(a < b ? -1 : 0)
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined) {
+            memory.stack.push(n1 < n2 ? -1 : 0)
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.more:
-          b = memory.stack.pop()
-          a = memory.stack.pop()
-          memory.stack.push(a > b ? -1 : 0)
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined) {
+            memory.stack.push(n1 > n2 ? -1 : 0)
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.lseq:
-          b = memory.stack.pop()
-          a = memory.stack.pop()
-          memory.stack.push(a <= b ? -1 : 0)
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined) {
+            memory.stack.push(n1 <= n2 ? -1 : 0)
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.mreq:
-          b = memory.stack.pop()
-          a = memory.stack.pop()
-          memory.stack.push(a >= b ? -1 : 0)
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined) {
+            memory.stack.push(n1 >= n2 ? -1 : 0)
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.maxi:
-          b = memory.stack.pop()
-          a = memory.stack.pop()
-          memory.stack.push(Math.max(a, b))
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined) {
+            memory.stack.push(Math.max(n1, n2))
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.mini:
-          b = memory.stack.pop()
-          a = memory.stack.pop()
-          memory.stack.push(Math.min(a, b))
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined) {
+            memory.stack.push(Math.min(n1, n2))
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.seql:
-          b = memory.getHeapString(memory.stack.pop())
-          a = memory.getHeapString(memory.stack.pop())
-          memory.stack.push(a === b ? -1 : 0)
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined) {
+            s2 = memory.getHeapString(n2)
+            s1 = memory.getHeapString(n1)
+            memory.stack.push(s1 === s2 ? -1 : 0)
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.sneq:
-          b = memory.getHeapString(memory.stack.pop())
-          a = memory.getHeapString(memory.stack.pop())
-          memory.stack.push(a !== b ? -1 : 0)
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined) {
+            s2 = memory.getHeapString(n2)
+            s1 = memory.getHeapString(n1)
+            memory.stack.push(s1 !== s2 ? -1 : 0)
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.sles:
-          b = memory.getHeapString(memory.stack.pop())
-          a = memory.getHeapString(memory.stack.pop())
-          memory.stack.push(a < b ? -1 : 0)
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined) {
+            s2 = memory.getHeapString(n1)
+            s1 = memory.getHeapString(n2)
+            memory.stack.push(n1 < n2 ? -1 : 0)
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.smor:
-          b = memory.getHeapString(memory.stack.pop())
-          a = memory.getHeapString(memory.stack.pop())
-          memory.stack.push(a > b ? -1 : 0)
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined) {
+            s2 = memory.getHeapString(n2)
+            s1 = memory.getHeapString(n1)
+            memory.stack.push(n1 > n2 ? -1 : 0)
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.sleq:
-          b = memory.getHeapString(memory.stack.pop())
-          a = memory.getHeapString(memory.stack.pop())
-          memory.stack.push(a <= b ? -1 : 0)
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined) {
+            s2 = memory.getHeapString(n2)
+            s1 = memory.getHeapString(n1)
+            memory.stack.push(s1 <= s2 ? -1 : 0)
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.smeq:
-          b = memory.getHeapString(memory.stack.pop())
-          a = memory.getHeapString(memory.stack.pop())
-          memory.stack.push(a >= b ? -1 : 0)
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined) {
+            s2 = memory.getHeapString(n2)
+            s1 = memory.getHeapString(n1)
+            memory.stack.push(s1 >= s2 ? -1 : 0)
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.smax:
-          b = memory.getHeapString(memory.stack.pop())
-          a = memory.getHeapString(memory.stack.pop())
-          memory.makeHeapString(b > a ? b : a)
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined) {
+            s2 = memory.getHeapString(n2)
+            s1 = memory.getHeapString(n1)
+            memory.makeHeapString(s2 > s1 ? s2 : s1)
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.smin:
-          b = memory.getHeapString(memory.stack.pop())
-          a = memory.getHeapString(memory.stack.pop())
-          memory.makeHeapString(b < a ? b : a)
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined) {
+            s2 = memory.getHeapString(n2)
+            s1 = memory.getHeapString(n1)
+            memory.makeHeapString(s2 < s1 ? s2 : s1)
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         // 0x30s - pseudo-real operators
         case PCode.divm:
-          c = memory.stack.pop()
-          b = memory.stack.pop()
-          a = memory.stack.pop()
-          memory.stack.push(Math.round((a / b) * c))
+          n3 = memory.stack.pop()
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined && n3 !== undefined) {
+            memory.stack.push(Math.round((n1 / n2) * n3))
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.sqrt:
-          b = memory.stack.pop()
-          a = memory.stack.pop()
-          memory.stack.push(Math.round(Math.sqrt(a) * b))
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined) {
+            memory.stack.push(Math.round(Math.sqrt(n1) * n2))
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.hyp:
-          c = memory.stack.pop()
-          b = memory.stack.pop()
-          a = memory.stack.pop()
-          memory.stack.push(Math.round(Math.sqrt((a * a) + (b * b)) * c))
+          n3 = memory.stack.pop()
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined && n3 !== undefined) {
+            memory.stack.push(Math.round(Math.sqrt((n1 * n1) + (n2 * n2)) * n3))
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.root:
-          d = memory.stack.pop()
-          c = memory.stack.pop()
-          b = memory.stack.pop()
-          a = memory.stack.pop()
-          memory.stack.push(Math.round(Math.pow(a / b, 1 / c) * d))
+          n4 = memory.stack.pop()
+          n3 = memory.stack.pop()
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined && n3 !== undefined && n4 !== undefined) {
+            memory.stack.push(Math.round(Math.pow(n1 / n2, 1 / n3) * n4))
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.powr:
-          d = memory.stack.pop()
-          c = memory.stack.pop()
-          b = memory.stack.pop()
-          a = memory.stack.pop()
-          memory.stack.push(Math.round(Math.pow(a / b, c) * d))
+          n4 = memory.stack.pop()
+          n3 = memory.stack.pop()
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined && n3 !== undefined && n4 !== undefined) {
+            memory.stack.push(Math.round(Math.pow(n1 / n2, n3) * n4))
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.log:
-          c = memory.stack.pop()
-          b = memory.stack.pop()
-          a = memory.stack.pop()
-          memory.stack.push(Math.round((Math.log(a / b) / Math.LN10) * c))
+          n3 = memory.stack.pop()
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined && n3 !== undefined) {
+            memory.stack.push(Math.round((Math.log(n1 / n2) / Math.LN10) * n3))
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.alog:
-          c = memory.stack.pop()
-          b = memory.stack.pop()
-          a = memory.stack.pop()
-          memory.stack.push(Math.round(Math.pow(10, a / b) * c))
+          n3 = memory.stack.pop()
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined && n3 !== undefined) {
+            memory.stack.push(Math.round(Math.pow(10, n1 / n2) * n3))
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.ln:
-          c = memory.stack.pop()
-          b = memory.stack.pop()
-          a = memory.stack.pop()
-          memory.stack.push(Math.round(Math.log(a / b) * c))
+          n3 = memory.stack.pop()
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined && n3 !== undefined) {
+            memory.stack.push(Math.round(Math.log(n1 / n2) * n3))
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.exp:
-          c = memory.stack.pop()
-          b = memory.stack.pop()
-          a = memory.stack.pop()
-          memory.stack.push(Math.round(Math.exp(a / b) * c))
+          n3 = memory.stack.pop()
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined && n3 !== undefined) {
+            memory.stack.push(Math.round(Math.exp(n1 / n2) * n3))
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.sin:
-          d = memory.stack.pop()
-          c = memory.stack.pop()
-          b = memory.stack.pop()
-          a = (b / c) * (2 * Math.PI) / memory.turta
-          memory.stack.push(Math.round(Math.sin(a) * d))
+          n4 = memory.stack.pop()
+          n3 = memory.stack.pop()
+          n2 = memory.stack.pop()
+          if (n2 !== undefined && n3 !== undefined && n4 !== undefined) {
+            n1 = (n2 / n3) * (2 * Math.PI) / memory.turta
+            memory.stack.push(Math.round(Math.sin(n1) * n4))
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.cos:
-          d = memory.stack.pop()
-          c = memory.stack.pop()
-          b = memory.stack.pop()
-          a = (b / c) * (2 * Math.PI) / memory.turta
-          memory.stack.push(Math.round(Math.cos(a) * d))
+          n4 = memory.stack.pop()
+          n3 = memory.stack.pop()
+          n2 = memory.stack.pop()
+          if (n2 !== undefined && n3 !== undefined && n4 !== undefined) {
+            n1 = (n2 / n3) * (2 * Math.PI) / memory.turta
+            memory.stack.push(Math.round(Math.cos(n1) * n4))
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.tan:
-          d = memory.stack.pop()
-          c = memory.stack.pop()
-          b = memory.stack.pop()
-          a = (b / c) * (2 * Math.PI) / memory.turta
-          memory.stack.push(Math.round(Math.tan(a) * d))
+          n4 = memory.stack.pop()
+          n3 = memory.stack.pop()
+          n2 = memory.stack.pop()
+          if (n2 !== undefined && n3 !== undefined && n4 !== undefined) {
+            n1 = (n2 / n3) * (2 * Math.PI) / memory.turta
+            memory.stack.push(Math.round(Math.tan(n1) * n4))
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.asin:
-          d = memory.stack.pop()
-          c = memory.stack.pop()
-          b = memory.stack.pop()
-          a = memory.turta / (2 * Math.PI)
-          memory.stack.push(Math.round(Math.asin(b / c) * d * a))
+          n4 = memory.stack.pop()
+          n3 = memory.stack.pop()
+          n2 = memory.stack.pop()
+          if (n2 !== undefined && n3 !== undefined && n4 !== undefined) {
+            n1 = memory.turta / (2 * Math.PI)
+            memory.stack.push(Math.round(Math.asin(n2 / n3) * n4 * n1))
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.acos:
-          d = memory.stack.pop()
-          c = memory.stack.pop()
-          b = memory.stack.pop()
-          a = memory.turta / (2 * Math.PI)
-          memory.stack.push(Math.round(Math.acos(b / c) * d * a))
+          n4 = memory.stack.pop()
+          n3 = memory.stack.pop()
+          n2 = memory.stack.pop()
+          if (n2 !== undefined && n3 !== undefined && n4 !== undefined) {
+            n1 = memory.turta / (2 * Math.PI)
+            memory.stack.push(Math.round(Math.acos(n2 / n3) * n4 * n1))
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.atan:
-          d = memory.stack.pop()
-          c = memory.stack.pop()
-          b = memory.stack.pop()
-          a = memory.turta / (2 * Math.PI)
-          memory.stack.push(Math.round(Math.atan2(b, c) * d * a))
+          n4 = memory.stack.pop()
+          n3 = memory.stack.pop()
+          n2 = memory.stack.pop()
+          if (n2 !== undefined && n3 !== undefined && n4 !== undefined) {
+            n1 = memory.turta / (2 * Math.PI)
+            memory.stack.push(Math.round(Math.atan2(n2, n3) * n4 * n1))
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.pi:
-          a = memory.stack.pop()
-          memory.stack.push(Math.round(Math.PI * a))
+          n1 = memory.stack.pop()
+          if (n1 !== undefined) {
+            memory.stack.push(Math.round(Math.PI * n1))
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         // 0x40s - string operators
         case PCode.scat:
-          b = memory.getHeapString(memory.stack.pop())
-          a = memory.getHeapString(memory.stack.pop())
-          memory.makeHeapString(a + b)
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined) {
+            s2 = memory.getHeapString(n2)
+            s1 = memory.getHeapString(n1)
+            memory.makeHeapString(s1 + s2)
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.slen:
-          a = memory.getHeapString(memory.stack.pop())
-          memory.stack.push(a.length)
+          n1 = memory.stack.pop()
+          if (n1 !== undefined) {
+            s1 = memory.getHeapString(n1)
+            memory.stack.push(s1.length)
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.case:
-          b = memory.stack.pop()
-          a = memory.getHeapString(memory.stack.pop())
-          switch (b) {
-            case 1:
-              // lowercase
-              memory.makeHeapString(a.toLowerCase())
-              break
-
-            case 2:
-              // uppercase
-              memory.makeHeapString(a.toUpperCase())
-              break
-
-            case 3:
-              // capitalise first letter
-              if (a.length > 0) {
-                memory.makeHeapString(a[0].toUpperCase() + a.slice(0))
-              } else {
-                memory.makeHeapString(a)
-              }
-              break
-
-            case 4:
-              // capitalise first letter of each word
-              a = a.split(' ').map(x => x[0].toUpperCase() + x.slice(0)).join(' ')
-              memory.makeHeapString(a)
-              break
-
-            case 5:
-              // TODO: swap case
-              a = a.split('').map(x => (x === x.toLowerCase()) ? x.toUpperCase() : x.toLowerCase()).join('')
-              memory.makeHeapString(a)
-              break
-
-            default:
-              // this should be impossible
-              memory.makeHeapString(a)
-              break
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined) {
+            s1 = memory.getHeapString(n1)
+            switch (n2) {
+              case 1:
+                // lowercase
+                memory.makeHeapString(s1.toLowerCase())
+                break
+              case 2:
+                // uppercase
+                memory.makeHeapString(s1.toUpperCase())
+                break
+              case 3:
+                // capitalise first letter
+                if (s1.length > 0) {
+                  memory.makeHeapString(s1[0].toUpperCase() + s1.slice(1))
+                } else {
+                  memory.makeHeapString(s1)
+                }
+                break
+              case 4:
+                // capitalise first letter of each word
+                s1 = s1.split(' ').map(x => x[0].toUpperCase() + x.slice(0)).join(' ')
+                memory.makeHeapString(s1)
+                break
+              case 5:
+                // swap case
+                s1 = s1.split('').map(x => (x === x.toLowerCase()) ? x.toUpperCase() : x.toLowerCase()).join('')
+                memory.makeHeapString(s1)
+                break
+              default:
+                // this should be impossible
+                memory.makeHeapString(s1)
+                break
+            }
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
           }
           break
 
         case PCode.copy:
-          c = memory.stack.pop()
-          b = memory.stack.pop()
-          a = memory.getHeapString(memory.stack.pop())
-          memory.makeHeapString(a.substr(b - 1, c))
+          n3 = memory.stack.pop()
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined && n3 !== undefined) {
+            s1 = memory.getHeapString(n1)
+            memory.makeHeapString(s1.substr(n2 - 1, n3))
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.dels:
-          d = memory.stack.pop()
-          c = memory.stack.pop()
-          b = memory.getHeapString(memory.stack.pop())
-          a = b.substr(0, c - 1) + b.substr((c - 1) + d)
-          memory.makeHeapString(a)
+          n4 = memory.stack.pop()
+          n3 = memory.stack.pop()
+          n2 = memory.stack.pop()
+          if (n2 !== undefined && n3 !== undefined && n4 !==undefined) {
+            s2 = memory.getHeapString(n2)
+            s1 = s2.substr(0, n3 - 1) + s2.substr((n3 - 1) + n4)
+            memory.makeHeapString(s1)
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.inss:
-          d = memory.stack.pop()
-          c = memory.getHeapString(memory.stack.pop())
-          b = memory.getHeapString(memory.stack.pop())
-          a = c.substr(0, d - 1) + b + c.substr(d - 1)
-          memory.makeHeapString(a)
+          n4 = memory.stack.pop()
+          n3 = memory.stack.pop()
+          n2 = memory.stack.pop()
+          if (n2 !== undefined && n3 !== undefined && n4 !== undefined) {
+            s3 = memory.getHeapString(n3)
+            s2 = memory.getHeapString(n2)
+            s1 = s3.substr(0, n4 - 1) + s2 + s3.substr(n4 - 1)
+            memory.makeHeapString(s1)
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.poss:
-          b = memory.getHeapString(memory.stack.pop())
-          a = memory.getHeapString(memory.stack.pop())
-          memory.stack.push(b.indexOf(a) + 1)
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined) {
+            s2 = memory.getHeapString(n2)
+            s1 = memory.getHeapString(n1)
+            memory.stack.push(s2.indexOf(s1) + 1)
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.repl:
-          d = memory.stack.pop()
-          c = memory.getHeapString(memory.stack.pop())
-          b = memory.getHeapString(memory.stack.pop())
-          a = memory.getHeapString(memory.stack.pop())
-          if (d > 0) {
-            while (d > 0) {
-              a = a.replace(b, c)
-              d = d - 1
+          n4 = memory.stack.pop()
+          n3 = memory.stack.pop()
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined && n3 !== undefined && n4 !== undefined) {
+            s3 = memory.getHeapString(n3)
+            s2 = memory.getHeapString(n2)
+            s1 = memory.getHeapString(n1)
+            if (n4 > 0) {
+              while (n4 > 0) {
+                s1 = s1.replace(s2, s3)
+                n4 = n4 - 1
+              }
+              memory.makeHeapString(s1)
+            } else {
+              memory.makeHeapString(s1.replace(new RegExp(s2, 'g'), s3))
             }
-            memory.makeHeapString(a)
           } else {
-            memory.makeHeapString(a.replace(new RegExp(b, 'g'), c))
+            throw new MachineError('Stack operation called on empty stack.')
           }
           break
 
         case PCode.spad:
-          d = memory.stack.pop()
-          c = Math.abs(d)
-          b = memory.getHeapString(memory.stack.pop())
-          a = memory.getHeapString(memory.stack.pop())
-          while ((a.length + b.length) <= c) {
-            if (d < 0) {
-              a = a + b
-            } else {
-              a = b + a
+          n3 = memory.stack.pop()
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined && n3 !== undefined) {
+            s2 = memory.getHeapString(n2)
+            s1 = memory.getHeapString(n1)
+            while ((s1.length + s2.length) <= Math.abs(n3)) {
+              if (n3 < 0) {
+                s1 = s1 + s2
+              } else {
+                s1 = s2 + s1
+              }
             }
+            memory.makeHeapString(s1)
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
           }
-          memory.makeHeapString(a)
           break
 
         case PCode.trim:
-          a = memory.getHeapString(memory.stack.pop())
-          memory.makeHeapString(a.trim())
+          n1 = memory.stack.pop()
+          if (n1 !== undefined) {
+            s1 = memory.getHeapString(n1)
+            memory.makeHeapString(s1.trim())
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         // 0x50s - turtle settings and movement
         case PCode.home:
-          a = vcanvas.startx + (vcanvas.sizex / 2)
-          b = vcanvas.starty + (vcanvas.sizey / 2)
-          memory.turtx = Math.round(a)
-          memory.turty = Math.round(b)
+          n1 = vcanvas.startx + (vcanvas.sizex / 2)
+          n2 = vcanvas.starty + (vcanvas.sizey / 2)
+          memory.turtx = Math.round(n1)
+          memory.turty = Math.round(n2)
           memory.turtd = 0
           send('turtxChanged', memory.turtx)
           send('turtyChanged', memory.turty)
@@ -888,255 +1215,292 @@ function execute (pcode: number[][], line: number, code: number, options: Option
           break
 
         case PCode.setx:
-          a = memory.stack.pop()
-          memory.turtx = a
-          send('turtxChanged', a)
-          memory.coords.push([memory.turtx, memory.turty])
+          n1 = memory.stack.pop()
+          if (n1 !== undefined) {
+            memory.turtx = n1
+            send('turtxChanged', n1)
+            memory.coords.push([memory.turtx, memory.turty])
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.sety:
-          a = memory.stack.pop()
-          memory.turty = a
-          send('turtyChanged', a)
-          memory.coords.push([memory.turtx, memory.turty])
+          n1 = memory.stack.pop()
+          if (n1 !== undefined) {
+            memory.turty = n1
+            send('turtyChanged', n1)
+            memory.coords.push([memory.turtx, memory.turty])
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.setd:
-          a = memory.stack.pop() % memory.turta
-          memory.turtd = a
-          send('turtdChanged', a)
+          n2 = memory.stack.pop()
+          if (n2 !== undefined) {
+            n1 = n2 % memory.turta
+            memory.turtd = n1
+            send('turtdChanged', n1)
+          }
           break
 
         case PCode.angl:
-          a = memory.stack.pop()
-          if (memory.turta === 0) {
-            // this should only happen at the start of the program before angles is set for the first time
-            memory.turta = a
+          n1 = memory.stack.pop()
+          if (n1 !== undefined) {
+            if (memory.turta === 0) {
+              // this should only happen at the start of the program before angles is set for the first time
+              memory.turta = n1
+            }
+            if (n1 === 0) {
+              // never let angles be set to zero
+              throw new MachineError('Angles cannot be set to zero.')
+            }
+            n2 = Math.round(n1 + memory.turtd * n1 / memory.turta)
+            memory.turtd = n2 % n1
+            memory.turta = n1
+            send('turtdChanged', n2 % n1)
+            send('turtaChanged', n1)
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
           }
-          if (a === 0) {
-            // never let angles be set to zero
-            halt()
-            throw error('Angles cannot be set to zero.')
-          }
-          b = Math.round(a + memory.turtd * a / memory.turta)
-          memory.turtd = b % a
-          memory.turta = a
-          send('turtdChanged', b % a)
-          send('turtaChanged', a)
           break
 
         case PCode.thik:
-          a = memory.stack.pop()
-          b = Math.abs(a)
-          c = a < 0
-          d = memory.turtt < 0
-          if (c) { // reverse pen status
-            memory.turtt = d ? b : -b
-          } else { // leave pen status as it is
-            memory.turtt = d ? -b : b
+          n1 = memory.stack.pop()
+          if (n1 !== undefined) {
+            n2 = Math.abs(n1)
+            bool1 = n1 < 0
+            bool2 = memory.turtt < 0
+            if (bool1) { // reverse pen status
+              memory.turtt = bool2 ? n2 : -n2
+            } else { // leave pen status as it is
+              memory.turtt = bool2 ? -n2 : n2
+            }
+            send('turttChanged', memory.turtt)
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
           }
-          send('turttChanged', memory.turtt)
           break
 
         case PCode.colr:
-          a = memory.stack.pop()
-          memory.turtc = a
-          send('turtcChanged', hex(a))
+          n1 = memory.stack.pop()
+          if (n1 !== undefined) {
+            memory.turtc = n1
+            send('turtcChanged', hex(n1))
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.pen:
-          a = (memory.stack.pop() !== 0) // pen up or down
-          b = Math.abs(memory.turtt) // current thickness
-          c = a ? b : -b // positive or negative depending on whether pen is down or up
-          memory.turtt = c
-          send('turttChanged', c)
+          n1 = memory.stack.pop()
+          if (n1 !== undefined) {
+            bool1 = (n1 !== 0) // pen up or down
+            n2 = Math.abs(memory.turtt) // current thickness
+            n3 = bool1 ? n2 : -n2 // positive or negative depending on whether pen is down or up
+            memory.turtt = n3
+            send('turttChanged', n3)
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.toxy:
-          b = memory.stack.pop()
-          a = memory.stack.pop()
-          memory.turtx = a
-          memory.turty = b
-          send('turtxChanged', a)
-          send('turtyChanged', b)
-          memory.coords.push([a, b])
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined) {
+            memory.turtx = n1
+            memory.turty = n2
+            send('turtxChanged', n1)
+            send('turtyChanged', n2)
+            memory.coords.push([n1, n2])
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.mvxy:
-          b = memory.stack.pop() + memory.turty
-          a = memory.stack.pop() + memory.turtx
-          memory.turtx = a
-          memory.turty = b
-          send('turtxChanged', a)
-          send('turtyChanged', b)
-          memory.coords.push([a, b])
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined) {
+            n2 += memory.turty
+            n1 += memory.turtx
+            memory.turtx = n1
+            memory.turty = n2
+            send('turtxChanged', n1)
+            send('turtyChanged', n2)
+            memory.coords.push([n1, n2])
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.drxy:
-          b = memory.stack.pop() + memory.turty
-          a = memory.stack.pop() + memory.turtx
+          n2 = memory.stack.pop() + memory.turty
+          n1 = memory.stack.pop() + memory.turtx
           if (memory.turtt > 0) {
-            send('line', { turtle: turtle(), x: turtx(a), y: turty(b) })
+            send('line', { turtle: turtle(), x: turtx(n1), y: turty(n2) })
             if (memory.update) {
               drawCount += 1
             }
           }
-          memory.turtx = a
-          memory.turty = b
-          send('turtxChanged', a)
-          send('turtyChanged', b)
-          memory.coords.push([a, b])
+          memory.turtx = n1
+          memory.turty = n2
+          send('turtxChanged', n1)
+          send('turtyChanged', n2)
+          memory.coords.push([n1, n2])
           break
 
         case PCode.fwrd:
-          c = memory.stack.pop() // distance
-          d = memory.turtd // turtle direction
+          n3 = memory.stack.pop() // distance
+          n4 = memory.turtd // turtle direction
           // work out final y coordinate
-          b = Math.cos(d * Math.PI / (memory.turta / 2))
-          b = -Math.round(b * c)
-          b += memory.turty
+          n2 = Math.cos(n4 * Math.PI / (memory.turta / 2))
+          n2 = -Math.round(n2 * n3)
+          n2 += memory.turty
           // work out final x coordinate
-          a = Math.sin(d * Math.PI / (memory.turta / 2))
-          a = Math.round(a * c)
-          a += memory.turtx
+          n1 = Math.sin(n4 * Math.PI / (memory.turta / 2))
+          n1 = Math.round(n1 * n3)
+          n1 += memory.turtx
           if (memory.turtt > 0) {
-            send('line', { turtle: turtle(), x: turtx(a), y: turty(b) })
+            send('line', { turtle: turtle(), x: turtx(n1), y: turty(n2) })
             if (memory.update) {
               drawCount += 1
             }
           }
-          memory.turtx = a
-          memory.turty = b
-          send('turtxChanged', a)
-          send('turtyChanged', b)
-          memory.coords.push([a, b])
+          memory.turtx = n1
+          memory.turty = n2
+          send('turtxChanged', n1)
+          send('turtyChanged', n2)
+          memory.coords.push([n1, n2])
           break
 
         case PCode.back:
-          c = memory.stack.pop() // distance
-          d = memory.turtd // turtle direction
+          n3 = memory.stack.pop() // distance
+          n4 = memory.turtd // turtle direction
           // work out final y coordinate
-          b = Math.cos(d * Math.PI / (memory.turta / 2))
-          b = Math.round(b * c)
-          b += memory.turty
+          n2 = Math.cos(n4 * Math.PI / (memory.turta / 2))
+          n2 = Math.round(n2 * n3)
+          n2 += memory.turty
           // work out final x coordinate
-          a = Math.sin(d * Math.PI / (memory.turta / 2))
-          a = -Math.round(a * c)
-          a += memory.turtx
+          n1 = Math.sin(n4 * Math.PI / (memory.turta / 2))
+          n1 = -Math.round(n1 * n3)
+          n1 += memory.turtx
           if (memory.turtt > 0) {
-            send('line', { turtle: turtle(), x: turtx(a), y: turty(b) })
+            send('line', { turtle: turtle(), x: turtx(n1), y: turty(n2) })
             if (memory.update) {
               drawCount += 1
             }
           }
-          memory.turtx = a
-          memory.turty = b
-          send('turtxChanged', a)
-          send('turtyChanged', b)
-          memory.coords.push([a, b])
+          memory.turtx = n1
+          memory.turty = n2
+          send('turtxChanged', n1)
+          send('turtyChanged', n2)
+          memory.coords.push([n1, n2])
           break
 
         case PCode.left:
-          a = (memory.turtd - memory.stack.pop()) % memory.turta
-          memory.turtd = a
-          send('turtdChanged', a)
+          n1 = (memory.turtd - memory.stack.pop()) % memory.turta
+          memory.turtd = n1
+          send('turtdChanged', n1)
           break
 
         case PCode.rght:
-          a = (memory.turtd + memory.stack.pop()) % memory.turta
-          memory.turtd = a
-          send('turtdChanged', a)
+          n1 = (memory.turtd + memory.stack.pop()) % memory.turta
+          memory.turtd = n1
+          send('turtdChanged', n1)
           break
 
         case PCode.turn:
-          b = memory.stack.pop()
-          a = memory.stack.pop()
-          if (Math.abs(b) >= Math.abs(a)) {
-            c = Math.atan(-a / b)
-            if (b > 0) {
-              c += Math.PI
-            } else if (a < 0) {
-              c += 2
-              c *= Math.PI
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (Math.abs(n2) >= Math.abs(n1)) {
+            n3 = Math.atan(-n1 / n2)
+            if (n2 > 0) {
+              n3 += Math.PI
+            } else if (n1 < 0) {
+              n3 += 2
+              n3 *= Math.PI
             }
           } else {
-            c = Math.atan(b / a)
-            if (a > 0) {
-              c += Math.PI
+            n3 = Math.atan(n2 / n1)
+            if (n1 > 0) {
+              n3 += Math.PI
             } else {
-              c += 3
-              c *= Math.PI
+              n3 += 3
+              n3 *= Math.PI
             }
-            c /= 2
+            n3 /= 2
           }
-          c = Math.round(c * memory.turta / Math.PI / 2) % memory.turta
-          memory.turtd = c
-          send('turtdChanged', a)
+          n3 = Math.round(n3 * memory.turta / Math.PI / 2) % memory.turta
+          memory.turtd = n3
+          send('turtdChanged', n1)
           break
 
         // 0x60s - colour operators, shapes and fills
         case PCode.blnk:
-          a = memory.stack.pop()
-          send('blank', hex(a))
+          n1 = memory.stack.pop()
+          send('blank', hex(n1))
           if (memory.update) {
             drawCount += 1
           }
           break
 
         case PCode.rcol:
-          c = memory.stack.pop()
-          b = memory.stack.pop()
-          a = memory.stack.pop()
-          send('flood', { x: a, y: b, c1: c, c2: 0, boundary: false })
+          n3 = memory.stack.pop()
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          send('flood', { x: n1, y: n2, c1: n3, c2: 0, boundary: false })
           if (memory.update) {
             drawCount += 1
           }
           break
 
         case PCode.fill:
-          d = memory.stack.pop()
-          c = memory.stack.pop()
-          b = memory.stack.pop()
-          a = memory.stack.pop()
-          send('flood', { x: a, y: b, c1: c, c2: d, boundayr: true })
+          n4 = memory.stack.pop()
+          n3 = memory.stack.pop()
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          send('flood', { x: n1, y: n2, c1: n3, c2: d, boundary: true })
           if (memory.update) {
             drawCount += 1
           }
           break
 
         case PCode.pixc:
-          c = memory.stack.pop()
-          b = memory.stack.pop()
-          a = context.getImageData(turtx(b), turty(c), 1, 1)
-          memory.stack.push((a.data[0] * 65536) + (a.data[1] * 256) + a.data[2])
+          n3 = memory.stack.pop()
+          n2 = memory.stack.pop()
+          n1 = context.getImageData(turtx(n2), turty(n3), 1, 1)
+          memory.stack.push((n1.data[0] * 65536) + (n1.data[1] * 256) + n1.data[2])
           break
 
         case PCode.pixs:
-          c = memory.stack.pop()
-          b = memory.stack.pop()
-          a = memory.stack.pop()
-          send('pixset', { x: turtx(a), y: turty(b), c, doubled: vcanvas.doubled })
+          n3 = memory.stack.pop()
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          send('pixset', { x: turtx(n1), y: turty(n2), n3, doubled: vcanvas.doubled })
           if (memory.update) {
             drawCount += 1
           }
           break
 
         case PCode.rgb:
-          a = memory.stack.pop()
-          a = a % 50
-          if (a <= 0) a += 50
-          a = colours[a - 1].value
-          memory.stack.push(a)
+          n1 = memory.stack.pop()
+          n1 = n1 % 50
+          if (n1 <= 0) n1 += 50
+          n1 = colours[n1 - 1].value
+          memory.stack.push(n1)
           break
 
         case PCode.mixc:
-          d = memory.stack.pop() // second proportion
-          c = memory.stack.pop() // first proportion
-          b = memory.stack.pop() // second colour
-          a = memory.stack.pop() // first colour
-          e = mixBytes(Math.floor(a / 0x10000), Math.floor(b / 0x10000), c, d) // red byte
-          f = mixBytes(Math.floor((a & 0xFF00) / 0x100), Math.floor((b & 0xFF00) / 0x100), c, d) // green byte
-          g = mixBytes(a & 0xFF, b & 0xFF, c, d) // blue byte
+          n4 = memory.stack.pop() // second proportion
+          n3 = memory.stack.pop() // first proportion
+          n2 = memory.stack.pop() // second colour
+          n1 = memory.stack.pop() // first colour
+          e = mixBytes(Math.floor(n1 / 0x10000), Math.floor(n2 / 0x10000), n3, n4) // red byte
+          f = mixBytes(Math.floor((n1 & 0xFF00) / 0x100), Math.floor((n2 & 0xFF00) / 0x100), n3, n4) // green byte
+          g = mixBytes(n1 & 0xFF, n2 & 0xFF, n3, n4) // blue byte
           memory.stack.push((e * 0x10000) + (f * 0x100) + g)
           break
 
@@ -1149,65 +1513,65 @@ function execute (pcode: number[][], line: number, code: number, options: Option
           break
 
         case PCode.poly:
-          c = memory.stack.pop()
-          b = memory.coords.length
-          a = (c > b) ? 0 : b - c
-          send('poly', { turtle: turtle(), coords: memory.coords.slice(a, b).map(vcoords), fill: false })
+          n3 = memory.stack.pop()
+          n2 = memory.coords.length
+          n1 = (n3 > n2) ? 0 : n2 - n3
+          send('poly', { turtle: turtle(), coords: memory.coords.slice(n1, n2).map(vcoords), fill: false })
           if (memory.update) {
             drawCount += 1
           }
           break
 
         case PCode.pfil:
-          c = memory.stack.pop()
-          b = memory.coords.length
-          a = (c > b) ? 0 : b - c
-          send('poly', { turtle: turtle(), coords: memory.coords.slice(a, b).map(vcoords), fill: true })
+          n3 = memory.stack.pop()
+          n2 = memory.coords.length
+          n1 = (n3 > n2) ? 0 : n2 - n3
+          send('poly', { turtle: turtle(), coords: memory.coords.slice(n1, n2).map(vcoords), fill: true })
           if (memory.update) {
             drawCount += 1
           }
           break
 
         case PCode.circ:
-          a = memory.stack.pop()
-          send('arc', { turtle: turtle(), x: turtx(a + vcanvas.startx), y: turty(a + vcanvas.starty), fill: false })
+          n1 = memory.stack.pop()
+          send('arc', { turtle: turtle(), x: turtx(n1 + vcanvas.startx), y: turty(n1 + vcanvas.starty), fill: false })
           if (memory.update) {
             drawCount += 1
           }
           break
 
         case PCode.blot:
-          a = memory.stack.pop()
-          send('arc', { turtle: turtle(), x: turtx(a + vcanvas.startx), y: turty(a + vcanvas.starty), fill: true })
+          n1 = memory.stack.pop()
+          send('arc', { turtle: turtle(), x: turtx(n1 + vcanvas.startx), y: turty(n1 + vcanvas.starty), fill: true })
           if (memory.update) {
             drawCount += 1
           }
           break
 
         case PCode.elps:
-          b = memory.stack.pop()
-          a = memory.stack.pop()
-          send('arc', { turtle: turtle(), x: turtx(a + vcanvas.startx), y: turty(b + vcanvas.starty), fill: false })
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          send('arc', { turtle: turtle(), x: turtx(n1 + vcanvas.startx), y: turty(n2 + vcanvas.starty), fill: false })
           if (memory.update) {
             drawCount += 1
           }
           break
 
         case PCode.eblt:
-          b = memory.stack.pop()
-          a = memory.stack.pop()
-          send('arc', { turtle: turtle(), x: turtx(a + vcanvas.startx), y: turty(b + vcanvas.starty), fill: true })
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          send('arc', { turtle: turtle(), x: turtx(n1 + vcanvas.startx), y: turty(n2 + vcanvas.starty), fill: true })
           if (memory.update) {
             drawCount += 1
           }
           break
 
         case PCode.box:
-          d = (memory.stack.pop() !== 0) // border
-          c = memory.stack.pop() // fill colour
-          b = memory.turty + memory.stack.pop() // end y coordinate
-          a = memory.turtx + memory.stack.pop() // end x coordinate
-          send('box', { turtle: turtle(), x: turtx(a), y: turty(b), fill: hex(c), border: d })
+          n4 = (memory.stack.pop() !== 0) // border
+          n3 = memory.stack.pop() // fill colour
+          n2 = memory.turty + memory.stack.pop() // end y coordinate
+          n1 = memory.turtx + memory.stack.pop() // end x coordinate
+          send('box', { turtle: turtle(), x: turtx(n1), y: turty(n2), fill: hex(n3), border: n4 })
           if (memory.update) {
             drawCount += 1
           }
@@ -1215,117 +1579,116 @@ function execute (pcode: number[][], line: number, code: number, options: Option
 
         // 0x70s - loading from stack, storing from stack, pointer and array operations
         case PCode.ldin:
-          a = pcode[line][code + 1]
-          memory.stack.push(a)
+          n1 = pcode[line][code + 1]
+          memory.stack.push(n1)
           code += 1
           break
 
         case PCode.ldvg:
-          a = pcode[line][code + 1]
-          memory.stack.push(memory.main[a])
+          n1 = pcode[line][code + 1]
+          memory.stack.push(memory.main[n1])
           code += 1
           break
 
         case PCode.ldvv:
-          a = pcode[line][code + 1]
-          b = pcode[line][code + 2]
-          memory.stack.push(memory.main[memory.main[a] + b])
+          n1 = pcode[line][code + 1]
+          n2 = pcode[line][code + 2]
+          memory.stack.push(memory.main[memory.main[n1] + n2])
           code += 2
           break
 
         case PCode.ldvr:
-          a = pcode[line][code + 1]
-          b = pcode[line][code + 2]
-          memory.stack.push(memory.main[memory.main[memory.main[a] + b]])
+          n1 = pcode[line][code + 1]
+          n2 = pcode[line][code + 2]
+          memory.stack.push(memory.main[memory.main[memory.main[n1] + n2]])
           code += 2
           break
 
         case PCode.ldag:
-          a = pcode[line][code + 1]
-          memory.stack.push(a)
+          n1 = pcode[line][code + 1]
+          memory.stack.push(n1)
           code += 1
           break
 
         case PCode.ldav:
-          a = pcode[line][code + 1]
-          b = pcode[line][code + 2]
-          memory.stack.push(memory.main[a] + b)
+          n1 = pcode[line][code + 1]
+          n2 = pcode[line][code + 2]
+          memory.stack.push(memory.main[n1] + n2)
           code += 2
           break
 
         case PCode.lstr:
           code += 1
-          a = pcode[line][code] // length of the string
-          b = code + a // end of the string
-          c = ''
-          while (code < b) {
+          n1 = pcode[line][code] // length of the string
+          n2 = code + n1 // end of the string
+          n3 = ''
+          while (code < n2) {
             code += 1
-            c += String.fromCharCode(pcode[line][code])
+            n3 += String.fromCharCode(pcode[line][code])
           }
-          memory.makeHeapString(c)
+          memory.makeHeapString(n3)
           break
 
         case PCode.stvg:
-          a = memory.stack.pop()
-          memory.main[pcode[line][code + 1]] = a
+          n1 = memory.stack.pop()
+          memory.main[pcode[line][code + 1]] = n1
           code += 1
           break
 
         case PCode.stvv:
-          a = pcode[line][code + 1]
-          b = pcode[line][code + 2]
-          c = memory.stack.pop()
-          memory.main[memory.main[a] + b] = c
+          n1 = pcode[line][code + 1]
+          n2 = pcode[line][code + 2]
+          n3 = memory.stack.pop()
+          memory.main[memory.main[n1] + n2] = n3
           code += 2
           break
 
         case PCode.stvr:
-          a = pcode[line][code + 1]
-          b = pcode[line][code + 2]
-          c = memory.stack.pop()
-          memory.main[memory.main[memory.main[a] + b]] = c
+          n1 = pcode[line][code + 1]
+          n2 = pcode[line][code + 2]
+          n3 = memory.stack.pop()
+          memory.main[memory.main[memory.main[n1] + n2]] = n3
           code += 2
           break
 
         case PCode.lptr:
-          a = memory.stack.pop()
-          memory.stack.push(memory.main[a])
+          n1 = memory.stack.pop()
+          memory.stack.push(memory.main[n1])
           break
 
         case PCode.sptr:
-          b = memory.stack.pop()
-          a = memory.stack.pop()
-          memory.main[b] = a
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          memory.main[n2] = n1
           break
 
         case PCode.zptr:
-          b = memory.stack.pop()
-          a = memory.stack.pop()
-          memory.zero(a, b)
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          memory.zero(n1, n2)
           break
 
         case PCode.cptr:
-          c = memory.stack.pop() // length
-          b = memory.stack.pop() // target
-          a = memory.stack.pop() // source
-          memory.copy(a, b, c)
+          n3 = memory.stack.pop() // length
+          n2 = memory.stack.pop() // target
+          n1 = memory.stack.pop() // source
+          memory.copy(n1, n2, n3)
           break
 
         case PCode.cstr:
-          b = memory.stack.pop() // target
-          a = memory.stack.pop() // source
-          d = memory.main[b - 1] // maximum length of target
-          c = memory.main[a] // length of source
-          memory.copy(a, b, Math.min(c, d) + 1)
+          n2 = memory.stack.pop() // target
+          n1 = memory.stack.pop() // source
+          n4 = memory.main[n2 - 1] // maximum length of target
+          n3 = memory.main[n1] // length of source
+          memory.copy(n1, n2, Math.min(n3, n4) + 1)
           break
 
         case PCode.test:
-          b = memory.stack[memory.stack.length - 1] // leave the stack unchanged
-          a = memory.stack[memory.stack.length - 2]
-          if ((a < 0) || (a >= memory.main[b])) {
+          n2 = memory.stack[memory.stack.length - 1] // leave the stack unchanged
+          n1 = memory.stack[memory.stack.length - 2]
+          if ((n1 < 0) || (n1 >= memory.main[n2])) {
             // TODO: make range check a runtime option
-            halt()
-            throw error('Array index out of range.')
+            throw new MachineError('Array index out of range.')
           }
           break
 
@@ -1385,35 +1748,34 @@ function execute (pcode: number[][], line: number, code: number, options: Option
           break
 
         case PCode.stmt:
-          a = memory.stack.pop()
-          memory.memoryStack.push(a)
-          memory.stackTop = Math.max(a, memory.stackTop)
+          n1 = memory.stack.pop()
+          memory.memoryStack.push(n1)
+          memory.stackTop = Math.max(n1, memory.stackTop)
           break
 
         case PCode.memc:
-          a = pcode[line][code + 1]
-          b = pcode[line][code + 2]
-          c = memory.memoryStack.pop()
+          n1 = pcode[line][code + 1]
+          n2 = pcode[line][code + 2]
+          n3 = memory.memoryStack.pop()
           // heap overflow check
-          if (c + b > options.stackSize) {
-            halt()
-            throw error('Memory stack has overflowed into memory heap. Probable cause is unterminated recursion.')
+          if (n3 + n2 > options.stackSize) {
+            throw new MachineError('Memory stack has overflowed into memory heap. Probable cause is unterminated recursion.')
           }
-          memory.memoryStack.push(memory.main[a])
-          memory.stackTop = Math.max(memory.main[a], memory.stackTop)
-          memory.main[a] = c
-          memory.memoryStack.push(c + b)
-          memory.stackTop = Math.max(c + b, memory.stackTop)
+          memory.memoryStack.push(memory.main[n1])
+          memory.stackTop = Math.max(memory.main[n1], memory.stackTop)
+          memory.main[n1] = n3
+          memory.memoryStack.push(n3 + n2)
+          memory.stackTop = Math.max(n3 + n2, memory.stackTop)
           code += 2
           break
 
         case PCode.memr:
           memory.memoryStack.pop()
-          a = pcode[line][code + 1]
-          b = memory.memoryStack.pop()
-          memory.memoryStack.push(memory.main[a])
-          memory.stackTop = Math.max(memory.main[a], memory.stackTop)
-          memory.main[a] = b
+          n1 = pcode[line][code + 1]
+          n2 = memory.memoryStack.pop()
+          memory.memoryStack.push(memory.main[n1])
+          memory.stackTop = Math.max(memory.main[n1], memory.stackTop)
+          memory.main[n1] = n2
           code += 2
           break
 
@@ -1450,37 +1812,37 @@ function execute (pcode: number[][], line: number, code: number, options: Option
           break
 
         case PCode.reso:
-          b = memory.stack.pop()
-          a = memory.stack.pop()
-          if (Math.min(a, b) <= options.smallSize) {
-            a = a * 2
-            b = b * 2
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (Math.min(n1, n2) <= options.smallSize) {
+            n1 = n1 * 2
+            n2 = n2 * 2
             vcanvas.doubled = true
           } else {
             vcanvas.doubled = false
           }
-          vcanvas.width = a
-          vcanvas.height = b
-          send('resolution', { width: a, height: b })
+          vcanvas.width = n1
+          vcanvas.height = n2
+          send('resolution', { width: n1, height: n2 })
           send('blank', '#FFFFFF')
           drawCount = options.drawCountMax // force update
           break
 
         case PCode.udat:
-          a = (memory.stack.pop() !== 0)
-          memory.update = a
-          if (a) {
+          n1 = (memory.stack.pop() !== 0)
+          memory.update = n1
+          if (n1) {
             drawCount = options.drawCountMax // force update
           }
           break
 
         case PCode.seed:
-          a = memory.stack.pop()
-          if (a === 0) {
+          n1 = memory.stack.pop()
+          if (n1 === 0) {
             memory.stack.push(memory.seed)
           } else {
-            memory.seed = a
-            memory.stack.push(a)
+            memory.seed = n1
+            memory.stack.push(n1)
           }
           break
 
@@ -1504,106 +1866,106 @@ function execute (pcode: number[][], line: number, code: number, options: Option
           break
 
         case PCode.peek:
-          a = memory.stack.pop()
-          memory.stack.push(memory.main[a])
+          n1 = memory.stack.pop()
+          memory.stack.push(memory.main[n1])
           break
 
         case PCode.poke:
-          b = memory.stack.pop()
-          a = memory.stack.pop()
-          memory.main[a] = b
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          memory.main[n1] = n2
           break
 
         // 0xA0s - text output, timing
         case PCode.inpt:
-          a = memory.stack.pop()
-          if (a < 0) {
-            memory.stack.push(memory.query[-a])
+          n1 = memory.stack.pop()
+          if (n1 < 0) {
+            memory.stack.push(memory.query[-n1])
           } else {
-            memory.stack.push(memory.keys[a])
+            memory.stack.push(memory.keys[n1])
           }
           break
 
         case PCode.iclr:
-          a = memory.stack.pop()
-          if (a < 0) {
+          n1 = memory.stack.pop()
+          if (n1 < 0) {
             // reset query value
-            memory.query[-a] = -1
-          } else if (a === 0) {
+            memory.query[-n1] = -1
+          } else if (n1 === 0) {
             // reset keybuffer
             memory.main[memory.main[1] + 1] = memory.main[1] + 3
             memory.main[memory.main[1] + 2] = memory.main[1] + 3
           } else {
             // reset key value
-            memory.keys[a] = -1
+            memory.keys[n1] = -1
           }
           break
 
         case PCode.bufr:
-          a = memory.stack.pop()
-          if (a > 0) {
-            b = memory.heapTemp + 4
+          n1 = memory.stack.pop()
+          if (n1 > 0) {
+            n2 = memory.heapTemp + 4
             memory.stack.push(memory.heapTemp + 1)
-            memory.main[memory.heapTemp + 1] = b + a
-            memory.main[memory.heapTemp + 2] = b
-            memory.main[memory.heapTemp + 3] = b
-            memory.main.fill(0, b, b + a)
-            memory.heapTemp = b + a
+            memory.main[memory.heapTemp + 1] = n2 + n1
+            memory.main[memory.heapTemp + 2] = n2
+            memory.main[memory.heapTemp + 3] = n2
+            memory.main.fill(0, n2, n2 + n1)
+            memory.heapTemp = n2 + n1
             memory.heapMax = Math.max(memory.heapTemp, memory.heapMax)
           }
           break
 
         case PCode.read:
-          a = memory.stack.pop() // maximum number of characters to read
-          b = memory.main[1] // the address of the buffer
-          c = memory.main[memory.main[1]] // the address of the end of the buffer
-          d = '' // the string read from the buffer
-          e = memory.main[b + 1]
-          f = memory.main[b + 2]
-          if (a === 0) {
+          n1 = memory.stack.pop() // maximum number of characters to read
+          n2 = memory.main[1] // the address of the buffer
+          n3 = memory.main[memory.main[1]] // the address of the end of the buffer
+          n4 = '' // the string read from the buffer
+          e = memory.main[n2 + 1]
+          f = memory.main[n2 + 2]
+          if (n1 === 0) {
             while (e !== f) {
-              d += String.fromCharCode(memory.main[e])
-              e = (e < c)
+              n4 += String.fromCharCode(memory.main[e])
+              e = (e < n3)
                 ? e + 1
-                : c + 3 // loop back to the start
+                : n3 + 3 // loop back to the start
             }
           } else {
-            while (e !== f && d.length <= a) {
-              d += String.fromCharCode(memory.main[e])
-              if (e < c) {
+            while (e !== f && n4.length <= n1) {
+              n4 += String.fromCharCode(memory.main[e])
+              if (e < n3) {
                 e += 1
               } else {
-                e = c + 3 // loop back to the start
+                e = n3 + 3 // loop back to the start
               }
             }
-            memory.main[b + 1] = e
+            memory.main[n2 + 1] = e
           }
-          memory.makeHeapString(d)
+          memory.makeHeapString(n4)
           break
 
         case PCode.rdln:
-          a = Math.pow(2, 31) - 1 // as long as possible
+          n1 = Math.pow(2, 31) - 1 // as long as possible
           code += 1
           if (code === pcode[line].length) {
             line += 1
             code = 0
           }
-          b = setTimeout(execute, a, pcode, line, code, options)
-          memory.readline = readlineProto.bind(null, b, pcode, line, code, options)
+          n2 = setTimeout(execute, n1, pcode, line, code, options)
+          memory.readline = readlineProto.bind(null, n2, pcode, line, code, options)
           window.addEventListener('keyup', memory.readline)
           return
 
         case PCode.kech:
-          a = (memory.stack.pop() !== 0)
-          memory.keyecho = a
+          n1 = (memory.stack.pop() !== 0)
+          memory.keyecho = n1
           break
 
         case PCode.outp:
-          c = (memory.stack.pop() !== 0)
-          b = memory.stack.pop()
-          a = (memory.stack.pop() !== 0)
-          send('output', { clear: a, colour: hex(b) })
-          if (c) {
+          n3 = (memory.stack.pop() !== 0)
+          n2 = memory.stack.pop()
+          n1 = (memory.stack.pop() !== 0)
+          send('output', { clear: n1, colour: hex(n2) })
+          if (n3) {
             send('selectTab', 'output')
           } else {
             send('selectTab', 'canvas')
@@ -1611,24 +1973,37 @@ function execute (pcode: number[][], line: number, code: number, options: Option
           break
 
         case PCode.cons:
-          b = memory.stack.pop()
-          a = (memory.stack.pop() !== 0)
-          send('console', { clear: a, colour: hex(b) })
+          n3 = memory.stack.pop()
+          n2 = memory.stack.pop()
+          if (n2 !== undefined && n3 !== undefined) {
+            bool1 = (n2 !== 0)
+            send('console', { clear: bool1, colour: hex(n3) })
+          }
           break
 
         case PCode.prnt:
-          c = memory.stack.pop()
-          b = memory.stack.pop()
-          a = memory.getHeapString(memory.stack.pop())
-          send('print', { turtle: turtle(), string: a, font: b, size: c })
+          n3 = memory.stack.pop()
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined && n3 !== undefined) {
+            s1 = memory.getHeapString(n1)
+            send('print', { turtle: turtle(), string: n1, font: n2, size: n3 })
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.writ:
-          a = memory.getHeapString(memory.stack.pop())
-          send('write', a)
-          send('log', a)
-          if (options.showOutputOnWrite) {
-            send('selectTab', 'output')
+          n1 = memory.stack.pop()
+          if (n1 !== undefined) {
+            s1 = memory.getHeapString(n1)
+            send('write', n1)
+            send('log', n1)
+            if (options.showOutputOnWrite) {
+              send('selectTab', 'output')
+            }
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
           }
           break
 
@@ -1638,44 +2013,60 @@ function execute (pcode: number[][], line: number, code: number, options: Option
           break
 
         case PCode.curs:
-          a = memory.stack.pop()
-          send('cursor', a)
+          n1 = memory.stack.pop()
+          if (n1 !== undefined) {
+            send('cursor', n1)
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.time:
-          a = Date.now()
-          a = a - memory.startTime
-          memory.stack.push(a)
+          n1 = Date.now()
+          n1 = n1 - memory.startTime
+          memory.stack.push(n1)
           break
 
         case PCode.tset:
-          a = Date.now()
-          b = memory.stack.pop()
-          memory.startTime = a - b
+          n1 = Date.now()
+          n2 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined) {
+            memory.startTime = n1 - n2
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
+          }
           break
 
         case PCode.wait:
-          a = memory.stack.pop()
-          code += 1
-          if (code === pcode[line].length) {
-            line += 1
-            code = 0
+          n1 = memory.stack.pop()
+          if (n1 !== undefined) {
+            code += 1
+            if (code === pcode[line].length) {
+              line += 1
+              code = 0
+            }
+            window.setTimeout(execute, n1, pcode, line, code, options)
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
           }
-          setTimeout(execute, a, pcode, line, code, options)
           return
 
         case PCode.tdet:
-          b = memory.stack.pop()
-          a = memory.stack.pop()
-          memory.stack.push(0)
-          code += 1
-          if (code === pcode[line].length) {
-            line += 1
-            code = 0
+          n2 = memory.stack.pop()
+          n1 = memory.stack.pop()
+          if (n1 !== undefined && n2 !== undefined) {
+            memory.stack.push(0)
+            code += 1
+            if (code === pcode[line].length) {
+              line += 1
+              code = 0
+            }
+            n3 = window.setTimeout(execute, n1, pcode, line, code, options)
+            memory.detect = detectProto.bind(null, n2, n3, pcode, line, code, options)
+            window.addEventListener('keyup', memory.detect)
+          } else {
+            throw new MachineError('Stack operation called on empty stack.')
           }
-          c = setTimeout(execute, a, pcode, line, code, options)
-          memory.detect = detectProto.bind(null, b, c, pcode, line, code, options)
-          window.addEventListener('keyup', memory.detect)
           return
 
         // 0xB0s - file processing
@@ -1696,21 +2087,18 @@ function execute (pcode: number[][], line: number, code: number, options: Option
         case PCode.fnxt: // fallthrough
         case PCode.fmov:
           // not yet implemented
-          halt()
-          throw error('File processing has not yet been implemented in the online Turtle System. We are working on introducing this very soon. In the meantime, please run this program using the downloable system to run this program.')
+          throw new MachineError('File processing has not yet been implemented in the online Turtle System. We are working on introducing this very soon. In the meantime, please run this program using the downloable system to run this program.')
 
         // anything else is an error
         default:
-          halt()
           console.log(line)
           console.log(code)
-          throw error(`Unknown PCode 0x${pcode[line][code].toString(16)}.`)
+          throw new MachineError(`Unknown PCode 0x${pcode[line][code].toString(16)}.`)
       }
       codeCount += 1
       code += 1
       if (!pcode[line]) {
-        halt()
-        throw error('The program has tried to jump to a line that does not exist. This is either a bug in our compiler, or in your assembled code.')
+        throw new MachineError('The program has tried to jump to a line that does not exist. This is either a bug in our compiler, or in your assembled code.')
       }
       if (code === pcode[line].length) { // line wrap
         line += 1
@@ -1718,6 +2106,7 @@ function execute (pcode: number[][], line: number, code: number, options: Option
       }
     }
   } catch (error) {
+    halt()
     send('error', error)
   }
   // setTimeout (with no delay) instead of direct recursion means the function will return and the
@@ -1725,15 +2114,9 @@ function execute (pcode: number[][], line: number, code: number, options: Option
   setTimeout(execute, 0, pcode, line, code, options)
 }
 
-// create a machine runtime error
-function error (message: string): MachineError {
-  return new MachineError(message)
-}
-
 // prototype key detection function
-function detectProto (keyCode, timeoutID, pcode, line, code, options, event) {
-  const pressedKey = event.keyCode || event.charCode
-  if (pressedKey === keyCode) {
+function detectProto (keycode: number, timeoutID: number, pcode: number[][], line: number, code: number, options: Options, event: KeyboardEvent): void {
+  if (keycodeFromKey(event.key) === keycode) {
     memory.stack.pop()
     memory.stack.push(-1) // -1 for true
     window.clearTimeout(timeoutID)
@@ -1742,9 +2125,8 @@ function detectProto (keyCode, timeoutID, pcode, line, code, options, event) {
 }
 
 // prototype line reading function
-function readlineProto (timeoutID, pcode, line, code, options, event) {
-  const pressedKey = event.keyCode || event.charCode
-  if (pressedKey === 13) {
+function readlineProto (timeoutID: number, pcode: number[][], line: number, code: number, options: Options, event: KeyboardEvent): void {
+  if (event.key === 'Enter') {
     // get heap string from the buffer, up to the first ENTER
     const bufferAddress = memory.main[1]
     const bufferEndAddress = memory.main[memory.main[1]]
@@ -1770,64 +2152,270 @@ function readlineProto (timeoutID, pcode, line, code, options, event) {
 }
 
 // get current turtle properties
-function turtle () {
-  return ({
+function turtle (): Turtle {
+  return {
     x: turtx(memory.turtx),
     y: turty(memory.turty),
     d: memory.turtd,
     a: memory.turta,
     p: turtt(memory.turtt),
     c: hex(memory.turtc)
-  })
+  }
 }
 
 // convert turtx to virtual canvas coordinate
-function turtx (x) {
+function turtx (x: number): number {
   const exact = ((x - vcanvas.startx) * vcanvas.width) / vcanvas.sizex
   return vcanvas.doubled ? Math.round(exact) + 1 : Math.round(exact)
 }
 
 // convert turty to virtual canvas coordinate
-function turty (y) {
+function turty (y: number): number {
   const exact = ((y - vcanvas.starty) * vcanvas.height) / vcanvas.sizey
   return vcanvas.doubled ? Math.round(exact) + 1 : Math.round(exact)
 }
 
 // convert turtt to virtual canvas thickness
-function turtt (t) {
+function turtt (t: number): number {
   return vcanvas.doubled ? t * 2 : t
 }
 
 // map turtle coordinates to virtual turtle coordinates
-function vcoords ([x, y]) {
-  return [turtx(x), turty(y)]
+function vcoords (coords: [number, number]): [number, number] {
+  return [turtx(coords[0]), turty(coords[1])]
 }
 
 // convert x to virtual canvas coordinate
-function virtx (x) {
+function virtx (x: number): number {
   const { left, width } = canvas.getBoundingClientRect()
   const exact = (((x - left) * vcanvas.sizex) / width) + vcanvas.startx
   return Math.round(exact)
 }
 
 // convert y to virtual canvas coordinate
-function virty (y) {
+function virty (y: number): number {
   const { height, top } = canvas.getBoundingClientRect()
   const exact = (((y - top) * vcanvas.sizey) / height) + vcanvas.starty
   return Math.round(exact)
 }
 
 // convert a number to css colour #000000 format
-function hex (colour) {
+function hex (colour: number): string {
   return `#${padded(colour.toString(16))}`
 }
 
 // mix two colours
-function mixBytes (byte1, byte2, proportion1, proportion2) {
+function mixBytes (byte1: number, byte2: number, proportion1: number, proportion2: number): number {
   return Math.round(((byte1 * proportion1) + (byte2 * proportion2)) / (proportion1 + proportion2))
 }
 
 // padd a string with leading zeros
-function padded (string) {
+function padded (string: string): string {
   return ((string.length < 6) ? padded(`0${string}`) : string)
+}
+
+/** get a keycode from a KeyboardEvent.key property */
+function keycodeFromKey (key: string): number {
+  switch (key.toLowerCase()) {
+    case 'backspace':
+      return 8
+    case 'tab':
+      return 9
+    case 'enter':
+      return 13
+    case 'shift':
+      return 16
+    case 'control':
+      return 17
+    case 'alt':
+      return 18
+    case 'pause': // check
+      return 19
+    case 'capslock':
+      return 20
+    case 'escape':
+      return 27
+    case ' ': // space
+      return 32
+    case 'pgup': // check
+      return 33
+    case 'pgdn': // check
+      return 34
+    case 'end': // check
+      return 35
+    case 'home': // check
+      return 36
+    case 'arrowleft':
+      return 37
+    case 'arrowup':
+      return 38
+    case 'arrowright':
+      return 39
+    case 'arrowdown':
+      return 40
+    case 'insert': // check
+      return 45
+    case 'delete': // check
+      return 46
+    case '0':
+      return 48
+    case '1':
+      return 49
+    case '2':
+      return 50
+    case '3':
+      return 51
+    case '4':
+      return 52
+    case '5':
+      return 53
+    case '6':
+      return 54
+    case '7':
+      return 55
+    case '8':
+      return 56
+    case '9':
+      return 57
+    case 'a':
+      return 65
+    case 'b':
+      return 66
+    case 'c':
+      return 67
+    case 'd':
+      return 68
+    case 'e':
+      return 69
+    case 'f':
+      return 70
+    case 'g':
+      return 71
+    case 'h':
+      return 72
+    case 'i':
+      return 73
+    case 'j':
+      return 74
+    case 'k':
+      return 75
+    case 'l':
+      return 76
+    case 'm':
+      return 77
+    case 'n':
+      return 78
+    case 'o':
+      return 79
+    case 'p':
+      return 80
+    case 'q':
+      return 81
+    case 'r':
+      return 82
+    case 's':
+      return 83
+    case 't':
+      return 84
+    case 'u':
+      return 85
+    case 'v':
+      return 86
+    case 'w':
+      return 87
+    case 'x':
+      return 88
+    case 'y':
+      return 89
+    case 'z':
+      return 90
+    case 'lwin': // check
+      return 91
+    case 'rwin': // check
+      return 92
+    case '#0': //check
+      return 96
+    case '#1': //check
+      return 97
+    case '#2': //check
+      return 98
+    case '#3': //check
+      return 99
+    case '#4': //check
+      return 100
+    case '#5': //check
+      return 101
+    case '#6': //check
+      return 102
+    case '#7': //check
+      return 103
+    case '#8': //check
+      return 104
+    case '#9': //check
+      return 105
+    case 'multiply': //check
+      return 106
+    case 'add': //check
+      return 107
+    case 'subtract': //check
+      return 109
+    case 'decimal': //check
+      return 110
+    case 'divide': //check
+      return 111
+    case 'f1':
+      return 112
+    case 'f2':
+      return 113
+    case 'f3':
+      return 114
+    case 'f4':
+      return 115
+    case 'f5':
+      return 116
+    case 'f6':
+      return 117
+    case 'f7':
+      return 118
+    case 'f8':
+      return 119
+    case 'f9':
+      return 120
+    case 'f10':
+      return 121
+    case 'f11':
+      return 122
+    case 'f12':
+      return 123
+    case 'numlock': //check
+      return 144
+    case 'scrolllock': //check
+      return 145
+    case ';':
+      return 186
+    case '=':
+      return 187
+    case ',':
+      return 188
+    case '-':
+      return 189
+    case '.':
+      return 190
+    case '/':
+      return 191
+    case '\'':
+      return 192
+    case '[':
+      return 219
+    case '/':
+      return 220
+    case ']':
+      return 221
+    case '#':
+      return 222
+    case '`':
+      return 223
+    default:
+      return 0
+  }
 }

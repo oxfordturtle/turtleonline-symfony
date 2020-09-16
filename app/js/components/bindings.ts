@@ -445,9 +445,11 @@ function fillFile (input: HTMLSelectElement): void {
 
 function disableInput (input: Element): void {
   input.setAttribute('disabled', 'disabled')
-  input.parentElement.addEventListener('click', function () {
-    send('error', new SystemError('This option cannot yet be modified in the online system.'))
-  })
+  if (input.parentElement) {
+    input.parentElement.addEventListener('click', function () {
+      send('error', new SystemError('This option cannot yet be modified in the online system.'))
+    })
+  }
 }
 
 async function disableInputIfNotLoggedIn (input: Element): Promise<void> {
@@ -455,8 +457,10 @@ async function disableInputIfNotLoggedIn (input: Element): Promise<void> {
   const user = response.ok ? await response.json() : null
   if (user === null) {
     input.setAttribute('disabled', 'disabled')
-    input.parentElement.addEventListener('click', function () {
-      send('error', new SystemError('You must be logged in to change this setting.'))
-    })
+    if (input.parentElement) {
+      input.parentElement.addEventListener('click', function () {
+        send('error', new SystemError('You must be logged in to change this setting.'))
+      })
+    }
   }
 }

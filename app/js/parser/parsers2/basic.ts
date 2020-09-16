@@ -8,6 +8,7 @@ import { simpleStatement, variableAssignment, expression, typeCheck } from './co
 import { CompoundExpression, VariableValue, LiteralValue } from '../expression'
 import { Program, Routine } from '../routine'
 import { Statement, IfStatement, ForStatement, RepeatStatement, WhileStatement, VariableAssignment } from '../statement'
+import { Variable } from '../variable'
 import { Lexeme } from '../../lexer/lexeme'
 import { PCode } from '../../constants/pcodes'
 import { CompilerError } from '../../tools/error'
@@ -72,7 +73,7 @@ function statement (routine: Routine, oneLine: boolean = false): Statement {
         case '=':
           const variable = routine.findVariable('!result')
           routine.lex += 1
-          statement = variableAssignment(routine, variable)
+          statement = variableAssignment(routine, variable as Variable)
           break
 
         default:
@@ -166,7 +167,7 @@ function forStatement (routine: Routine): ForStatement {
   if (routine.lexemes[routine.lex].type !== 'identifier') {
     throw new CompilerError('"FOR" must be followed by an integer variable.', routine.lexemes[routine.lex])
   }
-  const variable = routine.findVariable(routine.lexemes[routine.lex].content)
+  const variable = routine.findVariable(routine.lexemes[routine.lex].content as string)
   if (!variable) {
     throw new CompilerError('Variable {lex} not defined.', routine.lexemes[routine.lex])
   }

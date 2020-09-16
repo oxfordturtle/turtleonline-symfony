@@ -11,13 +11,13 @@ const heapTableBody = document.querySelector('[data-component="memoryHeapTableBo
 if (stackTableBody && heapTableBody) {
   // register to keep in sync with system state
   on('memoryDumped', function (memory: { stack: number[], heap: number[], heapBase: number }): void {
-    const stackSplit = []
-    const heapSplit = []
+    const stackSplit: number[][] = []
+    const heapSplit: number[][] = []
     while (memory.stack.length > 0) {
-      stackSplit[stackSplit.length] = memory.stack.splice(0, 8)
+      stackSplit.push(memory.stack.splice(0, 8))
     }
     while (memory.heap.length > 0) {
-      heapSplit[heapSplit.length] = memory.heap.splice(0, 8)
+      heapSplit.push(memory.heap.splice(0, 8))
     }
     fill(stackTableBody, stackSplit.map(tableRow.bind(null, 0)))
     fill(heapTableBody, heapSplit.map(tableRow.bind(null, memory.heapBase)))
