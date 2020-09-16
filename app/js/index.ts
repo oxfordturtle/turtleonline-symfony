@@ -5,10 +5,6 @@ import state from './state/index'
 import { languages, Language } from './constants/languages'
 import { on } from './tools/hub'
 
-import lexify from  './lexer/lexify'
-import parser from './parser/parser'
-import coder from './coder/coder'
-
 // general site components
 import './components/actions'
 import './components/bindings'
@@ -52,10 +48,6 @@ if ('serviceWorker' in navigator) {
 
 // add state to globals (for playing around in the console)
 globalThis.state = state
-
-globalThis.lexify = lexify
-globalThis.parser = parser
-globalThis.coder = coder
 
 // look for the turtle element
 const turtle = document.getElementById('turtle') as HTMLDivElement

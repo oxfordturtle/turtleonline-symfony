@@ -21,7 +21,7 @@ class Memory {
   coords: [number, number][] = []
   stack: number[] = []
   memoryStack: number[] = []
-  returnStack: number[] = []
+  returnStack: [number, number][] = []
   subroutineStack: number[] = []
   // stack top and heapBase markers
   stackTop: number

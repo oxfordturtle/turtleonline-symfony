@@ -3,21 +3,21 @@
  */
 import { Language } from './languages'
 import { PCode } from './pcodes'
-import { VariableType } from '../parser/routine'
+import { Type } from '../parser/type'
 
 /** command class definition */
 export class Command {
   readonly names: Record<Language, string|null>
   readonly code: number[]
   readonly parameters: Parameter[]
-  readonly returns: VariableType|null
+  readonly returns: Type|null
   readonly category: number
   readonly level: number
   readonly description: string
 
   constructor (
     names: Record<Language, string|null>,
-    code: number[], parameters: Parameter[], returns: VariableType|null,
+    code: number[], parameters: Parameter[], returns: Type|null,
     category: number,
     level: number,
     description: string
@@ -35,11 +35,11 @@ export class Command {
 /** parameter class definition */
 export class Parameter {
   readonly name: string
-  readonly type: VariableType
+  readonly type: Type
   readonly isReferenceParameter: boolean
   readonly length: number
 
-  constructor (name: string, type: VariableType, isReferenceParameter: boolean, length: number) {
+  constructor (name: string, type: Type, isReferenceParameter: boolean, length: number) {
     this.name = name
     this.type = type
     this.isReferenceParameter = isReferenceParameter

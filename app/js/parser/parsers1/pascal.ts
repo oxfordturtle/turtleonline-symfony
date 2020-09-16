@@ -7,7 +7,10 @@
  * the program (and any subroutine) code themselves are just stored for
  * subsequent handling by the pcoder.
  */
-import { Routine, Subroutine, Program, Constant, Variable, VariableType, SubroutineType } from '../routine'
+import { Routine, Program, Subroutine, SubroutineType } from '../routine'
+import { Variable } from '../variable'
+import { Type } from '../type'
+import { Constant } from '../constant'
 import evaluate from '../evaluate'
 import { Lexeme } from '../../lexer/lexeme'
 import { CompilerError } from '../../tools/error'
@@ -25,7 +28,7 @@ type State =
 
 /** working variables modified by the fsm's subroutines */
 type WIP = {
-  routines: Routine[] // array of routines to be returned (0 being the main program)
+  program: Program // the main program
   routineStack: Routine[] // stack of routines
   routine: Routine // reference to the current routine
   routineCount: number // index of the current routine
@@ -36,10 +39,10 @@ type WIP = {
 }
 
 /** parses lexemes as a pascal program */
-export default function pascal (lexemes: Lexeme[]): Routine[] {
+export default function pascal (lexemes: Lexeme[]): Program {
   // initialise the working variables
   let wip: WIP = {
-    routines: [],
+    program: null,
     routineStack: [],
     routine: null,
     routineCount: 0,
@@ -88,8 +91,8 @@ export default function pascal (lexemes: Lexeme[]): Routine[] {
     }
   }
 
-  // return the routines array
-  return wip.routines
+  // return the main program
+  return wip.program
 }
 
 /** parses lexemes at program start */
@@ -115,8 +118,8 @@ function program (wip: WIP, lexemes: Lexeme[]): void {
 
   // create the program and move on
   wip.lex += 2
-  wip.routine = new Program('Pascal', identifier.content)
-  wip.routines.push(wip.routine)
+  wip.program = new Program('Pascal', identifier.content)
+  wip.routine = wip.program
   wip.routineStack.push(wip.routine)
 
   // semicolon check
@@ -186,7 +189,7 @@ function constant (wip: WIP, lexemes: Lexeme[]): void {
   if (identifier.content === wip.routine.program.name) {
     throw new CompilerError('Constant name {lex} is already the name of the program.', identifier)
   }
-  if (wip.routine.program.findConstant(identifier.content)) {
+  if (wip.program.findConstant(identifier.content)) {
     throw new CompilerError('{lex} is already the name of a constant.', identifier)
   }
   if (!assignment) {
@@ -204,7 +207,8 @@ function constant (wip: WIP, lexemes: Lexeme[]): void {
     wip.lex += 1
   }
   const value = evaluate(identifier, valueLexemes, wip.routine.program)
-  const type = (typeof value === 'number') ? 'integer' : 'string'
+  // TODO: distinguish integer and boolean constants?
+  const type = (typeof value === 'number') ? 'boolint' : 'string'
 
   // create the constant and add it to the routine
   const constant = new Constant('Pascal', identifier.content, type, value)
@@ -249,7 +253,7 @@ function variables (wip: WIP, lexemes: Lexeme[], isParameter: boolean = false, i
     }
 
     // create the variable and add it to the array of variables
-    variables.push(new Variable(lexemes[wip.lex], wip.routine, isParameter, isReferenceParameter))
+    variables.push(new Variable(lexemes[wip.lex].content, wip.routine, isParameter, isReferenceParameter))
 
     // check there is something next
     if (!lexemes[wip.lex + 1]) {
@@ -305,12 +309,16 @@ function variableType(wip: WIP, lexemes: Lexeme[], variables: Variable[]): void 
   switch (lexemes[wip.lex].content.toLowerCase()) {
     case 'boolean': // fallthrough
     case 'integer':
-      for (const variable of variables) variable.type = lexemes[wip.lex].content.toLowerCase() as VariableType
+      for (const variable of variables) {
+        variable.type = lexemes[wip.lex].content.toLowerCase() as Type
+      }
       wip.lex += 1
       break
 
     case 'char':
-      for (const variable of variables) variable.type = 'character'
+      for (const variable of variables) {
+        variable.type = 'character'
+      }
       wip.lex += 1
       break
 
@@ -351,11 +359,6 @@ function variableType(wip: WIP, lexemes: Lexeme[], variables: Variable[]): void 
       wip.lex += 1
 
       if (variables.some(x => x.isParameter)) { // array parameters (if one is, they all are) ...
-        // array parameters can only be passed by reference
-        if (!variables.some(x => x.isReferenceParameter)) {
-          throw new CompilerError('Array parameters can only be passed by reference, not by value.', lexemes[wip.lex])
-        }
-
         // expecting "of"
         if (!lexemes[wip.lex]) {
           throw new CompilerError('Array parameter must be followed by "of", and then the type of the elements of the array.', lexemes[wip.lex - 1])
@@ -369,7 +372,10 @@ function variableType(wip: WIP, lexemes: Lexeme[], variables: Variable[]): void 
         wip.lex += 1
 
         // set the variables as arrays
-        for (const variable of variables) variable.isArray = true
+        for (const variable of variables) {
+          // TODO: array parameters don't have dimensions specified; how to handle this?
+          variable.arrayDimensions.push([0, 0])
+        }
 
         // expecting array type specification
         variableType(wip, lexemes, variables)
@@ -479,7 +485,6 @@ function variableType(wip: WIP, lexemes: Lexeme[], variables: Variable[]): void 
 
         // update the variables
         for (const variable of variables) {
-          variable.isArray = true
           variable.arrayDimensions = arrayDimensions
         }
 
@@ -638,9 +643,8 @@ function end (wip: WIP, lexemes: Lexeme[]): void {
     }
     wip.lex += 1 // so we exit the main loop
   } else {
-    const context = (wip.routine instanceof Program) ? 'program "END"' : 'subroutine "END"'
-    semicolon(wip, lexemes, true, context)
-    wip.routines.push(wip.routineStack.pop())
+    semicolon(wip, lexemes, true, 'subroutine "END"')
+    wip.routineStack.pop()
     wip.routine = wip.routineStack[wip.routineStack.length - 1]
     wip.state = 'crossroads'
   }

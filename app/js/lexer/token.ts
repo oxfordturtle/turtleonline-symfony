@@ -137,6 +137,7 @@ export class Token {
             }
             if (this.value.length === 1) {
               this.type = 'character'
+              this.value = this.value.charCodeAt(0)
             }
             break
           case 'C': // fallthrough

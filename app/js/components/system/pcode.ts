@@ -22,7 +22,7 @@ function pcodeListItem (line: number[]) {
   const content = state.assembler
     ? assemble(line, 0)
     : line.reduce((sofar, current) => sofar.concat(cell(current)), [])
-  while (content.length % 8 > 0) {
+  while (content.length % 10 > 0) {
     content.push(div())
   }
   return li({ content })

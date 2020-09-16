@@ -7,7 +7,10 @@
  * the program (and any subroutine) code themselves are just stored for
  * subsequent handling by the pcoder.
  */
-import { Routine, Program, Subroutine, Variable, VariableType, Constant, SubroutineType } from '../routine'
+import { Routine, Program, Subroutine, SubroutineType } from '../routine'
+import { Variable } from '../variable'
+import { Type } from '../type'
+import { Constant } from '../constant'
 import { Lexeme } from '../../lexer/lexeme'
 import { CompilerError } from '../../tools/error'
 
@@ -25,6 +28,6 @@ type WIP = {
 }
 
 /** parses lexemes as a TypeScript program */
-export default function typescript (lexemes: Lexeme[]): Routine[] {
-  return []
+export default function typescript (lexemes: Lexeme[]): Program {
+  return new Program('TypeScript', '!')
 }

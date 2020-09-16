@@ -1,6 +1,10 @@
 /**
- * Definitions for the objects that result from parsing.
+ * Definitions for routines (programs and subroutines).
  */
+import { Constant } from './constant'
+import { Statement } from './statement'
+import { Type } from './type'
+import { turt, Variable } from './variable'
 import { Colour, colours } from '../constants/colours'
 import { Command, commands } from '../constants/commands'
 import { Input, inputs } from '../constants/inputs'
@@ -13,8 +17,10 @@ export class Routine {
   index: number = 0 // the routine's index
   indent: number = 0 // the routine's indentation level (Python only)
   subroutines: Subroutine[] = [] // the routine's subroutines
-  lexemes: Lexeme[] = [] // the lexemes in the routine's main body
   variables: Variable[] = [] // the routine's (local) variables
+  statements: Statement[] = [] // the sequence of statements that makes up the routine
+  lexemes: Lexeme[] = [] // the lexemes in the routine's main body
+  lex: number = 0 // index of the current lexeme (used by parsers2)
 
   /** constructor */
   constructor (name: string) {
@@ -31,18 +37,18 @@ export class Routine {
   get allSubroutines (): Subroutine[] {
     const allSubroutines: Subroutine[] = []
     for (const subroutine of this.subroutines) {
-      allSubroutines.push(subroutine)
       allSubroutines.push(...subroutine.allSubroutines)
+      allSubroutines.push(subroutine)
     }
     return allSubroutines
   }
 
-  /** getsthis routines parameters */
+  /** gets this routine's parameters */
   get parameters (): Variable[] {
     return this.variables.filter(x => x.isParameter)
   }
 
-  /** returns how much memory this routine needs (i.e. length of all variables) */
+  /** returns how much memory this routine needs (i.e. the length of all variables) */
   get memoryNeeded (): number {
     return this.variables.reduce((x, y) => x + y.length, 0)
   }
@@ -68,22 +74,32 @@ export class Routine {
 
   /** looks for a variable visible to this routine */
   findVariable (name: string): Variable|undefined {
-    if (this.program.language === 'Pascal') name = name.toLowerCase()
+    if (this.program.language === 'Pascal') {
+      name = name.toLowerCase()
+    }
 
     // look for turtle variable first
     const turtleVariable = this.program.turtleVariables.find(x => x.name === name)
-    if (turtleVariable) return turtleVariable
+    if (turtleVariable) {
+      return turtleVariable
+    }
 
     // for Python subroutines, look up global variables if the name is declared as global
     if (this.program.language === 'Python' && this instanceof Subroutine) {
       const isGlobal = this.globals.indexOf(name) > -1
-      if (isGlobal) return this.program.findVariable(name)
+      if (isGlobal) {
+        return this.program.findVariable(name)
+      }
     }
 
-    // otherwise search this routine, then its parents recursively
+    // otherwise search this routine, then its ancestors recursively
     const variable = this.variables.find(x => x.name === name)
-    if (variable) return variable
-    if (this instanceof Subroutine) return this.parent.findVariable(name)
+    if (variable) {
+      return variable
+    }
+    if (this instanceof Subroutine) {
+      return this.parent.findVariable(name)
+    }
   }
 
   /** tests whether a potential variable/constant/subroutine name would clash in this routine's scope */
@@ -168,7 +184,7 @@ export class Subroutine extends Routine {
   readonly parent: Routine
   readonly level: -1 = -1 // needed for the usage data table
   type: SubroutineType
-  returns: VariableType|null = null
+  returns: Type|null = null
   globals: string[] = []
   nonlocals: string[] = []
   startLine: number = 0 // fixed later by the main coder module
@@ -188,85 +204,3 @@ export class Subroutine extends Routine {
 
 /** subroutine type definition */
 export type SubroutineType = 'procedure'|'function'
-
-/** constant definition */
-export class Constant {
-  readonly name: string
-  readonly type: VariableType
-  readonly value: string|number
-
-  constructor (language: Language, name: string, type: VariableType, value: string|number) {
-    this.name = (language === 'Pascal') ? name.toLowerCase() : name
-    this.type = type
-    this.value = value
-  }
-}
-
-/** variable definition */
-export class Variable {
-  readonly name: string
-  readonly lexeme: Lexeme // keep this around in case type cannot be deduced and an error message is needed
-  readonly routine: Routine
-  readonly isParameter: boolean
-  #isReferenceParameter: boolean
-  type: VariableType // set after initial construction
-  turtle: number // index of turtle variable (if this is one)
-  stringLength: number = 32
-  isArray: boolean = false
-  arrayDimensions: [number, number][] = [] // for array variables (BASIC and Pascal only)
-  private: Subroutine|null // subroutine for private variables (BASIC only)
-
-  constructor (lexemeOrName: Lexeme|string, routine: Routine, isParameter: boolean = false, isReferenceParameter: boolean = false) {
-    if (lexemeOrName instanceof Lexeme) {
-      this.name = (routine.program.language === 'Pascal') ? lexemeOrName.content.toLowerCase() : lexemeOrName.content
-      this.lexeme = lexemeOrName
-    } else {
-      this.name = lexemeOrName
-    }
-    this.routine = routine
-    this.isParameter = isParameter
-    this.#isReferenceParameter = isReferenceParameter
-  }
-
-  get isReferenceParameter (): boolean {
-    return (this.routine.program.language === 'Python') ? this.isArray : this.#isReferenceParameter
-  }
-
-  get baseLength (): number {
-    if (this.type === 'string') {
-      return this.stringLength + 3 // 3 = pointer + max length byte + actual length byte
-    }
-    return 1
-  }
-
-  get length (): number {
-    if (this.isArray) {
-      let length = this.baseLength
-      for (const dimensions of this.arrayDimensions) {
-        const size = dimensions[1] - dimensions[0]
-        length = (length * size) + 2
-      }
-      return length
-    }
-    return this.baseLength
-  }
-
-  get index (): number {
-    const arrayIndex = this.routine.variables.indexOf(this)
-    const routine = new Routine('!')
-    routine.variables = this.routine.variables.slice(0, arrayIndex)
-    return routine.memoryNeeded + 1
-  }
-}
-
-/** constant/variable type definition */
-export type VariableType = 'boolean'|'integer'|'boolint'|'string'|'character'
-
-/** creates a built-in turtle variable */
-function turt (name: 'x'|'y'|'d'|'a'|'t'|'c', program: Program): Variable {
-  const fullname = (program.language === 'BASIC') ? `turt${name}%` : `turt${name}`
-  const variable = new Variable(fullname, program, false)
-  variable.type = 'integer'
-  variable.turtle = ['x', 'y', 'd', 'a', 't', 'c'].indexOf(name) + 1
-  return variable
-}

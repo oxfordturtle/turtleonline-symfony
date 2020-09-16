@@ -11,3 +11,15 @@ export type Options = {
   separateMemoryControlStack: boolean,
   separateSubroutineRegisterStack: boolean
 }
+
+export const defaultOptions: Options = {
+  canvasStartSize: 1000,
+  setupDefaultKeyBuffer: true,
+  turtleAttributesAsGlobals: true,
+  initialiseLocals: true,
+  allowCSTR: true,
+  separateReturnStack: false,
+  separateMemoryControlStack: false,
+  separateSubroutineRegisterStack: false
+}
+

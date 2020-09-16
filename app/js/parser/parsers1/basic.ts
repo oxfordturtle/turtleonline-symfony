@@ -7,7 +7,10 @@
  * the program (and any subroutine) code themselves are just stored for
  * subsequent handling by the pcoder.
  */
-import { Routine, Program, Subroutine, Variable, VariableType, Constant, SubroutineType } from '../routine'
+import { Routine, Program, Subroutine, SubroutineType } from '../routine'
+import { Variable } from '../variable'
+import { Type } from '../type'
+import { Constant } from '../constant'
 import evaluate from '../evaluate'
 import { Lexeme } from '../../lexer/lexeme'
 import { CompilerError } from '../../tools/error'
@@ -29,7 +32,7 @@ type State =
 
 /** working variables modified by the fsm's subroutines */
 type WIP = {
-  routines: Routine[] // array of routines to be returned (0 being the main program)
+  program: Program // the program
   routine: Routine // reference to the current routine
   lex: number // index of the current lexeme
   state: State // the current fsm state
@@ -37,19 +40,19 @@ type WIP = {
 }
 
 /** parses lexemes as a BASIC program */
-export default function basic (lexemes: Lexeme[]): Routine[] {
+export default function basic (lexemes: Lexeme[]): Program {
   // initialise the working variables
   let wip: WIP = {
-    routines: [],
+    program: null,
     routine: null,
     lex: 0,
     state: 'start',
     context: 'program'
   }
 
-  // setup the program
-  wip.routine = new Program('BASIC', '!')
-  wip.routines.push(wip.routine)
+  // setup the program and set it as the current routine
+  wip.program = new Program('BASIC', '!')
+  wip.routine = wip.program
 
   // loop through the lexemes
   while (wip.lex < lexemes.length) {
@@ -113,8 +116,8 @@ export default function basic (lexemes: Lexeme[]): Routine[] {
       throw new CompilerError('Function must finish with "=expression".', lexemes[wip.lex - 1])
   }
 
-  // return the routines array
-  return wip.routines
+  // return the program
+  return wip.program
 }
 
 /** parses lexemes at start */
@@ -225,9 +228,8 @@ function dim (wip: WIP, lexemes: Lexeme[]): void {
   }
 
   // create the variable
-  const variable = new Variable(lexemes[wip.lex], wip.routine)
+  const variable = new Variable(lexemes[wip.lex].content, wip.routine)
   variable.type = variableType(lexemes[wip.lex])
-  variable.isArray = true
 
   // expecting open bracket
   wip.lex += 1
@@ -313,15 +315,15 @@ function program (wip: WIP, lexemes: Lexeme[]): void {
     // otherwise make a note of any variables ...
     if (lexemes[wip.lex].type === 'identifier' && lexemes[wip.lex].subtype !== 'turtle') {
       if (lexemes[wip.lex + 1] && lexemes[wip.lex + 1].content === '=') {
-        if (!wip.routines[0].isDuplicate(lexemes[wip.lex].content)) {
-          const variable = new Variable(lexemes[wip.lex], wip.routines[0])
+        if (!wip.program.isDuplicate(lexemes[wip.lex].content)) {
+          const variable = new Variable(lexemes[wip.lex].content, wip.program)
           variable.type = variableType(lexemes[wip.lex])
-          wip.routines[0].variables.push(variable)
+          wip.program.variables.push(variable)
         }
       }
     }
     // ... and add the lexeme to the main program and move on
-    wip.routines[0].lexemes.push(lexemes[wip.lex])
+    wip.program.lexemes.push(lexemes[wip.lex])
     wip.lex += 1
   }
 }
@@ -352,10 +354,9 @@ function def (wip: WIP, lexemes: Lexeme[]): void {
   }
 
   // create the subroutine and add it to the routine arrays
-  wip.routine = new Subroutine(wip.routines[0], lexemes[wip.lex].content, subroutineType(wip, lexemes))
-  wip.routine.index = wip.routines.length
-  wip.routines.push(wip.routine)
-  wip.routines[0].subroutines.push(wip.routine as Subroutine)
+  wip.routine = new Subroutine(wip.program, lexemes[wip.lex].content, subroutineType(wip, lexemes))
+  wip.program.subroutines.push(wip.routine as Subroutine)
+  wip.routine.index = wip.program.subroutines.length
 
   // set flags
   if ((wip.routine as Subroutine).type === 'procedure') {
@@ -410,7 +411,7 @@ function parameters (wip: WIP, lexemes: Lexeme[]): void {
   }
 
   // otherwise create the variable and add it to the routine
-  const variable = new Variable(lexemes[wip.lex], wip.routine, true, isReferenceParameter)
+  const variable = new Variable(lexemes[wip.lex].content, wip.routine, true, isReferenceParameter)
   variable.type = variableType(lexemes[wip.lex])
   wip.routine.variables.push(variable)
   wip.lex += 1
@@ -482,12 +483,12 @@ function local (wip: WIP, lexemes: Lexeme[]): void {
   // create the variable and add it to the routine
   let variable: Variable
   if (wip.state === 'private') {
-    variable = new Variable(lexemes[wip.lex], wip.routines[0])
+    variable = new Variable(lexemes[wip.lex].content, wip.program)
     variable.type = variableType(lexemes[wip.lex])
     variable.private = wip.routine as Subroutine // flag the variable as private to this routine
-    wip.routines[0].variables.push(variable)
+    wip.program.variables.push(variable)
   } else {
-    variable = new Variable(lexemes[wip.lex], wip.routine)
+    variable = new Variable(lexemes[wip.lex].content, wip.routine)
     variable.type = variableType(lexemes[wip.lex])
     wip.routine.variables.push(variable)
   }
@@ -529,10 +530,10 @@ function subroutine (wip: WIP, lexemes: Lexeme[]): void {
 
   // check for undefined variables, and add them to the main program
   if (lexemes[wip.lex].type === 'identifier' && lexemes[wip.lex + 1] && lexemes[wip.lex + 1].content === '=') {
-    if (!wip.routines[0].isDuplicate(lexemes[wip.lex].content) && !wip.routine.isDuplicate(lexemes[wip.lex].content)) {
-      const variable = new Variable(lexemes[wip.lex], wip.routines[0])
+    if (!wip.program.isDuplicate(lexemes[wip.lex].content) && !wip.routine.isDuplicate(lexemes[wip.lex].content)) {
+      const variable = new Variable(lexemes[wip.lex].content, wip.program)
       variable.type = variableType(lexemes[wip.lex])
-      wip.routines[0].variables.push(variable)
+      wip.program.variables.push(variable)
     }
   }
 
@@ -586,7 +587,7 @@ function newline (wip: WIP, lexemes: Lexeme[]): void {
 }
 
 /** gets the type of a variable from its name */
-function variableType (lexeme: Lexeme): VariableType {
+function variableType (lexeme: Lexeme): Type {
   switch (lexeme.content.slice(-1)) {
     case '$':
       return 'string'
@@ -607,7 +608,7 @@ function subroutineType (wip: WIP, lexemes: Lexeme[]): SubroutineType {
 }
 
 /** gets the return type of a function from its name */
-function functionReturnType (lexeme: Lexeme): VariableType {
+function functionReturnType (lexeme: Lexeme): Type {
   switch (lexeme.content.slice(-1)) {
     case '$':
       return 'string'

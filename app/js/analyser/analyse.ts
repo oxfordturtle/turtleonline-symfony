@@ -7,15 +7,16 @@ import { Keyword } from '../constants/keywords'
 import { Category, Expression, commandCategories, keywordCategories } from '../constants/categories'
 import { Language } from '../constants/languages'
 import { Lexeme } from '../lexer/lexeme'
-import { Routine, Subroutine } from '../parser/routine'
+import { Program, Subroutine } from '../parser/routine'
 
 /** analyses program lexemes to produce usage data */
-export default function (lexemes: Lexeme[], routines: Routine[], language: Language): UsageCategory[] {
+export default function (lexemes: Lexeme[], program: Program, language: Language): UsageCategory[] {
   const categories = commandCategories
     .concat(keywordCategories[language])
   const usageCategories = categories.map(usageCategory.bind(null, language, lexemes)) as UsageCategory[]
-  const subroutineCategory = new Category(30, 'Subroutine calls', routines.slice(1) as Subroutine[])
-  const subLexemes = routines.map(x => x.lexemes).flat()
+  const subroutineCategory = new Category(30, 'Subroutine calls', program.allSubroutines.slice(1))
+  const subLexemes = program.allSubroutines.map(x => x.lexemes).flat()
+  subLexemes.unshift(...program.lexemes)
   const subroutineUsageCategory = usageCategory(language, subLexemes, subroutineCategory)
   return usageCategories.concat(subroutineUsageCategory).filter(category => category.expressions.length > 0)
 }

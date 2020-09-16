@@ -7,9 +7,8 @@ import { examples, Example } from '../../../app/js/constants/examples'
 import { Language, extensions } from '../../../app/js/constants/languages'
 import lexify from '../../../app/js/lexer/lexify'
 import parser from '../../../app/js/parser/parser'
-import { Subroutine } from '../../../app/js/parser/routine'
 import analyse from '../../../app/js/analyser/analyse'
-import coder from '../../../app/js/coder/coder'
+import encoder from '../../../app/js/encoder/program'
 
 // run separate tests for each example
 for (const example of examples) {
@@ -17,9 +16,9 @@ for (const example of examples) {
     const tmx = getTMX(example, 'BASIC')
     const code = getCode(example, 'BASIC')
     const lexemes = lexify(code, 'BASIC')
-    const routines = parser(lexemes, 'BASIC')
-    const usage = analyse(lexemes, routines, 'BASIC')
-    const pcode = coder(routines)
+    const program = parser(lexemes, 'BASIC')
+    const usage = analyse(lexemes, program, 'BASIC')
+    const pcode = encoder(program)
     // expect(usage).toEqual(tmx.usage)
     expect(pcode).toEqual(tmx.pcode)
   })
@@ -28,9 +27,9 @@ for (const example of examples) {
     const tmx = getTMX(example, 'Pascal')
     const code = getCode(example, 'Pascal')
     const lexemes = lexify(code, 'Pascal')
-    const routines = parser(lexemes, 'Pascal')
-    const usage = analyse(lexemes, routines, 'Pascal')
-    const pcode = coder(routines)
+    const program = parser(lexemes, 'Pascal')
+    const usage = analyse(lexemes, program, 'Pascal')
+    const pcode = encoder(program)
     // expect(usage).toEqual(tmx.usage)
     expect(pcode).toEqual(tmx.pcode)
   })

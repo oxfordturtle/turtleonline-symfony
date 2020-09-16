@@ -26,14 +26,14 @@ import * as machine from '../machine/index'
 import { Options as MachineOptions } from '../machine/options'
 
 // compiler
-import { Options as CompilerOptions } from '../coder/options'
+import { Options as CompilerOptions } from '../encoder/options'
 import lexify from '../lexer/lexify'
 import { Lexeme } from '../lexer/lexeme'
 import parser from '../parser/parser'
-import { Routine } from '../parser/routine'
+import { Program } from '../parser/routine'
 import analyse from '../analyser/analyse'
 import { UsageCategory } from '../analyser/usage'
-import coder from '../coder/coder'
+import encoder from '../encoder/program'
 
 /** the system state object */
 class State {
@@ -63,7 +63,7 @@ class State {
   #files: File[]
   #currentFileIndex: number
   #lexemes: Lexeme[]
-  #routines: Routine[]
+  #program: Program
   #usage: UsageCategory[]
   #pcode: number[][]
   // machine runtime options
@@ -115,10 +115,10 @@ class State {
     // file memory
     this.#files = load('files')
     this.#currentFileIndex = load('currentFileIndex')
-    this.#lexemes = load('lexemes')
-    this.#routines = [] // load('routines')
-    this.#usage = load('usage')
-    this.#pcode = load('pcode')
+    this.#lexemes = []
+    this.#program = null
+    this.#usage = []
+    this.#pcode = []
     // machine runtime options
     this.#showCanvasOnRun = load('showCanvasOnRun')
     this.#showOutputOnWrite = load('showOutputOnWrite')
@@ -159,6 +159,11 @@ class State {
     } else if (this.#files.length === 1 && this.file.code === '') {
       this.file.language = this.language
     }
+    if (this.file.compiled) {
+      // the session doesn't save the results of compilation, so we need to
+      // compile again here
+      this.compileCurrentFile()
+    }
     // system settings
     send('languageChanged')
     send('modeChanged')
@@ -183,7 +188,7 @@ class State {
     send('filesChanged')
     send('currentFileIndexChanged')
     send('lexemesChanged')
-    send('routinesChanged')
+    send('programChanged')
     send('usageChanged')
     send('pcodeChanged')
     // machine runtime options
@@ -244,7 +249,7 @@ class State {
   get code (): string { return this.files[this.currentFileIndex].code }
   get lexemes (): Lexeme[] { return this.#lexemes.filter(x => x.type !== 'comment') }
   get comments (): Lexeme[] { return this.#lexemes.filter(x => x.type === 'comment') }
-  get routines (): Routine[] { return this.#routines }
+  get program (): Program { return this.#program }
   get usage (): UsageCategory[] { return this.#usage }
   get pcode (): number[][] { return this.#pcode }
 
@@ -309,8 +314,6 @@ class State {
 
   // setters for system settings
   set language (language: Language) {
-    const previousLanguage = this.language
-
     // check the input; the compiler cannot always do so, since the language can
     // be set on the HTML page itself
     if (!languages.includes(language)) {
@@ -320,23 +323,15 @@ class State {
     save('language', language)
     send('languageChanged')
 
-    // set file as not compiled
+    // set current file as not compiled
     this.file.compiled = false
     save('files', this.files)
     send('codeChanged') // update the syntax highlighting
 
-    // if the file is empty, update its language
-    if (this.code === '') {
-      this.file.language = language
-      send('filesChanged')
-    }
-
     // maybe load corresponding example
     if (this.files) { // false when language is set on first page load
-      if (previousLanguage !== language) { // stop infinite loop from example setting the language
-        if (this.file.example && this.loadCorrespondingExample) {
-          this.openExampleFile(this.file.example)
-        }
+      if (this.file.example && this.loadCorrespondingExample) {
+        this.openExampleFile(this.file.example)
       }
     }
   }
@@ -456,17 +451,18 @@ class State {
     save('currentFileIndex', currentFileIndex)
 
     // update language to match current file language
-    this.language = this.file.language
+    // don't use setter for this.language, because that does a bunch of other
+    // stuff as well that shouldn't be done in this case
+    this.#language = this.file.language
+    save('language', this.file.language)
+    send('languageChanged')
 
     // update lexemes, pcode, and usage to match current file
     if (this.file.compiled) {
-      this.lexemes = lexify(this.file.code, this.language)
-      this.routines = parser(this.lexemes, this.language)
-      this.usage = analyse(this.lexemes, this.routines, this.language)
-      this.pcode = coder(this.routines, this.compilerOptions)
+      this.compileCurrentFile()
     } else {
       this.lexemes = []
-      this.routines = []
+      this.program = null
       this.usage = []
       this.pcode = []
     }
@@ -491,25 +487,21 @@ class State {
 
   set lexemes (lexemes: Lexeme[]) {
     this.#lexemes = lexemes
-    save('lexemes', lexemes)
     send('lexemesChanged')
   }
 
-  set routines (routines: Routine[]) {
-    this.#routines = routines
-    // save('routines', routines)
-    send('routinesChanged')
+  set program (program: Program) {
+    this.#program = program
+    send('programChanged')
   }
 
   set usage (usage: UsageCategory[]) {
     this.#usage = usage
-    save('usage', usage)
     send('usageChanged')
   }
 
   set pcode (pcode: number[][]) {
     this.#pcode = pcode
-    save('pcode', pcode)
     send('pcodeChanged')
   }
 
@@ -788,10 +780,21 @@ class State {
 
   // add a file to the files array (and update current file index)
   addFile (file: File): void {
-    this.files = this.files.concat([file])
-    this.currentFileIndex = this.files.length - 1
-    send('closeMenu', 'system')
+    // stop the machine (if it's running)
     machine.halt()
+
+    if (this.file && this.file.code === '' && this.file.edited === false) {
+      // if current file is empty, overwrite it
+      this.files[this.currentFileIndex] = file
+      this.files = this.files // to update session
+      send('currentFileIndexChanged') // it hasn't, but this will get file displays to update
+    } else {
+      // otherwise add a new file
+      this.files.push(file)
+      this.files = this.files // to update session
+      this.currentFileIndex = this.files.length - 1
+      }
+    send('closeMenu', 'system')
   }
 
   // close the current file (and update current file index)
@@ -801,6 +804,10 @@ class State {
       this.newFile()
     } else if (this.currentFileIndex > this.files.length - 1) {
       this.currentFileIndex = this.currentFileIndex - 1
+    } else {
+      // although the currentFileIndex doesn't change in this case, we want
+      // everything refreshed as though it has changed
+      this.currentFileIndex = this.currentFileIndex
     }
     send('closeMenu', 'system')
   }
@@ -879,7 +886,7 @@ class State {
     this.addFile(file)
     if (json) {
       this.lexemes = lexify(json.code.trim(), this.language)
-      this.routines = parser(this.lexemes, this.language)
+      this.program = parser(this.lexemes, this.language)
       this.usage = json.usage
       this.pcode = json.pcode
       this.file.compiled = true
@@ -937,11 +944,14 @@ class State {
   }
 
   compileCurrentFile (): void {
+    // if this file's language doesn't match the current language, now is the
+    // time to make it match
+    this.file.language = this.language
     try {
       this.lexemes = lexify(this.code, this.language)
-      this.routines = parser(this.lexemes, this.language)
-      this.usage = analyse(this.lexemes, this.routines, this.language)
-      this.pcode = coder(this.routines, this.compilerOptions)
+      this.program = parser(this.lexemes, this.language)
+      this.usage = analyse(this.lexemes, this.program, this.language)
+      this.pcode = encoder(this.program, this.compilerOptions)
       this.file.language = this.language
       this.file.compiled = true
       this.files = this.files // to update the session storage

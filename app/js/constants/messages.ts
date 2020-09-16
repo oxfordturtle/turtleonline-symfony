@@ -29,7 +29,7 @@ export const messages = [
   'filenameChanged',
   'codeChanged',
   'lexemesChanged',
-  'routinesChanged',
+  'programChanged',
   'usageChanged',
   'pcodeChanged',
   // machine runtime options changed

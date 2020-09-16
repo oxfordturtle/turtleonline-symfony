@@ -7,7 +7,8 @@
  * the program (and any subroutine) code themselves are just stored for
  * subsequent handling by the pcoder.
  */
-import { Routine, Program, Subroutine, Variable, VariableType } from '../routine'
+import { Routine, Program, Subroutine } from '../routine'
+import { Variable } from '../variable'
 import { Lexeme } from '../../lexer/lexeme'
 import { CompilerError } from '../../tools/error'
 
@@ -23,7 +24,7 @@ type State =
 
 /** working variables modified by the fsm's subroutines */
 type WIP = {
-  routines: Routine[] // array of routines to be returned (0 being the main program)
+  program: Program // the main program
   routineStack: Routine[] // stack of routines
   routine: Routine // reference to the current routine
   lex: number // index of the current lexeme
@@ -31,10 +32,10 @@ type WIP = {
 }
 
 /** parses lexemes as a python program */
-export default function python (lexemes: Lexeme[]): Routine[] {
+export default function python (lexemes: Lexeme[]): Program {
   // initialise the working variables
   let wip: WIP = {
-    routines: [],
+    program: null,
     routineStack: [],
     routine: null,
     lex: 0,
@@ -42,8 +43,8 @@ export default function python (lexemes: Lexeme[]): Routine[] {
   }
 
   // setup the program
-  wip.routine = new Program('Python', '!')
-  wip.routines.push(wip.routine)
+  wip.program = new Program('Python', '!')
+  wip.routine = wip.program
   wip.routineStack.push(wip.routine)
 
   // loop through the lexemes
@@ -77,7 +78,7 @@ export default function python (lexemes: Lexeme[]): Routine[] {
   }
 
   // return the routines array
-  return wip.routines
+  return wip.program
 }
 
 /** parses routine at crossroads */
@@ -132,12 +133,13 @@ function identifier (wip: WIP, lexemes: Lexeme[]): void {
     }
 
     // ok, create the variable, push the lexeme, and move on
-    const variable = new Variable(lexemes[wip.lex], wip.routine)
+    const variable = new Variable(lexemes[wip.lex].content, wip.routine)
     wip.routine.lexemes.push(lexemes[wip.lex])
     wip.lex += 1
 
-    // the next lexeme is a colon (we already checked above); add that too
-    wip.routine.lexemes.push(lexemes[wip.lex])
+    // the next lexeme is a colon (we already checked above); don't add it to
+    // the routine's lexemes, because that makes parser2's job needlessly
+    // complicated
     wip.lex += 1
 
     // now we're expecting bool|int|str (we already know it's an identifier)
@@ -146,14 +148,14 @@ function identifier (wip: WIP, lexemes: Lexeme[]): void {
     // add the variable to the current routine
     wip.routine.variables.push(variable)
 
-    // push the lexeme and move on
-    wip.routine.lexemes.push(lexemes[wip.lex])
+    // move on; as with the colon, don't add the type to the routine's lexemes,
+    // since it makes parser2's job needlessly complicated
     wip.lex += 1
   } else if (lexemes[wip.lex + 1] && lexemes[wip.lex + 1].content === 'in') {
     // range variable (must be an integer)
     if (lexemes[wip.lex].type === 'identifier') { // don't bother for turtle variables
       if (!wip.routine.isDuplicate(lexemes[wip.lex].content)) {
-        let variable = new Variable(lexemes[wip.lex], wip.routine)
+        let variable = new Variable(lexemes[wip.lex].content, wip.routine)
         variable.type = 'integer'
         wip.routine.variables.push(variable)
       }
@@ -312,15 +314,15 @@ function global (wip: WIP, lexemes: Lexeme[]): void {
 /** parses lexemes at end */
 function end (wip: WIP, lexemes: Lexeme[]): void {
   // end of a subroutine
-  wip.routine.index = wip.routines.length
-  wip.routines.push(wip.routineStack.pop())
+  wip.routine.index = wip.program.allSubroutines.length + 1
 
   // discard newline lexeme at the end of the routine
   if (wip.routine.lexemes[wip.routine.lexemes.length - 1].type === 'newline') {
     wip.routine.lexemes.pop()
   }
 
-  // set current routine to the previous one
+  // pop the routine off the stack and set current routine to the previous one
+  wip.routineStack.pop()
   wip.routine = wip.routineStack[wip.routineStack.length - 1]
 
   // and go back to the crossroads
@@ -372,7 +374,7 @@ function parameter (wip: WIP, lexemes: Lexeme[]): void {
   if (wip.routine.isDuplicate(lexemes[wip.lex].content)) {
     throw new CompilerError('{lex} is already the name of a variable or subroutine in the current scope.', lexemes[wip.lex])
   }
-  const parameter = new Variable(lexemes[wip.lex], wip.routine, true)
+  const parameter = new Variable(lexemes[wip.lex].content, wip.routine, true)
   wip.lex += 1
 
   // expecting colon
@@ -418,7 +420,6 @@ function variableType (variable: Variable, wip: WIP, lexemes: Lexeme[]): void {
       if (lexemes[wip.lex].content !== '[') {
         throw new CompilerError('"List" must be followed by a type in square brackets.', lexemes[wip.lex])
       }
-      variable.isArray = true
       variable.arrayDimensions.push([0, -1])
       wip.lex += 1
       if (!lexemes[wip.lex]) {

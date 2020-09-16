@@ -317,7 +317,7 @@ function preventDefault (event) {
 }
 
 // execute a block of code
-function execute (pcode, line, code, options) {
+function execute (pcode: number[][], line: number, code: number, options: Options) {
   // don't do anything if we're not running
   if (!status.running) {
     return
@@ -335,8 +335,8 @@ function execute (pcode, line, code, options) {
   window.removeEventListener('keyup', memory.readline)
 
   // execute as much code as possible
-  let drawCount = 0
-  let codeCount = 0
+  let drawCount: number = 0
+  let codeCount: number = 0
   let a, b, c, d, e, f, g // miscellanous variables for working things out on the fly
   try {
     while (drawCount < options.drawCountMax && (codeCount <= options.codeCountMax)) {
@@ -1352,14 +1352,13 @@ function execute (pcode, line, code, options) {
           if (memory.heapGlobal === -1) {
             memory.heapGlobal = memory.heapPerm
           }
-          memory.returnStack.push(line + 1)
+          memory.returnStack.push([line, code + 1])
           line = pcode[line][code + 1] - 1
           code = -1
           break
 
         case PCode.retn:
-          line = memory.returnStack.pop()
-          code = -1
+          [line, code] = memory.returnStack.pop()
           break
 
         case PCode.pssr:
@@ -1499,7 +1498,7 @@ function execute (pcode, line, code, options) {
 
         case PCode.dump:
           send('memoryDumped', dump())
-          if (options.showMemory) {
+          if (options.showMemoryOnDump) {
             send('selectTab', 'memory')
           }
           break
@@ -1628,7 +1627,7 @@ function execute (pcode, line, code, options) {
           a = memory.getHeapString(memory.stack.pop())
           send('write', a)
           send('log', a)
-          if (options.showOutput) {
+          if (options.showOutputOnWrite) {
             send('selectTab', 'output')
           }
           break
