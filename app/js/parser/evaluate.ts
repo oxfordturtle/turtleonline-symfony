@@ -12,12 +12,12 @@ export default function (identifier: Lexeme, lexemes: Lexeme[], program: Program
     // generate JavaScript expression from the lexemes
     const code = lexemes.map(toJsString).join('')
     // make colour constants and previously defined constants available to the eval function
-    const constants = {}
+    const constants: Record<string, number> = {}
     for (const colour of colours) {
       constants[colour.names[program.language]] = colour.value
     }
     for (const constant of program.constants) {
-      constants[constant.name] = constant.value
+      constants[constant.name] = constant.value as number
     }
     // try to evaluate the code
     const value = eval(code)

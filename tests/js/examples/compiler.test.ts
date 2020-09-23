@@ -19,7 +19,7 @@ for (const example of examples) {
     const program = parser(lexemes, 'BASIC')
     const usage = analyse(lexemes, program, 'BASIC')
     const pcode = encoder(program)
-    // expect(usage).toEqual(tmx.usage)
+    expect(usage).toEqual(tmx.usage)
     expect(pcode).toEqual(tmx.pcode)
   })
 
@@ -30,7 +30,7 @@ for (const example of examples) {
     const program = parser(lexemes, 'Pascal')
     const usage = analyse(lexemes, program, 'Pascal')
     const pcode = encoder(program)
-    // expect(usage).toEqual(tmx.usage)
+    expect(usage).toEqual(tmx.usage)
     expect(pcode).toEqual(tmx.pcode)
   })
 }
@@ -45,7 +45,7 @@ function getCode (example: Example, language: Language) {
 function getTMX (example: Example, language: Language) {
   const tmxPath = `tests/js/examples/${language}/${example.groupId}/${example.id}.tmx`
   const tmx = JSON.parse(fs.readFileSync(tmxPath, 'utf-8'))
-  prepareTMX(example, tmx)
+  // prepareTMX(example, tmx)
   return tmx
 }
 

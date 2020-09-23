@@ -1,5 +1,5 @@
 import state from '../state/index'
-import * as machine from '../machine/index'
+import machine from '../machine/index'
 import { fill, i } from '../tools/elements'
 import { on, send } from '../tools/hub'
 import { toggleMenu, openMenu, closeMenu, selectTab } from './view'

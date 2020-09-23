@@ -2,7 +2,7 @@
  * Native commands reference table.
  */
 import { Command } from '../../constants/commands'
-import { commandCategories } from '../../constants/categories'
+import { commandCategories, Expression } from '../../constants/categories'
 import { fill, tr, td, code } from '../../tools/elements'
 import highlight from '../../lexer/highlight'
 import state from '../../state/index'
@@ -30,7 +30,8 @@ function updateTable (): void {
   }
 }
 
-function commandTableRow (command: Command): HTMLTableRowElement {
+function commandTableRow (expression: Expression): HTMLTableRowElement {
+  const command = expression as Command
   return tr({ content: [
     td({ content: [
       code({ content: highlight(command.names[state.language] as string, state.language) })

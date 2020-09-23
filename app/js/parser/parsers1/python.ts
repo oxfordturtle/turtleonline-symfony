@@ -329,7 +329,7 @@ function end (wip: WIP, lexemes: Lexeme[]): void {
 
 /** parses subroutine parameters */
 function parameters (wip: WIP, lexemes: Lexeme[]): void {
-  const parameters = []
+  const parameters: Variable[] = []
 
   while (lexemes[wip.lex] && lexemes[wip.lex].content !== ')') {
     // parse the parameter

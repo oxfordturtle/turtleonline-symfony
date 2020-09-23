@@ -65,7 +65,7 @@ test('Lexer: Python: Keywords', function () {
 })
 
 test('Lexer: Python: Operators', function () {
-  const operators = {
+  const operators: Record<string, PCode|null> = {
     '+': PCode.plus,
     '-': PCode.subt,
     '*': PCode.mult,
@@ -185,7 +185,7 @@ test('Lexer: Python: Integers', function () {
 })
 
 test('Lexer: Python: Keycodes', function () {
-  const keycodes = {
+  const keycodes: Record<string, number> = {
     '\\keybuffer': 0,
     '\\backspace': 8,
     '\\tab': 9,
@@ -297,7 +297,7 @@ test('Lexer: Python: Keycodes', function () {
 })
 
 test('Lexer: Python: Queries', function () {
-  const queries = {
+  const queries: Record<string, number> = {
     '?kshift': -10,
     '?key': -9,
     '?mousey': -8,

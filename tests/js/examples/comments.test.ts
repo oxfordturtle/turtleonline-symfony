@@ -7,7 +7,6 @@ import fs from 'fs'
 import { examples, Example } from '../../../app/js/constants/examples'
 import { Language, extensions } from '../../../app/js/constants/languages'
 import lexify from '../../../app/js/lexer/lexify'
-import { Lexeme } from '../../../app/js/lexer/lexeme'
 
 // run separate tests for each example
 for (const example of examples) {

@@ -10,11 +10,11 @@ export class Variable {
   readonly routine: Routine
   readonly isParameter: boolean
   #isReferenceParameter: boolean
-  type: Type // set after initial construction
-  turtle: number // index of turtle variable (if this is one)
-  stringLength: number = 32
-  arrayDimensions: [number, number][] = [] // for array variables
-  private: Subroutine|null // subroutine for private variables (BASIC only)
+  type: Type
+  turtle?: number // index of turtle variable (if this is one)
+  stringLength: number
+  arrayDimensions: [number, number][] // for array variables
+  private?: Subroutine // subroutine for private variables (BASIC only)
 
   /** constructor */
   constructor (name: string, routine: Routine, isParameter: boolean = false, isReferenceParameter: boolean = false) {
@@ -22,6 +22,9 @@ export class Variable {
     this.routine = routine
     this.isParameter = isParameter
     this.#isReferenceParameter = isReferenceParameter
+    this.type = 'boolint' // booling by default; this is set properly after initial construction
+    this.stringLength = 32 // default string length, maybe modified later
+    this.arrayDimensions = []
   }
 
   /** whether the variable is an array */
@@ -104,6 +107,7 @@ class SubVariable extends Variable {
   /** constructor */
   constructor (variable: Variable|SubVariable) {
     super(`${variable.name}`, variable.routine, variable.isParameter, variable.isReferenceParameter)
+    this.variable = variable
     this.type = variable.type
     this.stringLength = variable.stringLength
     this.arrayDimensions = variable.arrayDimensions.slice(1)

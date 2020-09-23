@@ -74,7 +74,7 @@ test('Lexer: BASIC: Keywords', function () {
 })
 
 test('Lexer: BASIC: Operators', function () {
-  const operators = {
+  const operators: Record<string, PCode> = {
     '+': PCode.plus,
     '-': PCode.subt,
     '*': PCode.mult,
@@ -167,7 +167,7 @@ test('Lexer: BASIC: Integers', function () {
 })
 
 test('Lexer: BASIC: Keycodes', function () {
-  const keycodes = {
+  const keycodes: Record<string, number> = {
     '\\keybuffer': 0,
     '\\backspace': 8,
     '\\tab': 9,
@@ -279,7 +279,7 @@ test('Lexer: BASIC: Keycodes', function () {
 })
 
 test('Lexer: BASIC: Queries', function () {
-  const queries = {
+  const queries: Record<string, number> = {
     '?KSHIFT': -10,
     '?KEY': -9,
     '?MOUSEY': -8,

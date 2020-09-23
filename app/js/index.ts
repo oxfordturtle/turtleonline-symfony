@@ -47,7 +47,7 @@ if ('serviceWorker' in navigator) {
 }
 
 // add state to globals (for playing around in the console)
-globalThis.state = state
+(globalThis as any).state = state
 
 // look for the turtle element
 const turtle = document.getElementById('turtle') as HTMLDivElement

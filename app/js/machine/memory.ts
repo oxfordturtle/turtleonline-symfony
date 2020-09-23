@@ -12,7 +12,7 @@ const turttIndex = 5
 const turtcIndex = 6
 
 /** the machine memory class */
-class Memory {
+export default class Memory {
   // the memory arrays
   main: number[] = []
   keys: number[] = []
@@ -24,19 +24,17 @@ class Memory {
   returnStack: [number, number][] = []
   subroutineStack: number[] = []
   // stack top and heapBase markers
-  stackTop: number
-  heapGlobal: number
-  heapBase: number
-  heapTemp: number
-  heapPerm: number
-  heapMax: number
+  stackTop: number = 0
+  heapGlobal: number = 0
+  heapBase: number = 0
+  heapTemp: number = 0
+  heapPerm: number = 0
+  heapMax: number = 0
   // runtime variables
-  startTime: number
-  update: boolean
-  keyecho: boolean
-  detect: any
-  readline: any
-  seed: number
+  startTime: number = 0
+  update: boolean = false
+  keyecho: boolean = false
+  seed: number = 0
 
   /** initialises the machine memory */
   init (options: Options): void {
@@ -64,8 +62,6 @@ class Memory {
     this.startTime = Date.now()
     this.update = true
     this.keyecho = true
-    this.detect = null
-    this.readline = null
     this.seed = Date.now()
   }
 
@@ -245,5 +241,3 @@ class Memory {
     return { stack, heap, heapBase: this.heapBase }
   }
 }
-
-export default new Memory()

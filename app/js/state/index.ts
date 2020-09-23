@@ -22,7 +22,7 @@ import { SystemError } from '../tools/error'
 import { send } from '../tools/hub'
 
 // machine
-import * as machine from '../machine/index'
+import machine from '../machine/index'
 import { Options as MachineOptions } from '../machine/options'
 
 // compiler
@@ -976,13 +976,13 @@ class State {
 
   // TODO: this should be in the machine module
   dumpMemory (): void {
-    send('memoryDumped', machine.dump())
+    send('memoryDumped', machine.memory.dump())
   }
 
   // play/pause the machine
   playPauseMachine () {
-    if (machine.isRunning()) {
-      if (machine.isPaused()) {
+    if (machine.running) {
+      if (machine.paused) {
         machine.play()
       } else {
         machine.pause()

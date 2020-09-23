@@ -76,7 +76,7 @@ test('Lexer: Pascal: Keywords', function () {
 })
 
 test('Lexer: Pascal: Operators', function () {
-  const operators = {
+  const operators: Record<string, PCode|null> = {
     '+': PCode.plus,
     '-': PCode.subt,
     '*': PCode.mult,
@@ -193,7 +193,7 @@ test('Lexer: Pascal: Integers', function () {
 })
 
 test('Lexer: Pascal: Keycodes', function () {
-  const keycodes = {
+  const keycodes: Record<string, number> = {
     '\\keybuffer': 0,
     '\\backspace': 8,
     '\\tab': 9,
@@ -305,7 +305,7 @@ test('Lexer: Pascal: Keycodes', function () {
 })
 
 test('Lexer: Pascal: Queries', function () {
-  const queries = {
+  const queries: Record<string, number> = {
     '?kshift': -10,
     '?key': -9,
     '?mousey': -8,
