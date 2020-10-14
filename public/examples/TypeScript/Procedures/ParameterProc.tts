@@ -1,15 +1,16 @@
-var count: number;
-
 // draws a prong of the given size
 function prong (size: number) {
   forward(size);
+  // blot radius is 1/20 of prong length
   blot(size / 20);
   back(size);
 }
 
 // draw 360 prongs of decreasing size
-for (count = 360; count = count - 1; count > 0) {
-  randcol(10);
+for (var count: number = 360; count = count - 1; count > 0) {
+  randCol(10);
+  // longest is 460, shortest is 101
   prong(count + 100);
+  // 61 degrees gives six-arm spiral
   right(61);
 }

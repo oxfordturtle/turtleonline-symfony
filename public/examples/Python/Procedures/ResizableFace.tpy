@@ -1,30 +1,40 @@
-# ResizableFace
-
-def face(size: int):
+# draws a face of the given radius
+def face(radius: int):
+  # draws an eye of appropriate size
   def eye():
     colour(white);
-    ellblot(size * 3 / 20, size / 10)
+    ellblot(radius * 3 / 20, radius / 10)
     colour(emerald)
-    blot(size * 9 / 100)
+    blot(radius * 9 / 100)
     colour(black)
-    blot(size / 25)
+    blot(radius / 25)
 
-  colour(peach)
-  blot(size)
-  colour(darkred)
-  blot(size * 7 / 10)
-  forward(size * 3 / 20)
-  colour(peach)
-  blot(size * 3 / 4)
-  back(size * 3 / 10)
-  colour(royal)
-  blot(size * 3 / 20)
+  # avoid drawing lines as Turtle moves
   penup()
-  forward(size * 9 / 20)
+  # draw head with blot of given radius
+  colour(peach)
+  blot(radius)
+  # draw mouth using overlapping blots
+  colour(darkred)
+  blot(radius * 7 / 10)
+  forward(radius * 3 / 20)
+  colour(peach)
+  blot(radius * 3 / 4)
+  # draw blue nose
+  back(radius * 3 / 10)
+  colour(royal)
+  blot(radius * 3 / 20)
+  # move to left eye position
+  forward(radius * 9 / 20)
   left(90)
-  forward(size * 2 / 5)
+  # Turtle is now pointing leftwards
+  forward(radius * 2 / 5)
+  # draw left eye
   eye()
-  back(size * 4 / 5)
+  # move to right eye position
+  back(radius * 4 / 5)
+  # draw right eye
   eye()
 
+# draw a face of radius 400
 face(400)

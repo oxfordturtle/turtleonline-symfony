@@ -12,6 +12,7 @@ export class Input {
     this.names = {
       BASIC: (value < 0) ? name.toUpperCase() : name,
       C: name,
+      Java: name,
       Pascal: name,
       Python: name,
       TypeScript: name

@@ -1,6 +1,8 @@
 /**
  * Compiler options.
  */
+import { defaults } from '../constants/properties'
+
 export type Options = {
   canvasStartSize: number,
   setupDefaultKeyBuffer: boolean,
@@ -13,13 +15,13 @@ export type Options = {
 }
 
 export const defaultOptions: Options = {
-  canvasStartSize: 1000,
-  setupDefaultKeyBuffer: true,
-  turtleAttributesAsGlobals: true,
-  initialiseLocals: true,
-  allowCSTR: true,
-  separateReturnStack: false,
-  separateMemoryControlStack: false,
-  separateSubroutineRegisterStack: false
+  canvasStartSize: defaults.canvasStartSize,
+  setupDefaultKeyBuffer: defaults.setupDefaultKeyBuffer,
+  turtleAttributesAsGlobals: defaults.turtleAttributesAsGlobals,
+  initialiseLocals: defaults.initialiseLocals,
+  allowCSTR: defaults.allowCSTR,
+  separateReturnStack: defaults.separateReturnStack,
+  separateMemoryControlStack: defaults.separateMemoryControlStack,
+  separateSubroutineRegisterStack: defaults.separateSubroutineRegisterStack
 }
 

@@ -75,11 +75,11 @@ export default function python (lexemes: Lexeme[]): Program {
     }
   }
 
-  // return the routines array
+  // return the program
   return wip.program
 }
 
-/** parses routine at crossroads */
+/** parses lexemes at crossroads */
 function crossroads (wip: WIP, lexemes: Lexeme[]): void {
   // expecting declarations, indent/dedent, or routine statements
   switch (lexemes[wip.lex].type) {
@@ -122,7 +122,7 @@ function identifier (wip: WIP, lexemes: Lexeme[]): void {
     // looks like a typed variable assignment ...
     // turtle properties are not allowed
     if (lexemes[wip.lex].subtype === 'turtle') {
-      throw new CompilerError('{lex} is the name of a predefined Turtle attribute, and cannot be declared.', lexemes[wip.lex])
+      throw new CompilerError('{lex} is the name of a predefined Turtle attribute, and cannot be given a type specification.', lexemes[wip.lex])
     }
 
     // check for duplicate
@@ -135,20 +135,16 @@ function identifier (wip: WIP, lexemes: Lexeme[]): void {
     wip.routine.lexemes.push(lexemes[wip.lex])
     wip.lex += 1
 
-    // the next lexeme is a colon (we already checked above); don't add it to
-    // the routine's lexemes, because that makes parser2's job needlessly
-    // complicated
+    // push the colon and move on
+    wip.routine.lexemes.push(lexemes[wip.lex])
     wip.lex += 1
 
-    // now we're expecting bool|int|str (we already know it's an identifier)
-    variableType(variable, wip, lexemes)
+    // now we're expecting bool|int|str|List[...] (we already know it's an identifier)
+    // last argument TRUE (to add the lexemes to the routine's lexemes)
+    variableType(variable, wip, lexemes, true)
 
     // add the variable to the current routine
     wip.routine.variables.push(variable)
-
-    // move on; as with the colon, don't add the type to the routine's lexemes,
-    // since it makes parser2's job needlessly complicated
-    wip.lex += 1
   } else if (lexemes[wip.lex + 1] && lexemes[wip.lex + 1].content === 'in') {
     // range variable (must be an integer)
     if (lexemes[wip.lex].type === 'identifier') { // don't bother for turtle variables
@@ -244,10 +240,9 @@ function def (wip: WIP, lexemes: Lexeme[]): void {
       throw new CompilerError('Function arrow "->" must be followed by a return type specification.', lexemes[wip.lex - 1])
     }
     const variable = new Variable('return', subroutine)
-    variableType(variable, wip, lexemes)
+    variableType(variable, wip, lexemes, false)
     subroutine.returns = variable.type
     subroutine.variables.unshift(variable)
-    wip.lex += 1
   }
 
   // check for colon
@@ -257,6 +252,7 @@ function def (wip: WIP, lexemes: Lexeme[]): void {
   if (lexemes[wip.lex].content !== ':') {
     throw new CompilerError('Subroutine declaration must be followed by a colon ":".', lexemes[wip.lex])
   }
+  wip.lex += 1
 
   // final checks and moving on
   if (!lexemes[wip.lex]) {
@@ -312,7 +308,7 @@ function global (wip: WIP, lexemes: Lexeme[]): void {
 /** parses lexemes at end */
 function end (wip: WIP, lexemes: Lexeme[]): void {
   // end of a subroutine
-  wip.routine.index = wip.program.allSubroutines.length + 1
+  wip.routine.index = wip.program.allSubroutines.length
 
   // discard newline lexeme at the end of the routine
   if (wip.routine.lexemes[wip.routine.lexemes.length - 1].type === 'newline') {
@@ -329,8 +325,6 @@ function end (wip: WIP, lexemes: Lexeme[]): void {
 
 /** parses subroutine parameters */
 function parameters (wip: WIP, lexemes: Lexeme[]): void {
-  const parameters: Variable[] = []
-
   while (lexemes[wip.lex] && lexemes[wip.lex].content !== ')') {
     // parse the parameter
     parameter(wip, lexemes)
@@ -355,9 +349,6 @@ function parameters (wip: WIP, lexemes: Lexeme[]): void {
       }
     }
   }
-
-  // add the parameters and the current routine
-  wip.routine.variables.push(...parameters)
 }
 
 /** parses a subroutine parameter */
@@ -388,29 +379,46 @@ function parameter (wip: WIP, lexemes: Lexeme[]): void {
   if (!lexemes[wip.lex]) {
     throw new CompilerError('Variable must be given a type specification ("bool", "int", or "str").', lexemes[wip.lex - 1])
   }
-  variableType(parameter, wip, lexemes)
-  wip.lex += 1
+  variableType(parameter, wip, lexemes, false)
+
+  // add the parameter to the current routine
+  wip.routine.variables.push(parameter)
 }
 
 /** sets the type of a variable */
-function variableType (variable: Variable, wip: WIP, lexemes: Lexeme[]): void {
+function variableType (variable: Variable, wip: WIP, lexemes: Lexeme[], pushLexemes: boolean): void {
   switch (lexemes[wip.lex].content) {
     case 'bool':
       variable.type = 'boolean'
+      if (pushLexemes) {
+        wip.routine.lexemes.push(lexemes[wip.lex])
+      }
+      wip.lex += 1
       break
 
     case 'int':
       variable.type = 'integer'
+      if (pushLexemes) {
+        wip.routine.lexemes.push(lexemes[wip.lex])
+      }
+      wip.lex += 1
       break
 
     case 'str':
       variable.type = 'string'
+      if (pushLexemes) {
+        wip.routine.lexemes.push(lexemes[wip.lex])
+      }
+      wip.lex += 1
       break
 
     case 'list':
       throw new CompilerError('"List" must be written with a capital "L".', lexemes[wip.lex])
 
     case 'List':
+      if (pushLexemes) {
+        wip.routine.lexemes.push(lexemes[wip.lex])
+      }
       wip.lex += 1
       if (!lexemes[wip.lex]) {
         throw new CompilerError('"List" must be followed by a type in square brackets.', lexemes[wip.lex - 1])
@@ -418,22 +426,28 @@ function variableType (variable: Variable, wip: WIP, lexemes: Lexeme[]): void {
       if (lexemes[wip.lex].content !== '[') {
         throw new CompilerError('"List" must be followed by a type in square brackets.', lexemes[wip.lex])
       }
-      variable.arrayDimensions.push([0, -1])
+      variable.arrayDimensions.push([0, 64])
+      if (pushLexemes) {
+        wip.routine.lexemes.push(lexemes[wip.lex])
+      }
       wip.lex += 1
       if (!lexemes[wip.lex]) {
         throw new CompilerError('"List" must be followed by a type in square brackets.', lexemes[wip.lex - 1])
       }
-      variableType(variable, wip, lexemes)
+      variableType(variable, wip, lexemes, pushLexemes)
       if (!lexemes[wip.lex]) {
         throw new CompilerError('List type must be followed by closing square brackets.', lexemes[wip.lex - 1])
       }
       if (lexemes[wip.lex].content !== ']') {
         throw new CompilerError('List type must be followed by closing square brackets.', lexemes[wip.lex])
       }
+      if (pushLexemes) {
+        wip.routine.lexemes.push(lexemes[wip.lex])
+      }
+      wip.lex += 1
       break
 
     default:
       throw new CompilerError('{lex} is not a valid type specification (expected "bool", "int", or "str")', lexemes[wip.lex])
   }
 }
-  

@@ -1,7 +1,6 @@
 // draws a multi-coloured annulus (a ring shape)
 void annulus (int inner, int width, int angle) {
-  int count;
-  for (count = 0; count < (360 / angle); count = count + 1) {
+  for (int count = 0; count < (360 / angle); count = count + 1) {
     forward(inner + width);
     back(width);
     back(inner);

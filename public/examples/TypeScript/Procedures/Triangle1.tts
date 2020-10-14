@@ -1,5 +1,5 @@
 // move to the start (without drawing)
-movexy(-100, 150);
+moveXY(-100, 150);
 // draw the first side
 forward(256);
 right(120);

@@ -8,7 +8,7 @@ BEGIN
   print('You are here', 4, 36);
   {draw blue multi-part "curve"}
   colour(blue);
-  setxy(790, 540);
+  setxy(790, 530);
   drawxy(40, 0);
   drawxy(28, -28);
   drawxy(0, -40);

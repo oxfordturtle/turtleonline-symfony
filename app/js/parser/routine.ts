@@ -16,8 +16,9 @@ export class Routine {
   readonly name: string // the name of the routine
   index: number = 0 // the routine's index
   indent: number = 0 // the routine's indentation level (Python only)
+  constants: Constant[] = [] // the routine's constants
+  variables: Variable[] = [] // the routine's variables
   subroutines: Subroutine[] = [] // the routine's subroutines
-  variables: Variable[] = [] // the routine's (local) variables
   statements: Statement[] = [] // the sequence of statements that makes up the routine
   lexemes: Lexeme[] = [] // the lexemes in the routine's main body
   lex: number = 0 // index of the current lexeme (used by parsers2)
@@ -65,7 +66,13 @@ export class Routine {
   /** looks for a constant visible to this routine */
   findConstant (name: string): Constant|undefined {
     if (this.program.language === 'Pascal') name = name.toLowerCase()
-    return this.program.constants.find(x => x.name === name)
+    const constant = this.constants.find(x => x.name === name)
+    if (constant) {
+      return constant
+    }
+    if (this instanceof Subroutine) {
+      return this.parent.findConstant(name)
+    }
   }
 
   /** looks for a colour */
@@ -114,7 +121,7 @@ export class Routine {
   /** tests whether a potential variable/constant/subroutine name would clash in this routine's scope */
   isDuplicate (name: string): boolean {
     if (this.program.language === 'Pascal') name = name.toLowerCase()
-    if (this.program.constants.some(x => x.name === name)) return true
+    if (this.constants.some(x => x.name === name)) return true
     if (this.program.language === 'Python' && this instanceof Subroutine) {
       if (this.globals.some(x => x === name)) return true
       if (this.nonlocals.some(x => x === name)) return true
@@ -152,7 +159,6 @@ export class Program extends Routine {
   readonly language: Language
   readonly baseGlobals: number
   readonly baseOffset: number
-  constants: Constant[] = []
 
   /** constructor */
   constructor (language: Language, name: string) {
@@ -194,6 +200,7 @@ export class Subroutine extends Routine {
   readonly level: -1 = -1 // needed for the usage data table
   type: SubroutineType
   returns: Type|null = null
+  hasReturnStatement: boolean = false // for C, Python, and TypeScript
   globals: string[] = []
   nonlocals: string[] = []
   startLine: number = 0 // fixed later by the main coder module

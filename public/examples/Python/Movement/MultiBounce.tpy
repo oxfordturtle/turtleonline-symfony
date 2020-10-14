@@ -1,3 +1,38 @@
-# MultiBounce
+minSize: int = 70
+maxSize: int = 130
+balls: int = 10
+x: List[int]
+y: List[int]
+xVelocity: List[int]
+yVelocity: List[int]
+size: List[int]
+colr: List[int]
 
-# not yet available in Turtle Python
+# set initial properties for each ball
+for n in range(0, balls, 1):
+  size[n] = minSize + random(maxSize - minSize)
+  colr[n] = rgb(n)
+  x[n] = randint(1000 - 1 * size[n], size[n])
+  y[n] = randint(1000 - 1 * size[n], size[n])
+  xVelocity[n] = random(7, 14)
+  yVelocity[n] = random(7, 14)
+while true:
+  noupdate()
+  # rub out previous balls
+  blank(white)
+  # draw each ball in its next position
+  for n in range(0, balls, 1):
+    # move to next position
+    x[n] = x[n] + xVelocity[n]
+    y[n] = y[n] + yVelocity[n]
+    setxy(x[n], y[n])
+    # draw ball
+    colour(colr[n])
+    blot(size[n])
+    # "bounce" (i.e. invert velocity) at canvas edges
+    if (x[n] < size[n]) or (x[n] > 1000 - size[n]):
+      xVelocity[n] = -xVelocity[n]
+    if (y[n] < size[n]) or (y[n] > 1000 - size[n]):
+      yVelocity[n] = -yVelocity[n]
+  update()
+  pause(5)

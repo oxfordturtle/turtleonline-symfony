@@ -7,8 +7,8 @@ VAR hours: integer;
   Var timeString: string;
   Begin
     {draw white box, erasing previous time}
-    setxy(300, 430);
-    box(400, 130, white, false);
+    setxy(300, 450);
+    box(400, 100, white, false);
     {print specified time}
     timeString := pad(str(hours), '0', 2) + ':' + pad(str(minutes), '0', 2);
     print(timeString, 21, 100)
@@ -17,12 +17,12 @@ VAR hours: integer;
 BEGIN
   {set up canvas with box for displaying time}
   blank(lightgreen);
-  setxy(250, 390);
+  setxy(250, 400);
   {Turtle maroon pen thickness 10 will be used for box border}
   colour(maroon);
   thickness(10);
-  {box will be size 500x210, filled in lightbrown with a border}
-  box(500, 210, lightbrown, true);
+  {box will be size 500x200, filled in lightbrown with a border}
+  box(500, 200, lightbrown, true);
   colour(black);
   {initialise hours and minutes to zero}
   hours := 0;

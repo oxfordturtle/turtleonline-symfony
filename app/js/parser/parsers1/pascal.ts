@@ -11,7 +11,7 @@ import { Routine, Program, Subroutine, SubroutineType } from '../routine'
 import { Variable } from '../variable'
 import { Type } from '../type'
 import { Constant } from '../constant'
-import evaluate from '../evaluate'
+import evaluate from '../evaluate.old'
 import { Lexeme } from '../../lexer/lexeme'
 import { CompilerError } from '../../tools/error'
 
@@ -210,7 +210,6 @@ function constant (wip: WIP, lexemes: Lexeme[]): void {
     wip.lex += 1
   }
   const value = evaluate(identifier, valueLexemes, wip.routine.program)
-  // TODO: distinguish integer and boolean constants?
   const type = (typeof value === 'number') ? 'boolint' : 'string'
 
   // create the constant and add it to the routine
@@ -410,7 +409,7 @@ function variableType(wip: WIP, lexemes: Lexeme[], variables: Variable[]): void 
               if (!constant) {
                 throw new CompilerError('Constant {lex} has not been defined.', start)
               }
-              if (constant.type !== 'integer') {
+              if (constant.type !== 'boolint') {
                 throw new CompilerError('{lex} is not an integer constant.', start)
               }
               if (constant.value < 0) {
@@ -447,7 +446,7 @@ function variableType(wip: WIP, lexemes: Lexeme[], variables: Variable[]): void 
               if (!constant) {
                 throw new CompilerError('Constant {lex} has not been defined.', end)
               }
-              if (constant.type !== 'integer') {
+              if (constant.type !== 'boolint') {
                 throw new CompilerError('{lex} is not an integer constant.', end)
               }
               if (constant.value < 0) {

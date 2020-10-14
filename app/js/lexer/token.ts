@@ -5,6 +5,7 @@ import { colours } from '../constants/colours'
 import { inputs } from '../constants/inputs'
 import { Language } from '../constants/languages'
 import { PCode } from '../constants/pcodes'
+import { Type } from '../parser/type'
 
 /** token class definition */
 export class Token {
@@ -33,6 +34,7 @@ export class Token {
             this.value = (this.content as string).slice(3).trim()
             break
           case 'C': // fallthrough
+          case 'Java': //fallthrough
           case 'TypeScript':
             this.value = (this.content as string).slice(2).trim()
             break
@@ -76,6 +78,7 @@ export class Token {
                 this.value = PCode.eqal
                 break
               case 'C': // fallthrough
+              case 'Java': // fallthrough
               case 'Python': // fallthrough
               case 'TypeScript':
                 this.value = null // this is the assignment operator in these languages
@@ -101,26 +104,51 @@ export class Token {
             this.value = PCode.more
             break
           case 'not': // fallthrough
-          case '~':
+          case '~': // fallthrough
+          case '!':
             this.value = PCode.not
             break
-          case 'and':
+          case 'and': // BASIC, Pascal, and Python
             this.value = (language === 'Python') ? PCode.andl : PCode.and
+            break
+          case 'or': // BASIC, Pascal, and Python
+            this.value = (language === 'Python') ? PCode.orl : PCode.or
+            break
+          case '&&':
+            this.value = PCode.andl
             break
           case '&':
             this.value = PCode.and
             break
-          case 'or':
-            this.value = (language === 'Python') ? PCode.orl : PCode.or
+          case '||':
+            this.value = PCode.orl
             break
           case '|':
             this.value = PCode.or
             break
-          case 'xor': // fallthrough
-          case 'eor': // fallthrough
-          case '^':
+          case 'eor': // BASIC
+          case 'xor': // Pascal
+          case '^': // everything else
             this.value = PCode.xor
             break
+        }
+        break
+
+      case 'keyword':
+        const types: Record<string, Type|null> = {
+          'bool': 'boolean',
+          'boolean': 'boolean',
+          'char': 'character',
+          'int': 'integer',
+          'integer': 'integer',
+          'number': 'integer',
+          'string': 'string',
+          'String': 'string',
+          'void': null
+        }
+        if (types[this.content as string] !== undefined) {
+          this.subtype = 'type'
+          this.value = types[this.content as string]
         }
         break
 
@@ -141,6 +169,7 @@ export class Token {
             }
             break
           case 'C': // fallthrough
+          case 'Java': // fallthrough
           case 'Python': // fallthrough
           case 'TypeScript':
             this.value = (this.content as string).slice(1, -1).replace(/\\('|")/g, '$1')
@@ -157,24 +186,19 @@ export class Token {
         break
 
       case 'integer':
+        const index = (this.content as string).match(/[^0-9]/)?.index || 0
         switch (this.subtype) {
           case 'binary':
-            this.value = (language === 'Python')
-              ? parseInt((this.content as string).slice(2), 2)
-              : parseInt((this.content as string).slice(1), 2)
+            this.value = parseInt((this.content as string).slice(index + 1), 2)
             break
           case 'octal':
-            this.value = (language === 'Python')
-              ? parseInt((this.content as string).slice(2), 8)
-              : parseInt((this.content as string).slice(1), 8)
+            this.value = parseInt((this.content as string).slice(index + 1), 8)
             break
           case 'decimal':
-            this.value = parseInt(this.content as string)
+            this.value = parseInt(this.content as string, 10)
             break
           case 'hexadecimal':
-            this.value = (language === 'Python')
-              ? parseInt((this.content as string).slice(2), 16)
-              : parseInt((this.content as string).slice(1), 16)
+            this.value = parseInt((this.content as string).slice(index + 1), 16)
             break
         }
         break
@@ -224,6 +248,7 @@ export type TokenType =
 export type TokenSubtype =
   | 'single'
   | 'double'
+  | 'type'
   | 'binary'
   | 'octal'
   | 'hexadecimal'

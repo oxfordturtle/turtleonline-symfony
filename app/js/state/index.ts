@@ -22,7 +22,8 @@ import { SystemError } from '../tools/error'
 import { send } from '../tools/hub'
 
 // machine
-import machine from '../machine/index'
+import * as machine from '../machine/index'
+import * as memory from '../machine/memory'
 import { Options as MachineOptions } from '../machine/options'
 
 // compiler
@@ -842,6 +843,12 @@ class State {
         file.code = content.trim()
         break
 
+      case 'tjav':
+        file.language = 'Java'
+        file.name = name
+        file.code = content.trim()
+        break
+
       case 'tpas': // fallthrough
       case 'tgp': // support old file extension
         file.language = 'Pascal'
@@ -953,7 +960,7 @@ class State {
     try {
       this.lexemes = lexify(this.code, this.language)
       this.program = parser(this.lexemes, this.language)
-      this.usage = analyse(this.lexemes, this.program, this.language)
+      this.usage = analyse(this.lexemes, this.program)
       this.pcode = encoder(this.program, this.compilerOptions)
       this.file.language = this.language
       this.file.compiled = true
@@ -976,13 +983,13 @@ class State {
 
   // TODO: this should be in the machine module
   dumpMemory (): void {
-    send('memoryDumped', machine.memory.dump())
+    send('memoryDumped', memory.dump())
   }
 
   // play/pause the machine
   playPauseMachine () {
-    if (machine.running) {
-      if (machine.paused) {
+    if (machine.isRunning()) {
+      if (machine.isPaused()) {
         machine.play()
       } else {
         machine.pause()

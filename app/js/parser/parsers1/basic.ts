@@ -7,13 +7,14 @@
  * the program (and any subroutine) code themselves are just stored for
  * subsequent handling by the pcoder.
  */
-import { Routine, Program, Subroutine, SubroutineType } from '../routine'
+import { Program, Subroutine, SubroutineType } from '../routine'
 import { Variable } from '../variable'
 import { Type } from '../type'
 import { Constant } from '../constant'
 import evaluate from '../evaluate'
 import { Lexeme } from '../../lexer/lexeme'
 import { CompilerError } from '../../tools/error'
+import { expression, typeCheck } from '../parsers2/common'
 
 /** fsm states */
 type State =
@@ -33,7 +34,7 @@ type State =
 /** working variables modified by the fsm's subroutines */
 type WIP = {
   program: Program // the program
-  routine: Routine // reference to the current routine
+  routine: Program|Subroutine // reference to the current routine
   lex: number // index of the current lexeme
   state: State // the current fsm state
   context: 'program'|'procedure'|'function'|'end' // the current context
@@ -145,57 +146,39 @@ function constant (wip: WIP, lexemes: Lexeme[]): void {
     throw new CompilerError('Constants can only be declared in the main program.', lexemes[wip.lex])
   }
 
-  // expecting "<identifier> = <value>"
-  const [identifier, assignment, firstValueLexeme] = lexemes.slice(wip.lex, wip.lex + 3)
-
-  // basic error checking
-  if (!identifier) {
+  // expecting identifier
+  if (!lexemes[wip.lex]) {
     throw new CompilerError('"CONST" must be followed by an identifier.', lexemes[wip.lex - 1])
   }
-  if (identifier.subtype === 'turtle') {
-    throw new CompilerError('{lex} is the name of a Turtle property, and cannot be used as a constant name.', lexemes[wip.lex])
-  }
-  if (identifier.type !== 'identifier') {
+  if (lexemes[wip.lex].type !== 'identifier') {
     throw new CompilerError('{lex} is not a valid constant name.', lexemes[wip.lex])
   }
-  if (wip.routine.findConstant(identifier.content as string)) {
+  if (lexemes[wip.lex].subtype === 'turtle') {
+    throw new CompilerError('{lex} is the name of a Turtle property, and cannot be used as a constant name.', lexemes[wip.lex])
+  }
+  if (wip.routine.isDuplicate(lexemes[wip.lex].content as string)) {
     throw new CompilerError('Duplicate constant name {lex}.', lexemes[wip.lex])
   }
-  if (!assignment) {
-    throw new CompilerError('Constant must be assigned a value.', identifier)
-  }
-  if (assignment.content !== '=' || !firstValueLexeme) {
-    throw new CompilerError('Constant must be assigned a value.', assignment)
-  }
-
-  // determine constant type based on name
-  const type = (identifier.content as string).slice(-1) === '$' ? 'string' : 'boolint'
-
-  // get all the lexemes up to the first line break
-  const valueLexemes: Lexeme[] = []
+  const name = lexemes[wip.lex].content as string
+  const type = (lexemes[wip.lex].content as string).slice(-1) === '$' ? 'string' : 'boolint'
   wip.lex += 1
-  while (lexemes[wip.lex + 1] && lexemes[wip.lex + 1].type !== 'newline') {
-    valueLexemes.push(lexemes[wip.lex + 1] as Lexeme)
-    wip.lex += 1
-  }
-  const value = evaluate(identifier, valueLexemes, wip.routine.program)
-  switch (typeof value) {
-    case 'number':
-      if (type === 'string') {
-        throw new CompilerError('String constant cannot be assigned an integer value.', identifier)
-      }
-      break
 
-    case 'string':
-      if (type === 'boolint') {
-        throw new CompilerError('Integer constant cannot be assigned a string value.', identifier)
-      }
-      break
+  // expecting '='
+  if (!lexemes[wip.lex] || lexemes[wip.lex].content !== '=') {
+    throw new CompilerError('Constant must be assigned a value.', lexemes[wip.lex - 1])
   }
+  wip.lex += 1
 
-  // create the constant and add it to the routine
-  const constant = new Constant('BASIC', identifier.content as string, type, value)
-  wip.routine.program.constants.push(constant)
+  // expecting an expression
+  const dummyRoutine = new Program('BASIC', wip.routine.name)
+  dummyRoutine.lexemes = lexemes.slice(wip.lex)
+  dummyRoutine.constants = wip.routine.constants
+  const exp = expression(dummyRoutine)
+  const value = evaluate(lexemes[wip.lex - 1], 'BASIC', exp)
+  typeCheck(exp, type, lexemes[wip.lex - 1])
+  // create the constant and add it to the current routine
+  const constant = new Constant('C', name, type, value)
+  wip.routine.constants.push(constant)
 
   // newline check
   newline(wip, lexemes)
@@ -579,10 +562,13 @@ function result (wip: WIP, lexemes: Lexeme[]): void {
 
 /** checks for a new line and moves past it */
 function newline (wip: WIP, lexemes: Lexeme[]): void {
-  if (lexemes[wip.lex + 1] && lexemes[wip.lex + 1].type !== 'newline') {
-    throw new CompilerError('Statement must be on a new line.', lexemes[wip.lex + 1])
+  wip.lex += 1
+  if (lexemes[wip.lex] && lexemes[wip.lex].type !== 'newline') {
+    throw new CompilerError('Statement must be on a new line.', lexemes[wip.lex])
   }
-  wip.lex += 2
+  while (lexemes[wip.lex] && lexemes[wip.lex].type === 'newline') {
+    wip.lex += 1
+  }
 }
 
 /** gets the type of a variable from its name */
@@ -601,8 +587,12 @@ function variableType (lexeme: Lexeme): Type {
 
 /** gets the type of a subroutine from its name */
 function subroutineType (wip: WIP, lexemes: Lexeme[]): SubroutineType {
-  if (lexemes[wip.lex].content?.slice(0, 4) === 'PROC') return 'procedure'
-  if (lexemes[wip.lex].content?.slice(0, 2) === 'FN') return 'function'
+  if (lexemes[wip.lex].content?.slice(0, 4) === 'PROC') {
+    return 'procedure'
+  }
+  if (lexemes[wip.lex].content?.slice(0, 2) === 'FN') {
+    return 'function'
+  }
   throw new CompilerError('"DEF" must be followed by a valid procedure or function name. (Procedure names must begin with "PROC", and function names must begin with "FN".)', lexemes[wip.lex])
 }
 

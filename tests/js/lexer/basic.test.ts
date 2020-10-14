@@ -56,10 +56,11 @@ test('Lexer: BASIC: Errors', function () {
 
 test('Lexer: BASIC: Comments', function () {
   const lexemes = lexify('REM this is a comment', 'BASIC')
-  expect(lexemes.length).toBe(1)
+  expect(lexemes.length).toBe(2)
   expect(lexemes[0].type).toBe('comment')
   expect(lexemes[0].content).toBe('REM this is a comment')
   expect(lexemes[0].value).toBe('this is a comment')
+  expect(lexemes[1].type).toBe('newline')
 })
 
 test('Lexer: BASIC: Keywords', function () {

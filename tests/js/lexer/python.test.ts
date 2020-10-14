@@ -47,10 +47,11 @@ test('Lexer: Python: Errors', function () {
 
 test('Lexer: Python: Comments', function () {
   const lexemes = lexify('# this is a comment', 'Python')
-  expect(lexemes.length).toBe(1)
+  expect(lexemes.length).toBe(2)
   expect(lexemes[0].type).toBe('comment')
   expect(lexemes[0].content).toBe('# this is a comment')
   expect(lexemes[0].value).toBe('this is a comment')
+  expect(lexemes[1].type).toBe('newline')
 })
 
 test('Lexer: Python: Keywords', function () {

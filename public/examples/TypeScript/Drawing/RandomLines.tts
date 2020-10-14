@@ -1,23 +1,24 @@
-var count, x, y: number;
-
-// draw 30 random lines
-for (count = 1; count = count + 1; count < 30) {
-  // pick a random point and angle
-  x = randint(0, 1000);
-  y = randint(0, 1000);
-  setxy(x, y);
-  turtd = randint(0, 360);
-  // draw a black line through that point, at that angle
+// draw 30 randInt lines
+for (var count: number = 1; count = count + 1; count <= 30) {
+  // pick a randInt point and move to it
+  var x: number = randInt(1000);
+  var y: number = randInt(1000);
+  setXY(x, y);
+  // set a randInt direction
+  turtd = randInt(360);
+  // draw black line, first 1500 forward
   forward(1500);
+  // then 3000 back - to reach canvas edge
   back(3000);
 }
-// try to fill all the resulting shapes
-for (count = 1; count = count + 1; count < 10000) {
-  // pick a random point
-  x = randint(0, 1000);
-  y = randint(0, 1000);
-  // if it's white, fill the surrounding shape with a random colour
-  if (pixcol(x, y) == white) {
-    recolour(x, y, rgb(randint(0, 20) + 1));
+// now colour resulting spaces ...
+for (count = 1; count = count + 1; count <= 10000) {
+  // pick 10000 randInt points in turn
+  x = randInt(1000);
+  y = randInt(1000);
+  // if point is currently white ...
+  if (pixCol(x, y) == white) {
+    // recolour in one of 20 randInt colours
+    recolour(x, y, rgb(randInt(20) + 1));
   }
 }

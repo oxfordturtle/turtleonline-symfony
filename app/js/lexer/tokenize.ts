@@ -12,7 +12,7 @@ import { Language } from '../constants/languages'
 export default function tokenize (code: string, language: Language): Token[] {
   const tokens: Token[] = []
   while (code.length > 0) {
-    const lexeme = spaces(code, language) ||
+    const token = spaces(code, language) ||
       newline(code, language) ||
       comment(code, language) ||
       operatorOrDelimiter(code, language) ||
@@ -32,8 +32,8 @@ export default function tokenize (code: string, language: Language): Token[] {
       variable(code, language) ||
       identifier(code, language) ||
       illegal(code, language)
-    tokens.push(lexeme)
-    code = code.slice(lexeme.content?.length)
+    tokens.push(token)
+    code = code.slice(token.content?.length)
   }
   return tokens
 }
@@ -58,6 +58,7 @@ function comment (code: string, language: Language): Token|false {
       return startBASIC ? new Token('comment', null, true, code.split('\n')[0], language) : false
 
     case 'C': // fallthrough
+    case 'Java': // fallthrough
     case 'TypeScript':
       const startCorTS = code.match(/^\/\//)
       return startCorTS ? new Token('comment', null, true, code.split('\n')[0], language) : false
@@ -84,6 +85,7 @@ function operatorOrDelimiter (code: string, language: Language): Token|false {
   switch (language) {
     case 'BASIC': // fallthrough
     case 'C': // fallthrough
+    case 'Java': // fallthrough
     case 'TypeScript':
       // the order doesn't matter
       return operator(code, language) || delimiter(code, language)
@@ -102,10 +104,11 @@ function operatorOrDelimiter (code: string, language: Language): Token|false {
 function operator (code: string, language: Language): Token|false {
   const tests = {
     BASIC: /^(\+|-|\*|\/|DIV\b|MOD\b|=|<>|<=|>=|<|>|NOT\b|AND\b|OR\b|EOR\b)/,
-    C: /^(\+|-|\*|\/|%|==|!=|<=|>=|<|>|=|!|&&|\|\||&|\||\^)/,
+    C: /^(\+|-|\*|\/|%|==|!=|<=|>=|<|>|=|!|&&|\|\||~|&|\||\^)/,
+    Java: /^(\+|-|\*|\/|%|==|!=|<=|>=|<|>|=|!|&&|\|\||~|&|\||\^)/,
     Pascal: /^(\+|-|\*|\/|div\b|mod\b|=|<>|<=|>=|<|>|:=|not\b|and\b|or\b|xor\b)/i,
-    Python: /^(\+|-|\*|\/\/|\/|%|==|!=|<=|>=|<|>|=|~|&|\||\^|not\b|and\b|or\b)/,
-    TypeScript: /^(\+|-|\*|\/|%|==|!=|<=|>=|<|>|=|!|&&|\|\||&|\||\^)/,
+    Python: /^(\+|-|\*|\/\/|\/|%|==|!=|<=|>=|<|>|=|not\b|and\b|or\b|~|&|\||\^)/,
+    TypeScript: /^(\+|-|\*|\/|%|==|!=|<=|>=|<|>|=|!|&&|\|\||~|&|\||\^)/
   }
   const test = code.match(tests[language])
   return test ? new Token('operator', null, true, test[0], language) : false
@@ -116,6 +119,7 @@ function delimiter (code: string, language: Language): Token|false {
   const tests = {
     BASIC: /^(\(|\)|,|:)/,
     C: /^(\(|\)|{|}|\[|\]|,|;)/,
+    Java: /^(\(|\)|{|}|\[|\]|,|;)/,
     Pascal: /^(\(|\)|\[|\]|,|:|;|\.\.|\.)/,
     Python: /^(\(|\)|\[|\]|,|:|;|->)/,
     TypeScript: /^(\(|\)|{|}|\[|\]|,|;|:)/
@@ -152,9 +156,9 @@ function string (code: string, language: Language): Token|false {
     case 'Pascal':
       // awkward cases
       if (code.match(/^''''/)) return new Token('string', 'single', true, '\'\'\'\'', language)
-      if (code.match(/^''[^']/)) return new Token('string', 'single', true, '\'\'', language)
+      if (code.match(/^''([^']|$)/)) return new Token('string', 'single', true, '\'\'', language)
       if (code.match(/^""""/)) return new Token('string', 'double', true, '""""', language)
-      if (code.match(/^""[^"]/)) return new Token('string', 'double', true, '""', language)
+      if (code.match(/^""([^"]|$)/)) return new Token('string', 'double', true, '""', language)
       // normal cases
       const start1Pascal = code[0] === '\''
       const start2Pascal = code[0] === '"'
@@ -175,22 +179,23 @@ function string (code: string, language: Language): Token|false {
       return false
 
     case 'C': // fallthrough
+    case 'Java': // fallthrough
     case 'Python': // fallthrough
     case 'TypeScript':
-      const start1Python = code[0] === '\''
-      const start2Python = code[0] === '"'
-      const end1Python = code.match(/[^\\](')/)
-      const end2Python = code.match(/[^\\](")/)
-      if (start1Python && end1Python) {
-        return new Token('string', 'single', true, code.slice(0, end1Python.index as number + 2), language)
+      const start1 = code[0] === '\''
+      const start2 = code[0] === '"'
+      const end1 = code.match(/[^\\](')/)
+      const end2 = code.match(/[^\\](")/)
+      if (start1 && end1) {
+        return new Token('string', 'single', true, code.slice(0, end1.index as number + 2), language)
       }
-      if (start1Python) {
+      if (start1) {
         return new Token('string', 'single', false, code.split('\n')[0], language)
       }
-      if (start2Python && end2Python) {
-        return new Token('string', 'double', true, code.slice(0, end2Python.index as number + 2), language)
+      if (start2 && end2) {
+        return new Token('string', 'double', true, code.slice(0, end2.index as number + 2), language)
       }
-      if (start2Python) {
+      if (start2) {
         return new Token('string', 'double', false, code.split('\n')[0], language)
       }
       return false
@@ -202,9 +207,10 @@ function boolean (code: string, language: Language): Token|false {
   const tests = {
     BASIC: /^(TRUE|FALSE)\b/,
     C: /^(true|false)\b/,
+    Java: /^(true|false)\b/,
     Pascal: /^(true|false)\b/i,
     Python: /^(True|False)\b/,
-    TypeScript: /^(true|false)\b/,
+    TypeScript: /^(true|false)\b/
   }
   const test = code.match(tests[language])
   return test ? new Token('boolean', null, true, test[0], language) : false
@@ -227,6 +233,7 @@ function binary (code: string, language: Language): Token|false {
       return false
 
     case 'C': // fallthrough
+    case 'Java': // fallthrough
     case 'Python': // fallthrough
     case 'TypeScript':
       // N.B. there's no bad binary in these languages, since '%' will match the MOD operator
@@ -261,6 +268,7 @@ function octal (code: string, language: Language): Token|false {
       return false
 
     case 'C': // fallthrough
+    case 'Java': // fallthrough
     case 'Python': // fallthrough
     case 'TypeScript':
       // N.B. there's no bad octal in these languages, since '&' will match the boolean AND operator
@@ -277,6 +285,7 @@ function hexadecimal (code: string, language: Language): Token|false {
   const bads = {
     BASIC: /^((\$|(0x))[A-Fa-f0-9]+)\b/,
     C: /^((&|#|\$)[A-Fa-f0-9]+)\b/,
+    Java: /^((&|#|\$)[A-Fa-f0-9]+)\b/,
     Pascal: /^((&|(0x))[A-Fa-f0-9]+)\b/,
     Python: /^((&|#|\$)[A-Fa-f0-9]+)\b/,
     TypeScript: /^((&|#|\$)[A-Fa-f0-9]+)\b/
@@ -284,6 +293,7 @@ function hexadecimal (code: string, language: Language): Token|false {
   const goods = {
     BASIC: /^((&|#)[A-Fa-f0-9]+)\b/, // also allow '#' notation
     C: /^((0x|#)[A-Fa-f0-9]+)\b/, // also allow '#' notation
+    Java: /^((0x|#)[A-Fa-f0-9]+)\b/, // also allow '#' notation
     Pascal: /^((\$|#)[A-Fa-f0-9]+)\b/, // also allow '#' notation
     Python: /^(0x[A-Fa-f0-9]+)\b/, // don't allow '#' notation ('#' is for comments)
     TypeScript: /^((0x|#)[A-Fa-f0-9]+)\b/ // also allow '#' notation
@@ -358,14 +368,21 @@ function query (code: string, language: Language): Token|false {
 
 /** tests for a native turtle command (identifier) and returns the token if matched */
 function command (code: string, language: Language): Token|false {
-  const names = commands
-    .filter(x => x.names[language])
-    .map(x => x.names[language])
-    .join('|')
-  const regex = (language === 'Python')
-    // pretend "bool" and "range" are also commands in Python (these should be added later)
-    ? new RegExp(`^(${names}|bool|range)\\b`)
-    : ((language === 'Pascal') ? new RegExp(`^(${names})\\b`, 'i') : new RegExp(`^(${names})\\b`))
+  let names: string = commands.filter(x => x.names[language]).map(x => x.names[language]).join('|')
+  let regex: RegExp = new RegExp(`^(${names})\\b`)
+  if (language === 'BASIC') {
+    names = commands
+      .filter(x => x.names[language])
+      .map(x => x.names[language])
+      .map(x => (x as string).slice(-1) === '$' ? (x as string).replace(/\$/, '\\$') : `${x}\\b`)
+      .join('|')
+    regex = new RegExp(`^(${names})`)
+  } else if (language === 'Pascal') {
+    regex = new RegExp(`^(${names})\\b`, 'i')
+  } else if (language === 'Python') {
+    // pretend "range" is also a command
+    regex = new RegExp(`^(${names}|range)\\b`)
+  }
   const test = code.match(regex)
   return test ? new Token('identifier', 'command', true, test[0], language) : false
 }
@@ -375,6 +392,7 @@ function turtle (code: string, language: Language): Token|false {
   const tests = {
     BASIC: /^(turt[xydatc]%)/,
     C: /^(turt[xydatc])\b/,
+    Java: /^(turt[xydatc])\b/,
     Pascal: /^(turt[xydatc])\b/i,
     Python: /^(turt[xydatc])\b/,
     TypeScript: /^(turt[xydatc])\b/

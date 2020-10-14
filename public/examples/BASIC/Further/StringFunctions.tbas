@@ -10,7 +10,7 @@ s3$ = MID$(s1$, 8, 5)
 WRITELN(s3$ + " was invented in the 1960s.")
 PAUSE(DELAY%)
 REM illustrate use of INS$ function ...
-s4$ = INS$(s3$, 2, "BC B")
+s4$ = INS$(s3$, "BC B", 2)
 WRITELN("""" + s4$ + """ is the name of a 1980s variant.")
 PAUSE(DELAY%)
 REM illustrate use of LEN function ...

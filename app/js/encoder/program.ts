@@ -11,7 +11,6 @@ import statement from './statement'
 export default function program (program: Program, options: Options = defaultOptions): number[][] {
   // get start code and end code
   const startCode = programStart(program, options)
-  const endCode = [[PCode.halt]]
 
   // calculate the start line of the first subroutine
   const subroutinesStartLine = (program.allSubroutines.length > 0)
@@ -32,16 +31,27 @@ export default function program (program: Program, options: Options = defaultOpt
   // stitch the program and subroutines pcode together
   const jumpLine = [[PCode.jump, startCode.length + subroutinesCode.length + 2]]
   const pcode = (subroutinesCode.length > 1)
-    ? startCode.concat(jumpLine).concat(subroutinesCode).concat(innerCode).concat(endCode)
-    : startCode.concat(innerCode).concat(endCode)
+    ? startCode.concat(jumpLine).concat(subroutinesCode).concat(innerCode)
+    : startCode.concat(innerCode)
 
   // backpatch subroutine jump codes for BASIC
   if (program.language === 'BASIC') {
     backpatchBASIC(program, pcode)
   }
 
+  // add call to the "main" subroutine for C and Java
+  if (program.language === 'C' || program.language === 'Java') {
+    // we know the main routine exists at this stage; parser1 for C will have
+    // thrown an error if it doesn't
+    const main = program.subroutines.find(x => x.name === 'main') as Subroutine
+    pcode.push([PCode.subr, main.startLine])
+  }
+
   // add HCLR codes where necessary
   addHCLR(pcode)
+
+  // add final HALT command
+  pcode.push([PCode.halt])
 
   // return the pcode
   return pcode
@@ -118,7 +128,7 @@ function setupGlobalVariable (variable: Variable, indexOffset: number = 0): numb
   const pcode: number[][] = []
 
   if (variable.isArray) {
-    const index = indexOffset + variable.index
+    const index = program.turtleAddress + program.turtleVariables.length + variable.index + indexOffset
     pcode.push([
       PCode.ldag,
       index + 1,
@@ -168,8 +178,14 @@ function compileSubroutines (subroutines: Subroutine[], startLine: number, optio
     // generate the code for the subroutine
     const startCode = subroutineStartCode(subroutine, options)
     const innerCode = compileInnerCode(subroutine, startLine + startCode.length, options)
-    const endCode = subroutineEndCode(subroutine, options)
-    const subroutineCode = startCode.concat(innerCode).concat(endCode)
+    const subroutineCode = startCode.concat(innerCode)
+
+    if ((subroutine.type === 'procedure') || subroutine.program.language.match(/(BASIC|Pascal)/)) {
+      // all procedures need end code, as do functions in BASIC and Pascal
+      // functions in other languages include at least one RETURN statement
+      const endCode = subroutineEndCode(subroutine, options)
+      subroutineCode.push(...endCode)
+    }
 
     // increment the start line for the next subroutine
     startLine += subroutineCode.length
@@ -205,7 +221,7 @@ function subroutineStartCode (subroutine: Subroutine, options: Options): number[
     // zero memory
     if (options.initialiseLocals) {
       if (subroutine.variables.length > subroutine.parameters.length) {
-        // TODO: speak to Peter about this - his latest compiler doesn't appear to be doing this (but it did before)
+        // TODO: speak to Peter about this - his latest compiler doesn't appear to be doing this in every case
         pcode.push([PCode.ldav, subroutine.address, 1, PCode.ldin, subroutine.memoryNeeded, PCode.zptr])
       }
     }
@@ -224,16 +240,12 @@ function subroutineStartCode (subroutine: Subroutine, options: Options): number[
       pcode.push([])
       for (const parameter of subroutine.parameters.reverse()) {
         const lastStartLine = pcode[pcode.length - 1]
-        if (parameter.isReferenceParameter) {
-          // TODO...
+        if (parameter.isArray && !parameter.isReferenceParameter) {
+          // TODO: copy the array
+        } else if (parameter.type === 'string') {
+          lastStartLine.push(PCode.ldvv, subroutine.index + subroutine.program.baseOffset, parameter.index, PCode.cstr)
         } else {
-          if (parameter.isArray) {
-            // TODO: copy the array
-          } else if (parameter.type === 'string') {
-            lastStartLine.push(PCode.ldvv, subroutine.index + subroutine.program.baseOffset, parameter.index, PCode.cstr)
-          } else {
-            lastStartLine.push(PCode.stvv, subroutine.index + subroutine.program.baseOffset, parameter.index)
-          }
+          lastStartLine.push(PCode.stvv, subroutine.index + subroutine.program.baseOffset, parameter.index)
         }
       }
     }
@@ -273,7 +285,6 @@ function setupLocalVariable(variable: Variable, indexOffset: number = 0): number
   }
 
   if (variable.type === 'string') {
-    console.log(variable)
     pcode.push([
       PCode.ldav,
       subroutine.address,
@@ -360,7 +371,7 @@ function addHCLR (pcode: number[][]): void {
       if (line[i] === PCode.subr) { // maybe more cases will be needed
         heapStringNeeded = true
       }
-      if (line[i] === PCode.jump) {
+      if (line[i] === PCode.jump || line[i] === PCode.ifno) {
         lastJumpIndex = i
       }
       const args = pcodeArgs(line[i])

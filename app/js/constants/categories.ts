@@ -49,6 +49,9 @@ export const keywordCategories: Record<Language, Category[]> = {
   C: [
     new Category(20, 'Command structures', keywords.C)
   ],
+  Java: [
+    new Category(20, 'Command structures', keywords.Java)
+  ],
   Pascal: [
     new Category(20, 'Command structures', keywords.Pascal)
   ],

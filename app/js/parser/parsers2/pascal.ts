@@ -1,15 +1,9 @@
 /**
- * Coder for Turtle Pascal.
- *
- * This function compiles a statement for Turtle Pascal. A statement is either a
- * single command (i.e. a variable assignment or a procedure call) or some more
- * complex structure (conditional, loop) containing a series of such commands;
- * in the latter case, the exported function calls itself recusrively, allowing
- * for structures of arbitrary complexity.
+ * Parser 2 for Turtle Pascal.
  */
 import { simpleStatement, variableAssignment, expression, typeCheck } from './common'
 import { CompoundExpression, VariableValue, LiteralValue } from '../expression'
-import { Program, Routine } from '../routine'
+import { Program, Subroutine } from '../routine'
 import { Statement, IfStatement, ForStatement, RepeatStatement, WhileStatement, VariableAssignment } from '../statement'
 import { Lexeme } from '../../lexer/lexeme'
 import { PCode } from '../../constants/pcodes'
@@ -22,7 +16,7 @@ export default function Pascal (program: Program): void {
 }
 
 /** parses the statements of a routine */
-function parseStatements (routine: Routine): void {
+function parseStatements (routine: Program|Subroutine): void {
   // parse the lexemes for any subroutines first
   for (const subroutine of routine.subroutines) {
     parseStatements(subroutine)
@@ -36,7 +30,7 @@ function parseStatements (routine: Routine): void {
 }
 
 /** parses a statement */
-function statement (routine: Routine): Statement {
+function statement (routine: Program|Subroutine): Statement {
   let statement: Statement
 
   switch (routine.lexemes[routine.lex].type) {
@@ -104,7 +98,7 @@ function statement (routine: Routine): Statement {
 }
 
 /** parses an if statement */
-function ifStatement (routine: Routine): IfStatement {
+function ifStatement (routine: Program|Subroutine): IfStatement {
   const ifStatement = new IfStatement()
 
   // expecting a boolean expression
@@ -154,7 +148,7 @@ function ifStatement (routine: Routine): IfStatement {
 }
 
 /** parses a for statement */
-function forStatement (routine: Routine): ForStatement {
+function forStatement (routine: Program|Subroutine): ForStatement {
   const forStatement = new ForStatement()
 
   // expecting an integer variable
@@ -180,7 +174,7 @@ function forStatement (routine: Routine): ForStatement {
   routine.lex += 1
 
   // expecting variable assignment
-  forStatement.initialisation = variableAssignment(routine, variable)
+  forStatement.initialisation = variableAssignment(routine, variable) as VariableAssignment
 
   // expecting "to" or "downto"
   if (!routine.lexemes[routine.lex]) {
@@ -235,7 +229,7 @@ function forStatement (routine: Routine): ForStatement {
 }
 
 /** parses a repeat statement */
-function repeatStatement (routine: Routine): RepeatStatement {
+function repeatStatement (routine: Program|Subroutine): RepeatStatement {
   const repeatStatement = new RepeatStatement()
 
   // expecting a block of code
@@ -253,7 +247,7 @@ function repeatStatement (routine: Routine): RepeatStatement {
 }
 
 /** parses a while statement */
-function whileStatement (routine: Routine): WhileStatement {
+function whileStatement (routine: Program|Subroutine): WhileStatement {
   const whileStatement = new WhileStatement()
 
   // expecting a boolean expression
@@ -291,7 +285,7 @@ function whileStatement (routine: Routine): WhileStatement {
 type Start = 'begin'|'repeat'
 
 /** parses a block of statements */
-function block (routine: Routine, start: Start): Statement[] {
+function block (routine: Program|Subroutine, start: Start): Statement[] {
   const statements: Statement[] = []
   let end: boolean = false
 

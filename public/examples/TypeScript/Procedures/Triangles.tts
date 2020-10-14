@@ -14,6 +14,6 @@ function triangle (size: number) {
 }
 
 // move to the start (without drawing)
-movexy(-100, 150);
+moveXY(-100, 150);
 // draw a triangle with triangles half the size at each point
 triangle(256);

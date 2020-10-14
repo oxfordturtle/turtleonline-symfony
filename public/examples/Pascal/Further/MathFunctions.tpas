@@ -20,13 +20,12 @@ VAR a, b: integer;
 BEGIN
   {show output and display information about the program}
   output(true, white, true);
-  writeln('This program selects two random numbers a and b, in the');
-  writeln('range 100-999, and then outputs various mathematical');
-  writeln('functions of the fraction a/b. The results are expressed');
-  writeln('to ' + str(decimals) + ' decimal places, and a denominator of ' + str(denominator) + ' is');
-  writeln('used in the calculations to provide precision, even');
-  writeln('though the Turtle functions strictly operate only on');
-  writeln('integers and produce integer results.');
+  writeln('This program selects two random numbers a and b, in the range');
+  writeln('100-999, and then outputs various mathematical functions of the');
+  writeln('fraction a/b. The results are expressed to ' + str(decimals) + ' decimal places, and a');
+  writeln('denominator of ' + str(denominator) + ' is used in the calculations to provide');
+  writeln('precision, even though the Turtle functions strictly operate only');
+  writeln('on integers and produce integer results.');
   writeln('');
   {set a and b to random values, and display their values and quotient}
   a := random(900) + 100;

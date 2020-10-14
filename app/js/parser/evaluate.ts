@@ -1,131 +1,100 @@
 /**
- * Evaluates a sequence of lexemes (to get the value of a constant).
+ * Evaluates an expression (used for assigning values to constants at compile
+ * time).
  */
-import { Program } from './routine'
-import { colours } from '../constants/colours'
+import { Language } from '../constants/languages'
+import { PCode } from '../constants/pcodes'
 import { Lexeme } from '../lexer/lexeme'
 import { CompilerError } from '../tools/error'
+import { Expression, LiteralValue, VariableValue, CommandCall } from './expression'
 
-/** evaluates a sequence of lexemes as an expression */
-export default function (identifier: Lexeme, lexemes: Lexeme[], program: Program): number|string {
-  try {
-    // generate JavaScript expression from the lexemes
-    const code = lexemes.map(toJsString).join('')
-    // make colour constants and previously defined constants available to the eval function
-    const constants: Record<string, number> = {}
-    for (const colour of colours) {
-      constants[colour.names[program.language]] = colour.value
-    }
-    for (const constant of program.constants) {
-      constants[constant.name] = constant.value as number
-    }
-    // try to evaluate the code
-    const value = eval(code)
-    // only integers and strings are allowed
-    switch (typeof value) {
-      case 'boolean':
-        return value ? -1 : 0 // only BASIC and Pascal have constants, and they treat true as -1
+export default function evaluate (lexeme: Lexeme, language: Language, expression: Expression): number|string {
+  const True = (language === 'BASIC' || language === 'Pascal') ? -1 : 1
+  const False = 0
 
-      case 'number':
-        return (value >= 0) ? Math.floor(value) : Math.ceil(value)
-
-      case 'string':
-        return value
-
-      default:
-        throw new Error() // throw empty error (will be caught below and ignored)
-    }
-  } catch (ignore) {
-    throw new CompilerError('Could not parse expression for constant value.', identifier)
+  // variable values are not allowed
+  if (expression instanceof VariableValue) {
+    throw new CompilerError('Constant value cannot refer to any variables.', lexeme)
   }
-}
 
-/** gets JavaScript string equivalent of a Turtle language lexeme */
-function toJsString (lexeme: Lexeme): string {
-  switch (lexeme.type) {
-    case 'boolean':
-      return (lexeme.content as string).toLowerCase()
+  // function calls are not allowed
+  if (expression instanceof CommandCall) {
+    throw new CompilerError('Constant value cannot invoke any functions.', lexeme)
+  }
 
-    case 'integer':
-      return (lexeme.content as string).replace(/^[$&]/, '0x') // fix hexadecimal values
+  // literal values are easy
+  if (expression instanceof LiteralValue) {
+    return expression.value
+  }
 
-    case 'string':
-      return lexeme.content as string
+  // compound expressions
+  const left = expression.left ? evaluate(lexeme, language, expression.left) : null
+  const right = evaluate(lexeme, language, expression.right)
+  switch (expression.operator) {
+    case PCode.eqal:
+    case PCode.seql:
+      return (left as number|string) === right ? True : False
 
-    case 'identifier':
-      return `constants['${lexeme.content}']`
+    case PCode.less:
+    case PCode.sles:
+      return (left as number|string) < right ? True : False
 
-    case 'operator':
-      switch (lexeme.value) {
-        case 'plus':
-          return '+'
+    case PCode.lseq:
+    case PCode.sleq:
+      return (left as number|string) <= right ? True : False
 
-        case 'subt':
-          return '-'
+    case PCode.more:
+    case PCode.smor:
+      return (left as number|string) > right ? True : False
 
-        case 'mult':
-          return '*'
+    case PCode.mreq:
+    case PCode.smeq:
+      return (left as number|string) >= right ? True : False
 
-        case 'divr':
-          return '/'
+    case PCode.noeq:
+    case PCode.sneq:
+      return (left as number|string) !== right ? True : False
 
-        case 'div':
-          return '/'
+    case PCode.plus:
+      return (left as number) + (right as number)
 
-        case 'mod':
-          return '%'
+    case PCode.scat:
+      return (left as string) + (right as string)
 
-        case 'eqal':
-          return '==='
+    case PCode.subt:
+      return left ? (left as number) - (right as number) : -(left as number)
 
-        case 'noeq':
-          return '!=='
+    case PCode.not:
+      return right === 0 ? True : False
 
-        case 'lseq':
-          return '<='
+    case PCode.or:
+      return (left as number) | (right as number)
 
-        case 'mreq':
-          return '>='
+    case PCode.orl:
+      return (left as number) || (right as number)
 
-        case 'less':
-          return '<'
+    case PCode.xor:
+      return (left as number) ^ (right as number)
 
-        case 'more':
-          return '>'
+    case PCode.and:
+      return (left as number) & (right as number)
 
-        case 'bnot':
-          return '!'
+    case PCode.andl:
+      return (left as number) && (right as number)
 
-        case 'not':
-          return '~'
+    case PCode.div:
+      return Math.floor((left as number) / (right as number))
 
-        case 'andl':
-          return '&&'
+    case PCode.divr:
+      return Math.round((left as number) / (right as number))
 
-        case 'and':
-          return '&'
+    case PCode.mod:
+      return (left as number) % (right as number)
 
-        case 'orl':
-          return '||'
-
-        case 'or':
-          return '|'
-
-        case 'xor':
-          return '^'
-        
-        default:
-          throw new Error()
-      }
-      break
-
-    case 'delimiter':
-      if (lexeme.content === '(' || lexeme.content === ')') {
-        return lexeme.content
-      }
-      throw new Error() // empty error (will be caught above anyway)
+    case PCode.mult:
+      return (left as number) * (right as number)
 
     default:
-      throw new Error() // empty error (will be caught above anyway)
+      throw new CompilerError('Unable to parse expression for constant value.', lexeme)
   }
 }

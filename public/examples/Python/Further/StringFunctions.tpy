@@ -1,26 +1,31 @@
-# StringFunctions
-
 delay: int = 500
-output(-1, cream, -1)
+output(True, cream, True)
+# set initial string
 s1: str = 'Turtle Python'
+# illustrate use of COPY function
 s2: str = copy(s1, 1, 6)
 writeline(s2 + ' is the name of a small animal.')
 pause(delay)
 s3: str = copy(s1, 8, 6)
 writeline(s3 + ' is a large snake.')
 pause(delay)
-s4: str = insert(s3, 2, 'onty M')
+# illustrate use of INSERT function
+s4: str = insert(s3, 'onty M', 2)
 writeline('\'' + s4 + '\' is a silly name.')
 pause(delay)
+# illustrate use of LEN function
 writeline('"' + s1 + '" has ' + str(len(s1)) + ' characters.')
 pause(delay)
+## illustrate use of LOWER and UPPER functions
 writeline('In lower case it is "' + lower(s1) + '".')
 writeline('In upper case it is "' + upper(s1) + '".')
 pause(delay)
+# illustrate use of POS function
 posn: int = find(s1, s3)
 if posn > 0:
   writeline('"' + s3 + '" occurs within "' + s1 + '" at position ' + str(posn) + '.')
 pause(delay)
+# illustrate use of QVAL function, converting a decimal string to an integer ...
 s5: str = '3.14159'
 writeline(s5 + ' times 100000 = ' + str(qval(s5, 100000, -1)) + '.')
 pause(delay)
@@ -28,10 +33,11 @@ n: int = qval(s5, 100000, -1)
 writeline(str(n) + ' divided by 100000 = ' + qstr(n, 100000, 5) + '.')
 writeline('')
 pause(delay * 5)
+# illustrate use of OUTPUT and CONSOLE commands ...
 writeline('Now back to the Canvas and Console ...')
-output(0, peach, -1)
+output(False, peach, True)
 pause(delay * 5)
-output(0, lightred, 0)
+output(False, lightred, False)
 pause(delay * 5)
-console(-1, lightblue)
+console(True, lightblue)
 writeline('You will see this on a clear light blue Console')

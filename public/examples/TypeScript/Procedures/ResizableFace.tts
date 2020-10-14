@@ -24,7 +24,7 @@ function face (radius: number) {
   colour(royal);
   blot(radius * 3 / 20);
   // move to left eye position (without drawing)
-  penup();
+  penUp();
   forward(radius * 9 / 20);
   left(90);
   forward(radius * 2 / 5);

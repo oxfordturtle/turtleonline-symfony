@@ -22,8 +22,8 @@ export class Variable {
     this.routine = routine
     this.isParameter = isParameter
     this.#isReferenceParameter = isReferenceParameter
-    this.type = 'boolint' // booling by default; this is set properly after initial construction
-    this.stringLength = 32 // default string length, maybe modified later
+    this.type = 'boolint' // boolint by default; this is set properly after initial construction
+    this.stringLength = 36 // default string length, maybe modified later
     this.arrayDimensions = []
   }
 
@@ -62,7 +62,7 @@ export class Variable {
     if (this.isArray) {
       let length = this.baseLength
       for (const dimensions of this.arrayDimensions) {
-        const size = dimensions[1] - dimensions[0]
+        const size = dimensions[1] - dimensions[0] + 1
         length = (length * size) + 2
       }
       return length
@@ -75,7 +75,7 @@ export class Variable {
   /** internal length of an array variable (i.e. how many elements it contains) */
   get arrayLength (): number {
     return this.isArray
-      ? (this.arrayDimensions[0][1] - this.arrayDimensions[0][0])
+      ? (this.arrayDimensions[0][1] - this.arrayDimensions[0][0] + 1)
       : 0
   }
 

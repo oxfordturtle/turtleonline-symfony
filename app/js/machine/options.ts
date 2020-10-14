@@ -1,6 +1,8 @@
 /**
  * Machine runtime options.
  */
+import { defaults } from '../constants/properties'
+
 export type Options = {
   showCanvasOnRun: boolean
   showOutputOnWrite: boolean
@@ -16,15 +18,15 @@ export type Options = {
 }
 
 export const defaultOptions: Options = {
-  showCanvasOnRun: true,
-  showOutputOnWrite: false,
-  showMemoryOnDump: true,
-  drawCountMax: 4,
-  codeCountMax: 100000,
-  smallSize: 60,
-  stackSize: 20000,
-  traceOnRun: false,
-  activateHCLR: true,
-  preventStackCollision: true,
-  rangeCheckArrays: true
+  showCanvasOnRun: defaults.showCanvasOnRun,
+  showOutputOnWrite: defaults.showOutputOnWrite,
+  showMemoryOnDump: defaults.showMemoryOnDump,
+  drawCountMax: defaults.drawCountMax,
+  codeCountMax: defaults.codeCountMax,
+  smallSize: defaults.smallSize,
+  stackSize: defaults.stackSize,
+  traceOnRun: defaults.traceOnRun,
+  activateHCLR: defaults.activateHCLR,
+  preventStackCollision: defaults.preventStackCollision,
+  rangeCheckArrays: defaults.rangeCheckArrays
 }

@@ -2,13 +2,12 @@ CONST DECIMALS% = 4 REM decimal places for display of values
 CONST DENOMINATOR% = 1000000 REM denominator gives level of precision
 REM show output and display information about the program
 OUTPUT(TRUE, WHITE, TRUE)
-WRITELN("This program selects two random numbers a and b, in the")
-WRITELN("range 100-999, and then outputs various mathematical")
-WRITELN("functions of the fraction a/b. The results are expressed")
-WRITELN("to " + STR$(DECIMALS%) + " decimal places, and a denominator of " + STR$(DENOMINATOR%) + " is")
-WRITELN("used in the calculations to provide precision, even")
-WRITELN("though the Turtle functions strictly operate only on")
-WRITELN("integers and produce integer results.")
+WRITELN("This program selects two random numbers a and b, in the range")
+WRITELN("100-999, and then outputs various mathematical functions of the")
+WRITELN("fraction a/b. The results are expressed to " + STR$(DECIMALS%) + " decimal places, and a")
+WRITELN("denominator of " + STR$(DENOMINATOR%) + " is used in the calculations to provide")
+WRITELN("precision, even though the Turtle functions strictly operate only")
+WRITELN("on integers and produce integer results.")
 WRITELN("")
 REM set a and b to random values, and display their values and quotient
 a% = RND(900) + 99

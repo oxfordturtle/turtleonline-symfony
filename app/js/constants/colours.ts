@@ -14,7 +14,7 @@ export class Colour {
 
   constructor (index: number, name: string, value: number, dark: boolean) {
     this.index = index
-    this.names = { BASIC: name.toUpperCase(), C: name, Pascal: name, Python: name, TypeScript: name }
+    this.names = { BASIC: name.toUpperCase(), C: name, Java: name, Pascal: name, Python: name, TypeScript: name }
     this.type = 'integer'
     this.value = value
     this.hex = value.toString(16).padStart(6, '0').toUpperCase()

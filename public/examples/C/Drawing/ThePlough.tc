@@ -1,8 +1,8 @@
 void main () {
-  // draw space
+  // set canvas to black, and pen to lightblue
   blank(black);
-  // draw stars
   colour(lightblue);
+  // place Turtle and draw blots for stars
   setxy(100, 200);
   blot(10);
   setxy(300, 250);
@@ -18,7 +18,7 @@ void main () {
   setxy(590, 660);
   blot(10);
   setxy(570, 490);
-  // join the dots
+  // join dots to highlight plough shape
   colour(silver);
   polyline(8);
 }

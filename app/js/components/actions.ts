@@ -1,8 +1,16 @@
 import state from '../state/index'
-import machine from '../machine/index'
+import * as machine from '../machine/index'
 import { fill, i } from '../tools/elements'
 import { on, send } from '../tools/hub'
-import { toggleMenu, openMenu, closeMenu, selectTab } from './view'
+import {
+  toggleMenu,
+  openMenu,
+  closeMenu,
+  toggleSystemMenu,
+  openSystemMenu,
+  closeSystemMenu,
+  selectTab
+} from './view'
 import { SystemError } from '../tools/error'
 
 const notImplemented = new SystemError('This feature has not yet been implemented in the online system.')
@@ -15,9 +23,7 @@ for (const element of document.querySelectorAll('[data-action]')) {
       el.addEventListener('click', function (): void {
         el.blur()
         if (el.dataset.arg) {
-          for (const arg of el.dataset.arg.split(',')) {
-            toggleMenu(arg)
-          }
+          toggleMenu(el.dataset.arg)
         }
       })
       on('toggleMenu', toggleMenu)
@@ -27,9 +33,7 @@ for (const element of document.querySelectorAll('[data-action]')) {
       el.addEventListener('click', function (): void {
         el.blur()
         if (el.dataset.arg) {
-          for (const arg of el.dataset.arg?.split(',')) {
-            openMenu(arg)
-          }
+          openMenu(el.dataset.arg)
         }
       })
       on('openMenu', openMenu)
@@ -39,12 +43,48 @@ for (const element of document.querySelectorAll('[data-action]')) {
       el.addEventListener('click', function (): void {
         el.blur()
         if (el.dataset.arg) {
-          for (const arg of el.dataset.arg.split(',')) {
-            closeMenu(arg)
-          }
+          closeMenu(el.dataset.arg)
         }
       })
       on('closeMenu', closeMenu)
+      break
+
+    case 'closeSiteMenus':
+      el.addEventListener('click', function (): void {
+        closeMenu('site')
+        closeMenu('documentation')
+        closeMenu('user')
+      })
+      break
+
+    case 'toggleSystemMenu':
+      el.addEventListener('click', function (): void {
+        el.blur()
+        if (el.dataset.arg) {
+          toggleSystemMenu(el.dataset.arg)
+        }
+      })
+      on('toggleSystemMenu', toggleSystemMenu)
+      break
+
+    case 'openSystemMenu':
+      el.addEventListener('click', function (): void {
+        el.blur()
+        if (el.dataset.arg) {
+          openSystemMenu(el.dataset.arg)
+        }
+      })
+      on('openSystemMenu', openSystemMenu)
+      break
+
+    case 'closeSystemMenu':
+      el.addEventListener('click', function (): void {
+        el.blur()
+        if (el.dataset.arg) {
+          closeSystemMenu(el.dataset.arg)
+        }
+      })
+      on('closeSystemMenu', closeSystemMenu)
       break
 
     case 'selectTab':

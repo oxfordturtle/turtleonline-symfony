@@ -17,19 +17,7 @@ export function openMenu (id: string): void {
   const menu = document.querySelector(`[data-menu="${id}"]`)
 
   if (a && menu) {
-    // close all sibling menus
-    if (a.parentElement) {
-      const siblingMenus = a.parentElement.querySelectorAll(':scope > [data-menu]').length > 1
-        ? a.parentElement.querySelectorAll('[data-menu]')
-        : a.parentElement.parentElement?.querySelectorAll('[data-menu]')
-      if (siblingMenus) {
-        for (const siblingMenu of siblingMenus) {
-          closeMenu((siblingMenu as HTMLElement).dataset.menu as string)
-        }
-      }
-    }
-
-    // close other menu-specific menus
+    // close other menus
     switch (id) {
       case 'user':
         closeMenu('site')
@@ -44,12 +32,7 @@ export function openMenu (id: string): void {
     a.classList.add('open')
     menu.classList.add('open')
 
-    // if it's a system sub menu, also open the system menu
-    if (menu.classList.contains('system-sub-menu')) {
-      document.querySelector('.system-menu')?.classList.add('open')
-    }
-
-    // maybe swap caret up/down
+    // swap caret up/down
     const caret = a.querySelector('.fa-caret-down')
     if (caret) {
       caret.classList.remove('fa-caret-down')
@@ -69,22 +52,68 @@ export function closeMenu (id: string): void {
     for (const subMenu of menu.querySelectorAll('[data-menu]')) {
       closeMenu((subMenu as HTMLElement).dataset.menu as string)
     }
+    for (const subMenu of menu.querySelectorAll('[data-system-menu]')) {
+      closeSystemMenu((subMenu as HTMLElement).dataset.systemMenu as string)
+    }
 
     // close the menu
     menu.classList.remove('open')
     a.classList.remove('open')
 
-    // if it's a system sub menu, also close the system menu
-    if (menu.classList.contains('system-sub-menu')) {
-      document.querySelector('.system-menu')?.classList.remove('open')
-    }
-
-    // maybe swap caret up/down
+    // swap caret up/down
     const caret = a.querySelector('.fa-caret-up')
     if (caret) {
       caret.classList.remove('fa-caret-up')
       caret.classList.add('fa-caret-down')
     }
+  }
+}
+
+/** toggles a system menu */
+export function toggleSystemMenu (id: string): void {
+  const menu = document.querySelector(`[data-system-menu="${id}"]`)
+  if (menu) {
+    if (menu.classList.contains('open')) {
+      closeSystemMenu(id)
+    } else {
+      openSystemMenu(id)
+    }
+  }
+}
+
+/** opens a system menu */
+export function openSystemMenu (id: string): void {
+  // get relevant elements
+  const a = document.querySelector(`[data-action="toggleSystemMenu"][data-arg="${id}"]`) as HTMLAnchorElement
+  const menu = document.querySelector(`[data-system-menu="${id}"]`)
+
+  if (a && menu) {
+    // open base system menu
+    openMenu('system')
+
+    // close all sibling menus
+    const subMenus = a.parentElement?.parentElement?.querySelectorAll('[data-action="toggleSystemMenu"]')
+    for (const subMenu of subMenus || []) {
+      const id = (subMenu as HTMLElement).dataset.arg
+      closeSystemMenu(id as string)
+    }
+
+    // open this menu
+    a.classList.add('open')
+    menu.classList.add('open')
+  }
+}
+
+/** closes a system menu */
+export function closeSystemMenu (id: string): void {
+  // get relevant elements
+  const a = document.querySelector(`[data-action="toggleSystemMenu"][data-arg="${id}"]`) as HTMLAnchorElement
+  const menu = document.querySelector(`[data-system-menu="${id}"]`)
+
+  if (a && menu) {
+    // close this menu
+    a.classList.remove('open')
+    menu.classList.remove('open')
   }
 }
 

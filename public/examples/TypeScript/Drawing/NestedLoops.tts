@@ -1,19 +1,24 @@
-var blotCount: number;
-var circleCount: number;
-
-penup();
-for (blotCount = 0; blotCount = blotCount + 1; blotCount < 10) {
-  // draw a black blot
+thickness(4);
+penUp();
+// counting from 0 to 29 ...
+for (var blotCount: number = 0; blotCount = blotCount + 1; blotCount <= 29) {
+  // set direction, multiple of 36 degrees
+  direction(blotCount * 36);
+  // move 260 units from middle of canvas
   forward(260);
+  // draw large black and smaller white blot
   colour(black);
   blot(150);
-  // set colour based on blotCount
+  colour(white);
+  blot(56);
+  // set standard Turtle colour blotCount+1
   colour(rgb(blotCount + 1));
-  // draw 25 circles of increasing radius
-  for (circleCount = 0; circleCount = circleCount + 1; circleCount < 25) {
-    circle((circleCount + 1) * 8);
+  // draw 19 circles, radius 56 up to 200
+  for (var circleCount: number = 7; circleCount = circleCount + 1; circleCount <= 25) {
+    circle(circleCount * 8);
   }
-  // reposition turtle for the next iteration
+  // reposition Turtle to canvas middle
   back(260);
-  right(36);
+  // pause for 1/5 second before continuing
+  pause(200);
 }

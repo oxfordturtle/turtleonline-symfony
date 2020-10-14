@@ -28,7 +28,8 @@ export default class File {
   static skeletons: Record<Language, string> = {
     BASIC: 'var1% = 100\nCOLOUR(GREEN)\nBLOT(var1%)\nEND',
     C: 'void main () {\n  int var1 = 100;\n  colour(green)\n  blot(var1)\n}',
-    Pascal: 'PROGRAM progname;\nVAR var1: integer;\nBEGIN\n  var1 := 100;\n  colour(green);\n  blot(var1)\nEND.',
+    Java: 'class ProgramName {\n  void main () {\n    int var1 = 100;\n    colour(green)\n    blot(var1)\n  }\n}',
+    Pascal: 'PROGRAM programName;\nVAR var1: integer;\nBEGIN\n  var1 := 100;\n  colour(green);\n  blot(var1)\nEND.',
     Python: 'var1: int = 100\ncolour(green)\nblot(var1)',
     TypeScript: 'var var1 = 100;\ncolour(green);\nblot(var1);'
   }

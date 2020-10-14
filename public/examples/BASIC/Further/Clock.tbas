@@ -11,13 +11,13 @@ REPEAT
     REM draw both hands in the appropriate place
     PROCshowHands(hours%, minutes%)
     REM pause 1/10 second [so clock goes 600 times too fast]
-    PAUSE(600)
+    PAUSE(100)
     REM count through minutes until it reaches 60
-    INC(minutes%)
+    minutes% = minutes% + 1
   UNTIL minutes% = 60
   REM reinitialise minutes, and count through hours until 12
   minutes% = 0
-  INC(hours%)
+  hours% = hours% + 1
 UNTIL hours% = 12
 REM show final position
 PROCshowHands(hours%, minutes%)

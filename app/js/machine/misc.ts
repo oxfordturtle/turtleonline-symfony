@@ -70,58 +70,33 @@ export function keycodeFromKey (key: string): number {
       return 56
     case '9':
       return 57
-    case 'a':
-      return 65
-    case 'b':
-      return 66
-    case 'c':
-      return 67
-    case 'd':
-      return 68
-    case 'e':
-      return 69
-    case 'f':
-      return 70
-    case 'g':
-      return 71
-    case 'h':
-      return 72
-    case 'i':
-      return 73
-    case 'j':
-      return 74
-    case 'k':
-      return 75
-    case 'l':
-      return 76
-    case 'm':
-      return 77
-    case 'n':
-      return 78
-    case 'o':
-      return 79
-    case 'p':
-      return 80
-    case 'q':
-      return 81
-    case 'r':
-      return 82
-    case 's':
-      return 83
-    case 't':
-      return 84
-    case 'u':
-      return 85
-    case 'v':
-      return 86
-    case 'w':
-      return 87
-    case 'x':
-      return 88
-    case 'y':
-      return 89
+    case 'a': //fallthrough
+    case 'b': //fallthrough
+    case 'c': //fallthrough
+    case 'd': //fallthrough
+    case 'e': //fallthrough
+    case 'f': //fallthrough //fallthrough
+    case 'g': //fallthrough
+    case 'h': //fallthrough
+    case 'i': //fallthrough
+    case 'j': //fallthrough
+    case 'k': //fallthrough
+    case 'l': //fallthrough
+    case 'm': //fallthrough
+    case 'n': //fallthrough
+    case 'o': //fallthrough
+    case 'p': //fallthrough
+    case 'q': //fallthrough
+    case 'r': //fallthrough
+    case 's': //fallthrough
+    case 't': //fallthrough
+    case 'u': //fallthrough
+    case 'v': //fallthrough
+    case 'w': //fallthrough
+    case 'x': //fallthrough
+    case 'y': //fallthrough
     case 'z':
-      return 90
+      return key.charCodeAt(0)
     case 'lwin': // check
       return 91
     case 'rwin': // check

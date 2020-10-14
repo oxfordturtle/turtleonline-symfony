@@ -1,21 +1,11 @@
 /**
- * Coder for Turtle Python.
- *
- * This function compiles a "command structure" for Turtle Python. A command
- * structure is either a single command (i.e. a variable assignment or a
- * procedure call) or some more complex structure (conditional, loop) containing
- * a series of such commands; in the latter case, the exported function calls
- * itself recusrively, allowing for structures of arbitrary complexity.
- *
- * A program or subroutine is a sequence of command structures; this function
- * comiles a single one, returning the pcode and the index of the next lexeme -
- * the function calling this function (in the main coder module) loops through
- * the lexemes until all command structures have been compiled.
+ * Parser 2 for Turtle Python.
  */
-import { simpleStatement, variableAssignment, expression, typeCheck } from './common'
+import { simpleStatement, expression, typeCheck } from './common'
 import { CompoundExpression, VariableValue, LiteralValue } from '../expression'
-import { Program, Routine } from '../routine'
-import { Statement, IfStatement, ForStatement, WhileStatement, PassStatement, VariableAssignment } from '../statement'
+import { Program, Subroutine } from '../routine'
+import { Statement, IfStatement, ForStatement, WhileStatement, PassStatement, VariableAssignment, ReturnStatement } from '../statement'
+import { Type } from '../type'
 import { PCode } from '../../constants/pcodes'
 import { CompilerError } from '../../tools/error'
 
@@ -26,7 +16,7 @@ export default function Python (program: Program): void {
 }
 
 /** parses the statements of a routine */
-function parseStatements (routine: Routine): void {
+function parseStatements (routine: Program|Subroutine): void {
   // parse the lexemes for any subroutines first
   for (const subroutine of routine.subroutines) {
     parseStatements(subroutine)
@@ -37,13 +27,30 @@ function parseStatements (routine: Routine): void {
   while (routine.lex < routine.lexemes.length) {
     routine.statements.push(statement(routine))
   }
+
+  // check functions include at least one RETURN statement
+  if (routine instanceof Subroutine && routine.type === 'function') {
+    if (!routine.hasReturnStatement) {
+      throw new CompilerError(`Function ${routine.name} does not contain any return statements.`)
+    }
+  }
 }
 
 /** parses a statement */
-function statement (routine: Routine): Statement {
+function statement (routine: Program|Subroutine): Statement {
   let statement: Statement
 
   switch (routine.lexemes[routine.lex].type) {
+    // new line
+    case 'newline':
+      // in general this should be impossible (new lines should be eaten up at
+      // the end of the previous statement), but it can happen at the start of
+      // of the program or the start of a block, if there's a comment on the
+      // first line
+      routine.lex += 1
+      statement = new PassStatement()
+      break
+
     // identifiers (variable declaration, variable assignment, or procedure call)
     case 'identifier':
       statement = simpleStatement(routine)
@@ -56,7 +63,7 @@ function statement (routine: Routine): Statement {
         // return (assign return variable of a function)
         case 'return':
           routine.lex += 1
-          statement = variableAssignment(routine, routine.variables[0])
+          statement = returnStatement(routine)
           break
 
         // start of IF structure
@@ -88,8 +95,11 @@ function statement (routine: Routine): Statement {
           statement = new PassStatement()
           break
 
-        // anything else is an error
+        // everything else is an error
         default:
+          if (routine.lexemes[routine.lex].type === 'indent') {
+            throw new CompilerError('Statement cannot be indented.', routine.lexemes[routine.lex + 1])
+          }
           throw new CompilerError('Statement cannot begin with {lex}.', routine.lexemes[routine.lex])
       }
       break
@@ -100,23 +110,50 @@ function statement (routine: Routine): Statement {
 }
 
 /** checks for semi colon or new line at the end of a statement */
-function eosCheck (routine: Routine): void {
+function eosCheck (routine: Program|Subroutine): void {
   if (routine.lexemes[routine.lex]) {
     if (routine.lexemes[routine.lex].content === ';') {
       routine.lex += 1
-      if (routine.lexemes[routine.lex].type === 'newline') {
+      while (routine.lexemes[routine.lex]?.type === 'newline') {
         routine.lex += 1
       }
-    } else if (routine.lexemes[routine.lex].type === 'newline') {
-      routine.lex += 1
+    } else if (routine.lexemes[routine.lex]?.type === 'newline') {
+      while (routine.lexemes[routine.lex]?.type === 'newline') {
+        routine.lex += 1
+      }
     } else {
       throw new CompilerError('Statement must be separated by a semicolon or placed on a new line.', routine.lexemes[routine.lex])
     }
   }
 }
 
-/** parses an if statement */
-function ifStatement (routine: Routine): IfStatement {
+/** parses a RETURN statement */
+function returnStatement (routine: Program|Subroutine): ReturnStatement {
+  // check a return statement is allowed
+  if (routine instanceof Program) {
+    throw new CompilerError('Programs cannot return a value.', routine.lexemes[routine.lex])
+  }
+  if (routine.type !== 'function') {
+    throw new CompilerError('Procedures cannot return a value.', routine.lexemes[routine.lex])
+  }
+
+  // create the statement
+  const returnStatement = new ReturnStatement(routine)
+
+  // expecting an expression of the right type, followed by end of statement
+  returnStatement.value = expression(routine)
+  typeCheck(returnStatement.value, routine.returns as Type, routine.lexemes[routine.lex])
+  eosCheck(routine)
+
+  // mark that this function has a return statement
+  routine.hasReturnStatement = true
+
+  // return the statement
+  return returnStatement
+}
+
+/** parses an IF statement */
+function ifStatement (routine: Program|Subroutine): IfStatement {
   const ifStatement = new IfStatement()
 
   // expecting a boolean expression
@@ -199,8 +236,8 @@ function ifStatement (routine: Routine): IfStatement {
   return ifStatement
 }
 
-/** parses a for statement */
-function forStatement (routine: Routine): ForStatement {
+/** parses a FOR statement */
+function forStatement (routine: Program|Subroutine): ForStatement {
   const forStatement = new ForStatement()
 
   // expecting an integer variable
@@ -374,8 +411,8 @@ function forStatement (routine: Routine): ForStatement {
   return forStatement
 }
 
-/** parses a while statement */
-function whileStatement (routine: Routine): WhileStatement {
+/** parses a WHILE statement */
+function whileStatement (routine: Program|Subroutine): WhileStatement {
   const whileStatement = new WhileStatement()
 
   // expecting a boolean expression
@@ -423,7 +460,7 @@ function whileStatement (routine: Routine): WhileStatement {
 }
 
 /** parses a block of statements */
-function block (routine: Routine): Statement[] {
+function block (routine: Program|Subroutine): Statement[] {
   const statements: Statement[] = []
 
   // loop through until the end of the block (or we run out of lexemes)

@@ -3,7 +3,7 @@
  */
 import { cursors } from '../../constants/cursors'
 import { fonts } from '../../constants/fonts'
-import machine from '../../machine/index'
+import * as machine from '../../machine/index'
 import { Turtle } from '../../machine/turtle'
 import { on, send } from '../../tools/hub'
 
@@ -28,8 +28,7 @@ if (canvas && xcoords && ycoords) {
 
   // give the machine access to the canvas and context so it can read pixels, add/remove event listeners etc.
   // (the machine can't import this module, because this module needs to import the machine)
-  machine.canvas = canvas
-  machine.context = context
+  machine.setCanvasAndContext(canvas, context)
 
   // set the canvas resolution
   on('resolution', function (data: { width: number, height: number }): void {

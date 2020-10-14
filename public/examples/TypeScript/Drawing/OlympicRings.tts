@@ -1,10 +1,9 @@
-var ringRadius: number;
-
 // set ring radius and thickness
-ringRadius = 130;
+var ringRadius: number = 130;
 thickness(20);
+// raise pen to avoid drawing lines
+penUp();
 // draw black ring
-penup();
 forward(50);
 circle(ringRadius);
 // draw blue ring

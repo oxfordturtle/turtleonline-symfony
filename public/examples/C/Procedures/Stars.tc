@@ -1,10 +1,9 @@
 // draws a coloured star with the given number of points
 void star (int points, int colr) {
-  int count;
   // set angles to twice the number of points
   angles(points * 2);
   // trace out each point with the turtle
-  for (count = 0; count < points; count = count + 1) {
+  for (int count = 0; count < points; count = count + 1) {
     forward(450);
     back(450);
     forget(1);
@@ -20,10 +19,9 @@ void star (int points, int colr) {
 }
 
 void main () {
-  int n;
   penup();
   // draw 10 stars with increasing numbers of points
-  for (n = 3; n <= 12; n = n + 1) {
+  for (int n = 3; n <= 12; n = n + 1) {
     star(n, rgb(n - 2));
     pause(500);
   }

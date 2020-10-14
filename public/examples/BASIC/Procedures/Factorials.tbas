@@ -9,6 +9,7 @@ END
 REM calculates n! recursively - both the
 REM parameter n% and the result are integers
 DEF FNfactorial(n%)
+  LOCAL result%
   IF n% = 0 THEN
     result% = 1
   ELSE

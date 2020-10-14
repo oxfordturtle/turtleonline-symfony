@@ -99,7 +99,7 @@ export const defaults: Record<Property, any> = {
   'drawCountMax': 4,
   'codeCountMax': 100000,
   'smallSize': 60,
-  'stackSize': 20000,
+  'stackSize': 50000,
   'traceOnRun': false,
   'activateHCLR': true,
   'preventStackCollision': true,

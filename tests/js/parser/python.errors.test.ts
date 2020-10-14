@@ -6,5 +6,5 @@ test('Parser: Python: error test 1', function (): void {
   const lexemes = lexify(code, 'Python')
   expect(() => {
     parser(lexemes, 'Python')
-  }).toThrow('"turtx" is the name of a predefined Turtle attribute, and cannot be declared. ("turtx", line 1.1)')
+  }).toThrow('"turtx" is the name of a predefined Turtle attribute, and cannot be given a type specification. ("turtx", line 1.1)')
 })

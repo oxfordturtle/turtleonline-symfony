@@ -1,10 +1,10 @@
 void main () {
-  int ringRadius;
   // set ring radius and thickness
-  ringRadius = 130;
+  int ringRadius = 130;
   thickness(20);
+  // raise pen to avoid drawing lines
+  penup();
   // draw black ring
-  penup;
   forward(50);
   circle(ringRadius);
   // draw blue ring

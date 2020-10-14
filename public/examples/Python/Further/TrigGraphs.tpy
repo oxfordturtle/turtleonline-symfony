@@ -1,62 +1,69 @@
-# TrigGraphs
+xOrigin: int = 500
+yOrigin: int = 500
+halfWidth: int = 400
+yScale: int = 200
+radians: bool = False # make true for x-axis in radians
 
-xorigin: int = 500
-yorigin: int = 500
-halfwidth: int = 400
-yscale: int = 200
-radians: bool = False
-
-def axes():
+# draws graph axes
+def drawAxes():
   thickness(3)
-  setxy(xorigin - halfwidth, yorigin)
-  drawxy(halfwidth * 2, 0)
-  setxy(xorigin, 0)
+  # draw y axis
+  setxy(xOrigin - halfWidth, yOrigin)
+  drawxy(halfWidth * 2, 0)
+  # draw x axis
+  setxy(xOrigin, 0)
   drawxy(0, 1000)
-  setxy(xorigin, yorigin)
+  # draw circle at origin
+  setxy(xOrigin, yOrigin)
   circle(15)
+  # draw lines at y=1 and y=-1
   thickness(2)
-  setxy(xorigin - halfwidth, yorigin - yscale)
-  drawxy(halfwidth * 2, 0)
-  setxy(xorigin - halfwidth, yorigin + yscale)
-  drawxy(halfwidth * 2, 0)
-  setxy(xorigin + halfwidth + 10, yorigin - yscale - 18)
+  setxy(xOrigin - halfWidth, yOrigin - yScale)
+  drawxy(halfWidth * 2, 0)
+  setxy(xOrigin - halfWidth, yOrigin + yScale)
+  drawxy(halfWidth * 2, 0)
+  setxy(xOrigin + halfWidth + 10, yOrigin - yScale - 18)
   print('+1', 0, 20)
-  setxy(xorigin + halfwidth + 10, yorigin + yscale - 18)
+  setxy(xOrigin + halfWidth + 10, yOrigin + yScale - 18)
   print('-1', 0, 20)
+  # print x axis labels
   if radians:
-    setxy(xorigin - halfwidth - 44, yorigin - 4)
+    setxy(xOrigin - halfWidth - 44, yOrigin - 4)
     print('-p', 29, 28)
-    setxy(xorigin - halfwidth // 2 - 2, yorigin - 4)
+    setxy(xOrigin - halfWidth // 2 - 2, yOrigin - 4)
     print('-p/2', 29, 28)
-    setxy(xorigin + halfwidth // 2 - 50, yorigin - 4)
+    setxy(xOrigin + halfWidth // 2 - 50, yOrigin - 4)
     print('p/2', 29, 28)
-    setxy(xorigin + halfwidth, yorigin - 4)
+    setxy(xOrigin + halfWidth, yOrigin - 4)
     print('p', 29, 28)
   else:
-    setxy(xorigin - halfwidth - 60, yorigin)
+    setxy(xOrigin - halfWidth - 60, yOrigin)
     print('-180', 0, 20)
-    setxy(xorigin - halfwidth // 2, yorigin)
+    setxy(xOrigin - halfWidth // 2, yOrigin)
     print('-90', 0, 20)
-    setxy(xorigin + halfwidth // 2 - 30, yorigin)
+    setxy(xOrigin + halfWidth // 2 - 30, yOrigin)
     print('90', 0, 20)
-    setxy(xorigin + halfwidth, yorigin)
+    setxy(xOrigin + halfWidth, yOrigin)
     print('180', 0, 20)
 
-def sinecurve():
+# plots a sine curve
+def plotSineCurve():
   for degrees in range(-180, 181, 1):
-    x: int = xorigin + divmult(degrees, 180, halfwidth)
-    y: int = yorigin - sin(degrees, 1, yscale)
+    x: int = xOrigin + divmult(degrees, 180, halfWidth)
+    y: int = yOrigin - sin(degrees, 1, yScale)
     setxy(x, y)
   polyline(361)
 
-def cosinecurve():
+# plots a cosine curve
+def plotCosineCurve():
   for degrees in range(-180, 181, 1):
-    x: int = xorigin + divmult(degrees, 180, halfwidth)
-    y: int = yorigin - cos(degrees, 1, yscale)
+    x: int = xOrigin + divmult(degrees, 180, halfWidth)
+    y: int = yOrigin - cos(degrees, 1, yScale)
     setxy(x, y)
   polyline(361)
 
-def tancurve():
+# plots a tan curve
+def plotTanCurve():
   for degrees in range(-180, 181, 1):
     if degrees == -90:
       polyline(90)
@@ -64,28 +71,27 @@ def tancurve():
       if degrees == 90:
         polyline(179)
       else:
-        x: int = xorigin + divmult(degrees, 180, halfwidth)
-        y: int = yorigin - tan(degrees, 1, yscale)
+        x: int = xOrigin + divmult(degrees, 180, halfWidth)
+        y: int = yOrigin - tan(degrees, 1, yScale)
         setxy(x, y)
   polyline(90)
 
-axes()
+# draw axes
+drawAxes()
 noupdate()
 thickness(4)
-colour(red)
-setxy(20, 700)
-print('cosine', 16, 40)
-cosinecurve()
+# plot sine curve in green
 colour(green)
-setxy(100, 810)
+setxy(250, 700)
 print('sine', 16, 40)
-setxy(205, 820)
-drawxy(70, -110)
-drawxy(0, 20)
-movexy(0, -20)
-drawxy(-18, 11)
-sinecurve()
+plotSineCurve()
+# plot cosine curve in red
+colour(red)
+setxy(30, 700)
+print('cosine', 16, 40)
+plotCosineCurve()
+# plot tan curve in blue
 colour(blue)
 setxy(140, 920)
 print('tangent', 16, 40)
-tancurve()
+plotTanCurve()

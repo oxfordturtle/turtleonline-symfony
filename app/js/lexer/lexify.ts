@@ -3,7 +3,7 @@
  */
 import { Lexeme } from './lexeme'
 import tokenize from './tokenize'
-import { Language, languages } from '../constants/languages'
+import { Language } from '../constants/languages'
 import { CompilerError } from '../tools/error'
 
 /** generates an array of lexemes from code */
@@ -11,7 +11,6 @@ export default function lexify (code: string, language: Language): Lexeme[] {
   // get the tokens from the code
   const tokens = tokenize(code, language)
   const lexemes: Lexeme[] = []
-  const errorOffset = languages.indexOf(language)
 
   // loop through the tokens, pushing lexemes into the lexemes array (or throwing an error)
   const indents = [0]
@@ -19,42 +18,73 @@ export default function lexify (code: string, language: Language): Lexeme[] {
   let line = 1
   let character = 1
   let indent = indents[0]
+  let messages: Record<Language, string>
+  let message: string
   while (index < tokens.length) {
     if (!tokens[index].ok) {
       switch (tokens[index].type) {
         case 'comment':
-          throw new CompilerError(messages[0], new Lexeme(tokens[index], line, character))
+          message = 'Unterminated comment.'
+          throw new CompilerError(message, new Lexeme(tokens[index], line, character))
   
         case 'character': // fallthrough
         case 'string':
-          if (language === 'BASIC' && tokens[index].subtype === 'single') {
-            throw new CompilerError(messages[1], new Lexeme(tokens[index], line, character))
-          }
-          throw new CompilerError(messages[2], new Lexeme(tokens[index], line, character))
+          message = (language === 'BASIC' && tokens[index].subtype === 'single')
+            ? 'Strings in Turtle BASIC use double quotes, not single quotes.'
+            : 'Unterminated string.'
+          throw new CompilerError(message, new Lexeme(tokens[index], line, character))
   
         case 'integer':
           switch (tokens[index].subtype) {
             case 'binary':
-              throw new CompilerError(messages[3 + errorOffset], new Lexeme(tokens[index], line, character))
+              messages = {
+                BASIC: 'Binary numbers in Turtle BASIC begin with "%".',
+                C: 'Binary numbers in Turtle C begin with "0b".',
+                Java: 'Binary numbers in Turtle Java begin with "0b".',
+                Pascal: 'Binary numbers in Turtle Pascal begin with "%".',
+                Python: 'Binary numbers in Turtle Python begin with "0b".',
+                TypeScript: 'Binary numbers in Turtle TypeScript begin with "0b".'
+              }
+              throw new CompilerError(messages[language], new Lexeme(tokens[index], line, character))
       
             case 'octal':
-              throw new CompilerError(messages[6 + errorOffset], new Lexeme(tokens[index], line, character))
+              messages = {
+                BASIC: 'Turtle BASIC does not support octal numbers.',
+                C: 'Octal numbers in Turtle C begin with "0o".',
+                Java: 'Octal numbers in Turtle Java begin with "0o".',
+                Pascal: 'Octal numbers in Turtle Pascal begin with "&".',
+                Python: 'Octal numbers in Turtle Python begin with "0o".',
+                TypeScript: 'Octal numbers in Turtle TypeScript begin with "0o".'
+              }
+              throw new CompilerError(messages[language], new Lexeme(tokens[index], line, character))
       
             case 'hexadecimal':
-              throw new CompilerError(messages[9 + errorOffset], new Lexeme(tokens[index], line, character))
+              messages = {
+                BASIC: 'Hexadecimal numbers in Turtle BASIC begin with "&".',
+                C: 'Hexadecimal numbers in Turtle C begin with "0x".',
+                Java: 'Hexadecimal numbers in Turtle Java begin with "0x".',
+                Pascal: 'Hexadecimal numbers in Turtle Pascal begin with "$".',
+                Python: 'Hexadecimal numbers in Turtle Python begin with "0x".',
+                TypeScript: 'Hexadecimal numbers in Turtle TypeScript begin with "0x".'
+              }
+              throw new CompilerError(messages[language], new Lexeme(tokens[index], line, character))
       
             case 'decimal':
-              throw new CompilerError(messages[12], new Lexeme(tokens[index], line, character))
+              message = 'The Turtle System does not support real numbers.'
+              throw new CompilerError(message, new Lexeme(tokens[index], line, character))
           }
 
         case 'keycode':
-          throw new CompilerError(messages[13], new Lexeme(tokens[index], line, character))
+          message = 'Unrecognised keycode constant.'
+          throw new CompilerError(message, new Lexeme(tokens[index], line, character))
 
         case 'query':
-          throw new CompilerError(messages[14], new Lexeme(tokens[index], line, character))
+          message = 'Unrecognised input query.'
+          throw new CompilerError(message, new Lexeme(tokens[index], line, character))
 
         case 'illegal':
-          throw new CompilerError(messages[15], new Lexeme(tokens[index], line, character))
+          message = 'Illegal character in this context.'
+          throw new CompilerError(message, new Lexeme(tokens[index], line, character))
       }
     }
 
@@ -66,8 +96,8 @@ export default function lexify (code: string, language: Language): Lexeme[] {
       case 'newline':
         line += 1
         character = 1
-        // line breaks are significant in BASIC and Python
-        if (language === 'BASIC' || language === 'Python') {
+        // line breaks are significant in BASIC, Python, and TypeScript
+        if (language === 'BASIC' || language === 'Python' || language === 'TypeScript') {
           // push the lexeme, unless this is a blank line at the start of the
           // program or there's a blank line or a comment previously
           if (lexemes[lexemes.length - 1]) {
@@ -102,6 +132,16 @@ export default function lexify (code: string, language: Language): Lexeme[] {
         }
         break
 
+      case 'comment':
+        lexemes.push(new Lexeme(tokens[index], line, character))
+        character += tokens[index].content?.length || 0
+        // in Python and BASIC, line breaks are significant, and comments are terminated
+        // with a line break; so we need to add a newline lexeme after each comment
+        if (language === 'BASIC' || language === 'Python') {
+          lexemes.push(new Lexeme('newline', line, character))
+        }
+        break
+
       default:
         lexemes.push(new Lexeme(tokens[index], line, character))
         character += tokens[index].content?.length || 0
@@ -114,23 +154,3 @@ export default function lexify (code: string, language: Language): Lexeme[] {
   // return the array of lexemes
   return lexemes
 }
-
-/** array of error messages */
-const messages = [
-  'Unterminated comment.',
-  'Strings in Turtle BASIC use double quotes, not single quotes.',
-  'Unterminated string.',
-  'Binary numbers in Turtle BASIC begin with "%".',
-  'Binary numbers in Turtle Pascal begin with "%".',
-  'Binary numbers in Turtle Python begin with "0b".',
-  'Turtle BASIC does not support octal numbers.',
-  'Octal numbers in Turtle Pascal begin with "&".',
-  'Octal numbers in Turtle Python begin with "0o".',
-  'Hexadecimal numbers in Turtle BASIC begin with "&".',
-  'Hexadecimal numbers in Turtle Pascal begin with "$".',
-  'Hexadecimal numbers in Turtle Python begin with "0x".',
-  'The Turtle System does not support real numbers.',
-  'Unrecognised keycode constant.',
-  'Unrecognised input query.',
-  'Illegal character in this context.'
-]

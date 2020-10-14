@@ -1,11 +1,8 @@
-x: int
-y: int
-
 # draw 30 random lines
 for count in range(1, 30, 1):
   # pick a random point and angle
-  x = randint(0, 1000)
-  y = randint(0, 1000)
+  x: int = randint(0, 1000)
+  y: int = randint(0, 1000)
   setxy(x, y)
   turtd = randint(0, 360)
   # draw a black line through that point, at that angle

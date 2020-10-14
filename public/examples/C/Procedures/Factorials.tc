@@ -1,6 +1,6 @@
 // calculates n! recursively
 int factorial (int n) {
-  if (n === 0) {
+  if (n == 0) {
     return 1;
   } else {
     return n * factorial(n - 1);
@@ -8,11 +8,10 @@ int factorial (int n) {
 }
 
 void main () {
-  int n;
   // set up and show the output
   output(true, cream, true);
   // calculate and display n! for n = 1 to 10
-  for (n = 1; n < 10; n = n + 1) {
-    writeln(str(n) + '! = ' + str(factorial(n)));
+  for (int n = 1; n <= 10; n = n + 1) {
+    writeline(itoa(n) + '! = ' + itoa(factorial(n)));
   }
 }

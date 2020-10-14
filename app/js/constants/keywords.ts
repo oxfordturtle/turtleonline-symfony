@@ -52,10 +52,32 @@ const C = [
   new Keyword(20, 1, 'while'),
   new Keyword(20, 1, 'do'),
   // other keywords (not shown in usage tables)
+  new Keyword(22, 0, 'const'),
   new Keyword(22, 0, 'void'),
-  new Keyword(22, 0, 'int'),
   new Keyword(22, 0, 'bool'),
-  new Keyword(22, 0, 'char')
+  new Keyword(22, 0, 'char'),
+  new Keyword(22, 0, 'int'),
+  new Keyword(22, 0, 'string'),
+  new Keyword(22, 0, 'return')
+]
+
+/** keywords for Turtle Java */
+const Java = [
+  // command structures
+  new Keyword(20, 0, 'if'),
+  new Keyword(20, 0, 'else'),
+  new Keyword(20, 0, 'for'),
+  new Keyword(20, 1, 'while'),
+  new Keyword(20, 1, 'do'),
+  // other keywords (not shown in usage tables)
+  new Keyword(22, 0, 'class'),
+  new Keyword(22, 0, 'final'),
+  new Keyword(22, 0, 'void'),
+  new Keyword(22, 0, 'boolean'),
+  new Keyword(22, 0, 'char'),
+  new Keyword(22, 0, 'int'),
+  new Keyword(22, 0, 'String'),
+  new Keyword(22, 0, 'return')
 ]
 
 /** keywords for Turtle Pascal */
@@ -116,9 +138,13 @@ const TypeScript = [
   new Keyword(20, 1, 'function'),
   // other keywords (not shown in usage tables)
   new Keyword(22, 0, 'var'),
-  new Keyword(22, 0, 'let'),
-  new Keyword(22, 0, 'const')
+  new Keyword(22, 0, 'const'),
+  new Keyword(22, 0, 'void'),
+  new Keyword(22, 0, 'boolean'),
+  new Keyword(22, 0, 'number'),
+  new Keyword(22, 0, 'string'),
+  new Keyword(22, 0, 'return')
 ]
 
 /** export a record of all keywords */
-export const keywords: Record<Language, Keyword[]> = { BASIC, C, Pascal, Python, TypeScript }
+export const keywords: Record<Language, Keyword[]> = { BASIC, C, Java, Pascal, Python, TypeScript }

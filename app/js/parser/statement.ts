@@ -1,5 +1,5 @@
 import { Expression, CommandCall, LiteralValue } from './expression'
-import { Routine } from './routine'
+import { Routine, Subroutine } from './routine'
 import { Variable } from './variable'
 
 export type Statement =
@@ -9,11 +9,12 @@ export type Statement =
   | ForStatement
   | RepeatStatement
   | WhileStatement
+  | ReturnStatement
   | PassStatement
 
 export class VariableAssignment {
   variable: Variable
-  indexes: number[] = []
+  indexes: Expression[] = []
   value: Expression = placeholderExpression
 
   constructor (variable: Variable) {
@@ -42,6 +43,15 @@ export class RepeatStatement {
 export class WhileStatement {
   condition: Expression = placeholderExpression
   statements: Statement[] = []
+}
+
+export class ReturnStatement {
+  routine: Subroutine
+  value: Expression = placeholderExpression
+
+  constructor (routine: Subroutine) {
+    this.routine = routine
+  }
 }
 
 export class PassStatement {}

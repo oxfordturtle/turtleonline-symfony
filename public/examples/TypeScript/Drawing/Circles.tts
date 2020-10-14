@@ -1,16 +1,18 @@
-var count: number;
-
-// set up the turtle
+// set up Turtle
 thickness(6);
-penup();
+penUp();
 blank(black);
 colour(orange);
-for (count = 0; count = count + 1; count < 36) {
-  // draw a circle 200 points from the centre of the canvas
+// counting from 1 to 36 ...
+for (var count: number = 1; count = count + 1; count <= 36) {
+  // move 200 units from middle of canvas
   forward(200);
+  // draw circle radius 200 centred there
   circle(200);
-  // re-centre the turtle, and turn right 10 degrees
+  // move back to middle of canvas
   back(200);
+  // turn right 10 degrees - 1/36 of full turn
   right(10);
+  // pause 25 milliseconds before next circle
   pause(25);
 }

@@ -9,6 +9,7 @@ export type Expression = LiteralValue|VariableValue|CommandCall|CompoundExpressi
 export class LiteralValue {
   readonly type: Type
   readonly value: string|number
+  as: Type|null = null // set if value is to be cast to a different type
   string: boolean = false // true for characters that need to be converted to strings
   input: boolean = false // true for input query codes
 
@@ -20,7 +21,8 @@ export class LiteralValue {
 
 export class VariableValue {
   readonly variable: Variable
-  readonly indexes: number[] = [] // for array variables
+  readonly indexes: Expression[] = [] // for array variables
+  as: Type|null = null // set if variable is to be cast to a different type
   string: boolean = false // true for character variables that need to be converted to strings
 
   constructor (variable: Variable) {
@@ -28,6 +30,9 @@ export class VariableValue {
   }
 
   get type (): Type {
+    if (this.variable.type === 'string' && this.indexes.length > 0) {
+      return 'character'
+    }
     return this.variable.type
   }
 }
@@ -35,6 +40,7 @@ export class VariableValue {
 export class CommandCall {
   readonly command: Subroutine|Command
   readonly arguments: Expression[] = []
+  as: Type|null = null // set if result is to be cast to a different type
   string: boolean = false // true for character return values that need to be converted to strings
 
   constructor (command: Subroutine|Command) {
@@ -52,40 +58,7 @@ export class CompoundExpression {
   readonly left: Expression|null // left hand side optional (for unary operators 'not' and 'minus')
   readonly right: Expression
   readonly operator: PCode
-
-  static booleans = [
-    PCode.not,
-    PCode.eqal,
-    PCode.less,
-    PCode.lseq,
-    PCode.more,
-    PCode.mreq,
-    PCode.noeq,
-    PCode.seql,
-    PCode.sles,
-    PCode.sleq,
-    PCode.smor,
-    PCode.smeq,
-    PCode.sneq
-  ]
-
-  static integers = [
-    PCode.plus,
-    PCode.subt,
-    PCode.div,
-    PCode.divr,
-    PCode.mod,
-    PCode.mult,
-    PCode.and,
-    PCode.andl,
-    PCode.or,
-    PCode.orl,
-    PCode.xor
-  ]
-
-  static strings = [
-    PCode.scat
-  ]
+  as: Type|null = null // set if expression is to be cast to a different type
 
   constructor (left: Expression|null, right: Expression, operator: PCode) {
     this.left = left
@@ -94,15 +67,27 @@ export class CompoundExpression {
   }
 
   get type (): Type {
-    if (CompoundExpression.booleans.indexOf(this.operator) > -1) {
+    const booleans = [
+      PCode.not,
+      PCode.eqal,
+      PCode.less,
+      PCode.lseq,
+      PCode.more,
+      PCode.mreq,
+      PCode.noeq,
+      PCode.seql,
+      PCode.sles,
+      PCode.sleq,
+      PCode.smor,
+      PCode.smeq,
+      PCode.sneq
+    ]
+  
+    if (booleans.includes(this.operator)) {
       return 'boolean'
     }
 
-    if (CompoundExpression.integers.indexOf(this.operator) > -1) {
-      return 'integer'
-    }
-
-    if (CompoundExpression.strings.indexOf(this.operator) > -1) {
+    if (this.operator === PCode.scat) {
       return 'string'
     }
 

@@ -17,7 +17,7 @@ export class Example {
     this.groupId = groupId
     this.id = id
     this.names = (typeof names === 'string')
-      ? { BASIC: names, C: names, Pascal: names, Python: names, TypeScript: names }
+      ? { BASIC: names, C: names, Java: names, Pascal: names, Python: names, TypeScript: names }
       : names
   }
 }

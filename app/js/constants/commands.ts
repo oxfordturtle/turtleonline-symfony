@@ -51,35 +51,35 @@ export class Parameter {
 export const commands: Command[] = [
   // 0. Turtle: relative movement
   new Command(
-    { BASIC: 'FORWARD', C: 'forward', Pascal: 'forward', Python: 'forward', TypeScript: 'forward' },
+    { BASIC: 'FORWARD', C: 'forward', Java: 'forward', Pascal: 'forward', Python: 'forward', TypeScript: 'forward' },
     [PCode.fwrd],
     [new Parameter('n', 'integer', false, 1)],
     null, 0, 0,
     'Moves the Turtle forward <code>n</code> units, drawing as it goes (unless the pen is up).'
   ),
   new Command(
-    { BASIC: 'BACK', C: 'back', Pascal: 'back', Python: 'back', TypeScript: 'back' },
+    { BASIC: 'BACK', C: 'back', Java: 'back', Pascal: 'back', Python: 'back', TypeScript: 'back' },
     [PCode.back],
     [new Parameter('n', 'integer', false, 1)],
     null, 0, 0,
     'Moves the Turtle back <code>n</code> units, drawing as it goes (unless the pen is up).'
   ),
   new Command(
-    { BASIC: 'LEFT', C: 'leff', Pascal: 'left', Python: 'left', TypeScript: 'left' },
+    { BASIC: 'LEFT', C: 'left', Java: 'left', Pascal: 'left', Python: 'left', TypeScript: 'left' },
     [PCode.left],
     [new Parameter('n', 'integer', false, 1)],
     null, 0, 0,
     'Rotates the Turtle left by <code>n</code> degrees.'
   ),
   new Command(
-    { BASIC: 'RIGHT', C: 'right', Pascal: 'right', Python: 'right', TypeScript: 'right' },
+    { BASIC: 'RIGHT', C: 'right', Java: 'right', Pascal: 'right', Python: 'right', TypeScript: 'right' },
     [PCode.rght],
     [new Parameter('n', 'integer', false, 1)],
     null, 0, 0,
     'Rotates the Turtle right by <code>n</code> degrees.'
   ),
   new Command(
-    { BASIC: 'DRAWXY', C: 'drawxy', Pascal: 'drawxy', Python: 'drawxy', TypeScript: 'drawxy' },
+    { BASIC: 'DRAWXY', C: 'drawxy', Java: 'drawXY', Pascal: 'drawxy', Python: 'drawxy', TypeScript: 'drawXY' },
     [PCode.drxy],
     [
       new Parameter('x', 'integer', false, 1),
@@ -89,7 +89,7 @@ export const commands: Command[] = [
     'Moves the Turtle in a straight line to a point <code>x</code> units away along the x-axis and <code>y</code> units away along the y-axis, drawing as it goes (unless the pen is up).'
   ),
   new Command(
-    { BASIC: 'MOVEXY', C: 'movexy', Pascal: 'movexy', Python: 'movexy', TypeScript: 'movexy' },
+    { BASIC: 'MOVEXY', C: 'movexy', Java: 'moveXY', Pascal: 'movexy', Python: 'movexy', TypeScript: 'moveXY' },
     [PCode.mvxy],
     [
       new Parameter('x', 'integer', false, 1),
@@ -100,27 +100,27 @@ export const commands: Command[] = [
   ),
   // 1. Turtle: absolute movement
   new Command(
-    { BASIC: 'HOME', C: 'home', Pascal: 'home', Python: 'home', TypeScript: 'home' },
+    { BASIC: 'HOME', C: 'home', Java: 'home', Pascal: 'home', Python: 'home', TypeScript: 'home' },
     [PCode.home],
     [], null, 1, 0,
     'Moves the Turtle back to its starting position in the centre of the canvas, facing north, drawing as it goes (unless the pen is up).'
   ),
   new Command(
-    { BASIC: 'SETX', C: 'setx', Pascal: 'setx', Python: 'setx', TypeScript: 'setx' },
+    { BASIC: 'SETX', C: 'setx', Java: 'setX', Pascal: 'setx', Python: 'setx', TypeScript: 'setX' },
     [PCode.setx],
     [new Parameter('x', 'integer', false, 1)],
     null, 1, 0,
     'Sets the Turtle&rsquo;s <code>x</code> coordinate directly (without movement or drawing on the canvas). This can also be achieved by direct assignment of the global variable <code>turtx</code>.'
   ),
   new Command(
-    { BASIC: 'SETY', C: 'sety', Pascal: 'sety', Python: 'sety', TypeScript: 'sety' },
+    { BASIC: 'SETY', C: 'sety', Java: 'setY', Pascal: 'sety', Python: 'sety', TypeScript: 'setY' },
     [PCode.sety],
     [new Parameter('y', 'integer', false, 1)],
     null, 1, 0,
     'Sets the Turtle&rsquo;s <code>y</code> coordinate directly (without movement or drawing on the canvas). This can also be achieved by direct assignment of the global variable <code>turty</code>.'
   ),
   new Command(
-    { BASIC: 'SETXY', C: 'sety', Pascal: 'setxy', Python: 'setxy', TypeScript: 'setxy' },
+    { BASIC: 'SETXY', C: 'setxy', Java: 'setXY', Pascal: 'setxy', Python: 'setxy', TypeScript: 'setXY' },
     [PCode.toxy],
     [
       new Parameter('x', 'integer', false, 1),
@@ -130,21 +130,21 @@ export const commands: Command[] = [
     'Sets the Turtle&rsquo;s <code>x</code> and <code>y</code> coordinates directly (without movement or drawing on the canvas). This can also be achieved by direct assingment of the global variables <code>turtx</code> and <code>turty</code>.'
   ),
   new Command(
-    { BASIC: 'DIRECTION', C: 'direction', Pascal: 'direction', Python: 'direction', TypeScript: 'direction' },
+    { BASIC: 'DIRECTION', C: 'direction', Java: 'direction', Pascal: 'direction', Python: 'direction', TypeScript: 'direction' },
     [PCode.setd],
     [new Parameter('n', 'integer', false, 1)],
     null, 1, 0,
     'Sets the Turtle&rsquo;s direction to <code>n</code> degrees (0 for north, 90 for east, 180 for south, 270 for west). This can also be achieved by direct assignment of the global variable <code>turtd</code>. Note that the number of degrees in a circle (360 by default) can be changed with the <code>angles</code> command.'
   ),
   new Command(
-    { BASIC: 'ANGLES', C: 'angles', Pascal: 'angles', Python: 'angles', TypeScript: 'angles' },
+    { BASIC: 'ANGLES', C: 'angles', Java: 'angles', Pascal: 'angles', Python: 'angles', TypeScript: 'angles' },
     [PCode.angl],
     [new Parameter('degrees', 'integer', false, 1)],
     null, 1, 1,
     'Sets the number of <code>degrees</code> in a circle (360 by default).'
   ),
   new Command(
-    { BASIC: 'TURNXY', C: 'turnxy', Pascal: 'turnxy', Python: 'turnxy', TypeScript: 'turnxy' },
+    { BASIC: 'TURNXY', C: 'turnxy', Java: 'turnXY', Pascal: 'turnxy', Python: 'turnxy', TypeScript: 'turnXY' },
     [PCode.turn],
     [
       new Parameter('x', 'integer', false, 1),
@@ -155,21 +155,21 @@ export const commands: Command[] = [
   ),
   // 2. Turtle: shape drawing
   new Command(
-    { BASIC: 'CIRCLE', C: 'circle', Pascal: 'circle', Python: 'circle', TypeScript: 'circle' },
+    { BASIC: 'CIRCLE', C: 'circle', Java: 'circle', Pascal: 'circle', Python: 'circle', TypeScript: 'circle' },
     [PCode.circ],
     [new Parameter('radius', 'integer', false, 1)],
     null, 2, 0,
     'Draws a circle outline in the Turtle&rsquo;s current colour and thickness, of the given <code>radius</code>, centred on the Turtle&rsquo;s current location.'
   ),
   new Command(
-    { BASIC: 'BLOT', C: 'blot', Pascal: 'blot', Python: 'blot', TypeScript: 'blot' },
+    { BASIC: 'BLOT', C: 'blot', Java: 'blot', Pascal: 'blot', Python: 'blot', TypeScript: 'blot' },
     [PCode.blot],
     [new Parameter('radius', 'integer', false, 1)],
     null, 2, 0,
     'Draws a filled circle in the Turtle&rsquo;s current colour, of the given <code>radius</code>, centred on the Turtle&rsquo;s current location.'
   ),
   new Command(
-    { BASIC: 'ELLIPSE', C: 'ellipse', Pascal: 'ellipse', Python: 'ellipse', TypeScript: 'ellipse' },
+    { BASIC: 'ELLIPSE', C: 'ellipse', Java: 'ellipse', Pascal: 'ellipse', Python: 'ellipse', TypeScript: 'ellipse' },
     [PCode.elps],
     [
       new Parameter('Xradius', 'integer', false, 1),
@@ -179,7 +179,7 @@ export const commands: Command[] = [
     'Draws an ellipse outline in the Turtle&rsquo;s current colour and thickness, of the given <code>Xradius</code> and <code>Yradius</code>, centred on the Turtle&rsquo;s current location.'
   ),
   new Command(
-    { BASIC: 'ELLBLOT', C: 'ellblot', Pascal: 'ellblot', Python: 'ellblot', TypeScript: 'ellblot' },
+    { BASIC: 'ELLBLOT', C: 'ellblot', Java: 'ellblot', Pascal: 'ellblot', Python: 'ellblot', TypeScript: 'ellblot' },
     [PCode.eblt],
     [
       new Parameter('Xradius', 'integer', false, 1),
@@ -189,34 +189,34 @@ export const commands: Command[] = [
     'Draws a filled ellipse in the Turtle&rsquo;s current colour, of the given <code>Xradius</code> and <code>Yradius</code>, centred on the Turtle&rsquo;s current location.'
   ),
   new Command(
-    { BASIC: 'POLYLINE', C: 'polyline', Pascal: 'polyline', Python: 'polyline', TypeScript: 'polyline' },
+    { BASIC: 'POLYLINE', C: 'polyline', Java: 'polyline', Pascal: 'polyline', Python: 'polyline', TypeScript: 'polyline' },
     [PCode.poly],
     [new Parameter('n', 'integer', false, 1)],
     null, 2, 1,
     'Draws a polygon outline in the Turtle&rsquo;s current colour and thickness, connecting the last <code>n</code> locations that the Turtle has visited.'
   ),
   new Command(
-    { BASIC: 'POLYGON', C: 'polygon', Pascal: 'polygon', Python: 'polygon', TypeScript: 'polygon' },
+    { BASIC: 'POLYGON', C: 'polygon', Java: 'polygon', Pascal: 'polygon', Python: 'polygon', TypeScript: 'polygon' },
     [PCode.pfil],
     [new Parameter('n', 'integer', false, 1)],
     null, 2, 1,
     'Draws a filled polygon in the Turtle&rsquo;s current colour and thickness, connecting the last <code>n</code> locations that the Turtle has visited.'
   ),
   new Command(
-    { BASIC: 'FORGET', C: 'forget', Pascal: 'forget', Python: 'forget', TypeScript: 'forget' },
+    { BASIC: 'FORGET', C: 'forget', Java: 'forget', Pascal: 'forget', Python: 'forget', TypeScript: 'forget' },
     [PCode.frgt],
     [new Parameter('n', 'integer', false, 1)],
     null, 2, 1,
     'Makes the Turtle &ldquo;forget&rdquo; the last <code>n</code> points it has visited. Used in conjunction with <code>polyline</code> and <code>polygon</code>.'
   ),
   new Command(
-    { BASIC: 'REMEMBER', C: 'remember', Pascal: 'remember', Python: 'remember', TypeScript: 'remember' },
+    { BASIC: 'REMEMBER', C: 'remember', Java: 'remember', Pascal: 'remember', Python: 'remember', TypeScript: 'remember' },
     [PCode.rmbr],
     [], null, 2, 1,
     'Makes the Turtle &ldquo;remember&rdquo; its current location. This is only necessary if its current location was set by a direct assignment of the global variables <code>turtx</code> and <code>turty</code>; when using the standard moving commands, the Turtle automatically remembers where it has been.'
   ),
   new Command(
-    { BASIC: 'BOX', C: 'box', Pascal: 'box', Python: 'box', TypeScript: 'box' },
+    { BASIC: 'BOX', C: 'box', Java: 'box', Pascal: 'box', Python: 'box', TypeScript: 'box' },
     [PCode.box],
     [
       new Parameter('x', 'integer', false, 1),
@@ -229,40 +229,40 @@ export const commands: Command[] = [
   ),
   // 3. Other Turtle commands
   new Command(
-    { BASIC: 'COLOUR', C: 'colour', Pascal: 'colour', Python: 'colour', TypeScript: 'colour' },
+    { BASIC: 'COLOUR', C: 'colour', Java: 'colour', Pascal: 'colour', Python: 'colour', TypeScript: 'colour' },
     [PCode.colr],
     [new Parameter('colour', 'integer', false, 1)],
     null, 3, 0,
     'Sets the <code>colour</code> of the Turtle&rsquo;s pen. Takes as an argument either an RGB value, or one of the Turtle System&rsquo;s fifty predefined colour constants (see the <b>Colours</b> tab). This can also be achieved by direct assignment of the global variable <code>turtc</code>.'
   ),
   new Command(
-    { BASIC: 'RNDCOL', C: 'randcol', Pascal: 'randcol', Python: 'randcol', TypeScript: 'randcol' },
+    { BASIC: 'RNDCOL', C: 'randcol', Java: 'randCol', Pascal: 'randcol', Python: 'randcol', TypeScript: 'randCol' },
     [PCode.rand, PCode.incr, PCode.rgb, PCode.colr],
     [new Parameter('n', 'integer', false, 1)],
     null, 3, 0,
     'Assigns a random colour to the Turte&rsquo;s pen, between 1 and <code>n</code> (maximum 50). The colours are taken from the Turtle System&rsquo;s fifty predefined colours, which are each assigned a number between 1 and 50 (see the <b>Colours</b> tab).'
   ),
   new Command(
-    { BASIC: 'THICKNESS', C: 'thickness', Pascal: 'thickness', Python: 'thickness', TypeScript: 'thickness' },
+    { BASIC: 'THICKNESS', C: 'thickness', Java: 'thickness', Pascal: 'thickness', Python: 'thickness', TypeScript: 'thickness' },
     [PCode.thik],
     [new Parameter('thickness', 'integer', false, 1)],
     null, 3, 0,
     'Sets the <code>thickness</code> of the Turtle&rsquo;s pen (for line drawing, and outlines of circles, ellipses, boxes, and polygons). This can also be achieved by direct assignment of the global variable <code>turtt</code>.'
   ),
   new Command(
-    { BASIC: 'PENUP', C: 'penup', Pascal: 'penup', Python: 'penup', TypeScript: 'penup' },
+    { BASIC: 'PENUP', C: 'penup', Java: 'penUp', Pascal: 'penup', Python: 'penup', TypeScript: 'penUp' },
     [PCode.ldin, 0, PCode.pen],
     [], null, 3, 0,
     'Lifts the Turtle&rsquo;s pen, so that subsequent movement will not draw a line on the Canvas.'
   ),
   new Command(
-    { BASIC: 'PENDOWN', C: 'pendown', Pascal: 'pendown', Python: 'pendown', TypeScript: 'pendown' },
+    { BASIC: 'PENDOWN', C: 'pendown', Java: 'penDown', Pascal: 'pendown', Python: 'pendown', TypeScript: 'penDown' },
     [PCode.ldin, -1, PCode.pen],
     [], null, 3, 0,
     'Lowers the Turtle&rsquo;s pen, so that subsequent movement will draw a line on the Canvas.'
   ),
   new Command(
-    { BASIC: 'OUTPUT', C: 'output', Pascal: 'output', Python: 'output', TypeScript: 'output' },
+    { BASIC: 'OUTPUT', C: 'output', Java: 'output', Pascal: 'output', Python: 'output', TypeScript: 'output' },
     [PCode.outp],
     [
       new Parameter('clear', 'boolean', false, 1),
@@ -273,7 +273,7 @@ export const commands: Command[] = [
     'Modifies the textual output. If the first argument is <code>true</code>, it clears any existing text. The second argument specifies the background colour, and the third argument is for switching the display. If the third argument is <code>true</code>, it switches to the <b>Output</b> tab, while if it is <code>false</code>, it switches to the <b>Canvas and Console</b> tab.'
   ),
   new Command(
-    { BASIC: 'CONSOLE', C: 'console', Pascal: 'console', Python: 'console', TypeScript: 'console' },
+    { BASIC: 'CONSOLE', C: 'console', Java: 'console', Pascal: 'console', Python: 'console', TypeScript: 'console' },
     [PCode.cons],
     [
       new Parameter('clear', 'boolean', false, 1),
@@ -283,14 +283,14 @@ export const commands: Command[] = [
     'Modifies the Console; if the first argument is <code>true</code>, it clears any existing text, while the second argument specifies the background colour.'
   ),
   new Command(
-    { BASIC: 'RGB', C: 'rgb', Pascal: 'rgb', Python: 'rgb', TypeScript: 'rgb' },
+    { BASIC: 'RGB', C: 'rgb', Java: 'rgb', Pascal: 'rgb', Python: 'rgb', TypeScript: 'rgb' },
     [PCode.rgb],
     [new Parameter('colour', 'integer', false, 1)],
     'integer', 3, 2,
     'Returns the RGB value of the input <code>colour</code> (an integer between 1 and 50). For example, <code>rgb(red)=255</code>.'
   ),
   new Command(
-    { BASIC: 'MIXCOLS', C: 'mixcols', Pascal: 'mixcols', Python: 'mixcols', TypeScript: 'mixcols' },
+    { BASIC: 'MIXCOLS', C: 'mixcols', Java: 'mixCols', Pascal: 'mixcols', Python: 'mixcols', TypeScript: 'mixCols' },
     [PCode.mixc],
     [
       new Parameter('colour1', 'integer', false, 1),
@@ -302,40 +302,40 @@ export const commands: Command[] = [
     'Mixes the given colours in the given proportions.'
   ),
   new Command(
-    { BASIC: 'NEWTURTLE', C: 'newturtle', Pascal: 'newturtle', Python: 'newturtle', TypeScript: 'newturtle' },
+    { BASIC: 'NEWTURTLE', C: 'newturtle', Java: 'newTurtle', Pascal: 'newturtle', Python: 'newturtle', TypeScript: 'newTurtle' },
     [PCode.ldin, 0, PCode.sptr],
     [new Parameter('array', 'integer', true, 5)],
     null, 3, 2,
     'Points the Turtle to a custom array in memory (this must be an array of five integers, corresponding to the Turtle&rsquo;s five properties, <code>turtx</code>, <code>turty</code>, <code>turtd</code>, <code>turtt</code>, and <code>turtc</code>). Use repeatedly to simulate multiple Turtles.'
   ),
   new Command(
-    { BASIC: 'OLDTURTLE', C: 'oldturtle', Pascal: 'oldturtle', Python: 'oldturtle', TypeScript: 'oldturtle' },
+    { BASIC: 'OLDTURTLE', C: 'oldturtle', Java: 'oldTurtle', Pascal: 'oldturtle', Python: 'oldturtle', TypeScript: 'oldTurtle' },
     [PCode.oldt],
     [], null, 3, 2,
     'Points the Turtle back to the default (built-in) array in memory. Use in conjunction with <code>newturtle</code>.'
   ),
   // 4. Canvas operations
   new Command(
-    { BASIC: 'UPDATE', C: 'update', Pascal: 'update', Python: 'update', TypeScript: 'update' },
+    { BASIC: 'UPDATE', C: 'update', Java: 'update', Pascal: 'update', Python: 'update', TypeScript: 'update' },
     [PCode.ldin, -1, PCode.udat],
     [], null, 4, 0,
     'Makes the Machine update the Canvas, and continue updating with all subsequent drawing commands. Used in conjunction with <em>noupdate</em>.'
   ),
   new Command(
-    { BASIC: 'NOUPDATE', C: 'noupdate', Pascal: 'noupdate', Python: 'noupdate', TypeScript: 'noupdate' },
+    { BASIC: 'NOUPDATE', C: 'noupdate', Java: 'noUpdate', Pascal: 'noupdate', Python: 'noupdate', TypeScript: 'noUpdate' },
     [PCode.ldin, 0, PCode.udat],
     [], null, 4, 0,
     'Makes the Machine refrain from updating the Canvas when executing all subsequent drawing commands, until <em>update</em> is called. Use this to create smooth animations, by queueing up several drawing commands to execute simultaneously.'
   ),
   new Command(
-    { BASIC: 'BLANK', C: 'blank', Pascal: 'blank', Python: 'blank', TypeScript: 'blank' },
+    { BASIC: 'BLANK', C: 'blank', Java: 'blank', Pascal: 'blank', Python: 'blank', TypeScript: 'blank' },
     [PCode.blnk],
     [new Parameter('colour', 'integer', false, 1)],
     null, 4, 0,
     'Blanks the entire Canvas with the specified <code>colour</code>.'
   ),
   new Command(
-    { BASIC: 'CANVAS', C: 'canvas', Pascal: 'canvas', Python: 'canvas', TypeScript: 'canvas' },
+    { BASIC: 'CANVAS', C: 'canvas', Java: 'canvas', Pascal: 'canvas', Python: 'canvas', TypeScript: 'canvas' },
     [PCode.canv],
     [
       new Parameter('x1', 'integer', false, 1),
@@ -347,7 +347,7 @@ export const commands: Command[] = [
     'Sets the top left Canvas coordinate to <code>(x1,y1)</code>, and the Canvas width and height to <code>x2</code> and <code>y2</code> respectively. Note that the width and height fix the number of virtual points on the Canvas, not the number of actual pixels.'
   ),
   new Command(
-    { BASIC: 'RESOLUTION', C: 'resolution', Pascal: 'resolution', Python: 'resolution', TypeScript: 'resolution' },
+    { BASIC: 'RESOLUTION', C: 'resolution', Java: 'resolution', Pascal: 'resolution', Python: 'resolution', TypeScript: 'resolution' },
     [PCode.reso],
     [
       new Parameter('x', 'integer', false, 1),
@@ -357,7 +357,7 @@ export const commands: Command[] = [
     'Sets the Canvas resolution, i.e. the number of actual pixels in the <code>x</code> and <code>y</code> dimensions. To be used in conjunction with the <code>canvas</code> command, typically to set the number of actual pixels equal to the number of virtual points on the Canvas.'
   ),
   new Command(
-    { BASIC: 'PIXSET', C: 'pixset', Pascal: 'pixset', Python: 'pixset', TypeScript: 'pixset' },
+    { BASIC: 'PIXSET', C: 'pixset', Java: 'pixSet', Pascal: 'pixset', Python: 'pixset', TypeScript: 'pixSet' },
     [PCode.pixs],
     [
       new Parameter('x', 'integer', false, 1),
@@ -368,7 +368,7 @@ export const commands: Command[] = [
     'Sets the <code>colour</code> at point <code>(x,y)</code>.'
   ),
   new Command(
-    { BASIC: 'PIXCOL', C: 'pixcol', Pascal: 'pixcol', Python: 'pixcol', TypeScript: 'pixcol' },
+    { BASIC: 'PIXCOL', C: 'pixcol', Java: 'pixCol', Pascal: 'pixcol', Python: 'pixcol', TypeScript: 'pixCol' },
     [PCode.pixc],
     [
       new Parameter('x', 'integer', false, 1),
@@ -378,7 +378,7 @@ export const commands: Command[] = [
     'Returns the RGB value of the colour at point <code>(x,y)</code>.'
   ),
   new Command(
-    { BASIC: 'RECOLOUR', C: 'recolour', Pascal: 'recolour', Python: 'recolour', TypeScript: 'recolour' },
+    { BASIC: 'RECOLOUR', C: 'recolour', Java: 'recolour', Pascal: 'recolour', Python: 'recolour', TypeScript: 'recolour' },
     [PCode.rcol],
     [
       new Parameter('x', 'integer', false, 1),
@@ -389,7 +389,7 @@ export const commands: Command[] = [
     'Floods the Canvas with the specified <code>colour</code>, starting at point <code>(x,y)</code>, until reaching any different colour.'
   ),
   new Command(
-    { BASIC: 'FILL', C: 'fill', Pascal: 'fill', Python: 'fill', TypeScript: 'fill' },
+    { BASIC: 'FILL', C: 'fill', Java: 'fill', Pascal: 'fill', Python: 'fill', TypeScript: 'fill' },
     [PCode.fill],
     [
       new Parameter('x', 'integer', false, 1),
@@ -402,35 +402,35 @@ export const commands: Command[] = [
   ),
   // 5. General arithmetic functions
   new Command(
-    { BASIC: 'INC', C: 'inc', Pascal: 'inc', Python: 'inc', TypeScript: 'inc' },
+    { BASIC: null, C: null, Java: null, Pascal: 'inc', Python: null, TypeScript: null },
     [PCode.dupl, PCode.lptr, PCode.incr, PCode.swap, PCode.sptr],
     [new Parameter('variable', 'integer', true, 1)],
     null, 5, 0,
     'Increments the specified <code>variable</code> by 1.'
   ),
   new Command(
-    { BASIC: 'DEC', C: 'dec', Pascal: 'dec', Python: 'dec', TypeScript: 'dec' },
+    { BASIC: null, C: null, Java: null, Pascal: 'dec', Python: null, TypeScript: null },
     [PCode.dupl, PCode.lptr, PCode.decr, PCode.swap, PCode.sptr],
     [new Parameter('variable', 'integer', true, 1)],
     null, 5, 0,
     'Decrements the specified <code>variable</code> by 1.'
   ),
   new Command(
-    { BASIC: 'ABS', C: 'abs', Pascal: 'abs', Python: 'abs', TypeScript: 'abs' },
+    { BASIC: 'ABS', C: 'abs', Java: 'abs', Pascal: 'abs', Python: 'abs', TypeScript: 'abs' },
     [PCode.abs],
     [new Parameter('n', 'integer', false, 1)],
     'integer', 5, 0,
     'Returns the absolute value of <code>n</code>, i.e. <code>n</code> if positive, <code>-n</code> if negative.'
   ),
   new Command(
-    { BASIC: 'SGN', C: 'sign', Pascal: 'sign', Python: 'sign', TypeScript: 'sign' },
+    { BASIC: 'SGN', C: 'sign', Java: 'sign', Pascal: 'sign', Python: 'sign', TypeScript: 'sign' },
     [PCode.sign],
     [new Parameter('a', 'integer', false, 1)],
     'integer', 5, 1,
     'Returns <code>+1</code> if <code>a</code> is positive, <code>-1</code> if <code>a</code> is negative, and <code>0</code> otherwise.'
   ),
   new Command(
-    { BASIC: 'MAX', C: 'max', Pascal: 'max', Python: 'max', TypeScript: 'max' },
+    { BASIC: 'MAX', C: 'max', Java: 'max', Pascal: 'max', Python: 'max', TypeScript: 'max' },
     [PCode.maxi],
     [
       new Parameter('a', 'integer', false, 1),
@@ -440,7 +440,7 @@ export const commands: Command[] = [
     'Returns the maximum of <code>a</code> and <code>b</code>.'
   ),
   new Command(
-    { BASIC: 'MIN', C: 'min', Pascal: 'min', Python: 'min', TypeScript: 'min' },
+    { BASIC: 'MIN', C: 'min', Java: 'min', Pascal: 'min', Python: 'min', TypeScript: 'min' },
     [PCode.mini],
     [
       new Parameter('a', 'integer', false, 1),
@@ -450,7 +450,7 @@ export const commands: Command[] = [
     'Returns the minimum of <code>a</code> and <code>b</code>.'
   ),
   new Command(
-    { BASIC: 'SQR', C: 'sqrt', Pascal: 'sqrt', Python: 'sqrt', TypeScript: 'sqrt' },
+    { BASIC: 'SQR', C: 'sqrt', Java: 'sqrt', Pascal: 'sqrt', Python: 'sqrt', TypeScript: 'sqrt' },
     [PCode.sqrt],
     [
       new Parameter('a', 'integer', false, 1),
@@ -460,7 +460,7 @@ export const commands: Command[] = [
     'Returns <code>&radic;a</code>, multiplied by <code>mult</code> and rounded to the nearest integer. Use the multiplier to approximate real numbers.'
   ),
   new Command(
-    { BASIC: 'HYPOT', C: 'hypot', Pascal: 'hypot', Python: 'hypot', TypeScript: 'hypot' },
+    { BASIC: 'HYPOT', C: 'hypot', Java: 'hypot', Pascal: 'hypot', Python: 'hypot', TypeScript: 'hypot' },
     [PCode.hyp],
     [
       new Parameter('a', 'integer', false, 1),
@@ -471,21 +471,21 @@ export const commands: Command[] = [
     'Returns <code>&radic;(a<sup>2</sup>+b<sup>2</sup>)</code>, multiplied by <code>mult</code> and rounded to the nearest integer. Use the multiplier to approximate real numbers.'
   ),
   new Command(
-    { BASIC: 'RND', C: null, Pascal: null, Python: null, TypeScript: null },
+    { BASIC: 'RND', C: null, Java: null, Pascal: null, Python: null, TypeScript: null },
     [PCode.rand, PCode.incr],
     [new Parameter('n', 'integer', false, 1)],
     'integer', 5, 1,
     'Returns a random integer between 1 and <code>n</code>.'
   ),
   new Command(
-    { BASIC: null, C: 'rand', Pascal: 'random', Python: null, TypeScript: 'random' },
+    { BASIC: null, C: 'rand', Java: 'randInt', Pascal: 'random', Python: null, TypeScript: 'randInt' },
     [PCode.rand],
     [new Parameter('n', 'integer', false, 1)],
     'integer', 5, 1,
     'Returns a random non-negative integer less than <code>n</code>.'
   ),
   new Command(
-    { BASIC: null, C: null, Pascal: null, Python: 'randint', TypeScript: null },
+    { BASIC: null, C: null, Java: null, Pascal: null, Python: 'randint', TypeScript: null },
     [PCode.swap, PCode.dupl, PCode.rota, PCode.incr, PCode.swap, PCode.subt, PCode.rand, PCode.plus],
     [
       new Parameter('a', 'integer', false, 1),
@@ -495,14 +495,14 @@ export const commands: Command[] = [
     'Returns a random integer between <code>a</code> and <code>b</code>.'
   ),
   new Command(
-    { BASIC: 'RNDSEED', C: 'srand', Pascal: 'randseed', Python: 'randseed', TypeScript: 'randseed' },
+    { BASIC: 'RNDSEED', C: 'srand', Java: 'seed', Pascal: 'randseed', Python: 'seed', TypeScript: 'seed' },
     [PCode.seed],
     [new Parameter('seed', 'integer', false, 1)],
     'integer', 5, 1,
     'Initialises the random number generator with the given <code>seed</code>, and returns that seed. If <code>seed</code> is 0, the seed is set from the current system clock.'
   ),
   new Command(
-    { BASIC: 'POWER', C: 'pow', Pascal: 'power', Python: 'power', TypeScript: 'pow' },
+    { BASIC: 'POWER', C: 'pow', Java: 'power', Pascal: 'power', Python: 'power', TypeScript: 'pow' },
     [PCode.powr],
     [
       new Parameter('a', 'integer', false, 1),
@@ -514,7 +514,7 @@ export const commands: Command[] = [
     'Returns <code>(a/b)<sup>c</sup></code>, multiplied by <code>mult</code> and rounded to the nearest integer. Use the multiplier to approximate real numbers.'
   ),
   new Command(
-    { BASIC: 'ROOT', C: 'root', Pascal: 'root', Python: 'root', TypeScript: 'root' },
+    { BASIC: 'ROOT', C: 'root', Java: 'root', Pascal: 'root', Python: 'root', TypeScript: 'root' },
     [PCode.root],
     [
       new Parameter('a', 'integer', false, 1),
@@ -526,7 +526,7 @@ export const commands: Command[] = [
     'Returns <code><sup>c</sup>&radic;(a/b)</code>, multiplied by <code>mult</code> and rounded to the nearest integer. Use the multiplier to approximate real numbers.'
   ),
   new Command(
-    { BASIC: 'DIVMULT', C: 'divmult', Pascal: 'divmult', Python: 'divmult', TypeScript: 'divmult' },
+    { BASIC: 'DIVMULT', C: 'divmult', Java: 'divmult', Pascal: 'divmult', Python: 'divmult', TypeScript: 'divmult' },
     [PCode.divm],
     [
       new Parameter('a', 'integer', false, 1),
@@ -537,14 +537,34 @@ export const commands: Command[] = [
     'Returns <code>a/b</code>, multiplied by <code>mult</code> and rounded to the nearest integer. Use the multiplier to approximate real numbers.'
   ),
   new Command(
-    { BASIC: 'MAXINT', C: 'maxint', Pascal: 'maxint', Python: 'maxint', TypeScript: 'maxint' },
+    { BASIC: 'MAXINT', C: 'maxint', Java: 'maxInt', Pascal: 'maxint', Python: 'maxint', TypeScript: 'maxInt' },
     [PCode.mxin],
     [], 'integer', 5, 2,
     'Returns the maximum integer that the Machine can deal with (2<sup>31</sup>-1).'
   ),
+  new Command(
+    { BASIC: null, C: null, Java: null, Pascal: 'shl', Python: null, TypeScript: null },
+    [PCode.shft],
+    [
+      new Parameter('number', 'integer', false, 1),
+      new Parameter('shift', 'integer', false, 1)
+    ],
+    'integer', 5, 2,
+    'Shift bits left.'
+  ),
+  new Command(
+    { BASIC: null, C: null, Java: null, Pascal: 'shr', Python: null, TypeScript: null },
+    [PCode.neg, PCode.shft],
+    [
+      new Parameter('number', 'integer', false, 1),
+      new Parameter('shift', 'integer', false, 1)
+    ],
+    'integer', 5, 2,
+    'Shift bits right.'
+  ),
   // 6. Trig / exp / log functions
   new Command(
-    { BASIC: 'SIN', C: 'sin', Pascal: 'sin', Python: 'sin', TypeScript: 'sin' },
+    { BASIC: 'SIN', C: 'sin', Java: 'sin', Pascal: 'sin', Python: 'sin', TypeScript: 'sin' },
     [PCode.sin],
     [
       new Parameter('a', 'integer', false, 1),
@@ -555,7 +575,7 @@ export const commands: Command[] = [
     'Returns <code>sin(a/b)</code>, multiplied by <code>mult</code> and rounded to the nearest integer. Use the multiplier to approximate real numbers.'
   ),
   new Command(
-    { BASIC: 'COS', C: 'cos', Pascal: 'cos', Python: 'cos', TypeScript: 'cos' },
+    { BASIC: 'COS', C: 'cos', Java: 'cos', Pascal: 'cos', Python: 'cos', TypeScript: 'cos' },
     [PCode.cos],
     [
       new Parameter('a', 'integer', false, 1),
@@ -566,7 +586,7 @@ export const commands: Command[] = [
     'Returns <code>cos(a/b)</code>, multiplied by <code>mult</code> and rounded to the nearest integer. Use the multiplier to approximate real numbers.'
   ),
   new Command(
-    { BASIC: 'TAN', C: 'tan', Pascal: 'tan', Python: 'tan', TypeScript: 'tan' },
+    { BASIC: 'TAN', C: 'tan', Java: 'tan', Pascal: 'tan', Python: 'tan', TypeScript: 'tan' },
     [PCode.tan],
     [
       new Parameter('a', 'integer', false, 1),
@@ -577,14 +597,14 @@ export const commands: Command[] = [
     'Returns <code>tan(a/b)</code>, multiplied by <code>mult</code> and rounded to the nearest integer. Use the multiplier to approximate real numbers.'
   ),
   new Command(
-    { BASIC: 'PI', C: 'pi', Pascal: 'pi', Python: 'pi', TypeScript: 'PI' },
+    { BASIC: 'PI', C: 'pi', Java: 'pi', Pascal: 'pi', Python: 'pi', TypeScript: 'PI' },
     [PCode.pi],
     [new Parameter('mult', 'integer', false, 1)],
     'integer', 6, 1,
     'Returns the value of Pi, multiplied by <code>mult</code> and rounded to the nearest integer. Use the multiplier to approximate real numbers.'
   ),
   new Command(
-    { BASIC: 'EXP', C: 'exp', Pascal: 'exp', Python: 'exp', TypeScript: 'exp' },
+    { BASIC: 'EXP', C: 'exp', Java: 'exp', Pascal: 'exp', Python: 'exp', TypeScript: 'exp' },
     [PCode.exp],
     [
       new Parameter('a', 'integer', false, 1),
@@ -595,7 +615,7 @@ export const commands: Command[] = [
     'Returns <code>a<sup>b</sup></code>, multiplied by <code>mult</code> and rounded to the nearest integer. Use the multiplier to approximate real numbers.'
   ),
   new Command(
-    { BASIC: 'LN', C: 'log', Pascal: 'ln', Python: 'ln', TypeScript: 'log' },
+    { BASIC: 'LN', C: 'log', Java: 'log', Pascal: 'ln', Python: 'log', TypeScript: 'log' },
     [PCode.ln],
     [
       new Parameter('a', 'integer', false, 1),
@@ -606,7 +626,7 @@ export const commands: Command[] = [
     'Returns <code>ln(a/b)</code>, multiplied by <code>mult</code> and rounded to the nearest integer. Use the multiplier to approximate real numbers.'
   ),
   new Command(
-    { BASIC: 'ANTILOG', C: 'antilog', Pascal: 'antilog', Python: 'antilog', TypeScript: 'antilog' },
+    { BASIC: 'ANTILOG', C: 'antilog', Java: 'antilog', Pascal: 'antilog', Python: 'antilog', TypeScript: 'antilog' },
     [PCode.alog],
     [
       new Parameter('a', 'integer', false, 1),
@@ -617,7 +637,7 @@ export const commands: Command[] = [
     'Returns <code>antilog<sub>10</sub>(a/b)</code> - i.e. <code>10<sup>a/b</sub></code> - multiplied by <code>mult</code> and rounded to the nearest integer. Use the multiplier to approximate real numbers.'
   ),
   new Command(
-    { BASIC: 'LOG10', C: 'log10', Pascal: 'log10', Python: 'log10', TypeScript: 'log10' },
+    { BASIC: 'LOG10', C: 'log10', Java: 'log10', Pascal: 'log10', Python: 'log10', TypeScript: 'log10' },
     [PCode.log],
     [
       new Parameter('a', 'integer', false, 1),
@@ -628,7 +648,7 @@ export const commands: Command[] = [
     'Returns <code>log<sub>10</sub>(a/b)</code>, multiplied by <code>mult</code> and rounded to the nearest integer. Use the multiplier to approximate real numbers.'
   ),
   new Command(
-    { BASIC: 'ASN', C: 'asin', Pascal: 'arcsin', Python: 'asin', TypeScript: 'asin' },
+    { BASIC: 'ASN', C: 'asin', Java: 'asin', Pascal: 'arcsin', Python: 'asin', TypeScript: 'asin' },
     [PCode.asin],
     [
       new Parameter('a', 'integer', false, 1),
@@ -639,7 +659,7 @@ export const commands: Command[] = [
     'Returns <code>arcsin(a/b)</code>, multiplied by <code>mult</code> and rounded to the nearest integer. Use the multiplier to approximate real numbers.'
   ),
   new Command(
-    { BASIC: 'ACS', C: 'acos', Pascal: 'arccos', Python: 'acos', TypeScript: 'acos' },
+    { BASIC: 'ACS', C: 'acos', Java: 'acos', Pascal: 'arccos', Python: 'acos', TypeScript: 'acos' },
     [PCode.acos],
     [
       new Parameter('a', 'integer', false, 1),
@@ -650,7 +670,7 @@ export const commands: Command[] = [
     'Returns <code>arccos(a/b)</code>, multiplied by <code>mult</code> and rounded to the nearest integer. Use the multiplier to approximate real numbers.'
   ),
   new Command(
-    { BASIC: 'ATN', C: 'atan', Pascal: 'arctan', Python: 'atan', TypeScript: 'atan' },
+    { BASIC: 'ATN', C: 'atan', Java: 'atan', Pascal: 'arctan', Python: 'atan', TypeScript: 'atan' },
     [PCode.atan],
     [
       new Parameter('a', 'integer', false, 1),
@@ -662,21 +682,21 @@ export const commands: Command[] = [
   ),
   // 7. String operations
   new Command(
-    { BASIC: 'WRITE', C: 'write', Pascal: 'write', Python: 'write', TypeScript: 'write' },
+    { BASIC: 'WRITE', C: 'write', Java: 'write', Pascal: 'write', Python: 'write', TypeScript: 'write' },
     [PCode.writ],
     [new Parameter('string', 'string', false, 1)],
     null, 7, 0,
     'Writes the input <code>string</code> to the console and textual output area of the System.'
   ),
   new Command(
-    { BASIC: 'WRITELN', C: 'writeline', Pascal: 'writeln', Python: 'writeline', TypeScript: 'writeline' },
+    { BASIC: 'WRITELN', C: 'writeline', Java: 'writeln', Pascal: 'writeln', Python: 'writeline', TypeScript: 'writeln' },
     [PCode.writ, PCode.newl],
     [new Parameter('string', 'string', false, 1)],
     null, 7, 0,
     'Writes the input <code>string</code> to the console and textual output area of the System, followed by a line break.'
   ),
   new Command(
-    { BASIC: 'PRINT', C: 'print', Pascal: 'print', Python: 'print', TypeScript: 'print' },
+    { BASIC: 'PRINT', C: 'print', Java: 'print', Pascal: 'print', Python: 'print', TypeScript: 'print' },
     [PCode.prnt],
     [
       new Parameter('string', 'string', false, 1),
@@ -687,49 +707,49 @@ export const commands: Command[] = [
     'Prints the input <code>string</code> in the Turtle&rsquo;s current colour and at the Turtle&rsquo;s current location, in the specified <code>font</code> and <code>size</code>. Can be used in conjunction with the <code>box</code> drawing command. For a list of available fonts, see the <b>Constants</b> tab.'
   ),
   new Command(
-    { BASIC: 'LCASE$', C: 'strlwr', Pascal: 'lowercase', Python: 'lower', TypeScript: 'lowercase' },
+    { BASIC: 'LCASE$', C: 'strlwr', Java: 'toLowerCase', Pascal: 'lowercase', Python: 'lower', TypeScript: 'toLowerCase' },
     [PCode.ldin, 1, PCode.case],
     [new Parameter('string', 'string', false, 1)],
     'string', 7, 1,
     'Returns the input <code>string</code> as all lowercase.'
   ),
   new Command(
-    { BASIC: 'UCASE$', C: 'strupr', Pascal: 'uppercase', Python: 'upper', TypeScript: 'uppercase' },
+    { BASIC: 'UCASE$', C: 'strupr', Java: 'toUpperCase', Pascal: 'uppercase', Python: 'upper', TypeScript: 'toUpperCase' },
     [PCode.ldin, 2, PCode.case],
     [new Parameter('string', 'string', false, 1)],
     'string', 7, 1,
     'Returns the input <code>string</code> as all uppercase.'
   ),
   new Command(
-    { BASIC: null, C: 'strinit', Pascal: 'initcap', Python: 'capitalize', TypeScript: 'initcap' },
+    { BASIC: 'CCASE$', C: 'strcap', Java: 'capitalize', Pascal: 'initcap', Python: 'capitalize', TypeScript: 'capitalize' },
     [PCode.ldin, 3, PCode.case],
     [new Parameter('string', 'string', false, 1)],
     'string', 7, 1,
     'Returns the input <code>string</code> with the first letter capitalized.'
   ),
   new Command(
-    { BASIC: null, C: 'strtitle', Pascal: 'titlecase', Python: 'titlecase', TypeScript: 'titlecase' },
+    { BASIC: 'TCASE$', C: 'strtitle', Java: 'toTitleCase', Pascal: 'titlecase', Python: 'title', TypeScript: 'toTitleCase' },
     [PCode.ldin, 4, PCode.case],
     [new Parameter('string', 'string', false, 1)],
     'string', 7, 1,
     'Returns the input <code>string</code> in title case (i.e. the first letter of each word capitalized).'
   ),
   new Command(
-    { BASIC: null, C: 'strswap', Pascal: 'swapcase', Python: 'swapcase', TypeScript: 'swapcase' },
+    { BASIC: 'SCASE$', C: 'strswap', Java: 'swapCase', Pascal: 'swapcase', Python: 'swapcase', TypeScript: 'swapCase' },
     [PCode.ldin, 5, PCode.case],
     [new Parameter('string', 'string', false, 1)],
     'string', 7, 1,
     'Returns the input <code>string</code> with all the cases swapped.'
   ),
   new Command(
-    { BASIC: 'LEN', C: 'strlen', Pascal: 'length', Python: 'len', TypeScript: 'length' },
+    { BASIC: 'LEN', C: 'strlen', Java: 'length', Pascal: 'length', Python: 'len', TypeScript: 'length' },
     [PCode.slen],
     [new Parameter('string', 'string', false, 1)],
     'integer', 7, 1,
     'Returns the length of the input <code>string</code> (i.e. the number of characters).'
   ),
   new Command(
-    { BASIC: 'DEL$', C: 'strdel', Pascal: 'delete', Python: null, TypeScript: null },
+    { BASIC: 'DEL$', C: 'strdel', Java: 'delete', Pascal: 'delete', Python: 'delete', TypeScript: 'delete' },
     [PCode.dels],
     [
       new Parameter('string', 'string', false, 1),
@@ -740,7 +760,7 @@ export const commands: Command[] = [
     'Returns the input <code>string</code> with some characters removed, starting at the given <code>index</code> and of the specified <code>length</code>.'
   ),
   new Command(
-    { BASIC: 'LEFT$', C: null, Pascal: null, Python: null, TypeScript: null },
+    { BASIC: 'LEFT$', C: null, Java: null, Pascal: null, Python: null, TypeScript: null },
     [PCode.ldin, 1, PCode.swap, PCode.copy],
     [
       new Parameter('string', 'string', false, 1),
@@ -750,7 +770,7 @@ export const commands: Command[] = [
     'Returns a copy of the characters in the input <code>string</code>, starting on the left and of the specified <code>length</code>.'
   ),
   new Command(
-    { BASIC: 'MID$', C: 'strcpy', Pascal: 'copy', Python: 'copy', TypeScript: null },
+    { BASIC: 'MID$', C: 'strcpy', Java: 'copy', Pascal: 'copy', Python: 'copy', TypeScript: 'copy' },
     [PCode.copy],
     [
       new Parameter('string', 'string', false, 1),
@@ -761,7 +781,7 @@ export const commands: Command[] = [
     'Returns a copy of the characters in the input <code>string</code>, starting at the given <code>index</code> and of the specified <code>length</code>.'
   ),
   new Command(
-    { BASIC: 'RIGHT$', C: null, Pascal: null, Python: null, TypeScript: null },
+    { BASIC: 'RIGHT$', C: null, Java: null, Pascal: null, Python: null, TypeScript: null },
     [PCode.swap, PCode.dupl, PCode.slen, PCode.incr, PCode.rota, PCode.subt, PCode.mxin, PCode.copy],
     [
       new Parameter('string', 'string', false, 1),
@@ -771,18 +791,18 @@ export const commands: Command[] = [
     'Returns a copy of the characters in the input <code>string</code>, starting on the right and of the specified <code>length</code>.'
   ),
   new Command(
-    { BASIC: 'INS$', C: null, Pascal: null, Python: 'insert', TypeScript: null },
-    [PCode.rota, PCode.rota, PCode.inss],
+    { BASIC: 'INS$', C: 'strins', Java: 'insert', Pascal: null, Python: 'insert', TypeScript: 'insert' },
+    [PCode.rota, PCode.rota, PCode.swap, PCode.rota, PCode.inss],
     [
       new Parameter('string', 'string', false, 1),
-      new Parameter('index', 'integer', false, 1),
-      new Parameter('substr', 'string', false, 1)
+      new Parameter('substr', 'string', false, 1),
+      new Parameter('index', 'integer', false, 1)
     ],
     'string', 7, 2,
     'Returns the input <code>string</code> with the specified <code>substring</code> inserted at the given <code>index</code>.'
   ),
   new Command(
-    { BASIC: null, C: null, Pascal: 'insert', Python: null, TypeScript: null },
+    { BASIC: null, C: null, Java: null, Pascal: 'insert', Python: null, TypeScript: null },
     [PCode.inss],
     [
       new Parameter('substr', 'string', false, 1),
@@ -793,7 +813,7 @@ export const commands: Command[] = [
     'Returns the input <code>string</code> with the specified <code>substring</code> inserted at the given <code>index</code>.'
   ),
   new Command(
-    { BASIC: 'PAD$', C: 'pad', Pascal: 'pad', Python: 'pad', TypeScript: 'pad' },
+    { BASIC: 'PAD$', C: 'strpad', Java: 'pad', Pascal: 'pad', Python: 'pad', TypeScript: null },
     [PCode.spad],
     [
       new Parameter('string', 'string', false, 1),
@@ -804,7 +824,29 @@ export const commands: Command[] = [
     'Returns the input <code>string</code> with the input <code>padding</code> added either before or after to make a string of minimum given <code>length</cope>. The <code>padding</code> is placed before if <code>length</code> is positive, after if it is negative.'
   ),
   new Command(
-    { BASIC: 'REPLACE$', C: null, Pascal: 'replace', Python: 'replace', TypeScript: null },
+    { BASIC: null, C: null, Java: null, Pascal: null, Python: null, TypeScript: 'padStart' },
+    [PCode.spad],
+    [
+      new Parameter('string', 'string', false, 1),
+      new Parameter('padding', 'string', false, 1),
+      new Parameter('length', 'integer', false, 1)
+    ],
+    'string', 7, 2,
+    'Returns the input <code>string</code> with the input <code>padding</code> added before to make a string of minimum given <code>length</cope>.'
+  ),
+  new Command(
+    { BASIC: null, C: null, Java: null, Pascal: null, Python: null, TypeScript: 'padEnd' },
+    [PCode.neg, PCode.spad],
+    [
+      new Parameter('string', 'string', false, 1),
+      new Parameter('padding', 'string', false, 1),
+      new Parameter('length', 'integer', false, 1)
+    ],
+    'string', 7, 2,
+    'Returns the input <code>string</code> with the input <code>padding</code> added after to make a string of minimum given <code>length</cope>.'
+  ),
+  new Command(
+    { BASIC: 'REPLACE$', C: 'strrepl', Java: 'replace', Pascal: 'replace', Python: 'replace', TypeScript: null },
     [PCode.repl],
     [
       new Parameter('string', 'string', false, 1),
@@ -816,7 +858,7 @@ export const commands: Command[] = [
     'Returns the input <code>string</code> with up to <code>n</code> occurences of <code>substring</code> replaced by <code>replace</code>. Set <code>n</code> equal to <code>0</code> to replace every occurence.'
   ),
   new Command(
-    { BASIC: 'INSTR', C: null, Pascal: null, Python: 'find', TypeScript: null },
+    { BASIC: 'INSTR', C: 'strpos', Java: 'indexOf', Pascal: null, Python: 'find', TypeScript: 'indexOf' },
     [PCode.swap, PCode.poss],
     [
       new Parameter('string', 'string', false, 1),
@@ -826,7 +868,7 @@ export const commands: Command[] = [
     'Searches for the input <code>substring</code> within the given <code>string</code>; returns the index of the first character if found, 0 otherwise.'
   ),
   new Command(
-    { BASIC: null, C: null, Pascal: 'pos', Python: null, TypeScript: null },
+    { BASIC: null, C: null, Java: null, Pascal: 'pos', Python: null, TypeScript: null },
     [PCode.poss],
     [
       new Parameter('substr', 'string', false, 1),
@@ -837,21 +879,21 @@ export const commands: Command[] = [
   ),
   // 8. Type conversion routines
   new Command(
-    { BASIC: 'STR$', C: null, Pascal: 'str', Python: 'str', TypeScript: null },
+    { BASIC: 'STR$', C: 'itoa', Java: 'toString', Pascal: 'str', Python: 'str', TypeScript: 'toString' },
     [PCode.itos],
     [new Parameter('n', 'integer', false, 1)],
     'string', 8, 0,
     'Returns the integer <code>n</code> as a string, e.g. <code>str(12)=\'12\'</code>.'
   ),
   new Command(
-    { BASIC: 'VAL', C: null, Pascal: 'val', Python: 'int', TypeScript: null },
+    { BASIC: 'VAL', C: 'atoi', Java: 'parseInt', Pascal: 'val', Python: 'int', TypeScript: 'parseInt' },
     [PCode.ldin, 0, PCode.sval],
     [new Parameter('string', 'string', false, 1)],
     'integer', 8, 0,
     'Returns the input <code>string</code> as an integer, e.g. <code>val(\'12\')=12</code>. Returns <code>0</code> if the string cannot be converted (i.e. if it is not an integer string).'
   ),
   new Command(
-    { BASIC: 'VALDEF', C: null, Pascal: 'valdef', Python: 'intdef', TypeScript: null },
+    { BASIC: 'VALDEF', C: 'atoidef', Java: 'parseIntDef', Pascal: 'valdef', Python: 'intdef', TypeScript: 'parseIntDef' },
     [PCode.sval],
     [
       new Parameter('string', 'string', false, 1),
@@ -861,7 +903,7 @@ export const commands: Command[] = [
     'Returns the input <code>string</code> as an integer, e.g. <code>val(\'12\')=12</code>. Returns the specified <code>default</code> value if the string cannot be converted (i.e. if it is not an integer string).'
   ),
   new Command(
-    { BASIC: 'QSTR$', C: null, Pascal: 'qstr', Python: 'qstr', TypeScript: null },
+    { BASIC: 'QSTR$', C: 'qitoa', Java: 'toStringQ', Pascal: 'qstr', Python: 'qstr', TypeScript: 'toStringQ' },
     [PCode.qtos],
     [
       new Parameter('a', 'integer', false, 1),
@@ -872,7 +914,7 @@ export const commands: Command[] = [
     'Returns the value of <code>a/b</code> to the specified number of decimal places, as a decimal string, e.g. <code>qstr(2,3,4)=\'0.6667\'</code>.'
   ),
   new Command(
-    { BASIC: 'QVAL', C: null, Pascal: 'qval', Python: 'qval', TypeScript: null },
+    { BASIC: 'QVAL', C: 'qatoi', Java: 'parseIntQ', Pascal: 'qval', Python: 'qint', TypeScript: 'parseIntQ' },
     [PCode.qval],
     [
       new Parameter('string', 'string', false, 1),
@@ -883,35 +925,56 @@ export const commands: Command[] = [
     'Returns the input decimal <code>string</code> as an integer, multiplied by <code>mult</code> and rounded to the nearest integer, e.g. <code>qval(\'1.5\',10)=15</code>. Returns the specified <code>default</code> value if the string cannot be converted (i.e. if it is not a decimal string).'
   ),
   new Command(
-    { BASIC: 'CHR$', C: null, Pascal: 'chr', Python: 'chr', TypeScript: null },
+    { BASIC: 'CHR$', C: null, Java: 'fromCharCode', Pascal: null, Python: 'chr', TypeScript: 'fromCharCode' },
     [PCode.ctos],
     [new Parameter('n', 'integer', false, 1)],
     'string', 8, 2,
     'Returns the character with ASCII character code <code>n</code>.'
   ),
   new Command(
-    { BASIC: 'ASC', C: null, Pascal: 'ord', Python: 'ord', TypeScript: null },
+    { BASIC: null, C: null, Java: null, Pascal: 'chr', Python: null, TypeScript: null },
+    [],
+    [new Parameter('n', 'integer', false, 1)],
+    'character', 8, 2,
+    'Returns the character with ASCII character code <code>n</code>.'
+  ),
+  new Command(
+    { BASIC: 'ASC', C: null, Java: 'charCode', Pascal: null, Python: 'ord', TypeScript: 'charCode' },
     [PCode.sasc],
     [new Parameter('char', 'string', false, 1)],
     'integer', 8, 2,
     'Returns the ASCII code of the input character, or of the first character of the input string.'
   ),
   new Command(
-    { BASIC: 'BOOLINT', C: null, Pascal: 'boolint', Python: null, TypeScript: null },
-    [PCode.null],
+    { BASIC: null, C: null, Java: null, Pascal: 'ord', Python: null, TypeScript: null },
+    [],
+    [new Parameter('char', 'character', false, 1)],
+    'integer', 8, 2,
+    'Returns the ASCII code of the input character.'
+  ),
+  new Command(
+    { BASIC: null, C: null, Java: null, Pascal: 'boolint', Python: null, TypeScript: null },
+    [],
     [new Parameter('boolean', 'boolean', false, 1)],
     'integer', 8, 2,
     'Returns the input <code>boolean</code> as an integer (-1 for <code>true</code>, 0 for <code>false</code>).'
   ),
   new Command(
-    { BASIC: null, C: null, Pascal: null, Python: 'boolint', TypeScript: null },
-    [PCode.abs],
+    { BASIC: null, C: null, Java: null, Pascal: null, Python: 'int', TypeScript: null },
+    [],
     [new Parameter('boolean', 'boolean', false, 1)],
     'integer', 8, 2,
     'Returns the input <code>boolean</code> as an integer (1 for <code>true</code>, 0 for <code>false</code>).'
   ),
   new Command(
-    { BASIC: 'HEX$', C: 'hex', Pascal: 'hexstr', Python: 'hex', TypeScript: 'hex' },
+    { BASIC: null, C: null, Java: null, Pascal: null, Python: 'bool', TypeScript: null },
+    [PCode.ldin, 0, PCode.noeq],
+    [new Parameter('integer', 'integer', false, 1)],
+    'boolean', 8, 2,
+    'Returns the input <code>integer</code> as a boolean (0 is <code>false</code>, everything else is <code>true</code>).'
+  ),
+  new Command(
+    { BASIC: 'HEX$', C: 'itoahex', Java: 'toStringHex', Pascal: 'hexstr', Python: 'hex', TypeScript: 'toStringHex' },
     [PCode.hexs],
     [
       new Parameter('n', 'integer', false, 1),
@@ -922,47 +985,47 @@ export const commands: Command[] = [
   ),
   // 9. Input and timing routines
   new Command(
-    { BASIC: 'PAUSE', C: 'pause', Pascal: 'pause', Python: 'pause', TypeScript: 'pause' },
+    { BASIC: 'PAUSE', C: 'pause', Java: 'pause', Pascal: 'pause', Python: 'pause', TypeScript: 'pause' },
     [PCode.wait],
     [new Parameter('m', 'integer', false, 1)],
     null, 9, 0,
     'Makes the Turtle Machine wait <code>m</code> milliseconds before performing the next operation. This is useful for controlling the speed of animations.'
   ),
   new Command(
-    { BASIC: 'HALT', C: 'halt', Pascal: 'halt', Python: 'halt', TypeScript: 'halt' },
+    { BASIC: 'HALT', C: 'exit', Java: 'halt', Pascal: 'halt', Python: 'halt', TypeScript: 'halt' },
     [PCode.halt],
     [], null, 9, 0,
     'Halts the program.'
   ),
   new Command(
-    { BASIC: 'GETLINE$', C: 'readline', Pascal: 'readln', Python: 'readline', TypeScript: 'readline' },
+    { BASIC: 'GETLINE$', C: 'gets', Java: 'readLine', Pascal: 'readln', Python: 'readline', TypeScript: 'readLine' },
     [PCode.rdln],
     [], 'string', 9, 0,
     'Waits for the RETURN key to be pressed, then returns everything in the keybuffer up to (and not including) the new line character.'
   ),
   new Command(
-    { BASIC: 'INPUT$', C: 'scan', Pascal: 'input', Python: 'input', TypeScript: 'input' },
+    { BASIC: 'INPUT$', C: 'scan', Java: 'input', Pascal: 'input', Python: 'input', TypeScript: 'input' },
     [PCode.writ, PCode.newl, PCode.rdln],
     [new Parameter('prompt', 'string', false, 1)],
     'string', 9, 0,
     'Gives an input prompt, then returns the input when the RETURN key is pressed (using the keybuffer).'
   ),
   new Command(
-    { BASIC: 'CURSOR', C: 'cursor', Pascal: 'cursor', Python: 'cursor', TypeScript: 'cursor' },
+    { BASIC: 'CURSOR', C: 'cursor', Java: 'cursor', Pascal: 'cursor', Python: 'cursor', TypeScript: 'cursor' },
     [PCode.curs],
     [new Parameter('cursorcode', 'integer', false, 1)],
     null, 9, 1,
     'Sets which cursor to display (1-15) when the mouse pointer is over the canvas. 0 hides the cursor; any value outside the range 0-15 resets the default cursor. For a list of available cursors, see the <b>Cursors</b> tab.'
   ),
   new Command(
-    { BASIC: 'KEYECHO', C: 'keyecho', Pascal: 'keyecho', Python: 'keyecho', TypeScript: 'keyecho' },
+    { BASIC: 'KEYECHO', C: 'keyecho', Java: 'keyEcho', Pascal: 'keyecho', Python: 'keyecho', TypeScript: 'keyEcho' },
     [PCode.kech],
     [new Parameter('on', 'boolean', false, 1)],
     null, 9, 1,
     'Turns the keyboard echo to the console on (<code>true</code>) or off (<code>false</code>).'
   ),
   new Command(
-    { BASIC: 'DETECT', C: 'detect', Pascal: 'detect', Python: 'detect', TypeScript: 'detect' },
+    { BASIC: 'DETECT', C: 'detect', Java: 'detect', Pascal: 'detect', Python: 'detect', TypeScript: 'detect' },
     [PCode.tdet],
     [
       new Parameter('keycode', 'integer', false, 1),
@@ -972,41 +1035,41 @@ export const commands: Command[] = [
     'Waits a maximum of <code>m</code> milliseconds for the key with the specified <code>keycode</code> to be pressed; returns <code>true</code> if pressed (and stops waiting), <code>false</code> otherwise.'
   ),
   new Command(
-    { BASIC: 'GET$', C: 'read', Pascal: 'read', Python: 'read', TypeScript: 'read' },
+    { BASIC: 'GET$', C: 'get', Java: 'read', Pascal: 'read', Python: 'read', TypeScript: 'read' },
     [PCode.read],
     [new Parameter('n', 'integer', false, 1)],
     'string', 9, 1,
     'Returns the first <code>n</code> characters from the keybuffer as a string.'
   ),
   new Command(
-    { BASIC: 'TIME', C: 'time', Pascal: 'time', Python: 'time', TypeScript: 'time' },
+    { BASIC: 'TIME', C: 'time', Java: 'time', Pascal: 'time', Python: 'time', TypeScript: 'time' },
     [PCode.time],
     [], 'integer', 9, 1,
     'Returns the time (in milliseconds) since the program began.'
   ),
   new Command(
-    { BASIC: 'TIMESET', C: 'timeset', Pascal: 'timeset', Python: 'timeset', TypeScript: 'timeset' },
+    { BASIC: 'TIMESET', C: 'timeset', Java: 'timeSet', Pascal: 'timeset', Python: 'timeset', TypeScript: 'timeSet' },
     [PCode.tset],
     [new Parameter('m', 'integer', false, 1)],
     null, 9, 1,
     'Artificially sets the time since the program began to <code>m</code> milliseconds.'
   ),
   new Command(
-    { BASIC: 'RESET', C: 'reset', Pascal: 'reset', Python: 'reset', TypeScript: 'reset' },
+    { BASIC: 'RESET', C: 'reset', Java: 'reset', Pascal: 'reset', Python: 'reset', TypeScript: 'reset' },
     [PCode.iclr],
     [new Parameter('?input', 'integer', false, 1)],
     null, 9, 2,
     'Resets the specified <code>?input</code> (<code>?mousex</code>, <code>?mousey</code>, <code>?click</code>, etc.) to its initial value (i.e. -1).'
   ),
   new Command(
-    { BASIC: 'KEYSTATUS', C: 'keystatus', Pascal: 'keystatus', Python: 'keystatus', TypeScript: 'keystatus' },
+    { BASIC: 'KEYSTATUS', C: 'keystatus', Java: 'keyStatus', Pascal: 'keystatus', Python: 'keystatus', TypeScript: 'keyStatus' },
     [PCode.inpt],
     [new Parameter('keycode', 'integer', false, 1)],
     'integer', 9, 2,
     'Returns the <code>?kshift</code> value for the most recent press of the key with the specified <code>keycode</code>.'
   ),
   new Command(
-    { BASIC: 'KEYBUFFER', C: 'keybuffer', Pascal: 'keybuffer', Python: 'keybuffer', TypeScript: 'keybuffer' },
+    { BASIC: 'KEYBUFFER', C: 'keybuffer', Java: 'keyBuffer', Pascal: 'keybuffer', Python: 'keybuffer', TypeScript: 'keyBuffer' },
     [PCode.bufr, PCode.ldin, 1, PCode.sptr, PCode.hfix],
     [new Parameter('n', 'integer', false, 1)],
     null, 9, 2,
@@ -1014,7 +1077,7 @@ export const commands: Command[] = [
   ),
   // 10. file processing
   new Command(
-    { BASIC: 'CHDIR', C: null, Pascal: 'chdir', Python: 'chdir', TypeScript: null },
+    { BASIC: 'CHDIR', C: null, Java: null, Pascal: 'chdir', Python: null, TypeScript: null },
     [PCode.chdr],
     [new Parameter('directory name', 'string', false, 1)],
     null,
@@ -1023,7 +1086,7 @@ export const commands: Command[] = [
     'Changes the current directory.'
   ),
   new Command(
-    { BASIC: 'RMDIR', C: null, Pascal: 'rmdir', Python: 'rmdir', TypeScript: null },
+    { BASIC: 'RMDIR', C: null, Java: null, Pascal: 'rmdir', Python: null, TypeScript: null },
     [PCode.ldin, 1, PCode.diry, PCode.ldin, 128, PCode.less],
     [new Parameter('subdirectory name', 'string', false, 1)],
     'boolean',
@@ -1032,7 +1095,7 @@ export const commands: Command[] = [
     'Removes a subdirectory.'
   ),
   new Command(
-    { BASIC: 'MKDIR', C: null, Pascal: 'mkdir', Python: 'mkdir', TypeScript: null },
+    { BASIC: 'MKDIR', C: null, Java: null, Pascal: 'mkdir', Python: null, TypeScript: null },
     [PCode.ldin, 2, PCode.diry, PCode.ldin, 127, PCode.more],
     [new Parameter('subdirectory name', 'string', false, 1)],
     'boolean',
@@ -1041,7 +1104,7 @@ export const commands: Command[] = [
     'Creates a subdirectory.'
   ),
   new Command(
-    { BASIC: null, C: null, Pascal: 'openfile', Python: 'openfile', TypeScript: null },
+    { BASIC: null, C: null, Java: null, Pascal: 'openfile', Python: null, TypeScript: null },
     [PCode.open],
     [
       new Parameter('filename', 'string', false, 1),
@@ -1053,7 +1116,7 @@ export const commands: Command[] = [
     'Opens a file (1: read, 2: append, 3: write).'
   ),
   new Command(
-    { BASIC: 'OPENIN', C: null, Pascal: null, Python: null, TypeScript: null },
+    { BASIC: 'OPENIN', C: null, Java: null, Pascal: null, Python: null, TypeScript: null },
     [PCode.ldin, 1, PCode.open],
     [new Parameter('filename', 'string', false, 1)],
     'integer',
@@ -1062,7 +1125,7 @@ export const commands: Command[] = [
     'Open a file for reading.'
   ),
   new Command(
-    { BASIC: 'OPENUP', C: null, Pascal: null, Python: null, TypeScript: null },
+    { BASIC: 'OPENUP', C: null, Java: null, Pascal: null, Python: null, TypeScript: null },
     [PCode.ldin, 2, PCode.open],
     [new Parameter('filename', 'string', false, 1)],
     'integer',
@@ -1071,7 +1134,7 @@ export const commands: Command[] = [
     'Opens a file for appending.'
   ),
   new Command(
-    { BASIC: 'OPENOUT', C: null, Pascal: null, Python: null, TypeScript: null },
+    { BASIC: 'OPENOUT', C: null, Java: null, Pascal: null, Python: null, TypeScript: null },
     [PCode.ldin, 4, PCode.open],
     [new Parameter('filename', 'string', false, 1)],
     'integer',
@@ -1080,7 +1143,7 @@ export const commands: Command[] = [
     'Opens a file for writing.'
   ),
   new Command(
-    { BASIC: 'CLOSE#', C: null, Pascal: 'closefile', Python: 'closefile', TypeScript: null },
+    { BASIC: 'CLOSE#', C: null, Java: null, Pascal: 'closefile', Python: null, TypeScript: null },
     [PCode.clos],
     [new Parameter('file handle', 'integer', false, 1)],
     null,
@@ -1089,7 +1152,7 @@ export const commands: Command[] = [
     'Closes a file.'
   ),
   new Command(
-    { BASIC: 'DELETEFILE', C: null, Pascal: 'deletefile', Python: 'deletefile', TypeScript: null },
+    { BASIC: 'DELETEFILE', C: null, Java: null, Pascal: 'deletefile', Python: null, TypeScript: null },
     [PCode.ldin, 1, PCode.file, PCode.ldin, 128, PCode.less],
     [new Parameter('filename', 'string', false, 1)],
     'boolean',
@@ -1098,7 +1161,7 @@ export const commands: Command[] = [
     'Deletes a file.'
   ),
   new Command(
-    { BASIC: 'FREAD#', C: null, Pascal: 'fread', Python: 'fread', TypeScript: null },
+    { BASIC: 'FREAD#', C: null, Java: null, Pascal: 'fread', Python: null, TypeScript: null },
     [PCode.frds],
     [
       new Parameter('file handle', 'integer', false, 1),
@@ -1110,7 +1173,7 @@ export const commands: Command[] = [
     'Reads n characters (maximum) from a file.'
   ),
   new Command(
-    { BASIC: 'FREADLN#', C: null, Pascal: 'freadln', Python: 'freadln', TypeScript: null },
+    { BASIC: 'FREADLN#', C: null, Java: null, Pascal: 'freadln', Python: null, TypeScript: null },
     [PCode.frln],
     [new Parameter('file handle', 'integer', false, 1)],
     'string',
@@ -1119,7 +1182,7 @@ export const commands: Command[] = [
     'Reads a line from a file.'
   ),
   new Command(
-    { BASIC: 'PRINT#', C: null, Pascal: 'fwrite', Python: 'fwrite', TypeScript: null },
+    { BASIC: 'PRINT#', C: null, Java: null, Pascal: 'fwrite', Python: null, TypeScript: null },
     [PCode.fwrs],
     [
       new Parameter('file handle', 'integer', false, 1),
@@ -1131,7 +1194,7 @@ export const commands: Command[] = [
     'Writes a string to a file.'
   ),
   new Command(
-    { BASIC: 'PRINTLN#', C: null, Pascal: 'fwriteln', Python: 'fwriteln', TypeScript: null },
+    { BASIC: 'PRINTLN#', C: null, Java: null, Pascal: 'fwriteln', Python: null, TypeScript: null },
     [PCode.fwln],
     [
       new Parameter('file handle', 'integer', false, 1),
@@ -1143,7 +1206,7 @@ export const commands: Command[] = [
     'Writes a line to a file.'
   ),
   new Command(
-    { BASIC: 'EOF#', C: null, Pascal: 'eof', Python: 'eof', TypeScript: null },
+    { BASIC: 'EOF#', C: null, Java: null, Pascal: 'eof', Python: null, TypeScript: null },
     [PCode.eof],
     [new Parameter('file handle', 'integer', false, 1)],
     'boolean',
@@ -1152,7 +1215,7 @@ export const commands: Command[] = [
     'Tests for the end of file.'
   ),
   new Command(
-    { BASIC: 'CHECKDIR', C: null, Pascal: 'checkdir', Python: 'checkdir', TypeScript: null },
+    { BASIC: 'CHECKDIR', C: null, Java: null, Pascal: 'checkdir', Python: null, TypeScript: null },
     [PCode.ldin, 0, PCode.diry, PCode.ldin, 127, PCode.more],
     [
       new Parameter('directory name', 'string', false, 1),
@@ -1164,7 +1227,7 @@ export const commands: Command[] = [
     'Creates/deletes/checks a directory.'
   ),
   new Command(
-    { BASIC: 'CHECKFILE', C: null, Pascal: 'checkfile', Python: 'checkfile', TypeScript: null },
+    { BASIC: 'CHECKFILE', C: null, Java: null, Pascal: 'checkfile', Python: null, TypeScript: null },
     [PCode.ldin, 0, PCode.file, PCode.ldin, 127, PCode.more],
     [
       new Parameter('filename', 'string', false, 1),
@@ -1176,7 +1239,7 @@ export const commands: Command[] = [
     'Creates/deletes/checks a file.'
   ),
   new Command(
-    { BASIC: 'COPYFILE', C: null, Pascal: 'copyfile', Python: 'copyfile', TypeScript: null },
+    { BASIC: 'COPYFILE', C: null, Java: null, Pascal: 'copyfile', Python: null, TypeScript: null },
     [PCode.ldin, 3, PCode.fmov],
     [
       new Parameter('old name', 'string', false, 1),
@@ -1188,7 +1251,7 @@ export const commands: Command[] = [
     'Copies a file.'
   ),
   new Command(
-    { BASIC: 'DIREXISTS', C: null, Pascal: 'direxists', Python: 'direxists', TypeScript: null },
+    { BASIC: 'DIREXISTS', C: null, Java: null, Pascal: 'direxists', Python: null, TypeScript: null },
     [PCode.ldin, 0, PCode.diry, PCode.ldin, 127, PCode.more],
     [new Parameter('subdirectory name', 'string', false, 1)],
     'boolean',
@@ -1197,7 +1260,7 @@ export const commands: Command[] = [
     'Checks whether a subdirectory exists.'
   ),
   new Command(
-    { BASIC: 'FILEEXISTS', C: null, Pascal: 'fileexists', Python: 'fileexists', TypeScript: null },
+    { BASIC: 'FILEEXISTS', C: null, Java: null, Pascal: 'fileexists', Python: null, TypeScript: null },
     [PCode.ldin, 0, PCode.file, PCode.ldin, 127, PCode.more],
     [new Parameter('filename', 'string', false, 1)],
     'boolean',
@@ -1206,7 +1269,7 @@ export const commands: Command[] = [
     'Checks whether a file exists.'
   ),
   new Command(
-    { BASIC: 'FINDDIR', C: null, Pascal: 'finddir', Python: 'finddir', TypeScript: null },
+    { BASIC: 'FINDDIR', C: null, Java: null, Pascal: 'finddir', Python: null, TypeScript: null },
     [PCode.dupl, PCode.lptr, PCode.rota, PCode.fdir, PCode.swap, PCode.rota, PCode.sptr],
     [
       new Parameter('directory name pattern', 'string', false, 1),
@@ -1218,7 +1281,7 @@ export const commands: Command[] = [
     'Finds the first directory matching the pattern.'
   ),
   new Command(
-    { BASIC: 'FINDFIRST', C: null, Pascal: 'findfirst', Python: 'findfirst', TypeScript: null },
+    { BASIC: 'FINDFIRST', C: null, Java: null, Pascal: 'findfirst', Python: null, TypeScript: null },
     [PCode.dupl, PCode.lptr, PCode.rota, PCode.ffnd, PCode.swap, PCode.rota, PCode.sptr],
     [
       new Parameter('filename pattern', 'string', false, 1),
@@ -1230,7 +1293,7 @@ export const commands: Command[] = [
     'Finds the first file matching the pattern.'
   ),
   new Command(
-    { BASIC: 'FINDNEXT', C: null, Pascal: 'findnext', Python: 'findnext', TypeScript: null },
+    { BASIC: 'FINDNEXT', C: null, Java: null, Pascal: 'findnext', Python: null, TypeScript: null },
     [PCode.fnxt],
     [new Parameter('file handle', 'integer', false, 1)],
     'string',
@@ -1239,7 +1302,7 @@ export const commands: Command[] = [
     'Finds the next file/directory matching a pattern.'
   ),
   new Command(
-    { BASIC: 'RENAMEFILE', C: null, Pascal: 'renamefile', Python: 'renamefile', TypeScript: null },
+    { BASIC: 'RENAMEFILE', C: null, Java: null, Pascal: 'renamefile', Python: null, TypeScript: null },
     [PCode.ldin, 1, PCode.fmov],
     [
       new Parameter('old filename', 'string', false, 1),
@@ -1251,7 +1314,7 @@ export const commands: Command[] = [
     'Rename file'
   ),
   new Command(
-    { BASIC: 'MOVEFILE', C: null, Pascal: 'movefile', Python: 'movefile', TypeScript: null },
+    { BASIC: 'MOVEFILE', C: null, Java: null, Pascal: 'movefile', Python: null, TypeScript: null },
     [PCode.ldin, 2, PCode.fmov],
     [
       new Parameter('old filename', 'string', false, 1),
@@ -1263,7 +1326,7 @@ export const commands: Command[] = [
     'Moves a file.'
   ),
   new Command(
-    { BASIC: 'RESTARTFILE', C: null, Pascal: 'restartfile', Python: 'restartfile', TypeScript: null },
+    { BASIC: 'RESTARTFILE', C: null, Java: null, Pascal: 'restartfile', Python: null, TypeScript: null },
     [PCode.fbeg],
     [new Parameter('file handle', 'integer', false, 1)],
     null,
@@ -1272,7 +1335,7 @@ export const commands: Command[] = [
     'Restarts reading a file.'
   ),
   new Command(
-    { BASIC: 'EOLN#', C: null, Pascal: 'eoln', Python: 'eoln', TypeScript: null },
+    { BASIC: 'EOLN#', C: null, Java: null, Pascal: 'eoln', Python: null, TypeScript: null },
     [PCode.eoln],
     [new Parameter('file handle', 'integer', false, 1)],
     'boolean',
@@ -1282,7 +1345,7 @@ export const commands: Command[] = [
   ),
   // 11. Turtle Machine monitoring
   new Command(
-    { BASIC: 'DUMP', C: 'dump', Pascal: 'dump', Python: 'dump', TypeScript: 'dump' },
+    { BASIC: 'DUMP', C: 'dump', Java: 'dump', Pascal: 'dump', Python: 'dump', TypeScript: 'dump' },
     [PCode.dump],
     [], null,
     11,
@@ -1290,7 +1353,7 @@ export const commands: Command[] = [
     '&ldquo;Dumps&rdquo; the current memory state into the display in the memory tab.'
   ),
   new Command(
-    { BASIC: 'HEAPRESET', C: 'heapreset', Pascal: 'heapreset', Python: 'heapreset', TypeScript: 'heapreset' },
+    { BASIC: 'HEAPRESET', C: 'heapreset', Java: 'heapReset', Pascal: 'heapreset', Python: 'heapreset', TypeScript: 'heapReset' },
     [PCode.hrst],
     [], null,
     11,
@@ -1298,16 +1361,25 @@ export const commands: Command[] = [
     'Resets the memory heap to the initial global value.'
   ),
   new Command(
-    { BASIC: 'PEEK', C: 'peek', Pascal: 'peek', Python: 'peek', TypeScript: 'peek' },
+    { BASIC: 'ADDRESS', C: 'address', Java: 'address', Pascal: 'address', Python: 'address', TypeScript: 'address' },
+    [],
+    [new Parameter('variable', 'integer', true, 1)],
+    'integer',
+    11,
+    2,
+    'Returns the address in memory of the given <code>variable</code>.'
+  ),
+  new Command(
+    { BASIC: 'PEEK', C: 'peek', Java: 'peek', Pascal: 'peek', Python: 'peek', TypeScript: 'peek' },
     [PCode.peek],
     [new Parameter('address', 'integer', false, 1)],
-    null,
+    'integer',
     11,
     2,
     'Peek at the value of the memory at the given <code>address</code>.'
   ),
   new Command(
-    { BASIC: 'POKE', C: 'poke', Pascal: 'poke', Python: 'poke', TypeScript: 'poke' },
+    { BASIC: 'POKE', C: 'poke', Java: 'poke', Pascal: 'poke', Python: 'poke', TypeScript: 'poke' },
     [PCode.poke],
     [
       new Parameter('address', 'integer', false, 1),
@@ -1319,7 +1391,7 @@ export const commands: Command[] = [
     'Poke the <code>value</code> into the memory at the given <code>address</code>.'
   ),
   new Command(
-    { BASIC: 'TRACE', C: 'trace', Pascal: 'trace', Python: 'trace', TypeScript: 'trace' },
+    { BASIC: 'TRACE', C: 'trace', Java: 'trace', Pascal: 'trace', Python: 'trace', TypeScript: 'trace' },
     [PCode.trac],
     [new Parameter('on', 'boolean', false, 1)],
     null,
@@ -1328,7 +1400,7 @@ export const commands: Command[] = [
     'Turns the PCode trace facility on (<code>true</code>) or off (<code>false</code>).'
   ),
   new Command(
-    { BASIC: 'WATCH', C: 'watch', Pascal: 'watch', Python: 'watch', TypeScript: 'watch' },
+    { BASIC: 'WATCH', C: 'watch', Java: 'watch', Pascal: 'watch', Python: 'watch', TypeScript: 'watch' },
     [PCode.memw],
     [new Parameter('address', 'integer', false, 1)],
     null,
