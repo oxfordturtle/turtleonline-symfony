@@ -328,17 +328,19 @@ function factor (routine: Program|Subroutine): Expression {
         const variableValue = new VariableValue(variable)
         routine.lex += 1
         if (variable.isArray || variable.type === 'string') {
-          if (routine.lexemes[routine.lex] && routine.lexemes[routine.lex].content === '[') {
+          const open = (routine.program.language === 'BASIC') ? '(' : '['
+          const close = (routine.program.language === 'BASIC') ? ')' : ']'
+          if (routine.lexemes[routine.lex] && routine.lexemes[routine.lex].content === open) {
             routine.lex += 1
             const exp = expression(routine)
             typeCheck(exp, 'integer', routine.lexemes[routine.lex])
             variableValue.indexes.push(exp)
             // TODO: multi-dimensional stuff
             if (!routine.lexemes[routine.lex]) {
-              throw new CompilerError('Closing bracket "]" missing after string/array index.', routine.lexemes[routine.lex - 1])
+              throw new CompilerError(`Closing bracket "${close}" missing after string/array index.`, routine.lexemes[routine.lex - 1])
             }
-            if (routine.lexemes[routine.lex].content !== ']') {
-              throw new CompilerError('Closing bracket "]" missing after string/array index.', routine.lexemes[routine.lex])
+            if (routine.lexemes[routine.lex].content !== close) {
+              throw new CompilerError(`Closing bracket "${close}" missing after string/array index.`, routine.lexemes[routine.lex])
             }
             routine.lex += 1
           }

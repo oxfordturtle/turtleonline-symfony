@@ -12,17 +12,17 @@ void triangle (int colr) {
   setxy(x, y);
   direction(d);
   colour(colr);
-  for (count = 0; count < 2; count = count + 1) {
+  for (int count = 0; count < 3; count = count + 1) {
     forward(size);
     if (abs(turtx - 500) > 495) {
-      xEdge := true;
+      xEdge = true;
     }
     if (abs(turty - 500) > 495) {
-      yEdge := true;
+      yEdge = true;
     }
     back(size);
     forget(1);
-    right(120)
+    right(120);
   }
   polygon(3);
 }

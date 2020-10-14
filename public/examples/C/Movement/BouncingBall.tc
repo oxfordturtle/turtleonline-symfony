@@ -16,13 +16,13 @@ void main () {
     // draw new ball
     colour(red);
     blot(50);
-    update;
+    update();
     pause(10);
     // "bounce" (i.e. invert velocity) at canvas edges
-    if ((x < 50) or (x > 949)) {
+    if ((x < 50) || (x > 949)) {
       xVelocity = -xVelocity;
     }
-    if ((y < 50) or (y > 949)) {
+    if ((y < 50) || (y > 949)) {
       yVelocity = -yVelocity;
     }
   }

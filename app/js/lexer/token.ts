@@ -217,7 +217,10 @@ export class Token {
             this.value = ['x', 'y', 'd', 'a', 't', 'c'].indexOf((this.content as string)[4].toLowerCase()) + 1
             break
           case 'colour':
-            this.value = colours.find(x => x.names[language] === this.content)?.value as number
+            const colour = (language === 'Pascal')
+              ? colours.find(x => x.names[language] === (this.content as string).toLowerCase())
+              : colours.find(x => x.names[language] === this.content)
+            this.value = colour ? colour.value as number : null
             break
         }
         break

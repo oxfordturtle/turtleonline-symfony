@@ -30,10 +30,14 @@ export default function highlight (code: string, language: Language): string {
       case 'identifier':
         switch (token.subtype) {
           case 'colour':
-            return `<span class="colour" style="border-color:${hex(token.value as number)};">${token.content}</span>`
+            return token.value
+              ? `<span class="colour" style="border-color:${hex(token.value as number)};">${token.content}</span>`
+              : `<span class="colour">${token.content}</span>`
 
           default:
-            return `<span class="${token.subtype}">${token.content}</span>`
+            return token.subtype
+              ? `<span class="${token.subtype}">${token.content}</span>`
+              : token.content
         }
     }
   }).join('')

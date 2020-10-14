@@ -177,7 +177,7 @@ function constant (wip: WIP, lexemes: Lexeme[]): void {
   const value = evaluate(lexemes[wip.lex - 1], 'BASIC', exp)
   typeCheck(exp, type, lexemes[wip.lex - 1])
   // create the constant and add it to the current routine
-  const constant = new Constant('C', name, type, value)
+  const constant = new Constant('BASIC', name, type, value)
   wip.routine.constants.push(constant)
 
   // newline check
@@ -248,14 +248,15 @@ function dim (wip: WIP, lexemes: Lexeme[]): void {
 
     // move on
     wip.lex += 1
-    if (lexemes[wip.lex].content === ',') wip.lex += 1
+    if (lexemes[wip.lex].content === ',') {
+      wip.lex += 1
+    }
   }
 
   // now check the previous loop exited for the right reason
   if (!lexemes[wip.lex]) {
     throw new CompilerError('Integer or integer constant expected.', lexemes[wip.lex - 1])
   }
-  wip.lex += 1 // move past the closing bracket
 
   // add the variable
   wip.routine.variables.push(variable)

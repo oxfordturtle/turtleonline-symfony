@@ -219,13 +219,21 @@ function type (wip: WIP, lexemes: Lexeme[]): void {
   else {
     const variable = new Variable(name, wip.routine)
     if (type === null) {
-      throw new CompilerError('Variable type cannot be void (expected "boolean", "char", "int", or "String").', lexemes[wip.lex - 2])
+      throw new CompilerError('Variable type cannot be void (expected "bool", "char", "int", or "string").', lexemes[wip.lex - 2])
     }
     variable.type = type
     wip.routine.variables.push(variable)
+
     // add the type and identifier lexemes to the routine
     wip.routine.lexemes.push(lexemes[wip.lex - 2])
     wip.routine.lexemes.push(lexemes[wip.lex - 1])
+
+    // open square bracket allowed here for arrays
+    if (lexemes[wip.lex]?.content === '[') {
+      variable.arrayDimensions = arrayDimensions(wip, lexemes)
+    }
+
+    // back to the crossroads
     wip.state = 'crossroads'
   }
 }
@@ -287,10 +295,10 @@ function parameter (wip: WIP, lexemes: Lexeme[]): void {
 
   // expecting a type
   if (lexemes[wip.lex].subtype !== 'type') {
-    throw new CompilerError('{lex} is not a valid parameter type (expected "boolean", "char", "int", or "String").', lexemes[wip.lex])
+    throw new CompilerError('{lex} is not a valid parameter type (expected "bool", "char", "int", or "string").', lexemes[wip.lex])
   }
   if (lexemes[wip.lex].value === null) {
-    throw new CompilerError('Parameter type cannot be void (expected "boolean", "char", "int", or "String").', lexemes[wip.lex])
+    throw new CompilerError('Parameter type cannot be void (expected "bool", "char", "int", or "string").', lexemes[wip.lex])
   }
   const type = lexemes[wip.lex].value as Type
   wip.lex += 1
@@ -317,4 +325,55 @@ function parameter (wip: WIP, lexemes: Lexeme[]): void {
   parameter.type = type
   wip.routine.variables.push(parameter)
   wip.lex += 1
+
+  // array dimensions allowed at this point
+  if (lexemes[wip.lex]?.content === '[') {
+    parameter.arrayDimensions = arrayDimensions(wip, lexemes)
+  }
+}
+
+/** parses lexemes at specification of array dimensions */
+function arrayDimensions (wip: WIP, lexemes: Lexeme[]): [number, number][] {
+  const dimensions: [number, number][] =[]
+
+  while (lexemes[wip.lex]?.content === '[') {
+    wip.lex += 1
+    if (!lexemes[wip.lex]) {
+      throw new CompilerError('"[" must be followed by an integer or integer constant.', lexemes[wip.lex - 1])
+    }
+    switch (lexemes[wip.lex].type) {
+      case 'identifier':
+        const variable = wip.routine.findVariable(lexemes[wip.lex].content as string)
+        if (variable) {
+          throw new CompilerError('Array size cannot be a variable.', lexemes[wip.lex])
+        }
+        const constant = wip.routine.findConstant(lexemes[wip.lex].content as string)
+        if (!constant) {
+          throw new CompilerError('{lex} is not defined.', lexemes[wip.lex])
+        }
+        if (constant.type !== 'integer') {
+          throw new CompilerError('{lex} is not an integer constant.', lexemes[wip.lex])
+        }
+        if (constant.value <= 0) {
+          throw new CompilerError('Array size must be greater than 0.', lexemes[wip.lex])
+        }
+        dimensions.push([0, constant.value as number])
+        break
+      case 'integer':
+        if (lexemes[wip.lex].value as number <= 0) {
+          throw new CompilerError('Array size must be greater than 0.', lexemes[wip.lex])
+        }
+        dimensions.push([0, lexemes[wip.lex].value as number])
+        break
+      default:
+        throw new CompilerError('"[" must be followed by an integer or integer constant.', lexemes[wip.lex])
+    }
+    wip.lex += 1
+    if (!lexemes[wip.lex] || lexemes[wip.lex].content !== ']') {
+      throw new CompilerError('Array dimensions must be followed by a closing bracket "]".', lexemes[wip.lex - 1])
+    }
+    wip.lex += 1
+  }
+
+  return dimensions
 }

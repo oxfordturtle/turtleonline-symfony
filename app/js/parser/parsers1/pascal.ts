@@ -384,10 +384,10 @@ function variableType(wip: WIP, lexemes: Lexeme[], variables: Variable[]): void 
       } else { // array variables ...
         // expecting open square bracket
         if (!lexemes[wip.lex]) {
-          throw new CompilerError('"aray" must be followed by array dimensions "[n..m]".', lexemes[wip.lex - 1])
+          throw new CompilerError('"array" must be followed by array dimensions "[n..m]".', lexemes[wip.lex - 1])
         }
         if (lexemes[wip.lex].content !== '[') {
-          throw new CompilerError('"aray" must be followed by array dimensions "[n..m]".', lexemes[wip.lex])
+          throw new CompilerError('"array" must be followed by array dimensions "[n..m]".', lexemes[wip.lex])
         }
         wip.lex += 1
 
