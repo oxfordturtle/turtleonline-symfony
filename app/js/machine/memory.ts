@@ -258,6 +258,8 @@ export function makeHeapString (string: string): void {
 
 /** gets a string from the heap */
 export function getHeapString (address: number): string {
+  // TODO: throw error (or something) in case there is no string at the given
+  // address on the heap
   const length = main[address]
   const start = address + 1
   const charArray = main.slice(start, start + length)

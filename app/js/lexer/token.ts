@@ -168,7 +168,13 @@ export class Token {
               this.value = this.value.charCodeAt(0)
             }
             break
-          case 'C': // fallthrough
+          case 'C':
+            this.value = (this.content as string).slice(1, -1).replace(/\\('|")/g, '$1')
+            if (this.value.length === 1) {
+              this.type = 'character'
+              this.value = this.value.charCodeAt(0)
+            }
+            break
           case 'Java': // fallthrough
           case 'Python': // fallthrough
           case 'TypeScript':

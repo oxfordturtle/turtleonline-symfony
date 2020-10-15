@@ -156,14 +156,14 @@ function ifStatement (stmt: IfStatement, program: Program, startLine: number, op
   // inner lines: pcode for all IF substatements
   const ifPcode: number[][] = []
   for (const subStmt of stmt.ifStatements) {
-    const subStartLine = startLine + ifPcode.length + 1
+    const subStartLine = startLine + ifPcode.length + firstLines.length
     ifPcode.push(...statement(subStmt, program, subStartLine, options))
   }
 
   // more inner lines: pcode for all ELSE statements
   const elsePcode: number[][] = []
   for (const subStmt of stmt.elseStatements) {
-    const subStartLine = startLine + ifPcode.length + elsePcode.length + 2
+    const subStartLine = startLine + ifPcode.length + elsePcode.length + firstLines.length + 1
     elsePcode.push(...statement(subStmt, program, subStartLine, options))
   }
 

@@ -180,9 +180,9 @@ function compileSubroutines (subroutines: Subroutine[], startLine: number, optio
     const innerCode = compileInnerCode(subroutine, startLine + startCode.length, options)
     const subroutineCode = startCode.concat(innerCode)
 
-    if ((subroutine.type === 'procedure') || subroutine.program.language.match(/(BASIC|Pascal)/)) {
-      // all procedures need end code, as do functions in BASIC and Pascal
-      // functions in other languages include at least one RETURN statement
+    if ((subroutine.type === 'procedure') || (subroutine.program.language === 'Pascal')) {
+      // all procedures need end code, as do functions in Pascal
+      // (functions in other languages include at least one RETURN statement)
       const endCode = subroutineEndCode(subroutine, options)
       subroutineCode.push(...endCode)
     }

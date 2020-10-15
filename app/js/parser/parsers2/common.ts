@@ -491,7 +491,7 @@ function parseArguments (routine: Program|Subroutine, commandCall: CommandCall):
     const parameter = commandCall.command.parameters[argsGiven]
     const argument = expression(routine)
     const bypassTypeCheck = (commandCall.command instanceof Command)
-      && (commandCall.command.names[routine.program.language]?.toLowerCase() !== 'address')
+      && (commandCall.command.names[routine.program.language]?.toLowerCase() === 'address')
     if (!bypassTypeCheck) { // variable passed (by reference) to built-in address function can be of any type
       typeCheck(argument, parameter.type, routine.lexemes[routine.lex - 1])
     }
