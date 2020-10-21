@@ -59,7 +59,9 @@ export class Token {
             this.value = PCode.mult
             break
           case '/':
-            this.value = PCode.divr
+            this.value = (language === 'C' || language === 'Java' || language === 'TypeScript')
+              ? PCode.div // C, Java, and TypeScript don't distinguish integer and real division
+              : PCode.divr
             break
           case 'div': // fallthrough
           case '//':
@@ -168,14 +170,14 @@ export class Token {
               this.value = this.value.charCodeAt(0)
             }
             break
-          case 'C':
+          case 'C': // fallthrough
+          case 'Java':
             this.value = (this.content as string).slice(1, -1).replace(/\\('|")/g, '$1')
             if (this.value.length === 1) {
               this.type = 'character'
               this.value = this.value.charCodeAt(0)
             }
             break
-          case 'Java': // fallthrough
           case 'Python': // fallthrough
           case 'TypeScript':
             this.value = (this.content as string).slice(1, -1).replace(/\\('|")/g, '$1')

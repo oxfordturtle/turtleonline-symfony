@@ -749,8 +749,19 @@ export const commands: Command[] = [
     'Returns the length of the input <code>string</code> (i.e. the number of characters).'
   ),
   new Command(
-    { BASIC: 'DEL$', C: 'strdel', Java: 'delete', Pascal: 'delete', Python: 'delete', TypeScript: 'delete' },
+    { BASIC: 'DEL$', C: null, Java: null, Pascal: 'delete', Python: null, TypeScript: null },
     [PCode.dels],
+    [
+      new Parameter('string', 'string', false, 1),
+      new Parameter('index', 'integer', false, 1),
+      new Parameter('length', 'integer', false, 1)
+    ],
+    'string', 7, 2,
+    'Returns the input <code>string</code> with some characters removed, starting at the given <code>index</code> and of the specified <code>length</code>.'
+  ),
+  new Command(
+    { BASIC: null, C: 'strdel', Java: 'delete', Pascal: null, Python: 'delete', TypeScript: 'delete' },
+    [PCode.swap, PCode.incr, PCode.swap, PCode.dels],
     [
       new Parameter('string', 'string', false, 1),
       new Parameter('index', 'integer', false, 1),
@@ -770,8 +781,19 @@ export const commands: Command[] = [
     'Returns a copy of the characters in the input <code>string</code>, starting on the left and of the specified <code>length</code>.'
   ),
   new Command(
-    { BASIC: 'MID$', C: 'strcpy', Java: 'copy', Pascal: 'copy', Python: 'copy', TypeScript: 'copy' },
+    { BASIC: 'MID$', C: null, Java: null, Pascal: 'copy', Python: null, TypeScript: null },
     [PCode.copy],
+    [
+      new Parameter('string', 'string', false, 1),
+      new Parameter('index', 'integer', false, 1),
+      new Parameter('length', 'integer', false, 1)
+    ],
+    'string', 7, 2,
+    'Returns a copy of the characters in the input <code>string</code>, starting at the given <code>index</code> and of the specified <code>length</code>.'
+  ),
+  new Command(
+    { BASIC: null, C: 'strcpy', Java: 'copy', Pascal: null, Python: 'copy', TypeScript: 'copy' },
+    [PCode.swap, PCode.incr, PCode.swap, PCode.copy],
     [
       new Parameter('string', 'string', false, 1),
       new Parameter('index', 'integer', false, 1),
@@ -792,7 +814,7 @@ export const commands: Command[] = [
   ),
   new Command(
     { BASIC: 'INS$', C: 'strins', Java: 'insert', Pascal: null, Python: 'insert', TypeScript: 'insert' },
-    [PCode.rota, PCode.rota, PCode.swap, PCode.rota, PCode.inss],
+    [PCode.rota, PCode.rota, PCode.swap, PCode.rota, PCode.incr, PCode.inss],
     [
       new Parameter('string', 'string', false, 1),
       new Parameter('substr', 'string', false, 1),
@@ -858,8 +880,18 @@ export const commands: Command[] = [
     'Returns the input <code>string</code> with up to <code>n</code> occurences of <code>substring</code> replaced by <code>replace</code>. Set <code>n</code> equal to <code>0</code> to replace every occurence.'
   ),
   new Command(
-    { BASIC: 'INSTR', C: 'strpos', Java: 'indexOf', Pascal: null, Python: 'find', TypeScript: 'indexOf' },
+    { BASIC: 'INSTR', C: null, Java: null, Pascal: null, Python: null, TypeScript: null },
     [PCode.swap, PCode.poss],
+    [
+      new Parameter('string', 'string', false, 1),
+      new Parameter('substr', 'string', false, 1)
+    ],
+    'integer', 7, 2,
+    'Searches for the input <code>substring</code> within the given <code>string</code>; returns the index of the first character if found, 0 otherwise.'
+  ),
+  new Command(
+    { BASIC: null, C: 'strpos', Java: 'indexOf', Pascal: null, Python: 'find', TypeScript: 'indexOf' },
+    [PCode.swap, PCode.poss, PCode.decr],
     [
       new Parameter('string', 'string', false, 1),
       new Parameter('substr', 'string', false, 1)
@@ -925,14 +957,14 @@ export const commands: Command[] = [
     'Returns the input decimal <code>string</code> as an integer, multiplied by <code>mult</code> and rounded to the nearest integer, e.g. <code>qval(\'1.5\',10)=15</code>. Returns the specified <code>default</code> value if the string cannot be converted (i.e. if it is not a decimal string).'
   ),
   new Command(
-    { BASIC: 'CHR$', C: null, Java: 'fromCharCode', Pascal: null, Python: 'chr', TypeScript: 'fromCharCode' },
+    { BASIC: 'CHR$', C: null, Java: null, Pascal: null, Python: 'chr', TypeScript: 'fromCharCode' },
     [PCode.ctos],
     [new Parameter('n', 'integer', false, 1)],
     'string', 8, 2,
     'Returns the character with ASCII character code <code>n</code>.'
   ),
   new Command(
-    { BASIC: null, C: null, Java: null, Pascal: 'chr', Python: null, TypeScript: null },
+    { BASIC: null, C: null, Java: 'fromCharCode', Pascal: 'chr', Python: null, TypeScript: null },
     [],
     [new Parameter('n', 'integer', false, 1)],
     'character', 8, 2,

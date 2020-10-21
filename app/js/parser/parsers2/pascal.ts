@@ -106,7 +106,7 @@ function ifStatement (routine: Program|Subroutine): IfStatement {
     throw new CompilerError('"IF" must be followed by a boolean expression.', routine.lexemes[routine.lex - 1])
   }
   ifStatement.condition = expression(routine)
-  typeCheck(ifStatement.condition, 'boolean', routine.lexemes[routine.lex - 1])
+  ifStatement.condition = typeCheck(ifStatement.condition, 'boolean', routine.lexemes[routine.lex - 1])
 
   // expecting "then"
   if (!routine.lexemes[routine.lex]) {
@@ -199,8 +199,8 @@ function forStatement (routine: Program|Subroutine): ForStatement {
       throw new CompilerError('"DOWNTO" must be followed by an integer (or integer constant).', routine.lexemes[routine.lex - 1])
     }
   }
-  const finalValue = expression(routine)
-  typeCheck(finalValue, 'integer', routine.lexemes[routine.lex - 1])
+  let finalValue = expression(routine)
+  finalValue = typeCheck(finalValue, 'integer', routine.lexemes[routine.lex - 1])
   const comparisonOperator = (toOrDownTo === 'to') ? PCode.lseq : PCode.mreq
   forStatement.condition = new CompoundExpression(left, finalValue, comparisonOperator)
 
@@ -240,7 +240,7 @@ function repeatStatement (routine: Program|Subroutine): RepeatStatement {
     throw new CompilerError('"UNTIL" must be followed by a boolean expression.', routine.lexemes[routine.lex - 1])
   }
   repeatStatement.condition = expression(routine)
-  typeCheck(repeatStatement.condition, 'boolean', routine.lexemes[routine.lex - 1])
+  repeatStatement.condition = typeCheck(repeatStatement.condition, 'boolean', routine.lexemes[routine.lex - 1])
 
   // now we have everything we need
   return repeatStatement
@@ -255,7 +255,7 @@ function whileStatement (routine: Program|Subroutine): WhileStatement {
     throw new CompilerError('"WHILE" must be followed by a boolean expression.', routine.lexemes[routine.lex - 1])
   }
   whileStatement.condition = expression(routine)
-  typeCheck(whileStatement.condition, 'boolean', routine.lexemes[routine.lex - 1])
+  whileStatement.condition = typeCheck(whileStatement.condition, 'boolean', routine.lexemes[routine.lex - 1])
 
   // expecting "DO"
   if (!routine.lexemes[routine.lex]) {

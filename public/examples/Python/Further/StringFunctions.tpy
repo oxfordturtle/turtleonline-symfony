@@ -3,14 +3,14 @@ output(True, cream, True)
 # set initial string
 s1: str = 'Turtle Python'
 # illustrate use of COPY function
-s2: str = copy(s1, 1, 6)
+s2: str = copy(s1, 0, 6)
 writeline(s2 + ' is the name of a small animal.')
 pause(delay)
-s3: str = copy(s1, 8, 6)
+s3: str = copy(s1, 7, 6)
 writeline(s3 + ' is a large snake.')
 pause(delay)
 # illustrate use of INSERT function
-s4: str = insert(s3, 'onty M', 2)
+s4: str = insert(s3, 'onty M', 1)
 writeline('\'' + s4 + '\' is a silly name.')
 pause(delay)
 # illustrate use of LEN function
@@ -25,11 +25,11 @@ posn: int = find(s1, s3)
 if posn > 0:
   writeline('"' + s3 + '" occurs within "' + s1 + '" at position ' + str(posn) + '.')
 pause(delay)
-# illustrate use of QVAL function, converting a decimal string to an integer ...
+# illustrate use of QINT function, converting a decimal string to an integer ...
 s5: str = '3.14159'
-writeline(s5 + ' times 100000 = ' + str(qval(s5, 100000, -1)) + '.')
+writeline(s5 + ' times 100000 = ' + str(qint(s5, 100000, -1)) + '.')
 pause(delay)
-n: int = qval(s5, 100000, -1)
+n: int = qint(s5, 100000, -1)
 writeline(str(n) + ' divided by 100000 = ' + qstr(n, 100000, 5) + '.')
 writeline('')
 pause(delay * 5)

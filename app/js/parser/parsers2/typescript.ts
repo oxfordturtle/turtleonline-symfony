@@ -1,8 +1,8 @@
 /**
  * Parser 2 for Turtle TypeScript.
  */
-import { simpleStatement, expression, typeCheck, variableAssignment } from './common'
-import { CompoundExpression, VariableValue, LiteralValue } from '../expression'
+import { simpleStatement, expression, typeCheck } from './common'
+import { CompoundExpression } from '../expression'
 import { Program, Subroutine } from '../routine'
 import { Type } from '../type'
 import { Statement, IfStatement, ForStatement, RepeatStatement, ReturnStatement, WhileStatement, VariableAssignment, PassStatement } from '../statement'
@@ -61,6 +61,7 @@ function statement (routine: Program|Subroutine): Statement {
     default:
       switch (routine.lexemes[routine.lex].content) {
         // start of variable declaration/assignment
+        case 'const': // fallthrough
         case 'var':
           statement = simpleStatement(routine)
           eosCheck(routine)
@@ -138,7 +139,7 @@ function returnStatement (routine: Program|Subroutine): ReturnStatement {
 
   // expecting an expression of the right type, followed by semicolon
   returnStatement.value = expression(routine)
-  typeCheck(returnStatement.value, routine.returns as Type, routine.lexemes[routine.lex])
+  returnStatement.value = typeCheck(returnStatement.value, routine.returns as Type, routine.lexemes[routine.lex])
   eosCheck(routine)
 
   // mark that this function has a return statement
@@ -163,7 +164,7 @@ function ifStatement (routine: Program|Subroutine): IfStatement {
     throw new CompilerError('"if (" must be followed by a Boolean expression.', routine.lexemes[routine.lex - 1])
   }
   ifStatement.condition = expression(routine)
-  typeCheck(ifStatement.condition, 'boolean', routine.lexemes[routine.lex - 1])
+  ifStatement.condition = typeCheck(ifStatement.condition, 'boolean', routine.lexemes[routine.lex - 1])
 
   // expecting a closing bracket
   if (!routine.lexemes[routine.lex] || routine.lexemes[routine.lex].content !== ')') {
@@ -224,6 +225,19 @@ function forStatement (routine: Program|Subroutine): ForStatement {
   }
   routine.lex += 1
 
+  // expecting a boolean expression
+  if (!routine.lexemes[routine.lex]) {
+    throw new CompilerError('"for (...; ...;" must be followed by a loop condition.', routine.lexemes[routine.lex - 1])
+  }
+  forStatement.condition = expression(routine)
+  forStatement.condition = typeCheck(forStatement.condition, 'boolean', routine.lexemes[routine.lex - 1])
+
+  // expecting a semicolon
+  if (!routine.lexemes[routine.lex] || routine.lexemes[routine.lex].content !== ';') {
+    throw new CompilerError('"for (...; ..." must be followed by a semicolon.', routine.lexemes[routine.lex - 1])
+  }
+  routine.lex += 1
+
   // expecting a variable assignment
   const change = simpleStatement(routine)
   if (!(change instanceof VariableAssignment)) {
@@ -233,19 +247,6 @@ function forStatement (routine: Program|Subroutine): ForStatement {
   if (change.variable !== initialisation.variable) {
     throw new CompilerError('Initial loop variable and change loop variable must be the same.', routine.lexemes[routine.lex - 1])
   }
-
-  // expecting a semicolon
-  if (!routine.lexemes[routine.lex] || routine.lexemes[routine.lex].content !== ';') {
-    throw new CompilerError('"for (...; ..." must be followed by a semicolon.', routine.lexemes[routine.lex - 1])
-  }
-  routine.lex += 1
-
-  // expecting a boolean expression
-  if (!routine.lexemes[routine.lex]) {
-    throw new CompilerError('"for (...; ...;" must be followed by a loop condition.', routine.lexemes[routine.lex - 1])
-  }
-  forStatement.condition = expression(routine)
-  typeCheck(forStatement.condition, 'boolean', routine.lexemes[routine.lex - 1])
 
   // expecting a closing bracket
   if (!routine.lexemes[routine.lex] || routine.lexemes[routine.lex].content !== ')') {
@@ -296,7 +297,7 @@ function doStatement (routine: Program|Subroutine): RepeatStatement {
     throw new CompilerError('"while (" must be followed by a boolean expression.', routine.lexemes[routine.lex - 1])
   }
   repeatStatement.condition = expression(routine)
-  typeCheck(repeatStatement.condition, 'boolean', routine.lexemes[routine.lex - 1])
+  repeatStatement.condition = typeCheck(repeatStatement.condition, 'boolean', routine.lexemes[routine.lex - 1])
   // negate the condition
   repeatStatement.condition = new CompoundExpression(null, repeatStatement.condition, PCode.not)
 
@@ -328,7 +329,7 @@ function whileStatement (routine: Program|Subroutine): WhileStatement {
     throw new CompilerError('"while (" must be followed by a Boolean expression.', routine.lexemes[routine.lex - 1])
   }
   whileStatement.condition = expression(routine)
-  typeCheck(whileStatement.condition, 'boolean', routine.lexemes[routine.lex - 1])
+  whileStatement.condition = typeCheck(whileStatement.condition, 'boolean', routine.lexemes[routine.lex - 1])
 
   // expecting a closing bracket
   if (!routine.lexemes[routine.lex] || routine.lexemes[routine.lex].content !== ')') {

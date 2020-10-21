@@ -9,12 +9,12 @@ class MathFunctions {
   // chr(176) is the degree symbol for sin/cos/tan and their inverses.
   void show (String fn, char op, int value, int degrees) {
     if (degrees == 1) {
-      writeline(fn + '(' + toString(a) + op + toString(b) + chr(176) + ') = ' + qstr(value, denominator, decimals));
+      writeln(fn + '(' + toString(a) + op + toString(b) + fromCharCode(176) + ') = ' + toStringQ(value, denominator, decimals));
     } else {
       if (degrees == 2) {
-        writeline(fn + '(' + toString(a) + op + toString(b) + ') = ' + qstr(value, denominator, decimals) + chr(176));
+        writeln(fn + '(' + toString(a) + op + toString(b) + ') = ' + toStringQ(value, denominator, decimals) + fromCharCode(176));
       } else {
-        writeline(fn + '(' + toString(a) + op + toString(b) + ') = ' + qstr(value, denominator, decimals))
+        writeln(fn + '(' + toString(a) + op + toString(b) + ') = ' + toStringQ(value, denominator, decimals));
       }
     }
   }
@@ -22,56 +22,55 @@ class MathFunctions {
   void main () {
     // show output and display information about the program
     output(true, white, true);
-    writeline('This program selects two random numbers a and b, in the range');
-    writeline('100-999, and then outputs various mathematical functions of the');
-    writeline('fraction a/b. The results are expressed to ' + str(decimals) + ' decimal places, and a');
-    writeline('denominator of ' + str(denominator) + ' is used in the calculations to provide');
-    writeline('precision, even though the Turtle functions strictly operate only');
-    writeline('on integers and produce integer results.');
-    writeline('');
+    writeln('This program selects two random numbers a and b, in the range');
+    writeln('100-999, and then outputs various mathematical functions of the');
+    writeln('fraction a/b. The results are expressed to ' + toString(decimals) + ' decimal places, and a');
+    writeln('denominator of ' + toString(denominator) + ' is used in the calculations to provide');
+    writeln('precision, even though the Turtle functions strictly operate only');
+    writeln('on integers and produce integer results.');
+    writeln('');
     // display the values and quotient of a and b
-    writeline('a = ' + toString(a) + '; b = ' + toString(b));
-    writeline('a/b = ' + toString(a) + '/' + toString(b) + ' = ' + qstr(a, b, decimals));
-    writeline('');
+    writeln('a = ' + toString(a) + '; b = ' + toString(b));
+    writeln('a/b = ' + toString(a) + '/' + toString(b) + ' = ' + toStringQ(a, b, decimals));
+    writeln('');
     // display square, square root, cube, and cube root of a/b
     show('square', '/', power(a, b, 2, denominator), 0);
     show('square root', '/', root(a, b, 2, denominator), 0);
     show('cube', '/', power(a, b, 3, denominator), 0);
     show('cube root', '/', root(a, b, 3, denominator), 0);
-    writeline('');
+    writeln('');
     // display hypotenuse of right-angled triangle with shorter sides a and b
     show('hypot', ',', hypot(a, b, denominator), 0);
     show('calculated hypot', ',', sqrt(a * a + b * b, denominator), 0);
-    writeline('');
+    writeln('');
     // display sin, cos, and tan of a/b, interpreted in degrees
     show('sin', '/', sin(a, b, denominator), 1);
     show('cos', '/', cos(a, b, denominator), 1);
     show('tan', '/', tan(a, b, denominator), 1);
-    writeline('');
+    writeln('');
     // display ln, exp, log10, and antilog of a/b
-    show('ln', '/', ln(a, b, denominator), 0);
-    if (divmult(a, b, 1000) + ln(denominator, 1, 1000) > ln(maxint, 1, 1000)) {
-      writeline('EXP(' + toString(a) + '/' + toString(b) + ') would give numerical overflow, because');
-      writeline('the result*' + toString(denominator) + ' would be greater than ' + toString(maxint));
+    show('ln', '/', log(a, b, denominator), 0);
+    if (divmult(a, b, 1000) + log(denominator, 1, 1000) > log(maxInt(), 1, 1000)) {
+      writeln('EXP(' + toString(a) + '/' + toString(b) + ') would give numerical overflow, because');
+      writeln('the result*' + toString(denominator) + ' would be greater than ' + toString(maxInt()));
     } else {
       show('exp', '/', exp(a, b, denominator), 0);
     }
     show('log10', '/', log10(a, b, denominator), 0);
-    if (divmult(a, b, 1000) + log10(denominator, 1, 1000) > log10(maxint, 1, 1000)) {
-      writeline('ANTILOG(' + toString(a) + '/' + toString(b) + ') would give numerical overflow, because');
-      writeline('the result*' + toString(denominator) + ' would be greater than ' + toString(maxint));
+    if (divmult(a, b, 1000) + log10(denominator, 1, 1000) > log10(maxInt(), 1, 1000)) {
+      writeln('ANTILOG(' + toString(a) + '/' + toString(b) + ') would give numerical overflow, because');
+      writeln('the result*' + toString(denominator) + ' would be greater than ' + toString(maxInt()));
     } else {
       show('antilog', '/', antilog(a, b, denominator), 0);
     }
-    writeline('');
+    writeln('');
     // display arccos, arcsin, and arctan of a/b, in degrees
     if (a > b) {
-      writeline('ARCCOS and ARCSIN are not defined for ' + toString(a) + '/' + toString(b) + ' = ' + qstr(a, b,
-      decimals));
+      writeln('ARCCOS and ARCSIN are not defined for ' + toString(a) + '/' + toString(b) + ' = ' + toStringQ(a, b, decimals));
     } else {
-      show('arccos', '/', arccos(a, b, denominator), 2);
-      show('arcsin', '/', arcsin(a, b, denominator), 2);
+      show('arccos', '/', acos(a, b, denominator), 2);
+      show('arcsin', '/', asin(a, b, denominator), 2);
     }
-    show('arctan', '/', arctan(a, b, denominator), 2);
+    show('arctan', '/', atan(a, b, denominator), 2);
   }
 }

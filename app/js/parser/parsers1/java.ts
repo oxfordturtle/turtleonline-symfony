@@ -84,7 +84,6 @@ export default function java (lexemes: Lexeme[]): Program {
 
   // check for a main routine
   if (!wip.program.subroutines.some(x => x.name === 'main')) {
-    console.log(wip.program)
     throw new CompilerError('Program does not contain any "main" routine.')
   }
 
@@ -139,7 +138,7 @@ function crossroads (wip: WIP, lexemes: Lexeme[]): void {
   }
 
   // variable/routine declaration
-  else if (lexemes[wip.lex].subtype === 'type') {
+  else if (lexemes[wip.lex].subtype === 'type' && lexemes[wip.lex + 1]?.type === 'identifier') {
     wip.state = 'type'
   }
 
@@ -220,9 +219,9 @@ function constant (wip: WIP, lexemes: Lexeme[]): void {
     : new Subroutine(wip.routine.parent, wip.routine.name)
   dummyRoutine.lexemes = lexemes.slice(wip.lex)
   dummyRoutine.constants = wip.routine.constants
-  const exp = expression(dummyRoutine)
+  let exp = expression(dummyRoutine)
   const value = evaluate(lexemes[wip.lex - 1], 'Java', exp)
-  typeCheck(exp, type, lexemes[wip.lex - 1])
+  exp = typeCheck(exp, type, lexemes[wip.lex - 1])
   // create the constant and add it to the current routine
   const constant = new Constant('Java', name, type, value)
   wip.routine.constants.push(constant)
@@ -230,14 +229,6 @@ function constant (wip: WIP, lexemes: Lexeme[]): void {
   // push the lexemes and move on
   wip.routine.lexemes.push(...dummyRoutine.lexemes.slice(0, dummyRoutine.lex))
   wip.lex += dummyRoutine.lex
-
-  // expecting semicolon
-  if (!lexemes[wip.lex] || lexemes[wip.lex].content !== ';') {
-    throw new CompilerError('Constant definition must be followed by a semicolon.', lexemes[wip.lex])
-  }
-  while (lexemes[wip.lex]?.content === ';') {
-    wip.lex += 1
-  }
   wip.state = 'crossroads'
 }
 

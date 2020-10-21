@@ -7,7 +7,7 @@ function prong (size: number) {
 }
 
 // draw 360 prongs of decreasing size
-for (var count: number = 360; count = count - 1; count > 0) {
+for (var count: number = 360; count > 0; count = count - 1) {
   randCol(10);
   // longest is 460, shortest is 101
   prong(count + 100);

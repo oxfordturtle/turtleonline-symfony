@@ -2,7 +2,7 @@
  * Tests that all the example programs compile correctly.
  */
 import fs from 'fs'
-import { examples, Example } from '../../../app/js/constants/examples'
+import { examples, groups, Example } from '../../../app/js/constants/examples'
 import { Language, languages, extensions } from '../../../app/js/constants/languages'
 import lexify from '../../../app/js/lexer/lexify'
 import parser from '../../../app/js/parser/parser'
@@ -11,7 +11,7 @@ import encoder from '../../../app/js/encoder/program'
 // create pcode (temporary)
 /*for (const language of languages) {
   for (const example of examples) {
-    if (example.groupId === 'Procedures') {
+    if (example.groupId === 'Further') {
       test(`Examples: ${language}: ${example.groupId}: ${example.id}`, function () {
         const code = getCode(example, language)
         const lexemes = lexify(code, language)
@@ -25,9 +25,9 @@ import encoder from '../../../app/js/encoder/program'
 
 // run tests
 for (const language of languages) {
-  for (const example of examples) {
-    if (example.groupId === 'Drawing') {
-      test(`Examples: ${language}: ${example.groupId}: ${example.id}`, function () {
+  for (const group of groups.slice(1, 3)) {
+    for (const example of group.examples) {
+      test(`Examples: ${language}: ${group.index}. ${group.id}: ${example.id}`, function () {
         const code = getCode(example, language)
         const testPCode = getPCode(example, language)
         const lexemes = lexify(code, language)

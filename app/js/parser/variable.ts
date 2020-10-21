@@ -10,6 +10,7 @@ export class Variable {
   readonly routine: Routine
   readonly isParameter: boolean
   #isReferenceParameter: boolean
+  isPointer: boolean
   type: Type
   turtle?: number // index of turtle variable (if this is one)
   stringLength: number
@@ -22,8 +23,9 @@ export class Variable {
     this.routine = routine
     this.isParameter = isParameter
     this.#isReferenceParameter = isReferenceParameter
+    this.isPointer = false
     this.type = 'boolint' // boolint by default; this is set properly after initial construction
-    this.stringLength = 36 // default string length, maybe modified later
+    this.stringLength = 32 // default string length, maybe modified later
     this.arrayDimensions = []
   }
 
@@ -53,8 +55,8 @@ export class Variable {
 
   /** full length of the variable (longer than baseLength for arrays) */
   get length (): number {
-    // reference parameters (simply hold the address to the varaiable)
-    if (this.isReferenceParameter) {
+    // reference parameters and pointers (simply hold the address to the varaiable)
+    if (this.isReferenceParameter || this.isPointer) {
       return 1
     }
 

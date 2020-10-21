@@ -4,7 +4,7 @@ penUp();
 blank(black);
 colour(orange);
 // counting from 1 to 36 ...
-for (var count: number = 1; count = count + 1; count <= 36) {
+for (var count: number = 1; count <= 36; count = count + 1) {
   // move 200 units from middle of canvas
   forward(200);
   // draw circle radius 200 centred there

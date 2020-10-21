@@ -31,18 +31,18 @@ class TrigGraphs {
     if (radians) {
       setXY(xOrigin - halfWidth - 44, yOrigin - 4);
       print('-p', 29, 28);
-      setXY(xOrigin - halfWidth div 2 - 2, yOrigin - 4);
+      setXY(xOrigin - halfWidth / 2 - 2, yOrigin - 4);
       print('-p/2', 29, 28);
-      setXY(xOrigin + halfWidth div 2 - 50, yOrigin - 4);
+      setXY(xOrigin + halfWidth / 2 - 50, yOrigin - 4);
       print('p/2', 29, 28);
       setXY(xOrigin + halfWidth, yOrigin - 4);
       print('p', 29, 28);
     } else {
       setXY(xOrigin - halfWidth - 64, yOrigin + 2);
       print('-180', 0, 24);
-      setXY(xOrigin - halfWidth div 2 - 2, yOrigin + 2);
+      setXY(xOrigin - halfWidth / 2 - 2, yOrigin + 2);
       print('-90', 0, 24);
-      setXY(xOrigin + halfWidth div 2 - 36, yOrigin + 2);
+      setXY(xOrigin + halfWidth / 2 - 36, yOrigin + 2);
       print('90', 0, 24);
       setXY(xOrigin + halfWidth, yOrigin + 2);
       print('180', 0, 24);

@@ -142,7 +142,7 @@ function returnStatement (routine: Program|Subroutine): ReturnStatement {
 
   // expecting an expression of the right type, followed by end of statement
   returnStatement.value = expression(routine)
-  typeCheck(returnStatement.value, routine.returns as Type, routine.lexemes[routine.lex])
+  returnStatement.value = typeCheck(returnStatement.value, routine.returns as Type, routine.lexemes[routine.lex])
   eosCheck(routine)
 
   // mark that this function has a return statement
@@ -161,7 +161,7 @@ function ifStatement (routine: Program|Subroutine): IfStatement {
     throw new CompilerError('"if" must be followed by a Boolean expression.', routine.lexemes[routine.lex - 1])
   }
   ifStatement.condition = expression(routine)
-  typeCheck(ifStatement.condition, 'boolean', routine.lexemes[routine.lex - 1])
+  ifStatement.condition = typeCheck(ifStatement.condition, 'boolean', routine.lexemes[routine.lex - 1])
 
   // expecting a colon
   if (!routine.lexemes[routine.lex]) {
@@ -287,8 +287,8 @@ function forStatement (routine: Program|Subroutine): ForStatement {
   if (!routine.lexemes[routine.lex]) {
     throw new CompilerError('Missing first argument to the "range" function.', routine.lexemes[routine.lex - 1])
   }
-  const initialValue = expression(routine)
-  typeCheck(initialValue, 'integer', routine.lexemes[routine.lex - 1])
+  let initialValue = expression(routine)
+  initialValue = typeCheck(initialValue, 'integer', routine.lexemes[routine.lex - 1])
   forStatement.initialisation = new VariableAssignment(variable)
   forStatement.initialisation.value = initialValue
 
@@ -308,8 +308,8 @@ function forStatement (routine: Program|Subroutine): ForStatement {
   if (!routine.lexemes[routine.lex]) {
     throw new CompilerError('Too few arguments for "range" function.', routine.lexemes[routine.lex - 1])
   }
-  const finalValue = expression(routine)
-  typeCheck(finalValue, 'integer', routine.lexemes[routine.lex - 1])
+  let finalValue = expression(routine)
+  finalValue = typeCheck(finalValue, 'integer', routine.lexemes[routine.lex - 1])
 
   // now expecting another comma
   if (!routine.lexemes[routine.lex]) {
@@ -420,7 +420,7 @@ function whileStatement (routine: Program|Subroutine): WhileStatement {
     throw new CompilerError('"while" must be followed by a Boolean expression.', routine.lexemes[routine.lex - 1])
   }
   whileStatement.condition = expression(routine)
-  typeCheck(whileStatement.condition, 'boolean', routine.lexemes[routine.lex - 1])
+  whileStatement.condition = typeCheck(whileStatement.condition, 'boolean', routine.lexemes[routine.lex - 1])
 
   // expecting a colon
   if (!routine.lexemes[routine.lex]) {

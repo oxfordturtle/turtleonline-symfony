@@ -1,4 +1,4 @@
-import { Expression, CommandCall, CompoundExpression, LiteralValue, VariableValue } from '../expression'
+import { Expression, CommandCall, CompoundExpression, LiteralValue, VariableAddress, VariableValue, CastExpression } from '../expression'
 import { Program, Subroutine, SubroutineType } from '../routine'
 import { VariableAssignment, PassStatement } from '../statement'
 import { Type } from '../type'
@@ -7,7 +7,6 @@ import { Lexeme } from '../../lexer/lexeme'
 import { Command } from '../../constants/commands'
 import { PCode } from '../../constants/pcodes'
 import { CompilerError } from '../../tools/error'
-import { Constant } from '../constant'
 
 /** parses lexemes as a simple statement */
 export function simpleStatement (routine: Program|Subroutine): CommandCall|VariableAssignment|PassStatement {
@@ -27,11 +26,17 @@ export function simpleStatement (routine: Program|Subroutine): CommandCall|Varia
   // constant/variable declarations in Java may begin with ?final <type>
   if (routine.program.language === 'Java') {
     if (routine.lexemes[routine.lex].content === 'final') {
+      isDefinition = true
       routine.lex += 2
-      isDefinition = true
     } else if (routine.lexemes[routine.lex].subtype === 'type') {
-      routine.lex += 1
       isDefinition = true
+      routine.lex += 1
+    }
+    if (isDefinition) {
+      // maybe move past '*' pointer operator
+      if (routine.lexemes[routine.lex].content === '*') {
+        routine.lex += 1
+      }
     }
   }
 
@@ -156,9 +161,14 @@ export function variableAssignment (routine: Program|Subroutine, variable: Varia
     const open = (routine.program.language === 'BASIC') ? '(' : '['
     const close = (routine.program.language === 'BASIC') ? ')' : ']'
     if (routine.lexemes[routine.lex] && routine.lexemes[routine.lex].content === open) {
+      if (routine.program.language === 'BASIC' || routine.program.language === 'Python' || routine.program.language === 'TypeScript') {
+        if (!variable.isArray) {
+          throw new CompilerError('String characters cannot be assigned a value.', routine.lexemes[routine.lex])
+        }
+      }
       routine.lex += 1
-      const exp = expression(routine)
-      typeCheck(exp, 'integer', routine.lexemes[routine.lex])
+      let exp = expression(routine)
+      exp = typeCheck(exp, 'integer', routine.lexemes[routine.lex])
       variableAssignment.indexes.push(exp)
       // TODO: multi-dimensional stuff
       if (!routine.lexemes[routine.lex]) {
@@ -206,10 +216,11 @@ export function variableAssignment (routine: Program|Subroutine, variable: Varia
     throw new CompilerError(`Variable "${name}" must be assigned a value.`, routine.lexemes[routine.lex - 1])
   }
   variableAssignment.value = expression(routine)
-  const expectedType = ((routine.program.language === 'Pascal') && (variable.type === 'string') && (variableAssignment.indexes.length > 0))
-    ? 'character'
-    : variable.type
-  typeCheck(variableAssignment.value, expectedType, variableLexeme)
+  const variableValue = new VariableValue(variableAssignment.variable)
+  variableValue.indexes.push(...variableAssignment.indexes)
+  // check against variableValue.type rather than variableAssignment.variable.type
+  // in case string has indexes and should be a character
+  variableAssignment.value = typeCheck(variableAssignment.value, variableValue.type, variableLexeme)
 
   return variableAssignment
 }
@@ -218,6 +229,9 @@ export function variableAssignment (routine: Program|Subroutine, variable: Varia
 export function constantDefinition (routine: Program|Subroutine): PassStatement {
   // constant definitions are handled by parser1; here we just need to move past
   // all the lexemes
+  if (routine.program.language === 'TypeScript') {
+    routine.lex += 2 // move past ": <type>"
+  }
   routine.lex += 1 // move past '='
   expression(routine) // move past the expression lexemes
   return new PassStatement()
@@ -242,26 +256,28 @@ export function expression (routine: Program|Subroutine, level: number = 0): Exp
   const operators = allOperators[level]
 
   while (routine.lexemes[routine.lex] && operators.includes(routine.lexemes[routine.lex].value as PCode)) {
-    // get the operator
-    const operator = routine.lexemes[routine.lex].value as PCode
-    const finalOperator = (exp.type === 'string' || (exp.type === 'character' && operator === PCode.plus))
-      ? stringOperator(operator)
-      : operator
+    // get the operator (provisionally)
+    let operator = routine.lexemes[routine.lex].value as PCode
 
     // move past the operator
     routine.lex += 1
 
     // evaluate the second bit
-    const nextExp = expression(routine, level + 1)
+    let nextExp = expression(routine, level + 1)
 
     // check types match (check both ways - so that if there's a character on
     // either side, and a string on the other, we'll know to convert the
     // character to a string)
-    typeCheck(exp, nextExp.type, routine.lexemes[routine.lex])
-    typeCheck(nextExp, exp.type, routine.lexemes[routine.lex])
+    exp = typeCheck(exp, nextExp.type, routine.lexemes[routine.lex])
+    nextExp = typeCheck(nextExp, exp.type, routine.lexemes[routine.lex])
 
-    // if RHS isn't compound, jiggling is unnecessary
-    exp = new CompoundExpression(exp, nextExp, finalOperator)
+    // maybe replace provisional operator with its string equivalent
+    if (exp.type === 'string' || nextExp.type === 'string') {
+      operator = stringOperator(operator)
+    }
+
+    // create a compound expression with the operator
+    exp = new CompoundExpression(exp, nextExp, operator)
   }
   
   // return the expression
@@ -270,7 +286,7 @@ export function expression (routine: Program|Subroutine, level: number = 0): Exp
 
 /** parses lexemes as a factor */
 function factor (routine: Program|Subroutine): Expression {
-  let result: Expression
+  let exp: Expression
 
   switch (routine.lexemes[routine.lex].type) {
     // operators
@@ -279,18 +295,32 @@ function factor (routine: Program|Subroutine): Expression {
       switch (operator) {
         case PCode.subt:
           routine.lex += 1
-          result = factor(routine)
-          typeCheck(result, 'integer', routine.lexemes[routine.lex])
-          return new CompoundExpression(null, result, PCode.neg)
+          exp = factor(routine)
+          exp = typeCheck(exp, 'integer', routine.lexemes[routine.lex])
+          return new CompoundExpression(null, exp, PCode.neg)
 
         case PCode.not:
           routine.lex += 1
-          result = factor(routine)
-          typeCheck(result, 'boolint', routine.lexemes[routine.lex])
-          return new CompoundExpression(null, result, PCode.not)
-        
+          exp = factor(routine)
+          exp = typeCheck(exp, 'boolint', routine.lexemes[routine.lex])
+          return new CompoundExpression(null, exp, PCode.not)
+
+        case PCode.and:
+          if (routine.program.language !== 'C') {
+            throw new CompilerError('Expression cannot begin with {lex}.', routine.lexemes[routine.lex])
+          }
+          routine.lex += 1
+          exp = factor(routine)
+          if (!(exp instanceof VariableValue)) {
+            throw new CompilerError('Address operator "&" must be followed by a variable.', routine.lexemes[routine.lex])
+          }
+          if (exp.indexes.length > 0) {
+            throw new CompilerError('Variable following address operator "&" cannot include array indexes.', routine.lexemes[routine.lex])
+          }
+          return new VariableAddress(exp.variable)
+
         default:
-          throw new CompilerError('{lex} makes no sense here.', routine.lexemes[routine.lex])
+          throw new CompilerError('Expression cannot begin with {lex}.', routine.lexemes[routine.lex])
       }
 
     // literal values
@@ -307,9 +337,9 @@ function factor (routine: Program|Subroutine): Expression {
       const input = routine.findInput(routine.lexemes[routine.lex].content as string)
       if (input) {
         routine.lex += 1
-        result = new LiteralValue('integer', input.value)
-        result.input = input.value < 0
-        return result
+        exp = new LiteralValue('integer', input.value)
+        exp.input = (input.value < 0)
+        return exp
       }
       throw new CompilerError('{lex} is not a valid input code.', routine.lexemes[routine.lex])
 
@@ -332,8 +362,8 @@ function factor (routine: Program|Subroutine): Expression {
           const close = (routine.program.language === 'BASIC') ? ')' : ']'
           if (routine.lexemes[routine.lex] && routine.lexemes[routine.lex].content === open) {
             routine.lex += 1
-            const exp = expression(routine)
-            typeCheck(exp, 'integer', routine.lexemes[routine.lex])
+            exp = expression(routine)
+            exp = typeCheck(exp, 'integer', routine.lexemes[routine.lex])
             variableValue.indexes.push(exp)
             // TODO: multi-dimensional stuff
             if (!routine.lexemes[routine.lex]) {
@@ -367,8 +397,8 @@ function factor (routine: Program|Subroutine): Expression {
 
     // everything else
     default:
-      // type casting in C
-      if ((routine.program.language === 'C')
+      // type casting in C and Java
+      if ((routine.program.language === 'C' || routine.program.language === 'Java')
         && (routine.lexemes[routine.lex].content === '(')
         && (routine.lexemes[routine.lex + 1]?.subtype === 'type')) {
         routine.lex += 1
@@ -382,7 +412,7 @@ function factor (routine: Program|Subroutine): Expression {
           throw new CompilerError('Type in type cast expression must be followed by a closing bracket ")".', typeLexeme)
         }
         routine.lex += 1
-        const exp = expression(routine)
+        exp = expression(routine)
         if (type !== exp.type) {
           if (type === 'boolean' && exp.type === 'character') {
             throw new CompilerError('Characters cannot be cast as booleans.', typeLexeme)
@@ -399,7 +429,7 @@ function factor (routine: Program|Subroutine): Expression {
           if (type === 'character' && exp.type === 'string') {
             throw new CompilerError('Strings cannot be cast as characters.', typeLexeme)
           }
-          exp.as = type
+          exp = new CastExpression(type, exp)
         }
         return exp
       }
@@ -408,12 +438,12 @@ function factor (routine: Program|Subroutine): Expression {
       else if (routine.lexemes[routine.lex].content === '(') {
         // what follows should be an expression
         routine.lex += 1
-        result = expression(routine)
+        exp = expression(routine)
 
         // now check for a closing bracket
         if (routine.lexemes[routine.lex] && (routine.lexemes[routine.lex].content === ')')) {
           routine.lex += 1
-          return result
+          return exp
         } else {
           throw new CompilerError('Closing bracket missing.', routine.lexemes[routine.lex - 1])
         }
@@ -434,44 +464,42 @@ function stringOperator (operator: PCode): PCode {
 }
 
 /** checks types match (throws an error if not) */
-export function typeCheck (foundExpression: Expression, expectedType: Type, lexeme: Lexeme): void {
+export function typeCheck (foundExpression: Expression, expectedType: Type, lexeme: Lexeme): Expression {
   // found and expected the same is obviously ok
   if (foundExpression.type === expectedType) {
-    return
+    return foundExpression
   }
 
   // if STRING is expected, CHARACTER is ok
   if ((expectedType === 'string') && (foundExpression.type === 'character')) {
-    // but we'll need to convert the character to a string when creating the pcode
-    // N.B. found can't be a CompoundExpression, because those are never characters
-    (foundExpression as LiteralValue|VariableValue|CommandCall).string = true
-    return
+    // but we'll need to cast it as a string
+    return new CastExpression('string', foundExpression)
   }
 
   // if CHARACTER is expected, STRING is ok
-  // the whole expression will end up being a string anyway
+  // (the whole expression will end up being a string anyway)
   if ((expectedType === 'character') && (foundExpression.type === 'string')) {
-    return
+    return foundExpression
   }
 
   // if CHARACTER is expected, INTEGER is ok
   if ((expectedType === 'character') && (foundExpression.type === 'integer')) {
-    return
+    return foundExpression
   }
 
   // if INTEGER is expected, CHARACTER is ok
   if ((expectedType === 'integer') && (foundExpression.type === 'character')) {
-    return
+    return foundExpression
   }
 
   // if BOOLINT is expected, either BOOLEAN or INTEGER is ok
   if (expectedType === 'boolint' && (foundExpression.type === 'boolean' || foundExpression.type === 'integer')) {
-    return
+    return foundExpression
   }
 
   // if BOOLINT is found, either BOOLEAN or INTEGER expected is ok
   if (foundExpression.type === 'boolint' && (expectedType === 'boolean' || expectedType === 'integer')) {
-    return
+    return foundExpression
   }
 
   // everything else is an error
@@ -489,11 +517,11 @@ function parseArguments (routine: Program|Subroutine, commandCall: CommandCall):
   let argsGiven = 0
   while ((argsGiven < argsExpected) && (routine.lexemes[routine.lex].content !== ')')) {
     const parameter = commandCall.command.parameters[argsGiven]
-    const argument = expression(routine)
+    let argument = expression(routine)
     const bypassTypeCheck = (commandCall.command instanceof Command)
       && (commandCall.command.names[routine.program.language]?.toLowerCase() === 'address')
     if (!bypassTypeCheck) { // variable passed (by reference) to built-in address function can be of any type
-      typeCheck(argument, parameter.type, routine.lexemes[routine.lex - 1])
+      argument = typeCheck(argument, parameter.type, routine.lexemes[routine.lex - 1])
     }
     commandCall.arguments.push(argument)
     argsGiven += 1

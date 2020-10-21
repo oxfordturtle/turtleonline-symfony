@@ -173,9 +173,9 @@ function constant (wip: WIP, lexemes: Lexeme[]): void {
   const dummyRoutine = new Program('BASIC', wip.routine.name)
   dummyRoutine.lexemes = lexemes.slice(wip.lex)
   dummyRoutine.constants = wip.routine.constants
-  const exp = expression(dummyRoutine)
+  let exp = expression(dummyRoutine)
   const value = evaluate(lexemes[wip.lex - 1], 'BASIC', exp)
-  typeCheck(exp, type, lexemes[wip.lex - 1])
+  exp = typeCheck(exp, type, lexemes[wip.lex - 1])
   // create the constant and add it to the current routine
   const constant = new Constant('BASIC', name, type, value)
   wip.routine.constants.push(constant)
@@ -336,7 +336,7 @@ function def (wip: WIP, lexemes: Lexeme[]): void {
     throw new CompilerError('"DEF" must be followed by a valid procedure or function name. (Procedure names must begin with "PROC", and function names must begin with "FN".)', lexemes[wip.lex - 1])
   }
 
-  // create the subroutine and add it to the routine arrays
+  // create the subroutine and add it to the program's subroutines
   wip.routine = new Subroutine(wip.program, lexemes[wip.lex].content as string, subroutineType(wip, lexemes))
   wip.program.subroutines.push(wip.routine as Subroutine)
   wip.routine.index = wip.program.subroutines.length

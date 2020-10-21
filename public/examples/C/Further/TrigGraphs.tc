@@ -2,7 +2,7 @@ const int xOrigin = 500;
 const int yOrigin = 500;
 const int halfWidth = 400;
 const int yScale = 200;
-const boolean radians = false; // make true for x-axis in radians
+const bool radians = false; // make true for x-axis in radians
 
 // draws graph axes
 void drawAxes () {
@@ -30,18 +30,18 @@ void drawAxes () {
   if (radians) {
     setxy(xOrigin - halfWidth - 44, yOrigin - 4);
     print('-p', 29, 28);
-    setxy(xOrigin - halfWidth div 2 - 2, yOrigin - 4);
+    setxy(xOrigin - halfWidth / 2 - 2, yOrigin - 4);
     print('-p/2', 29, 28);
-    setxy(xOrigin + halfWidth div 2 - 50, yOrigin - 4);
+    setxy(xOrigin + halfWidth / 2 - 50, yOrigin - 4);
     print('p/2', 29, 28);
     setxy(xOrigin + halfWidth, yOrigin - 4);
     print('p', 29, 28);
   } else {
     setxy(xOrigin - halfWidth - 64, yOrigin + 2);
     print('-180', 0, 24);
-    setxy(xOrigin - halfWidth div 2 - 2, yOrigin + 2);
+    setxy(xOrigin - halfWidth / 2 - 2, yOrigin + 2);
     print('-90', 0, 24);
-    setxy(xOrigin + halfWidth div 2 - 36, yOrigin + 2);
+    setxy(xOrigin + halfWidth / 2 - 36, yOrigin + 2);
     print('90', 0, 24);
     setxy(xOrigin + halfWidth, yOrigin + 2);
     print('180', 0, 24);

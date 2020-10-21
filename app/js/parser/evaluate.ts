@@ -6,14 +6,14 @@ import { Language } from '../constants/languages'
 import { PCode } from '../constants/pcodes'
 import { Lexeme } from '../lexer/lexeme'
 import { CompilerError } from '../tools/error'
-import { Expression, LiteralValue, VariableValue, CommandCall } from './expression'
+import { Expression, LiteralValue, VariableAddress, VariableValue, CommandCall, CastExpression } from './expression'
 
 export default function evaluate (lexeme: Lexeme, language: Language, expression: Expression): number|string {
   const True = (language === 'BASIC' || language === 'Pascal') ? -1 : 1
   const False = 0
 
   // variable values are not allowed
-  if (expression instanceof VariableValue) {
+  if (expression instanceof VariableAddress || expression instanceof VariableValue) {
     throw new CompilerError('Constant value cannot refer to any variables.', lexeme)
   }
 
@@ -25,6 +25,11 @@ export default function evaluate (lexeme: Lexeme, language: Language, expression
   // literal values are easy
   if (expression instanceof LiteralValue) {
     return expression.value
+  }
+
+  // cast expressions
+  if (expression instanceof CastExpression) {
+    return evaluate(lexeme, language, expression.expression)
   }
 
   // compound expressions

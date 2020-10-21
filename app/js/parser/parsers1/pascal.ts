@@ -11,8 +11,9 @@ import { Routine, Program, Subroutine, SubroutineType } from '../routine'
 import { Variable } from '../variable'
 import { Type } from '../type'
 import { Constant } from '../constant'
-import evaluate from '../evaluate.old'
+import evaluate from '../evaluate'
 import { Lexeme } from '../../lexer/lexeme'
+import { expression } from '../parsers2/common'
 import { CompilerError } from '../../tools/error'
 
 /** fsm states */
@@ -177,44 +178,45 @@ function crossroads(wip: WIP, lexemes: Lexeme[]): void {
 
 /** parses lexemes at "CONST" */
 function constant (wip: WIP, lexemes: Lexeme[]): void {
-  const [identifier, assignment, next] = lexemes.slice(wip.lex, wip.lex + 3)
-
-  // error checking
-  if (!identifier) {
+  // expecting an identifier
+  if (!lexemes[wip.lex]) {
     throw new CompilerError('No constant name found.', lexemes[wip.lex - 1])
   }
-  if (identifier.type !== 'identifier') {
-    throw new CompilerError('{lex} is not a valid constant name.', identifier)
+  if (lexemes[wip.lex].type !== 'identifier') {
+    throw new CompilerError('{lex} is not a valid constant name.', lexemes[wip.lex])
   }
-  if (identifier.subtype === 'turtle') {
-    throw new CompilerError('{lex} is the name of a predefined Turtle property, and cannot be used as a constant name.', identifier)
+  if (lexemes[wip.lex].subtype === 'turtle') {
+    throw new CompilerError('{lex} is the name of a predefined Turtle property, and cannot be used as a constant name.', lexemes[wip.lex])
   }
-  if (identifier.content === wip.routine.program.name) {
-    throw new CompilerError('Constant name {lex} is already the name of the program.', identifier)
+  if (lexemes[wip.lex].content === wip.routine.program.name) {
+    throw new CompilerError('Constant name {lex} is already the name of the program.', lexemes[wip.lex])
   }
-  if (wip.program.findConstant(identifier.content as string)) {
-    throw new CompilerError('{lex} is already the name of a constant.', identifier)
+  if (wip.program.findConstant(lexemes[wip.lex].content as string)) {
+    throw new CompilerError('{lex} is already the name of a constant.', lexemes[wip.lex])
   }
-  if (!assignment) {
-    throw new CompilerError('Constant must be assigned a value.', identifier)
-  }
-  if (assignment.content !== '=' || !next) {
-    throw new CompilerError('Constant must be assigned a value.', assignment)
-  }
+  const name = lexemes[wip.lex].content as string
+  wip.lex += 1
 
-  // get all the lexemes up to the first semicolon
-  const valueLexemes: Lexeme[] = []
-  wip.lex += 2
-  while (lexemes[wip.lex] && lexemes[wip.lex].content !== ';') {
-    valueLexemes.push(lexemes[wip.lex] as Lexeme)
-    wip.lex += 1
+  // expecting '='
+  if (!lexemes[wip.lex]) {
+    throw new CompilerError('Constant must be assigned a value.', lexemes[wip.lex - 1])
   }
-  const value = evaluate(identifier, valueLexemes, wip.routine.program)
+  if (lexemes[wip.lex].content !== '=') {
+    throw new CompilerError('Constant must be assigned a value.', lexemes[wip.lex])
+  }
+  wip.lex += 1
+
+  // expecting an expression
+  const dummyRoutine = new Program('Pascal', wip.program.name)
+  dummyRoutine.lexemes = lexemes.slice(wip.lex)
+  dummyRoutine.constants = wip.program.constants
+  let exp = expression(dummyRoutine)
+  const value = evaluate(lexemes[wip.lex - 1], 'Pascal', exp)
   const type = (typeof value === 'number') ? 'boolint' : 'string'
 
-  // create the constant and add it to the routine
-  const constant = new Constant('Pascal', identifier.content as string, type, value)
-  wip.routine.program.constants.push(constant)
+  // create the constant and add it to the current routine
+  const constant = new Constant('Pascal', name, type, value)
+  wip.program.constants.push(constant)
 
   // semicolon check
   semicolon(wip, lexemes, true, 'constant definition')

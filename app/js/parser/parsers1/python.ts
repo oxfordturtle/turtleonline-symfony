@@ -206,6 +206,7 @@ function def (wip: WIP, lexemes: Lexeme[]): void {
   // define the subroutine
   const subroutine = new Subroutine(wip.routine, lexemes[wip.lex].content as string, 'procedure')
   wip.routine.subroutines.push(subroutine)
+  subroutine.index = wip.program.allSubroutines.length
   wip.routineStack.push(subroutine)
   wip.routine = subroutine
 
@@ -308,8 +309,6 @@ function global (wip: WIP, lexemes: Lexeme[]): void {
 /** parses lexemes at end */
 function end (wip: WIP, lexemes: Lexeme[]): void {
   // end of a subroutine
-  wip.routine.index = wip.program.allSubroutines.length
-
   // discard newline lexeme at the end of the routine
   if (wip.routine.lexemes[wip.routine.lexemes.length - 1].type === 'newline') {
     wip.routine.lexemes.pop()

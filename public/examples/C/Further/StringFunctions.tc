@@ -4,14 +4,14 @@ void main () {
   // set initial string
   string s1 = 'Turtle C';
   // illustrate use of STRCPY function ...
-  string s2 = strcpy(s1, 1, 6);
+  string s2 = strcpy(s1, 0, 6);
   writeline(s2 + ' is the name of a small animal.');
   pause(delay);
-  string s3 = strcpy(s1, 8, 6);
+  string s3 = strcpy(s1, 7, 1);
   writeline('\'' + s3 + '\' is the third letter of the alphabet.');
   pause(delay);
   // illustrate use of STRINS function ...
-  string s4 = strins(s3, '++', 2);
+  string s4 = strins(s3, '++', 1);
   writeline(s4 + ' is an extension of the C programming language.');
   pause(delay);
   // illustrate use of STRLEN function ...

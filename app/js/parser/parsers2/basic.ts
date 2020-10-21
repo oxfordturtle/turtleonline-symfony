@@ -6,7 +6,6 @@ import { CompoundExpression, VariableValue, LiteralValue } from '../expression'
 import { Program, Subroutine } from '../routine'
 import { Type } from '../type'
 import { Statement, IfStatement, ForStatement, RepeatStatement, ReturnStatement, WhileStatement, VariableAssignment, PassStatement } from '../statement'
-import { Variable } from '../variable'
 import { Lexeme } from '../../lexer/lexeme'
 import { PCode } from '../../constants/pcodes'
 import { CompilerError } from '../../tools/error'
@@ -128,7 +127,7 @@ function returnStatement (routine: Program|Subroutine): ReturnStatement {
 
   // expecting an expression of the right type
   returnStatement.value = expression(routine)
-  typeCheck(returnStatement.value, routine.returns as Type, routine.lexemes[routine.lex])
+  returnStatement.value = typeCheck(returnStatement.value, routine.returns as Type, routine.lexemes[routine.lex])
 
   // return the statement
   return returnStatement
@@ -144,7 +143,7 @@ function ifStatement (routine: Program|Subroutine): IfStatement {
     throw new CompilerError('"IF" must be followed by a boolean expression.', routine.lexemes[routine.lex - 1])
   }
   ifStatement.condition = expression(routine)
-  typeCheck(ifStatement.condition, 'boolean', routine.lexemes[routine.lex])
+  ifStatement.condition = typeCheck(ifStatement.condition, 'boolean', routine.lexemes[routine.lex])
 
   // expecting "then"
   if (!routine.lexemes[routine.lex]) {
@@ -236,8 +235,8 @@ function forStatement (routine: Program|Subroutine): ForStatement {
   if (!routine.lexemes[routine.lex]) {
     throw new CompilerError('"TO" must be followed by an integer (or integer constant).', routine.lexemes[routine.lex - 1])
   }
-  const finalValue = expression(routine)
-  typeCheck(finalValue, 'integer', routine.lexemes[routine.lex])
+  let finalValue = expression(routine)
+  finalValue = typeCheck(finalValue, 'integer', routine.lexemes[routine.lex])
 
   // "STEP -1" possible here
   if (routine.lexemes[routine.lex] && routine.lexemes[routine.lex].content === 'STEP') {
@@ -310,7 +309,7 @@ function repeatStatement (routine: Program|Subroutine): RepeatStatement {
     throw new CompilerError('"UNTIL" must be followed by a boolean expression.', routine.lexemes[routine.lex - 1])
   }
   repeatStatement.condition = expression(routine)
-  typeCheck(repeatStatement.condition, 'boolean', routine.lexemes[routine.lex])
+  repeatStatement.condition = typeCheck(repeatStatement.condition, 'boolean', routine.lexemes[routine.lex])
 
   // now we have everything we need
   return repeatStatement
@@ -325,7 +324,7 @@ function whileStatement (routine: Program|Subroutine): WhileStatement {
     throw new CompilerError('"WHILE" must be followed by a boolean expression.', routine.lexemes[routine.lex - 1])
   }
   whileStatement.condition = expression(routine)
-  typeCheck(whileStatement.condition, 'boolean', routine.lexemes[routine.lex])
+  whileStatement.condition = typeCheck(whileStatement.condition, 'boolean', routine.lexemes[routine.lex])
 
   // expecting a statement on the same line or a block of statements on a new line
   if (!routine.lexemes[routine.lex]) {

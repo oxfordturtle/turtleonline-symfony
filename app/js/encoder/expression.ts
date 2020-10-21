@@ -4,13 +4,7 @@
 import { Options } from './options'
 import { PCode } from '../constants/pcodes'
 import { Program, Subroutine } from '../parser/routine'
-import {
-  Expression,
-  LiteralValue,
-  VariableValue,
-  CommandCall,
-  CompoundExpression
-} from '../parser/expression'
+import { Expression, LiteralValue, VariableAddress, VariableValue, CommandCall, CompoundExpression, CastExpression } from '../parser/expression'
 
 /** merges pcode2 into pcode1 */
 export function merge (pcode1: number[][], pcode2: number[][]): void {
@@ -29,44 +23,40 @@ export function merge (pcode1: number[][], pcode2: number[][]): void {
 
 /** generates the pcode for loading the value of any expression onto the stack */
 export function expression (exp: Expression, program: Program, options: Options, reference: boolean = false): number[][] {
-  let pcode: number[][] = []
-
-  // base expression
+  // literal value
   if (exp instanceof LiteralValue) {
-    pcode = [literalValue(exp, program, options)]
-  } else if (exp instanceof VariableValue) {
-    pcode = reference
-      ? [variableAddress(exp, program, options)]
+    return [literalValue(exp, options)]
+  }
+
+  // variable address
+  if (exp instanceof VariableAddress) {
+    return variableAddress(exp, program, options)
+  }
+
+  // variable value
+  if (exp instanceof VariableValue) {
+    return reference
+      ? variableAddress(exp, program, options)
       : variableValue(exp, program, options)
-  } else if (exp instanceof CommandCall) {
-    pcode = functionValue(exp, program, options)
-  } else {
-    pcode = compoundExpression(exp, program, options)
   }
 
-  // type casting as necessary
-  if (exp.type === 'character' && exp.as === 'string') {
-    merge(pcode, [[PCode.ctos]])
-  }
-  if (exp.type === 'integer' && exp.as === 'string') {
-    merge(pcode, [[PCode.itos]])
-  }
-  if (exp.type === 'string' && exp.as === 'integer') {
-    merge(pcode, [[PCode.ldin, 0, PCode.sval]])
+  // command (i.e. function) call
+  if (exp instanceof CommandCall) {
+    return functionValue(exp, program, options)
   }
 
-  // return the pcode
-  return pcode
+  // compound expression
+  if (exp instanceof CompoundExpression) {
+    return compoundExpression(exp, program, options)
+  }
+
+  // cast expression
+  return castExpression(exp, program, options)
 }
 
 /** generates the pcode for loading a literal value onto the stack */
-function literalValue (exp: LiteralValue, program: Program, options: Options): number[] {
+function literalValue (exp: LiteralValue, options: Options): number[] {
   switch (exp.type) {
-    case 'character':
-      return (exp.string)
-        ? [PCode.ldin, (exp.value as number), PCode.ctos]
-        : [PCode.ldin, (exp.value as number)]
-
     case 'string':
       return [PCode.lstr, (exp.value as string).length].concat(Array.from(exp.value as string).map(x => x.charCodeAt(0)))
 
@@ -78,22 +68,22 @@ function literalValue (exp: LiteralValue, program: Program, options: Options): n
 }
 
 /** generates the pcode for loading the address of a variable onto the stack */
-function variableAddress (exp: VariableValue, program: Program, options: Options): number[] {
-  let pcode: number[] = []
+function variableAddress (exp: VariableAddress|VariableValue, program: Program, options: Options): number[][] {
+  const pcode: number[][] = []
 
   // predefined turtle property
   if (exp.variable.turtle) {
-    pcode = [PCode.ldag, program.turtleAddress + exp.variable.turtle]
+    pcode.push([PCode.ldag, program.turtleAddress + exp.variable.turtle])
   }
 
   // global variable
   else if (exp.variable.routine.index === 0) {
-    pcode = [PCode.ldag, program.turtleAddress + program.turtleVariables.length + exp.variable.index]
+    pcode.push([PCode.ldag, program.turtleAddress + program.turtleVariables.length + exp.variable.index])
   }
 
   // local variable
   else {
-    pcode = [PCode.ldav, exp.variable.routine.index + program.baseOffset, exp.variable.index]
+    pcode.push([PCode.ldav, exp.variable.routine.index + program.baseOffset, exp.variable.index])
   }
 
   // return the pcode
@@ -130,6 +120,14 @@ function variableValue (exp: VariableValue, program: Program, options: Options):
       const baseVariableExp = new VariableValue(exp.variable) // same variable, no indexes
       merge(pcode, expression(baseVariableExp, program, options))
       merge(pcode, [[PCode.test, PCode.plus, PCode.incr, PCode.lptr]])
+      if (program.language === 'Python' || program.language === 'TypeScript') {
+        // Python and TypeScript don't have character types, so we need to add
+        // this here - it won't be picked up with a contextual type cast
+        // (N.B. BASIC doesn't have a character type either, but BASIC doesn't
+        // allow direct reference to characters within strings, so this
+        // situation won't arise for BASIC)
+        merge(pcode, [[PCode.ctos]])
+      }
     }
   }
 
@@ -155,11 +153,9 @@ function variableValue (exp: VariableValue, program: Program, options: Options):
     pcode.push([PCode.ldvv, exp.variable.routine.index + program.baseOffset, exp.variable.index])
   }
 
-  // maybe convert characters to strings
-  if (exp.variable.type === 'character' || (exp.variable.type === 'string' && exp.indexes.length > 0)) {
-    if (exp.string) {
-      merge(pcode, [[PCode.ctos]])
-    }
+  // add peek code for pointer variables
+  if (exp.variable.isPointer) {
+    merge(pcode, [[PCode.peek]])
   }
 
   // return the pcode
@@ -180,13 +176,13 @@ function functionValue (exp: CommandCall, program: Program, options: Options): n
   // next: code for the function
   if (exp.command instanceof Subroutine) {
     // custom functions
-    const startLine = (program.language === 'BASIC')
-      ? exp.command.index     // in BASIC, we don't know the start line yet,
-      : exp.command.startLine // so this will be backpatched later
-    merge(pcode, [[PCode.subr, startLine]])
+    // N.B. use command index as placeholder for now; this will be backpatched
+    // when compilation is otherwise complete
+    merge(pcode, [[PCode.subr, exp.command.index]])
   } else {
     // native functions
-    merge(pcode, [exp.command.code])
+    // copy the command.code array so it isn't modified subsequently
+    merge(pcode, [exp.command.code.slice()])
   }
 
   // custom functions: load the result variable onto the stack
@@ -196,11 +192,6 @@ function functionValue (exp: CommandCall, program: Program, options: Options): n
     if (exp.command.returns === 'string') {
       merge(pcode, [[PCode.hstr]])
     }
-  }
-
-  // maybe convert characters to strings
-  if (exp.type === 'character' && exp.string) {
-    merge(pcode, [[PCode.ctos]])
   }
 
   // return the pcode
@@ -236,6 +227,26 @@ function compoundExpression (exp: CompoundExpression, program: Program, options:
   }
   merge(right, [op])
   return right
+}
+
+/** generates the pcode for loading the value of a cast expression onto the stack */
+function castExpression (exp: CastExpression, program: Program, options: Options): number[][] {
+  // generate the code for the underlying expression
+  const pcode = expression(exp.expression, program, options)
+
+  // add type casting as necessary
+  if (exp.expression.type === 'character' && exp.type === 'string') {
+    merge(pcode, [[PCode.ctos]])
+  }
+  if (exp.expression.type === 'integer' && exp.type === 'string') {
+    merge(pcode, [[PCode.itos]])
+  }
+  if (exp.expression.type === 'string' && exp.type === 'integer') {
+    merge(pcode, [[PCode.ldin, 0, PCode.sval]])
+  }
+
+  // return the pcode
+  return pcode
 }
 
 /** generates the pcode for an operator */

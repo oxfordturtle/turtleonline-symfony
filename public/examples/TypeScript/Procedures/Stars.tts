@@ -3,7 +3,7 @@ function star (points: number, colr: number) {
   // set angles to twice the number of points
   angles(points * 2);
   // trace out each point with the turtle
-  for (var count: number = 0; count = count + 1; count < points) {
+  for (var count: number = 0; count < points; count = count + 1) {
     forward(450);
     back(450);
     forget(1);
@@ -20,7 +20,7 @@ function star (points: number, colr: number) {
 
 penUp();
 // draw 10 stars with increasing numbers of points
-for (var n: number = 3; n = n + 1; n <= 12) {
+for (var n: number = 3; n <= 12; n = n + 1) {
   star(n, rgb(n - 2));
   pause(500);
 }

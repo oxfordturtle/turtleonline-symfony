@@ -91,7 +91,10 @@ function crossroads (wip: WIP, lexemes: Lexeme[]): void {
   }
 
   // variable/routine declaration
-  else if (lexemes[wip.lex].subtype === 'type' && lexemes[wip.lex + 1]?.type === 'identifier') {
+  else if ((lexemes[wip.lex].subtype === 'type') && (
+    (lexemes[wip.lex + 1]?.type === 'identifier') ||
+    (lexemes[wip.lex + 1]?.content === '*' && lexemes[wip.lex + 2]?.type === 'identifier')
+  )) {
     wip.state = 'type'
   }
 
@@ -166,9 +169,10 @@ function constant (wip: WIP, lexemes: Lexeme[]): void {
     : new Subroutine(wip.routine.parent, wip.routine.name)
   dummyRoutine.lexemes = lexemes.slice(wip.lex)
   dummyRoutine.constants = wip.routine.constants
-  const exp = expression(dummyRoutine)
+  let exp = expression(dummyRoutine)
   const value = evaluate(lexemes[wip.lex - 1], 'C', exp)
-  typeCheck(exp, type, lexemes[wip.lex - 1])
+  exp = typeCheck(exp, type, lexemes[wip.lex - 1])
+
   // create the constant and add it to the current routine
   const constant = new Constant('C', name, type, value)
   wip.routine.constants.push(constant)
@@ -185,6 +189,13 @@ function type (wip: WIP, lexemes: Lexeme[]): void {
   const type = lexemes[wip.lex].value as Type|null
   wip.lex += 1
 
+  // check for '*' pointer operator
+  let isPointer: boolean = false
+  if (lexemes[wip.lex]?.content === '*') {
+    isPointer = true
+    wip.lex += 1
+  }
+
   // expecting an identifier
   if (!lexemes[wip.lex] || lexemes[wip.lex].type !== 'identifier') {
     throw new CompilerError('{lex} must be followed by a valid identifier.', lexemes[wip.lex - 1])
@@ -197,6 +208,9 @@ function type (wip: WIP, lexemes: Lexeme[]): void {
 
   // '(' means this is a subroutine definition
   if (lexemes[wip.lex]?.content === '(') {
+    if (isPointer) {
+      throw new CompilerError('Routine cannot be a pointer.', lexemes[wip.lex - 1])
+    }
     if (wip.routine !== wip.program) {
       throw new CompilerError('Routines cannot contain any subroutines.', lexemes[wip.lex - 1])
     }
@@ -222,9 +236,13 @@ function type (wip: WIP, lexemes: Lexeme[]): void {
       throw new CompilerError('Variable type cannot be void (expected "bool", "char", "int", or "string").', lexemes[wip.lex - 2])
     }
     variable.type = type
+    variable.isPointer = isPointer
     wip.routine.variables.push(variable)
 
     // add the type and identifier lexemes to the routine
+    if (isPointer) {
+      wip.routine.lexemes.push(lexemes[wip.lex - 3])
+    }
     wip.routine.lexemes.push(lexemes[wip.lex - 2])
     wip.routine.lexemes.push(lexemes[wip.lex - 1])
 

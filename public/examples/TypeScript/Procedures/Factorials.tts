@@ -10,6 +10,6 @@ function factorial (n: number): number {
 // set up and show the output
 output(true, cream, true);
 // calculate and display n! for n = 1 to 10
-for (var n: number = 1; n = n + 1; n <= 10) {
+for (var n: number = 1; n <= 10; n = n + 1) {
   writeln(toString(n) + '! = ' + toString(factorial(n)));
 }

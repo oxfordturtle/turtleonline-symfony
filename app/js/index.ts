@@ -38,11 +38,7 @@ import './components/system/variables'
 // register service worker
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function (): void {
-    navigator.serviceWorker.register('/service-worker.js').then(function (registration): void {
-      console.log('SW registered: ', registration)
-    }).catch(function (registrationError): void {
-      console.log('SW registration failed: ', registrationError)
-    })
+    navigator.serviceWorker.register('/service-worker.js')
   })
 }
 

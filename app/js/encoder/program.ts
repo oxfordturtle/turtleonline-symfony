@@ -34,10 +34,8 @@ export default function program (program: Program, options: Options = defaultOpt
     ? startCode.concat(jumpLine).concat(subroutinesCode).concat(innerCode)
     : startCode.concat(innerCode)
 
-  // backpatch subroutine jump codes for BASIC
-  if (program.language === 'BASIC') {
-    backpatchBASIC(program, pcode)
-  }
+  // backpatch subroutine jump codes
+  backpatchSubroutineCalls(program, pcode)
 
   // add call to the "main" subroutine for C and Java
   if (program.language === 'C' || program.language === 'Java') {
@@ -298,7 +296,7 @@ function setupLocalVariable(variable: Variable, indexOffset: number = 0): number
       subroutine.address,
       index + 1
     ])
-    }
+  }
 
   return pcode
 }
@@ -319,8 +317,8 @@ function subroutineEndCode (subroutine: Subroutine, options: Options): number[][
   return [pcode]
 }
 
-/** backpatches pcode for BASIC programs (correcting jumps for subroutine calls) */
-function backpatchBASIC (program: Program, pcode: number[][]): void {
+/** backpatches pcode for subroutine calls */
+function backpatchSubroutineCalls (program: Program, pcode: number[][]): void {
   for (let i = 0; i < pcode.length; i += 1) {
     for (let j = 0; j < pcode[i].length; j += 1) {
       if (pcode[i][j - 1] && pcode[i][j - 1] === PCode.subr) {

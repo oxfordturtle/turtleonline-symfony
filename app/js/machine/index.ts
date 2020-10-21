@@ -501,7 +501,11 @@ function execute (): void {
           n2 = memory.stack.pop()
           n1 = memory.stack.pop()
           if (n1 !== undefined && n2 !== undefined) {
-            memory.stack.push(Math.round(n1 / n2))
+            if (n2 === 0) {
+              throw new MachineError('Cannot divide by zero.')
+            }
+            n3 = n1 / n2
+            memory.stack.push(Math.round(n3))
           } else {
             throw new MachineError('Stack operation called on empty stack.')
           }
@@ -511,7 +515,11 @@ function execute (): void {
           n2 = memory.stack.pop()
           n1 = memory.stack.pop()
           if (n1 !== undefined && n2 !== undefined) {
-            memory.stack.push(Math.floor(n1 / n2))
+            if (n2 === 0) {
+              throw new MachineError('Cannot divide by zero.')
+            }
+            n3 = n1 / n2
+            memory.stack.push((n3 > 0) ? Math.floor(n3) : Math.ceil(n3))
           } else {
             throw new MachineError('Stack operation called on empty stack.')
           }
@@ -931,8 +939,8 @@ function execute (): void {
                 }
                 break
               case 4:
-                // capitalise first letter of each word
-                s1 = s1.split(' ').map(x => x[0].toUpperCase() + x.slice(1)).join(' ')
+                // capitalise first letter of each word (and make the rest lowercase)
+                s1 = s1.split(' ').map(x => x[0].toUpperCase() + x.slice(1).toLowerCase()).join(' ')
                 memory.makeHeapString(s1)
                 break
               case 5:

@@ -2,7 +2,7 @@
 function poly (sides: number, colr: number) {
   direction(90);
   // trace the shape with the turtle
-  for (var count: number = 0; count = count + 1; count < sides) {
+  for (var count: number = 0; count < sides; count = count + 1) {
     forward(600 / sides);
     left(360 / sides);
   }

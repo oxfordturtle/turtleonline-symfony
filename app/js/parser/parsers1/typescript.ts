@@ -14,7 +14,7 @@ import { Type } from '../type'
 import { Variable } from '../variable'
 import { Lexeme } from '../../lexer/lexeme'
 import { CompilerError } from '../../tools/error'
-import { expression } from '../parsers2/common'
+import { expression, typeCheck } from '../parsers2/common'
 
 /** fsm states */
 type State =
@@ -95,7 +95,6 @@ function crossroads (wip: WIP, lexemes: Lexeme[]): void {
       } else if (lexemes[wip.lex].content === '}') {
         if (wip.brackets === 0 && wip.routine instanceof Subroutine) {
           // end of subroutine
-          wip.routine.index = wip.program.allSubroutines.length
           // pop the routine off the stack and set current routine to the previous one
           wip.routineStack.pop()
           wip.routine = wip.routineStack[wip.routineStack.length - 1]
@@ -130,6 +129,7 @@ function parseFunction (wip: WIP, lexemes: Lexeme[]): void {
   // define the subroutine and move on
   const subroutine = new Subroutine(wip.routine, lexemes[wip.lex].content as string, 'procedure')
   wip.routine.subroutines.push(subroutine)
+  subroutine.index = wip.program.allSubroutines.length
   wip.routineStack.push(subroutine)
   wip.routine = subroutine
   wip.lex += 1
@@ -227,6 +227,12 @@ function parseConst (wip: WIP, lexemes: Lexeme[]): void {
   wip.routine.lexemes.push(lexemes[wip.lex])
   wip.lex += 1
 
+  // expecting a type specification
+  const type = parseType(wip, lexemes, true)
+  if (type === null) {
+    throw new CompilerError('Constant type cannot be void.', lexemes[wip.lex - 1])
+  }
+
   // expecting '='
   if (!lexemes[wip.lex] || lexemes[wip.lex].content !== '=') {
     throw new CompilerError(`Constant ${name} must be assigned a value.`, lexemes[wip.lex - 1])
@@ -242,7 +248,10 @@ function parseConst (wip: WIP, lexemes: Lexeme[]): void {
   dummyRoutine.constants = wip.routine.constants
   const exp = expression(dummyRoutine)
   const value = evaluate(lexemes[wip.lex - 1], 'TypeScript', exp)
-  const type = (typeof value === 'string') ? 'string' : 'boolint'
+
+  // check the type
+  typeCheck(exp, type, lexemes[wip.lex])
+
   // create the constant and add it to the current routine
   const constant = new Constant('TypeScript', name, type, value)
   wip.routine.constants.push(constant)

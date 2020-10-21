@@ -1,5 +1,5 @@
 // counting from 1 to 200 ...
-for (var count: number = 1; count = count + 1; count <= 200) {
+for (var count: number = 1; count <= 200; count = count + 1) {
   // move forward and turn right 5 degrees
   forward(count / 3);
   right(5);

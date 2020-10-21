@@ -31,7 +31,7 @@ class GravitySteps {
       blot(24);
       update();
       pause(10);
-      noUpdate
+      noUpdate();
     } while (turty != floor);
   }
 
@@ -45,7 +45,7 @@ class GravitySteps {
       throwBall(-2, -22, 1, turty + 100);
     } while (turtx >= 75);
     // bounce ball on the ground
-    for (count = 1; count <= 10; count = count + 1) {
+    for (int count = 1; count <= 10; count = count + 1) {
       throwBall(0, count * 2 - 20, 1, turty);
     }
   }

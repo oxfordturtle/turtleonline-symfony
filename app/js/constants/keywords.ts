@@ -70,6 +70,7 @@ const Java = [
   new Keyword(20, 1, 'while'),
   new Keyword(20, 1, 'do'),
   // other keywords (not shown in usage tables)
+  new Keyword(22, 0, 'new'),
   new Keyword(22, 0, 'class'),
   new Keyword(22, 0, 'final'),
   new Keyword(22, 0, 'void'),

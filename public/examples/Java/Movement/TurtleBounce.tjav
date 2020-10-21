@@ -14,13 +14,13 @@ class TurtleBounce {
       // draw new ball
       colour(red);
       blot(50);
-      update;
+      update();
       pause(10);
       // "bounce" (i.e. invert velocity) at canvas edges
-      if ((turtx < 50) or (turtx > 949)) {
+      if ((turtx < 50) || (turtx > 949)) {
         xVelocity = -xVelocity;
       }
-      if ((turty < 50) or (turty > 949)) {
+      if ((turty < 50) || (turty > 949)) {
         yVelocity = -yVelocity;
       }
     }

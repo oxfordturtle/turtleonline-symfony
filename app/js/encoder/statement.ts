@@ -5,7 +5,7 @@ import { Options } from './options'
 import { merge, expression } from './expression'
 import { PCode } from '../constants/pcodes'
 import { Program, Subroutine } from '../parser/routine'
-import { CommandCall, VariableValue } from '../parser/expression'
+import { CommandCall, VariableAddress, VariableValue } from '../parser/expression'
 import { Statement, VariableAssignment, IfStatement, ForStatement, RepeatStatement, WhileStatement, ReturnStatement } from '../parser/statement'
 
 /** generates the pcode for a statement of any kind */
@@ -44,9 +44,33 @@ export default function statement (stmt: Statement, program: Program, startLine:
 
 /** generates the pcode for a variable assignment */
 function variableAssignment (stmt: VariableAssignment, program: Program, options: Options): number[][] {
-  return stmt.variable.isGlobal
-    ? globalVariableAssignment(stmt, program, options)
-    : localVariableAssignment(stmt, program, options)
+  if (stmt.variable.turtle) {
+    return turtleVariableAssignment(stmt, program, options)
+  }
+
+  if (stmt.variable.isGlobal) {
+    return globalVariableAssignment(stmt, program, options)
+  }
+
+  if (stmt.variable.isPointer) {
+    return pointerVariableAssignment(stmt, program, options)
+  }
+
+  if (stmt.variable.isReferenceParameter) {
+    return referenceVariableAssignment(stmt, program, options)
+  }
+
+  return localVariableAssignment(stmt, program, options)
+}
+
+/** generates the pcode for a turtle variable assignment */
+function turtleVariableAssignment (stmt: VariableAssignment, program: Program, options: Options): number[][] {
+  const pcode = expression(stmt.value, program, options)
+
+  // TODO: after NEWTURTLE??
+  merge(pcode, [[PCode.stvg, program.turtleAddress + (stmt.variable.turtle as number)]])
+
+  return pcode
 }
 
 /** generates the pcode for a global variable assignment */
@@ -54,15 +78,8 @@ function globalVariableAssignment (stmt: VariableAssignment, program: Program, o
   const address = program.turtleAddress + program.turtleVariables.length + stmt.variable.index
   const pcode = expression(stmt.value, program, options)
 
-  // global turtle property
-  if (stmt.variable.turtle) {
-    // turtle variable
-    // TODO: after NEWTURTLE??
-    merge(pcode, [[PCode.stvg, program.turtleAddress + stmt.variable.turtle]])
-  }
-
   // global array
-  else if (stmt.variable.isArray || (stmt.variable.type === 'string' && stmt.indexes.length > 0)) {
+  if (stmt.variable.isArray || (stmt.variable.type === 'string' && stmt.indexes.length > 0)) {
     // TODO: multi dimensional stuff
     const exp = new VariableValue(stmt.variable)
     exp.indexes.push(...stmt.indexes)
@@ -85,17 +102,38 @@ function globalVariableAssignment (stmt: VariableAssignment, program: Program, o
   return pcode
 }
 
+/** generates the pcode for a pointer variable assignment */
+function pointerVariableAssignment (stmt: VariableAssignment, program: Program, options: Options): number[][] {
+  const pcode = expression(stmt.value, program, options)
+
+  const variableAddress = new VariableAddress(stmt.variable)
+  merge(pcode, expression(variableAddress, program, options))
+
+  if (stmt.variable.type === 'string') {
+    merge(pcode, [[PCode.cstr]])
+  } else {
+    merge(pcode, [[PCode.poke]])
+  }
+
+  return pcode
+}
+
+/** generates the pcode for a reference variable assignment */
+function referenceVariableAssignment (stmt: VariableAssignment, program: Program, options: Options): number[][] {
+  const pcode = expression(stmt.value, program, options)
+
+  // TODO: array reference parameters
+  merge(pcode, [[PCode.stvr, stmt.variable.routine.index + program.baseOffset, stmt.variable.index]])
+
+  return pcode
+}
+
 /** generates the pcode for a local variable assignment */
 function localVariableAssignment (stmt: VariableAssignment, program: Program, options: Options): number[][] {
   const pcode = expression(stmt.value, program, options)
 
-  // local reference parameter
-  if (stmt.variable.isReferenceParameter) {
-    merge(pcode, [[PCode.stvr, stmt.variable.routine.index + program.baseOffset, stmt.variable.index]])
-  }
-
   // local array
-  else if (stmt.variable.isArray || (stmt.variable.type === 'string' && stmt.indexes.length > 0)) {
+  if (stmt.variable.isArray || (stmt.variable.type === 'string' && stmt.indexes.length > 0)) {
     // TODO: multi dimensional stuff
     const exp = new VariableValue(stmt.variable)
     exp.indexes.push(...stmt.indexes)
@@ -132,17 +170,17 @@ function procedureCall (stmt: CommandCall, program: Program, options: Options): 
   // next: code for the command
   if (stmt.command instanceof Subroutine) {
     // custom commands
-    const startLine = (program.language === 'BASIC')
-      ? stmt.command.index     // in BASIC, we don't know the start line yet,
-      : stmt.command.startLine // so this will be backpatched later
-    merge(pcode, [[PCode.subr, startLine]])
+    // N.B. use command index as placeholder for now; this will be backpatched
+    // when compilation is otherwise complete
+    merge(pcode, [[PCode.subr, stmt.command.index]])
   } else {
     // native commands
     if (stmt.command.code[0] === PCode.oldt) {
       // this is a special case, because compilation requires knowing the original turtle address
       merge(pcode, [[PCode.ldin, program.turtleAddress, PCode.ldin, 0, PCode.sptr]])
     } else {
-      merge(pcode, [stmt.command.code])
+      // copy the command.code array so it isn't modified subsequently
+      merge(pcode, [stmt.command.code.slice()])
     }
   }
 

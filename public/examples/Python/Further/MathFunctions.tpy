@@ -44,8 +44,8 @@ show('cos', '/', cos(a, b, denominator), 1)
 show('tan', '/', tan(a, b, denominator), 1)
 writeline('')
 # display ln, exp, log10, and antilog of a/b
-show('ln', '/', ln(a, b, denominator), 0)
-if divmult(a, b, 1000) + ln(denominator, 1, 1000) > ln(maxint(), 1, 1000):
+show('ln', '/', log(a, b, denominator), 0)
+if divmult(a, b, 1000) + log(denominator, 1, 1000) > log(maxint(), 1, 1000):
   writeline('EXP(' + str(a) + '/' + str(b) + ') would give numerical overflow, because')
   writeline('the result*' + str(denominator) + ' would be greater than ' + str(maxint()))
 else:

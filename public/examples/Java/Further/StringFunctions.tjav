@@ -3,46 +3,46 @@ class StringFunctions {
     final int delay = 500;
     output(true, cream, true);
     // set initial String
-    String s1 = 'Turtle C';
-    // illustrate use of STRCPY function ...
-    String s2 = strcpy(s1, 1, 6);
-    writeline(s2 + ' is the name of a small animal.');
+    String s1 = 'Turtle Java';
+    // illustrate use of COPY function ...
+    String s2 = copy(s1, 0, 6);
+    writeln(s2 + ' is the name of a small animal.');
     pause(delay);
-    String s3 = strcpy(s1, 8, 6);
-    writeline('\'' + s3 + '\' is the third letter of the alphabet.');
+    String s3 = copy(s1, 7, 4);
+    writeln(s3 + ' is an Indonesian island.');
     pause(delay);
-    // illustrate use of STRINS function ...
-    String s4 = strins(s3, '++', 2);
-    writeline(s4 + ' is an extension of the C programming language.');
+    // illustrate use of INSERT function ...
+    String s4 = insert(s3, 'Script', 4);
+    writeln(s4 + ' is not related to the Java programming language.');
     pause(delay);
-    // illustrate use of STRLEN function ...
-    writeline('"' + s1 + '" has ' + toString(strlen(s1)) + ' characters.');
+    // illustrate use of LENGTH function ...
+    writeln('"' + s1 + '" has ' + toString(length(s1)) + ' characters.');
     pause(delay);
-    // illustrate use of STRLWR and STRUPR functions ...
-    writeline('In lower case it is "' + strlwr(s1) + '".');
-    writeline('In upper case it is "' + strupr(s1) + '".');
+    // illustrate use of TOLOWERCASE and TOUPPERCASE functions ...
+    writeln('In lower case it is "' + toLowerCase(s1) + '".');
+    writeln('In upper case it is "' + toUpperCase(s1) + '".');
     pause(delay);
-    // illustrate use of STRPOS function ...
-    int posn = strpos(s1, s3);
+    // illustrate use of INDEXOF function ...
+    int posn = indexOf(s1, s3);
     if (posn > 0) {
-      writeline('"' + s3 + '" occurs within "' + s1 + '" at position ' + toString(posn) + '.');
+      writeln('"' + s3 + '" occurs within "' + s1 + '" at position ' + toString(posn) + '.');
     }
     pause(delay);
-    // illustrate use of QVAL function, converting a decimal String to an integer ...
+    // illustrate use of PARSEINTQ function, converting a decimal String to an integer ...
     String s5 = '3.14159';
-    writeline(s5 + ' times 100000 = ' + toString(qval(s5, 100000, -1)) + '.');
+    writeln(s5 + ' times 100000 = ' + toString(parseIntQ(s5, 100000, -1)) + '.');
     pause(delay);
-    int n = qval(s5, 100000, -1);
-    writeline(toString(n) + ' divided by 100000 = ' + qstr(n, 100000, 5) + '.');
-    writeline('');
+    int n = parseIntQ(s5, 100000, -1);
+    writeln(toString(n) + ' divided by 100000 = ' + toStringQ(n, 100000, 5) + '.');
+    writeln('');
     pause(delay * 5);
     // illustrate use of OUTPUT and CONSOLE commands ...
-    writeline('Now back to the Canvas and Console ...');
+    writeln('Now back to the Canvas and Console ...');
     output(false, peach, true);
     pause(delay * 5);
     output(false, lightred, false);
     pause(delay * 5);
     console(true, lightblue);
-    writeline('You will see this on a clear light blue Console');
+    writeln('You will see this on a clear light blue Console');
   }
 }
