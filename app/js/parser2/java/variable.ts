@@ -1,16 +1,28 @@
+import identifier from './identifier'
+import type from './type'
 import { Program } from '../definitions/program'
 import { Subroutine } from '../definitions/subroutine'
 import { Variable } from '../definitions/variable'
-import { Type } from '../definitions/type'
-import { VariableAssignment } from '../definitions/statement'
-import { Lex } from '../lex'
+import { CompilerError } from '../../tools/error'
 
 /** parses lexemes as a variable declaration */
-export function variable (lex: Lex, routine: Program|Subroutine, name: string, type: Type|null, arrayDimensions: number): Variable {
-  return new Variable(name, routine)
-}
+export default function variable (routine: Program|Subroutine, subroutine?: Subroutine): Variable {
+  // expecting type specification
+  const [variableType, arrayDimensions] = type(routine)
 
-/** parses lexemes as a variable declaration or assignment */
-export function varStatement (lex: Lex, variable: Variable): VariableAssignment|null {
-  return null
+  // "void" not allowed for variables
+  if (variableType === null) {
+    throw new CompilerError('Variable cannot be void (expected "boolean", "char", "int", or "String").', routine.lex())
+  }
+
+  // expecting identifier
+  const name = identifier(routine)
+
+  // create the variable
+  const variable = new Variable(name, subroutine || routine)
+  variable.type = variableType
+  variable.arrayDimensions = arrayDimensions
+
+  // return the variable
+  return variable
 }

@@ -1,13 +1,11 @@
 import { Program } from '../definitions/program'
-import { Lex } from '../lex'
+import { Lexeme } from '../../lexer/lexeme'
 import { CompilerError } from '../../tools/error'
 
 /** parses outermost structure "class ProgramName { ... }" */
-export default function program (lex: Lex): Program {
-  const keyword = lex.lexemes.shift()
-  const identifier = lex.lexemes.shift()
-  const openingBracket = lex.lexemes.shift()
-  const closingBracket = lex.lexemes.pop()
+export default function program (lexemes: Lexeme[]): Program {
+  const [keyword, identifier, openingBracket] = lexemes.slice(0, 3)
+  const closingBracket = lexemes[lexemes.length - 1]
 
   // "class" check
   if (!keyword) {
@@ -42,9 +40,17 @@ export default function program (lex: Lex): Program {
 
   // closing curly bracket
   if (!closingBracket) {
-    throw new CompilerError('Program must end with a closing bracket "}".', lex.lexemes[lex.lexemes.length - 1])
+    throw new CompilerError('Program must end with a closing bracket "}".', lexemes[lexemes.length - 1])
+  }
+  if (closingBracket.content !== '}') {
+    throw new CompilerError('Program must end with a closing bracket "}".', lexemes[lexemes.length])
   }
 
-  // create and return the program
-  return new Program('Java', identifier.content as string)
+  // create the program
+  const prog = new Program('Java', identifier.content as string)
+  prog.outerLexemes = lexemes
+  prog.lexemes = lexemes.slice(3, -1)
+
+  // return the program
+  return prog
 }

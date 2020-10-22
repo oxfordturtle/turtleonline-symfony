@@ -89,7 +89,7 @@ export class PassStatement {}
 
 /** placeholders for use in constructors */
 const placeholderExpression = new LiteralValue('boolint', 0)
-const placeHolderProgram = new Program('C', [])
+const placeHolderProgram = new Program('C')
 const placeholderRoutine = new Subroutine(placeHolderProgram)
 const placeholderVariable = new Variable('foo', placeholderRoutine)
 const placeholderVariableAssigment = new VariableAssignment(placeholderVariable)

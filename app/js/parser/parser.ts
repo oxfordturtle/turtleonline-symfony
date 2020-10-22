@@ -15,6 +15,7 @@ import Python2 from './parsers2/python'
 import TypeScript2 from './parsers2/typescript'
 import { Language } from '../constants/languages'
 import { Lexeme } from '../lexer/lexeme'
+import javaParser from '../parser2/java/parser'
 
 export default function parser (lexemes: Lexeme[], language: Language): Program {
   let program: Program
@@ -31,8 +32,10 @@ export default function parser (lexemes: Lexeme[], language: Language): Program 
       break
 
     case 'Java':
-      program = Java1(lexemes.filter(x => x.type !== 'comment'))
-      CandJava2(program)
+      // program = Java1(lexemes.filter(x => x.type !== 'comment'))
+      // CandJava2(program)
+      program = (javaParser(lexemes) as any) as Program
+      console.log(program)
       break
 
       case 'Pascal':

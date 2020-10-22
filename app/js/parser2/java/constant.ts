@@ -6,49 +6,46 @@ import { Program } from '../definitions/program'
 import { Subroutine } from '../definitions/subroutine'
 import { expression, typeCheck } from '../expression'
 import evaluate from '../evaluate'
-import { Lex } from '../lex'
 import { CompilerError } from '../../tools/error'
 
 /** parses lexemes as a constant definition, and returns the constant */
-export default function constant (routine: Program|Subroutine, lex: Lex): Constant {
+export default function constant (routine: Program|Subroutine): Constant {
   // expecting "final"
   // N.B. this should always be the case, otherwise we wouldn't be here, but it
   // doesn't hurt to cover all bases
-  if (!lex.get()) {
-    throw new CompilerError('Constant definition must begin with keyword "final".', lex.get(-1))
+  if (!routine.lex()) {
+    throw new CompilerError('Constant definition must begin with keyword "final".', routine.lex(-1))
   }
-  if (lex.content() !== 'final') {
-    throw new CompilerError('Constant definition must begin with keyword "final".', lex.get())
+  if (routine.lex()?.content !== 'final') {
+    throw new CompilerError('Constant definition must begin with keyword "final".', routine.lex())
   }
+  routine.lexemeIndex += 1
 
   // expecting type specification
-  const [constantType, arrayDimensions] = type(lex)
+  const [constantType, arrayDimensions] = type(routine)
   if (constantType === null) {
-    throw new CompilerError('Constant type cannot be void (expected "boolean", "char", "int", or "String").', lex.get())
+    throw new CompilerError('Constant type cannot be void (expected "boolean", "char", "int", or "String").', routine.lex())
   }
-  if (arrayDimensions > 0) {
-    throw new CompilerError('Constant cannot be an array.', lex.get())
+  if (arrayDimensions.length > 0) {
+    throw new CompilerError('Constant cannot be an array.', routine.lex())
   }
 
   // expecting identifier
-  const name = identifier(lex)
+  const name = identifier(routine)
 
   // expecting "="
-  if (!lex.get()) {
-    throw new CompilerError(`Constant ${name} must be assigned a value.`, lex.get(-1))
+  if (!routine.lex()) {
+    throw new CompilerError(`Constant ${name} must be assigned a value.`, routine.lex(-1))
   }
-  if (lex.content() !== '=') {
-    throw new CompilerError(`Constant ${name} must be assigned a value.`, lex.get())
+  if (routine.lex()?.content !== '=') {
+    throw new CompilerError(`Constant ${name} must be assigned a value.`, routine.lex())
   }
-  lex.step()
+  routine.lexemeIndex += 1
 
   // expecting value expression
-  const exp = expression(routine, lex)
-  typeCheck(exp, constantType, lex.get())
-  const value = evaluate(exp, 'Java', lex.get())
-
-  // end of statement check
-  eosCheck(lex)
+  const exp = expression(routine)
+  typeCheck(exp, constantType, routine.lex())
+  const value = evaluate(exp, 'Java', 'constant', routine.lex())
 
   // create and return the constant
   return new Constant('Java', name, constantType, value)

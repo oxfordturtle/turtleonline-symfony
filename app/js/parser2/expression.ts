@@ -1,14 +1,6 @@
-import { Lex } from './lex'
 import { functionCall } from './call'
 import * as find from './find'
-import {
-  Expression,
-  CompoundExpression,
-  LiteralValue,
-  VariableAddress,
-  VariableValue,
-  CastExpression
-} from './definitions/expression'
+import { Expression, CompoundExpression, LiteralValue, VariableAddress, VariableValue, CastExpression } from './definitions/expression'
 import { Program } from './definitions/program'
 import { Subroutine } from './definitions/subroutine'
 import { Type } from './definitions/type'
@@ -60,14 +52,14 @@ export function typeCheck (foundExpression: Expression, expectedType: Type, lexe
 }
 
 /** parses lexemes as an expression */
-export function expression (routine: Program|Subroutine, lex: Lex, level: number = 0): Expression {
+export function expression (routine: Program|Subroutine, level: number = 0): Expression {
   // break out of recursion at level > 2
   if (level > 2) {
-    return factor(routine, lex)
+    return factor(routine)
   }
 
   // evaluate the first bit
-  let exp = expression(routine, lex, level + 1)
+  let exp = expression(routine, level + 1)
 
   // get relevant operators for the current level
   const allOperators = [
@@ -77,21 +69,21 @@ export function expression (routine: Program|Subroutine, lex: Lex, level: number
   ]
   const operators = allOperators[level]
 
-  while (lex.get() && operators.includes(lex.value() as PCode)) {
+  while (routine.lex() && operators.includes(routine.lex()?.value as PCode)) {
     // get the operator (provisionally)
-    let operator = lex.value() as PCode
+    let operator = routine.lex()?.value as PCode
 
     // move past the operator
-    lex.step()
+    routine.lexemeIndex += 1
 
     // evaluate the second bit
-    let nextExp = expression(routine, lex, level + 1)
+    let nextExp = expression(routine, level + 1)
 
     // check types match (check both ways - so that if there's a character on
     // either side, and a string on the other, we'll know to convert the
     // character to a string)
-    exp = typeCheck(exp, nextExp.type, lex.get())
-    nextExp = typeCheck(nextExp, exp.type, lex.get())
+    exp = typeCheck(exp, nextExp.type, routine.lex())
+    nextExp = typeCheck(nextExp, exp.type, routine.lex())
 
     // maybe replace provisional operator with its string equivalent
     if (exp.type === 'string' || nextExp.type === 'string') {
@@ -107,42 +99,42 @@ export function expression (routine: Program|Subroutine, lex: Lex, level: number
 }
 
 /** parses lexemes as a factor */
-function factor (routine: Program|Subroutine, lex: Lex): Expression {
+function factor (routine: Program|Subroutine): Expression {
   let exp: Expression
 
-  switch (lex.type()) {
+  switch (routine.lex()?.type) {
     // operators
     case 'operator':
-      const operator = lex.value() as PCode
+      const operator = routine.lex()?.value as PCode
       switch (operator) {
         case PCode.subt:
-          lex.step()
-          exp = factor(routine, lex)
-          exp = typeCheck(exp, 'integer', lex.get())
+          routine.lexemeIndex += 1
+          exp = factor(routine)
+          exp = typeCheck(exp, 'integer', routine.lex())
           return new CompoundExpression(null, exp, PCode.neg)
 
         case PCode.not:
-          lex.step()
-          exp = factor(routine, lex)
-          exp = typeCheck(exp, 'boolint', lex.get())
+          routine.lexemeIndex += 1
+          exp = factor(routine)
+          exp = typeCheck(exp, 'boolint', routine.lex())
           return new CompoundExpression(null, exp, PCode.not)
 
         case PCode.and:
           if (routine.language !== 'C') {
-            throw new CompilerError('Expression cannot begin with {lex}.', lex.get())
+            throw new CompilerError('Expression cannot begin with {lex}.', routine.lex())
           }
-          lex.step()
-          exp = factor(routine, lex)
+          routine.lexemeIndex += 1
+          exp = factor(routine)
           if (!(exp instanceof VariableValue)) {
-            throw new CompilerError('Address operator "&" must be followed by a variable.', lex.get())
+            throw new CompilerError('Address operator "&" must be followed by a variable.', routine.lex())
           }
           if (exp.indexes.length > 0) {
-            throw new CompilerError('Variable following address operator "&" cannot include array indexes.', lex.get())
+            throw new CompilerError('Variable following address operator "&" cannot include array indexes.', routine.lex())
           }
           return new VariableAddress(exp.variable)
 
         default:
-          throw new CompilerError('Expression cannot begin with {lex}.', lex.get())
+          throw new CompilerError('Expression cannot begin with {lex}.', routine.lex())
       }
 
     // literal values
@@ -150,89 +142,89 @@ function factor (routine: Program|Subroutine, lex: Lex): Expression {
     case 'integer': // fallthrough
     case 'string': // fallthrough
     case 'character':
-      lex.step()
-      return new LiteralValue(lex.type(-1) as Type, lex.value(-1) as number|string)
+      routine.lexemeIndex += 1
+      return new LiteralValue(routine.lex(-1)?.type as Type, routine.lex(-1)?.value as number|string)
 
     // input codes
     case 'keycode': // fallthrough
     case 'query':
-      const input = find.input(routine, lex.content() as string)
+      const input = find.input(routine, routine.lex()?.content as string)
       if (input) {
-        lex.step()
+        routine.lexemeIndex += 1
         exp = new LiteralValue('integer', input.value)
         exp.input = (input.value < 0)
         return exp
       }
-      throw new CompilerError('{lex} is not a valid input code.', lex.get())
+      throw new CompilerError('{lex} is not a valid input code.', routine.lex())
 
     // identifiers
     case 'identifier':
       // look for a constant
-      const constant = find.constant(routine, lex.content() as string)
+      const constant = find.constant(routine, routine.lex()?.content as string)
       if (constant) {
-        lex.step()
+        routine.lexemeIndex += 1
         return new LiteralValue(constant.type, constant.value)
       }
 
       // look for a variable
-      const variable = find.variable(routine, lex.content() as string)
+      const variable = find.variable(routine, routine.lex()?.content as string)
       if (variable) {
         const variableValue = new VariableValue(variable)
-        lex.step()
+        routine.lexemeIndex += 1
         if (variable.isArray || variable.type === 'string') {
           const open = (routine.language === 'BASIC') ? '(' : '['
           const close = (routine.language === 'BASIC') ? ')' : ']'
-          if (lex.get() && lex.content() === open) {
-            lex.step()
-            exp = expression(routine, lex)
-            exp = typeCheck(exp, 'integer', lex.get())
+          if (routine.lex() && routine.lex()?.content === open) {
+            routine.lexemeIndex += 1
+            exp = expression(routine)
+            exp = typeCheck(exp, 'integer', routine.lex())
             variableValue.indexes.push(exp)
             // TODO: multi-dimensional stuff
-            if (!lex.get()) {
-              throw new CompilerError(`Closing bracket "${close}" missing after string/array index.`, lex.get(-1))
+            if (!routine.lex()) {
+              throw new CompilerError(`Closing bracket "${close}" missing after string/array index.`, routine.lex(-1))
             }
-            if (lex.content() !== close) {
-              throw new CompilerError(`Closing bracket "${close}" missing after string/array index.`, lex.get())
+            if (routine.lex()?.content !== close) {
+              throw new CompilerError(`Closing bracket "${close}" missing after string/array index.`, routine.lex())
             }
-            lex.step()
+            routine.lexemeIndex += 1
           }
         }
         return variableValue
       }
 
       // look for a predefined colour constant
-      const colour = find.colour(routine, lex.content() as string)
+      const colour = find.colour(routine, routine.lex()?.content as string)
       if (colour) {
-        lex.step()
+        routine.lexemeIndex += 1
         return new LiteralValue('integer', colour.value)
       }
 
       // look for a command
-      const command = find.command(routine, lex.content() as string)
+      const command = find.command(routine, routine.lex()?.content as string)
       if (command) {
-        lex.step()
-        return functionCall(routine, lex, command)
+        routine.lexemeIndex += 1
+        return functionCall(routine, command)
       }
 
       // if none of those were found, throw an error
-      throw new CompilerError('{lex} is not defined.', lex.get())
+      throw new CompilerError('{lex} is not defined.', routine.lex())
 
     // everything else
     default:
       // type casting in C and Java
-      if ((routine.language === 'C' || routine.language === 'Java') && (lex.content() === '(') && (lex.subtype(1) === 'type')) {
-        lex.step()
-        const typeLexeme = lex.get() as Lexeme
+      if ((routine.language === 'C' || routine.language === 'Java') && (routine.lex()?.content === '(') && (routine.lex(1)?.subtype === 'type')) {
+        routine.lexemeIndex += 1
+        const typeLexeme = routine.lex() as Lexeme
         const type = typeLexeme.value as Type|null
         if (type === null) {
           throw new CompilerError('Expression cannot be cast as void.', typeLexeme)
         }
-        lex.step()
-        if (lex.content() !== ')') {
+        routine.lexemeIndex += 1
+        if (routine.lex()?.content !== ')') {
           throw new CompilerError('Type in type cast expression must be followed by a closing bracket ")".', typeLexeme)
         }
-        lex.step()
-        exp = expression(routine, lex)
+        routine.lexemeIndex += 1
+        exp = expression(routine)
         if (type !== exp.type) {
           if (type === 'boolean' && exp.type === 'character') {
             throw new CompilerError('Characters cannot be cast as booleans.', typeLexeme)
@@ -255,23 +247,23 @@ function factor (routine: Program|Subroutine, lex: Lex): Expression {
       }
 
       // bracketed expression
-      else if (lex.content() === '(') {
+      else if (routine.lex()?.content === '(') {
         // what follows should be an expression
-        lex.step()
-        exp = expression(routine, lex)
+        routine.lexemeIndex += 1
+        exp = expression(routine)
 
         // now check for a closing bracket
-        if (lex.get() && (lex.content() === ')')) {
-          lex.step()
+        if (routine.lex() && (routine.lex()?.content === ')')) {
+          routine.lexemeIndex += 1
           return exp
         } else {
-          throw new CompilerError('Closing bracket missing after expression.', lex.get(-1))
+          throw new CompilerError('Closing bracket missing after expression.', routine.lex(-1))
         }
       }
       
       // anything else is an error
       else {
-        throw new CompilerError('Expression cannot begin with {lex}.', lex.get())
+        throw new CompilerError('Expression cannot begin with {lex}.', routine.lex())
       }
   }
 }

@@ -35,6 +35,7 @@ import { Program } from '../parser/routine'
 import analyse from '../analyser/analyse'
 import { UsageCategory } from '../analyser/usage'
 import encoder from '../encoder/program'
+import encoder2 from '../encoder2/program'
 
 /** the system state object */
 class State {
@@ -961,7 +962,9 @@ class State {
       this.lexemes = lexify(this.code, this.language)
       this.program = parser(this.lexemes, this.language)
       this.usage = analyse(this.lexemes, this.program)
-      this.pcode = encoder(this.program, this.compilerOptions)
+      this.pcode = (this.language === 'Java')
+        ? encoder2(this.program as any, this.compilerOptions)
+        : encoder(this.program, this.compilerOptions)
       this.file.language = this.language
       this.file.compiled = true
       this.files = this.files // to update the session storage

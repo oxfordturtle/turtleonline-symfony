@@ -6,7 +6,7 @@ import { Type } from './type'
 export class Subroutine extends Routine {
   readonly parent: Program|Subroutine
   readonly level: -1 = -1 // needed for the usage data table
-  type: SubroutineType
+  type: SubroutineType = 'procedure'
   returns: Type|null = null
   hasReturnStatement: boolean = false // for C, Java, Python, and TypeScript
   globals: string[] = []
@@ -14,10 +14,9 @@ export class Subroutine extends Routine {
   startLine: number = 0 // first line in PCode (fixed later by the encoder module)
 
   /** constructor */
-  constructor (parent: Program|Subroutine, name?: string, type: SubroutineType = 'procedure') {
+  constructor (parent: Program|Subroutine, name?: string) {
     super(parent.language, name)
     this.parent = parent
-    this.type = type
   }
 
   /** gets the program this subroutine belongs to */

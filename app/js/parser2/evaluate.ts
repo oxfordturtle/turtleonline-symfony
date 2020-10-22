@@ -2,27 +2,26 @@ import { Language } from '../constants/languages'
 import { PCode } from '../constants/pcodes'
 import { Lexeme } from '../lexer/lexeme'
 import { CompilerError } from '../tools/error'
-import {
-  Expression,
-  LiteralValue,
-  VariableAddress,
-  VariableValue,
-  FunctionCall,
-  CastExpression
-} from './definitions/expression'
+import { Expression, LiteralValue, VariableAddress, VariableValue, FunctionCall, CastExpression } from './definitions/expression'
 
-export default function evaluate (expression: Expression, language: Language, lexeme: Lexeme|undefined): number|string {
+export default function evaluate (expression: Expression, language: Language, context: 'constant'|'array', lexeme: Lexeme|undefined): number|string {
   const True = (language === 'BASIC' || language === 'Pascal') ? -1 : 1
   const False = 0
 
   // variable values are not allowed
   if (expression instanceof VariableAddress || expression instanceof VariableValue) {
-    throw new CompilerError('Constant value cannot refer to any variables.', lexeme)
+    const message = (context === 'constant')
+      ? 'Constant value cannot refer to any variables.'
+      : 'Array size specification cannot refer to any variables.'
+    throw new CompilerError(message, lexeme)
   }
 
   // function calls are not allowed
   if (expression instanceof FunctionCall) {
-    throw new CompilerError('Constant value cannot invoke any functions.', lexeme)
+    const message = (context === 'constant')
+      ? 'Constant value cannot invoke any functions.'
+      : 'Array size specification cannot invoke any functions.'
+    throw new CompilerError(message, lexeme)
   }
 
   // literal values are easy
@@ -32,12 +31,12 @@ export default function evaluate (expression: Expression, language: Language, le
 
   // cast expressions
   if (expression instanceof CastExpression) {
-    return evaluate(expression.expression, language, lexeme)
+    return evaluate(expression.expression, language, context, lexeme)
   }
 
   // compound expressions
-  const left = expression.left ? evaluate(expression.left, language, lexeme) : null
-  const right = evaluate(expression.right, language, lexeme)
+  const left = expression.left ? evaluate(expression.left, language, context, lexeme) : null
+  const right = evaluate(expression.right, language, context, lexeme)
   switch (expression.operator) {
     case PCode.eqal:
     case PCode.seql:
@@ -103,6 +102,9 @@ export default function evaluate (expression: Expression, language: Language, le
       return (left as number) * (right as number)
 
     default:
-      throw new CompilerError('Unable to parse expression for constant value.', lexeme)
+      const message = (context === 'constant')
+        ? 'Unable to evaluate expression for constant value.'
+        : 'Unable to evaluate expression for array size specification.'
+      throw new CompilerError(message, lexeme)
   }
 }

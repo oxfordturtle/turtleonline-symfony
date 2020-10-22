@@ -2,6 +2,7 @@ import { Constant } from './constant'
 import { Statement } from './statement'
 import { Subroutine } from './subroutine'
 import { Variable } from './variable'
+import { Lexeme } from '../../lexer/lexeme'
 import { Language } from '../../constants/languages'
 
 /** routine (extended by program and subroutine) */
@@ -9,6 +10,9 @@ export class Routine {
   language: Language // the routine's language
   name: string = '!' // the routine's name
   index: number = 0 // the routine's index (0 for main program, > 0 for subroutines)
+  outerLexemes: Lexeme[] = [] // all the routine's lexemes (including outer ones)
+  lexemes: Lexeme[] = [] // the routine's (inner) lexemes
+  lexemeIndex: number = 0 // index of the current lexeme (used by the parser)
   constants: Constant[] = [] // the routine's constants
   variables: Variable[] = [] // the routine's variables
   subroutines: Subroutine[] = [] // the routine's subroutines
@@ -40,5 +44,10 @@ export class Routine {
       allSubroutines.push(subroutine)
     }
     return allSubroutines
+  }
+
+  /** gets a lexeme (relative to the current lexemeIndex) */
+  lex (offset: number = 0): Lexeme|undefined {
+    return this.lexemes[this.lexemeIndex + offset]
   }
 }
