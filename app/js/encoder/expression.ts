@@ -56,8 +56,8 @@ export function expression (exp: Expression, program: Program, options: Options,
 
     case 'variable':
       return reference
-      ? variableAddress(exp, program, options)
-      : variableValue(exp, program, options)
+        ? variableAddress(exp, program, options)
+        : variableValue(exp, program, options)
 
     case 'function':
       return functionValue(exp, program, options)
@@ -127,13 +127,13 @@ function variableValue (exp: VariableValue, program: Program, options: Options):
   let pcode: number[][] = []
 
   // array element
-  if (exp.variable.isArray) {
+  if (exp.variable.isArray && exp.indexes.length > 0) {
     const baseVariableExp = new VariableValue(exp.lexeme, exp.variable) // same variable, no indexes
     pcode.push(...expression(baseVariableExp, program, options))
     for (const index of exp.indexes) {
       const indexExp = expression(index, program, options)
       merge(pcode, indexExp)
-      if (exp.variable.arrayDimensions[0][0] > 0) {
+      if (exp.variable.arrayDimensions[0][0] > 0) { // wrong!!
         merge(pcode, [[PCode.ldin, exp.variable.arrayDimensions[0][0], PCode.subt]])
       }
       merge(pcode, [[PCode.swap, PCode.test, PCode.plus, PCode.incr, PCode.lptr]])

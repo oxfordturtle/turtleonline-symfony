@@ -141,8 +141,10 @@ function setupGlobalVariable (variable: Variable, indexOffset: number = 0): numb
       PCode.stvg,
       index + 1
     ])
+    let offset = 0
     for (const subVariable of variable.subVariables) {
-      const subPcode = setupGlobalVariable(subVariable, index)
+      const subPcode = setupGlobalVariable(subVariable, offset)
+      offset += subVariable.length
       if (subPcode.length > 0) {
         pcode.push(...subPcode)
       }

@@ -128,8 +128,6 @@ function factor (lexemes: Lexemes, routine: Program|Subroutine): Expression {
           return new VariableAddress(exp.lexeme, exp.variable)
 
         default:
-          console.log(lexeme)
-          console.log(operator)
           throw new CompilerError('Expression cannot begin with {lex}.', lexeme)
       }
 

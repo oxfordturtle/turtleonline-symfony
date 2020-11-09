@@ -1675,7 +1675,7 @@ function execute (): void {
           if (n1 !== undefined && n2 !== undefined) {
             if ((n1 < 0) || (n1 >= memory.main[n2])) {
               // TODO: make range check a runtime option
-              throw new MachineError('Array index out of range.')
+              throw new MachineError(`Array index out of range (${line}, ${code}).`)
             }
           }
           break
