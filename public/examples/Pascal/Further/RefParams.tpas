@@ -1,9 +1,5 @@
 PROGRAM RefParams;
 
-  {Reference parameters are indicated with the keyword "var"; changing these }
-  {within a subroutine also changes the external variable that was passed in.}
-  {This program illustrates the principle by passing in Turtle properties.   }
-
   Procedure lines(var turtleProperty: integer; isColour: boolean);
   Var n: integer;
   Begin

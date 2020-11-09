@@ -1,10 +1,11 @@
-/*
- * The Virtual Turtle Machine.
- */
+// type imports
+import type { Options } from './options'
+import type { Turtle } from './turtle'
+
+// module imports
 import * as memory from './memory'
-import { defaultOptions, Options } from './options'
+import { defaultOptions } from './options'
 import { keycodeFromKey, mixBytes } from './misc'
-import { Turtle } from './turtle'
 import { colours } from '../constants/colours'
 import { PCode } from '../constants/pcodes'
 import { MachineError } from '../tools/error'
@@ -21,7 +22,7 @@ let line: number = 0
 let code: number = 0
 let options: Options = defaultOptions
 
-// virtual canvas
+// the virtual canvas
 let startx: number = 0
 let starty: number = 0
 let sizex: number = 1000

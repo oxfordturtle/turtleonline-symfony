@@ -1,7 +1,8 @@
 /**
  * Fonts reference table.
  */
-import { fonts, Font } from '../../constants/fonts'
+import type { Font } from '../../constants/fonts'
+import { fonts } from '../../constants/fonts'
 import { fill, tr, td } from '../../tools/elements'
 import { on } from '../../tools/hub'
 

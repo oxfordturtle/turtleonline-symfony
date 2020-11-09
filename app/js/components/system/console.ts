@@ -1,6 +1,4 @@
-/*
- * The machine console component.
- */
+// module imports
 import { on } from '../../tools/hub'
 
 // get relevant elements

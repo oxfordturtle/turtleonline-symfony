@@ -1,5 +1,5 @@
 // draws a coloured star with the given number of points
-function star (points: number, colr: number) {
+function star (points: number, colr: number): void {
   // set angles to twice the number of points
   angles(points * 2);
   // trace out each point with the turtle

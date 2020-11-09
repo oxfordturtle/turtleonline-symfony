@@ -6,19 +6,19 @@ var xEdge: boolean;
 var yEdge: boolean;
 
 // draws a triangle, and checks whether it meets the edge of the canvas
-function triangle(colr: number) {
+function triangle (colr: number): void {
   xEdge = false;
   yEdge = false;
   setXY(x, y);
   direction(d);
   colour(colr);
-  for (count = 0; count < 2; count = count + 1) {
+  for (var count: number = 0; count < 3; count = count + 1) {
     forward(size);
     if (abs(turtx - 500) > 495) {
-      xEdge := true;
+      xEdge = true;
     }
     if (abs(turty - 500) > 495) {
-      yEdge := true;
+      yEdge = true;
     }
     back(size);
     forget(1);

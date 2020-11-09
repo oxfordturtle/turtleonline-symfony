@@ -1,6 +1,4 @@
-/**
- * Controls component (buttons at the top right of the system).
- */
+// module imorts
 import { on } from '../../tools/hub'
 
 // get relevant elements

@@ -28,6 +28,7 @@ export const messages = [
   'currentFileIndexChanged',
   'filenameChanged',
   'codeChanged',
+  'tokensChanged',
   'lexemesChanged',
   'programChanged',
   'usageChanged',

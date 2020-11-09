@@ -1,4 +1,4 @@
-// create an HTML element
+/** creates an HTML element */
 export function element (type: string, options: any = {}): HTMLElement {
   const element = document.createElement(type)
 
@@ -41,7 +41,7 @@ export function element (type: string, options: any = {}): HTMLElement {
   return element
 }
 
-// set the content of an HTML element / fragment
+/** sets the content of an HTML element / fragment */
 export function fill (element: HTMLElement|DocumentFragment, content: (HTMLElement|DocumentFragment)[]|string): void {
   if (Array.isArray(content)) {
     const fragment = document.createDocumentFragment()
@@ -57,14 +57,14 @@ export function fill (element: HTMLElement|DocumentFragment, content: (HTMLEleme
   }
 }
 
-// create a document fragment
+/** creates a document fragment */
 export function fragment (content: (HTMLElement|DocumentFragment)[]): DocumentFragment {
   const fragment = document.createDocumentFragment()
   fill(fragment, content)
   return fragment
 }
 
-// shorthand for creating the main root element
+/** creates an html root element */
 export function html (options: any = {}): HTMLHtmlElement {
   return element('html', options) as HTMLHtmlElement
 }

@@ -1,5 +1,5 @@
 // draws a triangle of the given size
-function triangle (size: number) {
+function triangle (size: number): void {
   // draw the first side
   forward(size);
   right(120);

@@ -6,7 +6,7 @@ var b: number = randInt(900) + 100;
 // Writes to the output the value of a mathematical function of a/b,
 // or - in the case of HYPOT (where OP is "," not "/") - of a and b;
 // chr(176) is the degree symbol for sin/cos/tan and their inverses.
-function show (fn: string, op: string, value: number, degrees: number) {
+function show (fn: string, op: string, value: number, degrees: number): void {
   if (degrees == 1) {
     writeln(fn + '(' + toString(a) + op + toString(b) + fromCharCode(176) + ') = ' + toStringQ(value, denominator, decimals));
   } else {

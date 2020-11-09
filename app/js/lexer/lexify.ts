@@ -1,151 +1,172 @@
-/*
- * Lexical analysis function.
- */
-import { Lexeme } from './lexeme'
+// type imports
+import type { Token } from './token'
+import type { Language } from '../constants/languages'
+
+// module imports
 import tokenize from './tokenize'
-import { Language } from '../constants/languages'
+import {
+  Lexeme,
+  NewlineLexeme,
+  IndentLexeme,
+  DedentLexeme,
+  CommentLexeme,
+  KeywordLexeme,
+  TypeLexeme,
+  OperatorLexeme,
+  DelimiterLexeme,
+  BooleanLexeme,
+  IntegerLexeme,
+  CharacterLexeme,
+  StringLexeme,
+  KeycodeLexeme,
+  QueryLexeme,
+  IdentifierLexeme
+} from './lexeme'
 import { CompilerError } from '../tools/error'
 
-/** generates an array of lexemes from code */
-export default function lexify (code: string, language: Language): Lexeme[] {
-  // get the tokens from the code
-  const tokens = tokenize(code, language)
-  const lexemes: Lexeme[] = []
+/** generates an array of lexemes from code string or tokens */
+export default function lexify (code: string|Token[], language: Language): Lexeme[] {
+  // get the tokens (if first argument was code string)
+  const tokens = (typeof code === 'string') ? tokenize(code, language) : code
 
   // loop through the tokens, pushing lexemes into the lexemes array (or throwing an error)
+  const lexemes: Lexeme[] = []
   const indents = [0]
   let index = 0
-  let line = 1
-  let character = 1
   let indent = indents[0]
-  let messages: Record<Language, string>
-  let message: string
   while (index < tokens.length) {
-    if (!tokens[index].ok) {
-      switch (tokens[index].type) {
-        case 'comment':
-          message = 'Unterminated comment.'
-          throw new CompilerError(message, new Lexeme(tokens[index], line, character))
-  
-        case 'character': // fallthrough
-        case 'string':
-          message = (language === 'BASIC' && tokens[index].subtype === 'single')
-            ? 'Strings in Turtle BASIC use double quotes, not single quotes.'
-            : 'Unterminated string.'
-          throw new CompilerError(message, new Lexeme(tokens[index], line, character))
-  
-        case 'integer':
-          switch (tokens[index].subtype) {
-            case 'binary':
-              messages = {
-                BASIC: 'Binary numbers in Turtle BASIC begin with "%".',
-                C: 'Binary numbers in Turtle C begin with "0b".',
-                Java: 'Binary numbers in Turtle Java begin with "0b".',
-                Pascal: 'Binary numbers in Turtle Pascal begin with "%".',
-                Python: 'Binary numbers in Turtle Python begin with "0b".',
-                TypeScript: 'Binary numbers in Turtle TypeScript begin with "0b".'
-              }
-              throw new CompilerError(messages[language], new Lexeme(tokens[index], line, character))
-      
-            case 'octal':
-              messages = {
-                BASIC: 'Turtle BASIC does not support octal numbers.',
-                C: 'Octal numbers in Turtle C begin with "0o".',
-                Java: 'Octal numbers in Turtle Java begin with "0o".',
-                Pascal: 'Octal numbers in Turtle Pascal begin with "&".',
-                Python: 'Octal numbers in Turtle Python begin with "0o".',
-                TypeScript: 'Octal numbers in Turtle TypeScript begin with "0o".'
-              }
-              throw new CompilerError(messages[language], new Lexeme(tokens[index], line, character))
-      
-            case 'hexadecimal':
-              messages = {
-                BASIC: 'Hexadecimal numbers in Turtle BASIC begin with "&".',
-                C: 'Hexadecimal numbers in Turtle C begin with "0x".',
-                Java: 'Hexadecimal numbers in Turtle Java begin with "0x".',
-                Pascal: 'Hexadecimal numbers in Turtle Pascal begin with "$".',
-                Python: 'Hexadecimal numbers in Turtle Python begin with "0x".',
-                TypeScript: 'Hexadecimal numbers in Turtle TypeScript begin with "0x".'
-              }
-              throw new CompilerError(messages[language], new Lexeme(tokens[index], line, character))
-      
-            case 'decimal':
-              message = 'The Turtle System does not support real numbers.'
-              throw new CompilerError(message, new Lexeme(tokens[index], line, character))
-          }
-
-        case 'keycode':
-          message = 'Unrecognised keycode constant.'
-          throw new CompilerError(message, new Lexeme(tokens[index], line, character))
-
-        case 'query':
-          message = 'Unrecognised input query.'
-          throw new CompilerError(message, new Lexeme(tokens[index], line, character))
-
-        case 'illegal':
-          message = 'Illegal character in this context.'
-          throw new CompilerError(message, new Lexeme(tokens[index], line, character))
-      }
-    }
-
     switch (tokens[index].type) {
       case 'spaces':
-        character += (tokens[index].content as string).length
         break
 
       case 'newline':
-        line += 1
-        character = 1
         // line breaks are significant in BASIC, Python, and TypeScript
         if (language === 'BASIC' || language === 'Python' || language === 'TypeScript') {
           // push the lexeme, unless this is a blank line at the start of the
           // program or there's a blank line or a comment previously
           if (lexemes[lexemes.length - 1]) {
             if (lexemes[lexemes.length - 1].type !== 'newline' && lexemes[lexemes.length - 1].type !== 'comment') {
-              lexemes.push(new Lexeme(tokens[index], line - 1, character))
+              lexemes.push(new NewlineLexeme(tokens[index]))
             }
           }
-          // move past any additional line breaks, just incrementing the line number
+          // move past any additional line breaks
           while (tokens[index + 1] && tokens[index + 1].type === 'newline') {
             index += 1
-            line += 1
           }
         }
 
         // indents are significant in Python
         if (language === 'Python') {
           indent = (tokens[index + 1] && tokens[index + 1].type === 'spaces')
-            ? (tokens[index + 1].content as string).length
+            ? tokens[index + 1].content.length
             : 0
           if (indent > indents[indents.length - 1]) {
             indents.push(indent)
-            lexemes.push(new Lexeme('indent', line, character))
+            lexemes.push(new IndentLexeme(tokens[index + 1]))
           } else {
             while (indent < indents[indents.length - 1]) {
               indents.pop()
-              lexemes.push(new Lexeme('dedent', line, character))
+              lexemes.push(new DedentLexeme(tokens[index + 1] || tokens[index]))
             }
             if (indent !== indents[indents.length - 1]) {
-              throw new CompilerError(`Inconsistent indentation at line ${line}.`)
+              throw new CompilerError(`Inconsistent indentation at line ${(tokens[index + 1] || tokens[index]).line}.`)
             }
           }
         }
         break
 
       case 'comment':
-        lexemes.push(new Lexeme(tokens[index], line, character))
-        character += tokens[index].content?.length || 0
+        lexemes.push(new CommentLexeme(tokens[index], language))
         // in Python and BASIC, line breaks are significant, and comments are terminated
         // with a line break; so we need to add a newline lexeme after each comment
         if (language === 'BASIC' || language === 'Python') {
-          lexemes.push(new Lexeme('newline', line, character))
+          lexemes.push(new NewlineLexeme(tokens[index + 1] || tokens[index]))
         }
         break
 
-      default:
-        lexemes.push(new Lexeme(tokens[index], line, character))
-        character += tokens[index].content?.length || 0
+      case 'keyword':
+        lexemes.push(new KeywordLexeme(tokens[index]))
         break
+
+      case 'type':
+        lexemes.push(new TypeLexeme(tokens[index]))
+        break
+
+      case 'operator':
+        lexemes.push(new OperatorLexeme(tokens[index], language))
+        break
+
+      case 'delimiter':
+        lexemes.push(new DelimiterLexeme(tokens[index]))
+        break
+
+      case 'string':
+        const stringLexeme = new StringLexeme(tokens[index], language)
+        const isCharacter = stringLexeme.value.length === 1
+        if (isCharacter && (language === 'C' || language === 'Java' || language === 'Pascal')) {
+          lexemes.push(new CharacterLexeme(stringLexeme))
+        } else {
+          lexemes.push(stringLexeme)
+        }
+        break
+
+      case 'boolean':
+        lexemes.push(new BooleanLexeme(tokens[index], language))
+        break
+
+      case 'binary':
+        lexemes.push(new IntegerLexeme(tokens[index], 2))
+        break
+
+      case 'octal':
+        lexemes.push(new IntegerLexeme(tokens[index], 8))
+        break
+
+      case 'hexadecimal':
+        lexemes.push(new IntegerLexeme(tokens[index], 16))
+        break
+
+      case 'decimal':
+        lexemes.push(new IntegerLexeme(tokens[index], 10))
+        break
+
+      case 'keycode':
+        lexemes.push(new KeycodeLexeme(tokens[index], language))
+        break
+
+      case 'query':
+        lexemes.push(new QueryLexeme(tokens[index], language))
+        break
+
+      case 'command':
+      case 'turtle':
+      case 'colour':
+      case 'identifier':
+        lexemes.push(new IdentifierLexeme(tokens[index], language))
+        break
+
+      case 'unterminated-comment':
+        throw new CompilerError('Unterminated comment.', tokens[index])
+
+      case 'unterminated-string':
+        throw new CompilerError('Unterminated string.', tokens[index])
+
+      case 'bad-binary':
+      case 'bad-octal':
+      case 'bad-hexadecimal':
+        throw new CompilerError('Ill-formed integer literal.', tokens[index])
+
+      case 'real':
+        throw new CompilerError('The Turtle System does not support real numbers.', tokens[index])
+
+      case 'bad-keycode':
+        throw new CompilerError('Unrecognised input keycode.', tokens[index])
+
+      case 'bad-query':
+        throw new CompilerError('Unrecognised input query.', tokens[index])
+
+      case 'illegal':
+        throw new CompilerError('Illegal character in this context.', tokens[index])
     }
 
     index += 1

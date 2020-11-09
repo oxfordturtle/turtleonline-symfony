@@ -1,16 +1,21 @@
-# TurtleBounce
-
-xvel: int = 3
-yvel: int = -2
+# set starting point and velocity
+setxy(100, 700)
+xVelocity: int = 8
+yVelocity: int = -4
 while (0 < 1):
+  noupdate()
+  # rub out existing ball
   colour(white)
   blot(51)
-  movexy(xvel, yvel)
+  # move to next location
+  movexy(xVelocity, yVelocity)
+  # draw new ball
   colour(red)
   blot(50)
   update()
-  noupdate()
+  pause(10)
+  # "bounce" (i.e. invert velocity) at canvas edges
   if (turtx < 50) or (turtx > 950):
-    xvel = -xvel
+    xVelocity = -xVelocity
   if (turty < 50) or (turty > 950):
-    yvel = -yvel
+    yVelocity = -yVelocity

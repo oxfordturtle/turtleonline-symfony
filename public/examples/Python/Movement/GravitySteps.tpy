@@ -1,27 +1,27 @@
-# GravitySteps
-
-def steps(s: int):
-  size: int = 1000 / s
+# draws n steps
+def steps (n: int):
+  size: int = 1000 / n
   setxy(0, 1000)
   thickness(1)
-  for count in range(0, s * 2, 1):
+  for count in range(0, n * 2, 1):
     if count % 2 == 1:
       movexy(0, -size)
     else:
       movexy(size, 0)
-  movexy(0, s * size)
-  movexy(-s * size, 0)
+  movexy(0, n * size)
+  movexy(-n * size, 0)
   colour(blue)
-  polygon(s * 2 + 2)
+  polygon(n * 2 + 2)
 
-def throwball(xvel: int, yvel: int, gravity: int, floor: int):
+# simulates the movement of a ball with the effect of gravity
+def throwBall (xVelocity: int, yVelocity: int, gravity: int, floor: int):
   global turty
   turty = turty - 1
   while (turty != floor):
     colour(white)
     blot(25)
-    movexy(xvel, yvel)
-    yvel = yvel + gravity
+    movexy(xVelocity, yVelocity)
+    yVelocity = yVelocity + gravity
     if turty > floor:
       turty = floor
     colour(red)
@@ -30,9 +30,13 @@ def throwball(xvel: int, yvel: int, gravity: int, floor: int):
     pause(10)
     noupdate()
 
+# draw steps
 steps(10)
+# set starting point
 setxy(950, 75)
+# throw ball down each step
 while not(turtx < 75):
-  throwball(-2, -22, 1, turty + 100)
-for bounce in range(0, 10, 1):
-  throwball(0, bounce * 2 - 18, 1, turty)
+  throwBall(-2, -22, 1, turty + 100)
+# bounce ball on the ground
+for count in range(0, 10, 1):
+  throwBall(0, count * 2 - 18, 1, turty)

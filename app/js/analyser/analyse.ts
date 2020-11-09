@@ -1,13 +1,14 @@
 /*
  * usage data generator - arrays of lexemes and subroutines go in, usage data comes out
  */
-import { UsageCategory, UsageExpression } from './usage'
+import type { UsageCategory, UsageExpression } from './usage'
 import { Command } from '../constants/commands'
-import { Keyword } from '../constants/keywords'
+import type { Keyword } from '../constants/keywords'
 import { Category, Expression, commandCategories, keywordCategories } from '../constants/categories'
-import { Language } from '../constants/languages'
-import { Lexeme } from '../lexer/lexeme'
-import { Program, Subroutine } from '../parser/routine'
+import type { Language } from '../constants/languages'
+import type { Lexeme } from '../lexer/lexeme'
+import type Program from '../parser/definitions/program'
+import type { Subroutine } from '../parser/definitions/subroutine'
 
 /** analyses program lexemes to produce usage data */
 export default function (lexemes: Lexeme[], program: Program): UsageCategory[] {
@@ -15,9 +16,11 @@ export default function (lexemes: Lexeme[], program: Program): UsageCategory[] {
     .concat(keywordCategories[program.language])
   const usageCategories = categories.map(usageCategory.bind(null, program.language, lexemes)) as UsageCategory[]
   const subroutineCategory = new Category(30, 'Subroutine calls', program.allSubroutines.slice(1))
-  const subLexemes = program.allSubroutines.map(x => x.lexemes).flat()
-  subLexemes.unshift(...program.lexemes)
-  const subroutineUsageCategory = usageCategory(program.language, subLexemes, subroutineCategory)
+  //const subLexemes = program.allSubroutines.map(x => x.lexemes).flat()
+  //subLexemes.unshift(...program.lexemes)
+  //const subroutineUsageCategory = usageCategory(program.language, subLexemes, subroutineCategory)
+  // TODO: don't count subroutine definitions as subroutine calls
+  const subroutineUsageCategory = usageCategory(program.language, lexemes, subroutineCategory)
   return usageCategories.concat(subroutineUsageCategory).filter(category => category.expressions.length > 0)
 }
 

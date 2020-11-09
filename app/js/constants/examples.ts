@@ -4,7 +4,7 @@
  * Example program code is stored in the /public/examples directory, to be
  * fetched as needed.
  */
-import { Language } from './languages'
+import type { Language } from './languages'
 
 /** Example class */
 export class Example {

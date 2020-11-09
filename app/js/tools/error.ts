@@ -1,7 +1,6 @@
-/*
- * Custom error objects.
- */
-import { Lexeme } from '../lexer/lexeme'
+// type imports
+import type { Token } from '../lexer/token'
+import type { Lexeme } from '../lexer/lexeme'
 
 /** system error */
 export class SystemError extends Error {
@@ -19,14 +18,14 @@ export class MachineError extends Error {
 
 /** compiler error */
 export class CompilerError extends Error {
-  readonly lexeme: Lexeme|null
+  readonly token: Token|Lexeme|null
 
-  constructor (message: string, lexeme: Lexeme|null = null) {
-    if (lexeme) {
-      message = message.replace('{lex}', `"${lexeme.content}"`)
-      message += ` ("${lexeme.content}", line ${lexeme.line}.${lexeme.character})`
+  constructor (message: string, token: Token|Lexeme|null = null) {
+    if (token) {
+      message = message.replace('{lex}', `"${token.content}"`)
+      message += ` ("${token.content}", line ${token.line}, index ${token.character})`
     }
     super(message)
-    this.lexeme = lexeme
+    this.token = token
   }
 }

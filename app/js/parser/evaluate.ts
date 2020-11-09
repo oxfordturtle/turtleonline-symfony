@@ -1,105 +1,125 @@
-/**
- * Evaluates an expression (used for assigning values to constants at compile
- * time).
- */
-import { Language } from '../constants/languages'
-import { PCode } from '../constants/pcodes'
-import { Lexeme } from '../lexer/lexeme'
+import type { Language } from '../constants/languages'
 import { CompilerError } from '../tools/error'
-import { Expression, LiteralValue, VariableAddress, VariableValue, CommandCall, CastExpression } from './expression'
+import { Expression } from './definitions/expression'
 
-export default function evaluate (lexeme: Lexeme, language: Language, expression: Expression): number|string {
+/** evaluates an expression */
+export default function evaluate (expression: Expression, language: Language, context: 'constant'|'array'|'step'): number|string {
   const True = (language === 'BASIC' || language === 'Pascal') ? -1 : 1
   const False = 0
 
-  // variable values are not allowed
-  if (expression instanceof VariableAddress || expression instanceof VariableValue) {
-    throw new CompilerError('Constant value cannot refer to any variables.', lexeme)
-  }
+  switch (expression.expressionType) {
+    // variable values are not allowed
+    case 'address':
+    case 'variable':
+      if (context === 'constant') {
+        throw new CompilerError('Constant value cannot refer to any variables.', expression.lexeme)
+      } else if (context === 'array') {
+        throw new CompilerError('Array size specification cannot refer to any variables.', expression.lexeme)
+      } else {
+        throw new CompilerError('FOR loop step change specification cannot refer to any variables.', expression.lexeme)
+      }
 
-  // function calls are not allowed
-  if (expression instanceof CommandCall) {
-    throw new CompilerError('Constant value cannot invoke any functions.', lexeme)
-  }
+    // function calls are not allowed
+    case 'function':
+      if (context === 'constant') {
+        throw new CompilerError('Constant value cannot invoke any functions.', expression.lexeme)
+      } else if (context === 'array') {
+        throw new CompilerError('Array size specification cannot invoke any functions.', expression.lexeme)
+      } else {
+        throw new CompilerError('FOR loop step change specification cannot invoke any functions.', expression.lexeme)
+      }
 
-  // literal values are easy
-  if (expression instanceof LiteralValue) {
-    return expression.value
-  }
+    // constant values
+    case 'constant':
+      return expression.constant.value
 
-  // cast expressions
-  if (expression instanceof CastExpression) {
-    return evaluate(lexeme, language, expression.expression)
-  }
+    // integer or string values
+    case 'integer':
+    case 'string':
+      return expression.value
 
-  // compound expressions
-  const left = expression.left ? evaluate(lexeme, language, expression.left) : null
-  const right = evaluate(lexeme, language, expression.right)
-  switch (expression.operator) {
-    case PCode.eqal:
-    case PCode.seql:
-      return (left as number|string) === right ? True : False
+    // input values
+    case 'input':
+      return expression.input.value
 
-    case PCode.less:
-    case PCode.sles:
-      return (left as number|string) < right ? True : False
+    // colour values
+    case 'colour':
+      return expression.colour.value
 
-    case PCode.lseq:
-    case PCode.sleq:
-      return (left as number|string) <= right ? True : False
+    // cast expressions
+    case 'cast':
+      return evaluate(expression.expression, language, context)
 
-    case PCode.more:
-    case PCode.smor:
-      return (left as number|string) > right ? True : False
+    // compound expressions
+    case 'compound':
+      const left = expression.left ? evaluate(expression.left, language, context) : null
+      const right = evaluate(expression.right, language, context)
+      switch (expression.operator) {
+        case 'eqal':
+        case 'seql':
+          return (left as number|string) === right ? True : False
 
-    case PCode.mreq:
-    case PCode.smeq:
-      return (left as number|string) >= right ? True : False
+        case 'less':
+        case 'sles':
+          return (left as number|string) < right ? True : False
 
-    case PCode.noeq:
-    case PCode.sneq:
-      return (left as number|string) !== right ? True : False
+        case 'lseq':
+        case 'sleq':
+          return (left as number|string) <= right ? True : False
 
-    case PCode.plus:
-      return (left as number) + (right as number)
+        case 'more':
+        case 'smor':
+          return (left as number|string) > right ? True : False
 
-    case PCode.scat:
-      return (left as string) + (right as string)
+        case 'mreq':
+        case 'smeq':
+          return (left as number|string) >= right ? True : False
 
-    case PCode.subt:
-      return left ? (left as number) - (right as number) : -(left as number)
+        case 'noeq':
+        case 'sneq':
+          return (left as number|string) !== right ? True : False
 
-    case PCode.not:
-      return right === 0 ? True : False
+        case 'plus':
+          return (left as number) + (right as number)
 
-    case PCode.or:
-      return (left as number) | (right as number)
+        case 'scat':
+          return (left as string) + (right as string)
 
-    case PCode.orl:
-      return (left as number) || (right as number)
+        case 'subt':
+          return left ? (left as number) - (right as number) : -(right as number)
 
-    case PCode.xor:
-      return (left as number) ^ (right as number)
+        case 'neg':
+          return -(right as number)
 
-    case PCode.and:
-      return (left as number) & (right as number)
+        case 'not':
+          return right === 0 ? True : False
+    
+        case 'or':
+          return (left as number) | (right as number)
+    
+        case 'orl':
+          return (left as number) || (right as number)
+    
+        case 'xor':
+          return (left as number) ^ (right as number)
 
-    case PCode.andl:
-      return (left as number) && (right as number)
+        case 'and':
+          return (left as number) & (right as number)
 
-    case PCode.div:
-      return Math.floor((left as number) / (right as number))
+        case 'andl':
+          return (left as number) && (right as number)
 
-    case PCode.divr:
-      return Math.round((left as number) / (right as number))
+        case 'div':
+          return Math.floor((left as number) / (right as number))
 
-    case PCode.mod:
-      return (left as number) % (right as number)
+        case 'divr':
+          return Math.round((left as number) / (right as number))
 
-    case PCode.mult:
-      return (left as number) * (right as number)
+        case 'mod':
+          return (left as number) % (right as number)
 
-    default:
-      throw new CompilerError('Unable to parse expression for constant value.', lexeme)
+        case 'mult':
+          return (left as number) * (right as number)
+      }
   }
 }

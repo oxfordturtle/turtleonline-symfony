@@ -1,5 +1,5 @@
 // draws a line and turns right 60 degrees
-function lineTurn () {
+function lineTurn (): void {
   forward(lineLength);
   right(60);
 }

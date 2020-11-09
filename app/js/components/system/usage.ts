@@ -5,7 +5,7 @@ import highlight from '../../lexer/highlight'
 import state from '../../state/index'
 import { fill, fragment, tr, th, td, code } from '../../tools/elements'
 import { on } from '../../tools/hub'
-import { UsageCategory, UsageExpression } from '../../analyser/usage'
+import type { UsageCategory, UsageExpression } from '../../analyser/usage'
 
 // the usage table body
 const usageTableBody = document.querySelector('[data-component="usageTableBody"]') as HTMLElement

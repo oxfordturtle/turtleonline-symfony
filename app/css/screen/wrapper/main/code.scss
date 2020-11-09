@@ -8,19 +8,27 @@
     font-weight: bold;
   }
 
+  .type {
+    color: firebrick;
+  }
+
+  .operator {
+    color: cornflowerblue;
+  }
+
   .command {
     color: darkviolet;
+  }
+
+  .integer {
+    color: chocolate;
   }
 
   .character, .string {
     color: seagreen;
   }
 
-  .keycode, .query {
-    font-weight: bold;
-  }
-
-  .turtle, .variable {
+  .keycode, .query, .turtle {
     font-weight: bold;
   }
 

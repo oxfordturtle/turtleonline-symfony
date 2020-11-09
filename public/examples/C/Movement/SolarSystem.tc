@@ -65,7 +65,7 @@ void main () {
     colour(yellow);
     blot(sunRadius);
     // draw each planet
-    for (int i = 0; i < 8; i = i + 1) {
+    for (int i = 0; i < planets; i = i + 1) {
       home();
       // draw a white circle for the orbit
       colour(white);

@@ -5,7 +5,7 @@ const yScale: number = 200;
 const radians: boolean = false; // make true for x-axis in radians
 
 // draws graph axes
-function drawAxes () {
+function drawAxes (): void {
   thickness(3);
   // draw y axis
   setXY(xOrigin - halfWidth, yOrigin);
@@ -49,7 +49,7 @@ function drawAxes () {
 }
 
 // plots a sine curve
-function plotSineCurve () {
+function plotSineCurve (): void {
   for (var degrees: number = -180; degrees <= 180; degrees = degrees + 1) {
     var x: number = xOrigin + divmult(degrees, 180, halfWidth);
     var y: number = yOrigin - sin(degrees, 1, yScale);
@@ -59,7 +59,7 @@ function plotSineCurve () {
 }
 
 // plots a cosine curve
-function plotCosineCurve () {
+function plotCosineCurve (): void {
   for (var degrees: number = -180; degrees <= 180; degrees = degrees + 1) {
     var x: number = xOrigin + divmult(degrees, 180, halfWidth);
     var y: number = yOrigin - cos(degrees, 1, yScale);
@@ -69,7 +69,7 @@ function plotCosineCurve () {
 }
 
 // plots a tan curve
-function plotTanCurve () {
+function plotTanCurve (): void {
   for (var degrees: number = -180; degrees <= 180; degrees = degrees + 1) {
     if (degrees == -90) {
       polyline(90);

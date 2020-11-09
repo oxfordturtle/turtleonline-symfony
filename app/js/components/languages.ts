@@ -1,7 +1,7 @@
 /**
  * Language features.
  */
-import { Language } from '../constants/languages'
+import type { Language } from '../constants/languages'
 import state from '../state/index'
 import highlight from '../lexer/highlight'
 import { on } from '../tools/hub'

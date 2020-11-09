@@ -1,7 +1,7 @@
 /**
  * Keywords for the Turtle languages.
  */
-import { Language } from './languages'
+import type { Language } from './languages'
 
 /** keyword class definition */
 export class Keyword {
@@ -53,11 +53,6 @@ const C = [
   new Keyword(20, 1, 'do'),
   // other keywords (not shown in usage tables)
   new Keyword(22, 0, 'const'),
-  new Keyword(22, 0, 'void'),
-  new Keyword(22, 0, 'bool'),
-  new Keyword(22, 0, 'char'),
-  new Keyword(22, 0, 'int'),
-  new Keyword(22, 0, 'string'),
   new Keyword(22, 0, 'return')
 ]
 
@@ -73,11 +68,6 @@ const Java = [
   new Keyword(22, 0, 'new'),
   new Keyword(22, 0, 'class'),
   new Keyword(22, 0, 'final'),
-  new Keyword(22, 0, 'void'),
-  new Keyword(22, 0, 'boolean'),
-  new Keyword(22, 0, 'char'),
-  new Keyword(22, 0, 'int'),
-  new Keyword(22, 0, 'String'),
   new Keyword(22, 0, 'return')
 ]
 
@@ -97,10 +87,6 @@ const Pascal = [
   new Keyword(22, 0, 'const'),
   new Keyword(22, 0, 'array'),
   new Keyword(22, 0, 'of'),
-  new Keyword(22, 0, 'boolean'),
-  new Keyword(22, 0, 'char'),
-  new Keyword(22, 0, 'integer'),
-  new Keyword(22, 0, 'string'),
   new Keyword(22, 0, 'begin'),
   new Keyword(22, 0, 'end'),
   new Keyword(22, 0, 'then'),
@@ -140,10 +126,6 @@ const TypeScript = [
   // other keywords (not shown in usage tables)
   new Keyword(22, 0, 'var'),
   new Keyword(22, 0, 'const'),
-  new Keyword(22, 0, 'void'),
-  new Keyword(22, 0, 'boolean'),
-  new Keyword(22, 0, 'number'),
-  new Keyword(22, 0, 'string'),
   new Keyword(22, 0, 'return')
 ]
 

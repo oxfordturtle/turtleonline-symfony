@@ -1,5 +1,5 @@
 // draws a single "prong" and then returns
-function prong() {
+function prong (): void {
   forward(400);
   blot(20);
   back(400);

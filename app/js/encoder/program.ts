@@ -1,11 +1,15 @@
-/**
- * Generates the pcode for a turtle program.
- */
-import { Options, defaultOptions } from './options'
-import { Program, Subroutine, Routine } from '../parser/routine'
-import { Variable } from '../parser/variable'
-import { PCode, pcodeArgs } from '../constants/pcodes'
+// type imports
+import type Program from '../parser/definitions/program'
+import type Variable from '../parser/definitions/variable'
+import type { Options } from './options'
+
+// submodule imports
+import { defaultOptions } from './options'
 import statement from './statement'
+
+// other module imports
+import { Subroutine } from '../parser/definitions/subroutine'
+import { PCode, pcodeArgs } from '../constants/pcodes'
 
 /** generates the pcode for a turtle program */
 export default function program (program: Program, options: Options = defaultOptions): number[][] {
@@ -122,7 +126,7 @@ function programStart (program: Program, options: Options): number[][] {
 
 /** generates pcode for setting up a global variable */
 function setupGlobalVariable (variable: Variable, indexOffset: number = 0): number[][] {
-  const program = variable.routine.program
+  const program = (variable.routine instanceof Subroutine) ? variable.routine.program : variable.routine
   const pcode: number[][] = []
 
   if (variable.isArray) {
@@ -197,10 +201,11 @@ function compileSubroutines (subroutines: Subroutine[], startLine: number, optio
 }
 
 /** creates pcode for the body of a routine */
-function compileInnerCode (routine: Routine, startLine: number, options: Options): number[][] {
+function compileInnerCode (routine: Program|Subroutine, startLine: number, options: Options): number[][] {
+  const program = (routine instanceof Subroutine) ? routine.program : routine
   const pcode: number[][] = []
   for (const stmt of routine.statements) {
-    pcode.push(...statement(stmt, routine.program, startLine + pcode.length, options))
+    pcode.push(...statement(stmt, program, startLine + pcode.length, options))
   }
   return pcode
 }

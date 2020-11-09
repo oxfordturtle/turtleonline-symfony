@@ -1,10 +1,12 @@
 /**
  * Command and keywords categories (for help tables and usage analysis).
  */
-import { commands, Command } from './commands'
-import { keywords, Keyword } from './keywords'
-import { Language } from './languages'
-import { Subroutine } from '../parser/routine'
+import type { Command } from './commands'
+import { commands } from './commands'
+import type { Keyword } from './keywords'
+import { keywords } from './keywords'
+import type { Language } from './languages'
+import { Subroutine } from '../parser/definitions/subroutine'
 
 /** expression type definition */
 export type Expression = Command|Keyword|Subroutine

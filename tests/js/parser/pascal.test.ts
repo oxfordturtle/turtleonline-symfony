@@ -8,5 +8,4 @@ test('Parser: Pascal: test 1', function (): void {
   expect(program.name).toBe('test')
   expect(program.variables.length).toBe(0)
   expect(program.memoryNeeded).toBe(0)
-  expect(program.lexemes.length).toBe(0)
 })

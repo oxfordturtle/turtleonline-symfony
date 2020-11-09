@@ -1,12 +1,13 @@
-/**
- * The central communications hub of the application. Implements a basic pub/sub model
- */
-import { Message } from '../constants/messages'
+// type imports
+import type { Message } from '../constants/messages'
 
-/** record of functions to call when message is sent */
+/** record of functions to call when a message is sent */
 const replies: Partial<Record<Message, Reply[]>> = {}
 
-/** registers a function to call when message is sent */
+/** signature for reply functions */
+export type Reply = (data: any) => void
+
+/** registers a function to call when a message is sent */
 export function on (message: Message, callback: Reply) {
   if (replies[message]) {
     (replies[message] as Reply[]).push(callback)
@@ -30,6 +31,3 @@ export function send (message: Message, data: any = null): void {
     send('codeChanged')
   }
 }
-
-/** signature for reply functions */
-export type Reply = (data: any) => void

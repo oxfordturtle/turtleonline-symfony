@@ -15,7 +15,7 @@ for (count = 1; count < 10000; count = count + 1) {
   // if pixel is in a white region
   if (pixCol(x, y) == white) {
     // choose next colour in the sequence
-    nextColour: number = nextColour % 20 + 1;
+    nextColour = nextColour % 20 + 1;
     // recolour region in that colour
     recolour(x, y, rgb(nextColour));
   }

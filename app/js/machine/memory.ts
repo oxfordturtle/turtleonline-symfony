@@ -1,7 +1,5 @@
-/**
- * Turtle virtual machine memory.
- */
-import { Options } from './options'
+// type imports
+import type { Options } from './options'
 
 // the memory arrays
 export const main: number[] = []

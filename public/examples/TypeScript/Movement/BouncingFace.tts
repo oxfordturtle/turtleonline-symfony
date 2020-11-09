@@ -1,8 +1,8 @@
 // draws a face of the given radius
 // N.B. copied from the Resizable face example
-function face (radius: number) {
+function face (radius: number): void {
   // draws an eye sized relative to the face
-  function eye () {
+  function eye (): void {
     colour(white);
     ellblot(radius * 3 / 20, radius / 10);
     colour(emerald);
@@ -31,11 +31,11 @@ function face (radius: number) {
   left(90);
   forward(radius * 2 / 5);
   // draw left eye
-  eye(radius);
+  eye();
   // move to right eye position (without drawing)
   back(radius * 4 / 5);
   // draw right eye
-  eye(radius);
+  eye();
 }
 
 // set face size
@@ -61,10 +61,10 @@ while (0 < 1) {
   update();
   pause(10);
   // "bounce" (i.e. invert velocity) at canvas edges
-  if ((x < faceRadius) or (x > 999 - faceRadius)) {
-    xVelocity := -xVelocity;
+  if ((x < faceRadius) || (x > 999 - faceRadius)) {
+    xVelocity = -xVelocity;
   }
-  if ((y < faceRadius) or (y > 999 - faceRadius)) {
-    yVelocity := -yVelocity;
+  if ((y < faceRadius) || (y > 999 - faceRadius)) {
+    yVelocity = -yVelocity;
   }
 }

@@ -1,11 +1,11 @@
-/*
- * The machine canvas component.
- */
+// type imports
+import type { Turtle } from '../../machine/turtle'
+
+// module imports
 import { cursors } from '../../constants/cursors'
 import { fonts } from '../../constants/fonts'
 import * as machine from '../../machine/index'
-import { Turtle } from '../../machine/turtle'
-import { on, send } from '../../tools/hub'
+import { on } from '../../tools/hub'
 
 // get relevant elements
 const canvas = document.querySelector('[data-component="canvas"]') as HTMLCanvasElement

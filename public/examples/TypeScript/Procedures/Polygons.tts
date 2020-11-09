@@ -1,5 +1,5 @@
 // draws a coloured polygon with the given number of sides
-function poly (sides: number, colr: number) {
+function poly (sides: number, colr: number): void {
   direction(90);
   // trace the shape with the turtle
   for (var count: number = 0; count < sides; count = count + 1) {

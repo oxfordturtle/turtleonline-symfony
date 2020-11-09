@@ -2,58 +2,43 @@
  * Tests for the Turtle Pascal lexical analysis function.
  */
 import lexify from '../../../app/js/lexer/lexify'
-import { PCode } from '../../../app/js/constants/pcodes'
+import { BooleanLexeme, CommentLexeme, IdentifierLexeme, IntegerLexeme, KeycodeLexeme, Operator, OperatorLexeme, QueryLexeme, StringLexeme } from '../../../app/js/lexer/lexeme'
 
 test('Lexer: Pascal: Errors', function () {
   // comments
   expect(() => {
     lexify('{blah', 'Pascal')
-  }).toThrow('Unterminated comment. ("{blah", line 1.1)')
+  }).toThrow('Unterminated comment. ("{blah", line 1, index 1)')
 
   // single quoted strings
   expect(() => {
     lexify('\'blah', 'Pascal')
-  }).toThrow('Unterminated string. ("\'blah", line 1.1)')
+  }).toThrow('Unterminated string. ("\'blah", line 1, index 1)')
 
   // double quoted strings
   expect(() => {
     lexify('"blah', 'Pascal')
-  }).toThrow('Unterminated string. ("\"blah", line 1.1)')
+  }).toThrow('Unterminated string. ("\"blah", line 1, index 1)')
 
-  // binary integers
-  expect(() => {
-    lexify('0b0', 'Pascal')
-  }).toThrow('Binary numbers in Turtle Pascal begin with "%". ("0b0", line 1.1)')
-
-  // octal integers
-  expect(() => {
-    lexify('0o0', 'Pascal')
-  }).toThrow('Octal numbers in Turtle Pascal begin with "&". ("0o0", line 1.1)')
-
-  // decimal integers
+  // real numbers
   expect(() => {
     lexify('1.2', 'Pascal')
-  }).toThrow('The Turtle System does not support real numbers. ("1.2", line 1.1)')
-
-  // hexadecimal integers
-  expect(() => {
-    lexify('0x0', 'Pascal')
-  }).toThrow('Hexadecimal numbers in Turtle Pascal begin with "$". ("0x0", line 1.1)')
+  }).toThrow('The Turtle System does not support real numbers. ("1.2", line 1, index 1)')
 
   // keycodes
   expect(() => {
     lexify('\\bookspace', 'Pascal')
-  }).toThrow('Unrecognised keycode constant. ("\\bookspace", line 1.1)')
+  }).toThrow('Unrecognised input keycode. ("\\bookspace", line 1, index 1)')
 
   // queries
   expect(() => {
     lexify('?keyboofer', 'Pascal')
-  }).toThrow('Unrecognised input query. ("?keyboofer", line 1.1)')
+  }).toThrow('Unrecognised input query. ("?keyboofer", line 1, index 1)')
 
   // illegal characters
   expect(() => {
     lexify('!', 'Pascal')
-  }).toThrow('Illegal character in this context. ("!", line 1.1)')
+  }).toThrow('Illegal character in this context. ("!", line 1, index 1)')
 })
 
 test('Lexer: Pascal: Comments', function () {
@@ -61,11 +46,11 @@ test('Lexer: Pascal: Comments', function () {
   expect(lexemes.length).toBe(1)
   expect(lexemes[0].type).toBe('comment')
   expect(lexemes[0].content).toBe('{this is a comment}')
-  expect(lexemes[0].value).toBe('this is a comment')
+  expect((lexemes[0] as CommentLexeme).value).toBe('this is a comment')
 })
 
 test('Lexer: Pascal: Keywords', function () {
-  const code = 'if else for repeat while procedure function program var const array of boolean char integer string begin end then to downto do until'
+  const code = 'if else for repeat while procedure function program var const array of begin end then to downto do until'
   const keywords = code.split(' ')
   const lexemes = lexify(code, 'Pascal')
   expect(lexemes.length).toBe(keywords.length)
@@ -75,32 +60,43 @@ test('Lexer: Pascal: Keywords', function () {
   }
 })
 
+test('Lexer: Pascal: Type Keywords', function () {
+  const code = 'boolean char integer string'
+  const types = code.split(' ')
+  const lexemes = lexify(code, 'Pascal')
+  expect(lexemes.length).toBe(types.length)
+  for (let index = 0; index < types.length; index += 1) {
+    expect(lexemes[index].type).toBe('type')
+    expect(lexemes[index].content).toBe(types[index])
+  }
+})
+
 test('Lexer: Pascal: Operators', function () {
-  const operators: Record<string, PCode|null> = {
-    '+': PCode.plus,
-    '-': PCode.subt,
-    '*': PCode.mult,
-    '/': PCode.divr,
-    'div': PCode.div,
-    'mod': PCode.mod,
-    '=': PCode.eqal,
-    '<>': PCode.noeq,
-    '<=': PCode.lseq,
-    '>=': PCode.mreq,
-    '<': PCode.less,
-    '>': PCode.more,
-    ':=': null,
-    'not': PCode.not,
-    'and': PCode.and,
-    'or': PCode.or,
-    'xor': PCode.xor
+  const operators: Record<string, Operator|'asgn'> = {
+    '+': 'plus',
+    '-': 'subt',
+    '*': 'mult',
+    '/': 'divr',
+    'div': 'div',
+    'mod': 'mod',
+    '=': 'eqal',
+    '<>': 'noeq',
+    '<=': 'lseq',
+    '>=': 'mreq',
+    '<': 'less',
+    '>': 'more',
+    ':=': 'asgn',
+    'not': 'not',
+    'and': 'and',
+    'or': 'or',
+    'xor': 'xor'
   }
   for (const operator of Object.keys(operators)) {
     const lexemes = lexify(operator, 'Pascal')
     expect(lexemes.length).toBe(1)
     expect(lexemes[0].type).toBe('operator')
     expect(lexemes[0].content).toBe(operator)
-    expect(lexemes[0].value).toBe(operators[operator])
+    expect((lexemes[0] as OperatorLexeme).subtype).toBe(operators[operator])
   }
 })
 
@@ -119,209 +115,219 @@ test('Lexer: Pascal: Strings', function () {
   let string = "'single quoted string'"
   let lexemes = lexify(string, 'Pascal')
   expect(lexemes.length).toBe(1)
-  expect(lexemes[0].type).toBe('string')
+  expect(lexemes[0].type).toBe('literal')
+  expect((lexemes[0] as StringLexeme).subtype).toBe('string')
   expect(lexemes[0].content).toBe(string)
-  expect(lexemes[0].value).toBe(value)
+  expect((lexemes[0] as StringLexeme).value).toBe(value)
 
   value = "single 'quoted' string"
   string = "'single ''quoted'' string'"
   lexemes = lexify(string, 'Pascal')
   expect(lexemes.length).toBe(1)
-  expect(lexemes[0].type).toBe('string')
+  expect(lexemes[0].type).toBe('literal')
+  expect((lexemes[0] as StringLexeme).subtype).toBe('string')
   expect(lexemes[0].content).toBe(string)
-  expect(lexemes[0].value).toBe(value)
+  expect((lexemes[0] as StringLexeme).value).toBe(value)
 
   value = "double quoted string"
   string = '"double quoted string"'
   lexemes = lexify(string, 'Pascal')
   expect(lexemes.length).toBe(1)
-  expect(lexemes[0].type).toBe('string')
+  expect(lexemes[0].type).toBe('literal')
+  expect((lexemes[0] as StringLexeme).subtype).toBe('string')
   expect(lexemes[0].content).toBe(string)
-  expect(lexemes[0].value).toBe(value)
+  expect((lexemes[0] as StringLexeme).value).toBe(value)
 
   value = 'double "quoted" string'
   string = '"double ""quoted"" string"'
   lexemes = lexify(string, 'Pascal')
   expect(lexemes.length).toBe(1)
-  expect(lexemes[0].type).toBe('string')
+  expect(lexemes[0].type).toBe('literal')
+  expect((lexemes[0] as StringLexeme).subtype).toBe('string')
   expect(lexemes[0].content).toBe(string)
-  expect(lexemes[0].value).toBe(value)
+  expect((lexemes[0] as StringLexeme).value).toBe(value)
 })
 
 test('Lexer: Pascal: Booleans', function () {
   const lexemes1 = lexify('true', 'Pascal')
   expect(lexemes1.length).toBe(1)
-  expect(lexemes1[0].type).toBe('boolean')
+  expect(lexemes1[0].type).toBe('literal')
+  expect((lexemes1[0] as BooleanLexeme).subtype).toBe('boolean')
   expect(lexemes1[0].content).toBe('true')
-  expect(lexemes1[0].value).toBe(-1)
+  expect((lexemes1[0] as BooleanLexeme).value).toBe(-1)
 
   const lexemes2 = lexify('false', 'Pascal')
   expect(lexemes2.length).toBe(1)
-  expect(lexemes2[0].type).toBe('boolean')
+  expect(lexemes2[0].type).toBe('literal')
+  expect((lexemes2[0] as BooleanLexeme).subtype).toBe('boolean')
   expect(lexemes2[0].content).toBe('false')
-  expect(lexemes2[0].value).toBe(0)
+  expect((lexemes2[0] as BooleanLexeme).value).toBe(0)
 })
 
 test('Lexer: Pascal: Integers', function () {
   // binary numbers
   const binary = lexify('%10', 'Pascal')
   expect(binary.length).toBe(1)
-  expect(binary[0].type).toBe('integer')
-  expect(binary[0].subtype).toBe('binary')
-  expect(binary[0].value).toBe(2)
+  expect(binary[0].type).toBe('literal')
+  expect((binary[0] as IntegerLexeme).subtype).toBe('integer')
+  expect((binary[0] as IntegerLexeme).radix).toBe(2)
+  expect((binary[0] as IntegerLexeme).value).toBe(2)
 
   // octal numbers
   const octal = lexify('&10', 'Pascal')
   expect(octal.length).toBe(1)
-  expect(octal[0].type).toBe('integer')
-  expect(octal[0].subtype).toBe('octal')
-  expect(octal[0].value).toBe(8)
+  expect(octal[0].type).toBe('literal')
+  expect((octal[0] as IntegerLexeme).subtype).toBe('integer')
+  expect((octal[0] as IntegerLexeme).radix).toBe(8)
+  expect((octal[0] as IntegerLexeme).value).toBe(8)
 
   // decimal numbers
   const decimal = lexify('10', 'Pascal')
   expect(decimal.length).toBe(1)
-  expect(decimal[0].type).toBe('integer')
-  expect(decimal[0].subtype).toBe('decimal')
-  expect(decimal[0].value).toBe(10)
+  expect(decimal[0].type).toBe('literal')
+  expect((decimal[0] as IntegerLexeme).subtype).toBe('integer')
+  expect((decimal[0] as IntegerLexeme).radix).toBe(10)
+  expect((decimal[0] as IntegerLexeme).value).toBe(10)
 
   // hexadecimal numbers
   const hexadecimal = lexify('$10', 'Pascal')
   expect(hexadecimal.length).toBe(1)
-  expect(hexadecimal[0].type).toBe('integer')
-  expect(hexadecimal[0].subtype).toBe('hexadecimal')
-  expect(hexadecimal[0].value).toBe(16)
+  expect(hexadecimal[0].type).toBe('literal')
+  expect((hexadecimal[0] as IntegerLexeme).subtype).toBe('integer')
+  expect((hexadecimal[0] as IntegerLexeme).radix).toBe(16)
+  expect((hexadecimal[0] as IntegerLexeme).value).toBe(16)
 })
 
 test('Lexer: Pascal: Keycodes', function () {
-  const keycodes: Record<string, number> = {
-    '\\keybuffer': 0,
-    '\\backspace': 8,
-    '\\tab': 9,
-    '\\enter': 13,
-    '\\return': 13,
-    '\\shift': 16,
-    '\\ctrl': 17,
-    '\\alt': 18,
-    '\\pause': 19,
-    '\\capslock': 20,
-    '\\escape': 27,
-    '\\space': 32,
-    '\\pgup': 33,
-    '\\pgdn': 34,
-    '\\end': 35,
-    '\\home': 36,
-    '\\left': 37,
-    '\\up': 38,
-    '\\right': 39,
-    '\\down': 40,
-    '\\insert': 45,
-    '\\delete': 46,
-    '\\0': 48,
-    '\\1': 49,
-    '\\2': 50,
-    '\\3': 51,
-    '\\4': 52,
-    '\\5': 53,
-    '\\6': 54,
-    '\\7': 55,
-    '\\8': 56,
-    '\\9': 57,
-    '\\a': 65,
-    '\\b': 66,
-    '\\c': 67,
-    '\\d': 68,
-    '\\e': 69,
-    '\\f': 70,
-    '\\g': 71,
-    '\\h': 72,
-    '\\i': 73,
-    '\\j': 74,
-    '\\k': 75,
-    '\\l': 76,
-    '\\m': 77,
-    '\\n': 78,
-    '\\o': 79,
-    '\\p': 80,
-    '\\q': 81,
-    '\\r': 82,
-    '\\s': 83,
-    '\\t': 84,
-    '\\u': 85,
-    '\\v': 86,
-    '\\w': 87,
-    '\\x': 88,
-    '\\y': 89,
-    '\\z': 90,
-    '\\lwin': 91,
-    '\\rwin': 92,
-    '\\#0': 96,
-    '\\#1': 97,
-    '\\#2': 98,
-    '\\#3': 99,
-    '\\#4': 100,
-    '\\#5': 101,
-    '\\#6': 102,
-    '\\#7': 103,
-    '\\#8': 104,
-    '\\#9': 105,
-    '\\multiply': 106,
-    '\\add': 107,
-    '\\subtract': 109,
-    '\\decimal': 110,
-    '\\divide': 111,
-    '\\f1': 112,
-    '\\f2': 113,
-    '\\f3': 114,
-    '\\f4': 115,
-    '\\f5': 116,
-    '\\f6': 117,
-    '\\f7': 118,
-    '\\f8': 119,
-    '\\f9': 120,
-    '\\f10': 121,
-    '\\f11': 122,
-    '\\f12': 123,
-    '\\numlock': 144,
-    '\\scrolllock': 145,
-    '\\semicolon': 186,
-    '\\equals': 187,
-    '\\comma': 188,
-    '\\dash': 189,
-    '\\fullstop': 190,
-    '\\forwardslash': 191,
-    '\\singlequote': 192,
-    '\\openbracket': 219,
-    '\\backslash': 220,
-    '\\closebracket': 221,
-    '\\hash': 222,
-    '\\backtick': 223
-  }
-  for (const keycode of Object.keys(keycodes)) {
+  const keycodes = [
+    '\\keybuffer',
+    '\\backspace',
+    '\\tab',
+    '\\enter',
+    '\\return',
+    '\\shift',
+    '\\ctrl',
+    '\\alt',
+    '\\pause',
+    '\\capslock',
+    '\\escape',
+    '\\space',
+    '\\pgup',
+    '\\pgdn',
+    '\\end',
+    '\\home',
+    '\\left',
+    '\\up',
+    '\\right',
+    '\\down',
+    '\\insert',
+    '\\delete',
+    '\\0',
+    '\\1',
+    '\\2',
+    '\\3',
+    '\\4',
+    '\\5',
+    '\\6',
+    '\\7',
+    '\\8',
+    '\\9',
+    '\\a',
+    '\\b',
+    '\\c',
+    '\\d',
+    '\\e',
+    '\\f',
+    '\\g',
+    '\\h',
+    '\\i',
+    '\\j',
+    '\\k',
+    '\\l',
+    '\\m',
+    '\\n',
+    '\\o',
+    '\\p',
+    '\\q',
+    '\\r',
+    '\\s',
+    '\\t',
+    '\\u',
+    '\\v',
+    '\\w',
+    '\\x',
+    '\\y',
+    '\\z',
+    '\\lwin',
+    '\\rwin',
+    '\\#0',
+    '\\#1',
+    '\\#2',
+    '\\#3',
+    '\\#4',
+    '\\#5',
+    '\\#6',
+    '\\#7',
+    '\\#8',
+    '\\#9',
+    '\\multiply',
+    '\\add',
+    '\\subtract',
+    '\\decimal',
+    '\\divide',
+    '\\f1',
+    '\\f2',
+    '\\f3',
+    '\\f4',
+    '\\f5',
+    '\\f6',
+    '\\f7',
+    '\\f8',
+    '\\f9',
+    '\\f10',
+    '\\f11',
+    '\\f12',
+    '\\numlock',
+    '\\scrolllock',
+    '\\semicolon',
+    '\\equals',
+    '\\comma',
+    '\\dash',
+    '\\fullstop',
+    '\\forwardslash',
+    '\\singlequote',
+    '\\openbracket',
+    '\\backslash',
+    '\\closebracket',
+    '\\hash',
+    '\\backtick'
+  ]
+  for (const keycode of keycodes) {
     const lexemes = lexify(keycode, 'Pascal')
     expect(lexemes.length).toBe(1)
-    expect(lexemes[0].type).toBe('keycode')
-    expect(lexemes[0].value).toBe(keycodes[keycode])
+    expect(lexemes[0].type).toBe('input')
+    expect((lexemes[0] as KeycodeLexeme).subtype).toBe('keycode')
   }
 })
 
 test('Lexer: Pascal: Queries', function () {
-  const queries: Record<string, number> = {
-    '?kshift': -10,
-    '?key': -9,
-    '?mousey': -8,
-    '?mousex': -7,
-    '?clicky': -6,
-    '?clickx': -5,
-    '?click': -4,
-    '?mmouse': -3,
-    '?rmouse': -2,
-    '?lmouse': -1
-  }
-  for (const query of Object.keys(queries)) {
+  const queries = [
+    '?kshift',
+    '?key',
+    '?mousey',
+    '?mousex',
+    '?clicky',
+    '?clickx',
+    '?click',
+    '?mmouse',
+    '?rmouse',
+    '?lmouse'
+  ]
+  for (const query of queries) {
     const lexemes = lexify(query, 'Pascal')
     expect(lexemes.length).toBe(1)
-    expect(lexemes[0].type).toBe('query')
-    expect(lexemes[0].value).toBe(queries[query])
+    expect(lexemes[0].type).toBe('input')
+    expect((lexemes[0] as QueryLexeme).subtype).toBe('query')
   }
 })
 
@@ -336,23 +342,9 @@ test('Lexer: Pascal: Identifiers', function () {
     expect(lexemes[index].type).toBe('identifier')
     expect(lexemes[index].content).toBe(identifiers[index])
     if (index < 2) {
-      expect(lexemes[index].subtype).toBe('command')
+      expect((lexemes[index] as IdentifierLexeme).subtype).toBe('identifier')
     } else if (index < 8) {
-      expect(lexemes[index].subtype).toBe('turtle')
-      expect(lexemes[index].value).toBe(index - 1)
-    } else if (index < 11) {
-      expect(lexemes[index].subtype).toBe('colour')
-      switch (identifiers[index]) {
-        case 'red':
-          expect(lexemes[index].value).toBe(0xFF0000)
-          break
-        case 'green':
-          expect(lexemes[index].value).toBe(0x228B22)
-          break
-        case 'blue':
-          expect(lexemes[index].value).toBe(0x0000FF)
-          break
-      }
+      expect((lexemes[index] as IdentifierLexeme).subtype).toBe('turtle')
     }
   }
 })

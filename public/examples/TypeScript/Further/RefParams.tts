@@ -1,4 +1,4 @@
-function lines(addr: number, isColour: boolean) {
+function lines (addr: number, isColour: boolean): void {
   // draw 8 short lines, modifying passed-in Turtle property each time
   for (var n: number = 1; n <= 8; n = n + 1) {
     if (isColour) {
@@ -13,7 +13,7 @@ function lines(addr: number, isColour: boolean) {
   }
 }
 
-function dots(addr: number) {
+function dots (addr: number): void {
   // draw 8 blots, modifying passed-in Turtle property each time
   for (var n: number = 1; n <= 8; n = n + 1) {
     // increment property value by 100

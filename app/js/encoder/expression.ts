@@ -1,10 +1,22 @@
-/**
- * Generates the pcode for loading the value of expressions onto the stack.
- */
-import { Options } from './options'
+// type imports
+import type { Options } from './options'
+import type Program from '../parser/definitions/program'
+import type { Operator } from '../lexer/lexeme'
+import type {
+  Expression,
+  InputValue,
+  ColourValue,
+  ConstantValue,
+  VariableAddress,
+  CompoundExpression,
+  CastExpression,
+  FunctionCall
+} from '../parser/definitions/expression'
+
+// other module imports
 import { PCode } from '../constants/pcodes'
-import { Program, Subroutine } from '../parser/routine'
-import { Expression, LiteralValue, VariableAddress, VariableValue, CommandCall, CompoundExpression, CastExpression } from '../parser/expression'
+import { Subroutine } from '../parser/definitions/subroutine'
+import { IntegerValue, StringValue, VariableValue } from '../parser/definitions/expression'
 
 /** merges pcode2 into pcode1 */
 export function merge (pcode1: number[][], pcode2: number[][]): void {
@@ -23,48 +35,68 @@ export function merge (pcode1: number[][], pcode2: number[][]): void {
 
 /** generates the pcode for loading the value of any expression onto the stack */
 export function expression (exp: Expression, program: Program, options: Options, reference: boolean = false): number[][] {
-  // literal value
-  if (exp instanceof LiteralValue) {
-    return [literalValue(exp, options)]
-  }
+  switch (exp.expressionType) {
+    case 'integer':
+      return [literalIntegerValue(exp, options)]
 
-  // variable address
-  if (exp instanceof VariableAddress) {
-    return variableAddress(exp, program, options)
-  }
+    case 'string':
+      return [literalStringValue(exp, options)]
 
-  // variable value
-  if (exp instanceof VariableValue) {
-    return reference
+    case 'input':
+      return [inputValue(exp, options)]
+
+    case 'colour':
+      return [colourValue(exp, options)]
+
+    case 'constant':
+      return [constantValue(exp, options)]
+
+    case 'address':
+      return variableAddress(exp, program, options)
+
+    case 'variable':
+      return reference
       ? variableAddress(exp, program, options)
       : variableValue(exp, program, options)
-  }
 
-  // command (i.e. function) call
-  if (exp instanceof CommandCall) {
-    return functionValue(exp, program, options)
-  }
+    case 'function':
+      return functionValue(exp, program, options)
 
-  // compound expression
-  if (exp instanceof CompoundExpression) {
-    return compoundExpression(exp, program, options)
-  }
+    case 'compound':
+      return compoundExpression(exp, program, options)
 
-  // cast expression
-  return castExpression(exp, program, options)
+    case 'cast':
+      return castExpression(exp, program, options)
+  }
 }
 
 /** generates the pcode for loading a literal value onto the stack */
-function literalValue (exp: LiteralValue, options: Options): number[] {
-  switch (exp.type) {
-    case 'string':
-      return [PCode.lstr, (exp.value as string).length].concat(Array.from(exp.value as string).map(x => x.charCodeAt(0)))
+function literalIntegerValue (exp: IntegerValue, options: Options): number[] {
+  return [PCode.ldin, exp.value]
+}
 
-    default:
-      return exp.input
-        ? [PCode.ldin, (exp.value as number), PCode.inpt]
-        : [PCode.ldin, (exp.value as number)]
-  }
+/** generate the pcode for loading a literal string onto the stack */
+function literalStringValue (exp: StringValue, options: Options): number[] {
+  return [PCode.lstr, exp.value.length].concat(Array.from(exp.value).map(x => x.charCodeAt(0)))
+}
+
+/** generates the pcode for loading an input value onto the stack */
+function inputValue (exp: InputValue, options: Options): number[] {
+  return (exp.input.value < 0)
+    ? [PCode.ldin, exp.input.value, PCode.inpt]
+    : [PCode.ldin, exp.input.value]
+}
+
+/** generates the pcode for loading a colour value onto the stack */
+function colourValue (exp: ColourValue, options: Options): number[] {
+  return [PCode.ldin, exp.colour.value]
+}
+
+/** generates the pcode for loading a constant value onto the stack */
+function constantValue (exp: ConstantValue, options: Options): number[] {
+  return (exp.constant.type === 'string')
+    ? [PCode.lstr, exp.constant.value.length].concat(Array.from(exp.constant.value).map(x => x.charCodeAt(0)))
+    : [PCode.ldin, exp.constant.value]
 }
 
 /** generates the pcode for loading the address of a variable onto the stack */
@@ -94,40 +126,37 @@ function variableAddress (exp: VariableAddress|VariableValue, program: Program, 
 function variableValue (exp: VariableValue, program: Program, options: Options): number[][] {
   let pcode: number[][] = []
 
-  // array element / string character
-  if (exp.indexes.length > 0) {
-    const index = exp.indexes[0] // TODO: multi-dimensions
-    const indexExp = expression(index, program, options)
-
-    // array variable
-    if (exp.variable.isArray) {
-      pcode.push(...indexExp)
+  // array element
+  if (exp.variable.isArray) {
+    const baseVariableExp = new VariableValue(exp.lexeme, exp.variable) // same variable, no indexes
+    pcode.push(...expression(baseVariableExp, program, options))
+    for (const index of exp.indexes) {
+      const indexExp = expression(index, program, options)
+      merge(pcode, indexExp)
       if (exp.variable.arrayDimensions[0][0] > 0) {
         merge(pcode, [[PCode.ldin, exp.variable.arrayDimensions[0][0], PCode.subt]])
       }
-      const baseVariableExp = new VariableValue(exp.variable) // same variable, no indexes
-      merge(pcode, expression(baseVariableExp, program, options))
-      merge(pcode, [[PCode.test, PCode.plus, PCode.incr, PCode.lptr]])
+      merge(pcode, [[PCode.swap, PCode.test, PCode.plus, PCode.incr, PCode.lptr]])
     }
+  }
 
-    // string variable
-    else if (exp.variable.type === 'string') {
-      pcode.push(...indexExp)
-      if (program.language === 'Pascal') {
-        // Pascal string indexes start from 1 instead of 0
-        merge(pcode, [[PCode.ldin, 1, PCode.subt]])
-      }
-      const baseVariableExp = new VariableValue(exp.variable) // same variable, no indexes
-      merge(pcode, expression(baseVariableExp, program, options))
-      merge(pcode, [[PCode.test, PCode.plus, PCode.incr, PCode.lptr]])
-      if (program.language === 'Python' || program.language === 'TypeScript') {
-        // Python and TypeScript don't have character types, so we need to add
-        // this here - it won't be picked up with a contextual type cast
-        // (N.B. BASIC doesn't have a character type either, but BASIC doesn't
-        // allow direct reference to characters within strings, so this
-        // situation won't arise for BASIC)
-        merge(pcode, [[PCode.ctos]])
-      }
+  // character from string variable as array
+  else if (exp.variable.type === 'string' && exp.indexes.length > 0) {
+    pcode.push(...expression(exp.indexes[0], program, options))
+    if (program.language === 'Pascal') {
+      // Pascal string indexes start from 1 instead of 0
+      merge(pcode, [[PCode.ldin, 1, PCode.subt]])
+    }
+    const baseVariableExp = new VariableValue(exp.lexeme, exp.variable) // same variable, no indexes
+    merge(pcode, expression(baseVariableExp, program, options))
+    merge(pcode, [[PCode.test, PCode.plus, PCode.incr, PCode.lptr]])
+    if (program.language === 'Python' || program.language === 'TypeScript') {
+      // Python and TypeScript don't have character types, so we need to add
+      // this here - it won't be picked up with a contextual type cast
+      // (N.B. BASIC doesn't have a character type either, but BASIC doesn't
+      // allow direct reference to characters within strings, so this
+      // situation won't arise for BASIC)
+      merge(pcode, [[PCode.ctos]])
     }
   }
 
@@ -163,7 +192,7 @@ function variableValue (exp: VariableValue, program: Program, options: Options):
 }
 
 /** generates the pcode for loading the result of a function onto the stack */
-function functionValue (exp: CommandCall, program: Program, options: Options): number[][] {
+function functionValue (exp: FunctionCall, program: Program, options: Options): number[][] {
   const pcode: number[][] = []
 
   // first: load arguments onto stack
@@ -204,12 +233,12 @@ function compoundExpression (exp: CompoundExpression, program: Program, options:
   const left = exp.left ? expression(exp.left, program, options) : null
 
   // treat +/- 1 as a special case
-  if (left && exp.right instanceof LiteralValue && exp.right.value === 1) {
-    if (exp.operator === PCode.plus) {
+  if (left && exp.right.expressionType === 'integer' && exp.right.value === 1) {
+    if (exp.operator === 'plus') {
       merge(left, [[PCode.incr]])
       return left
     }
-    if (exp.operator === PCode.subt) {
+    if (exp.operator === 'subt') {
       merge(left, [[PCode.decr]])
       return left
     }
@@ -250,9 +279,9 @@ function castExpression (exp: CastExpression, program: Program, options: Options
 }
 
 /** generates the pcode for an operator */
-function operator (op: PCode, program: Program, options: Options): number[] {
+function operator (op: Operator, program: Program, options: Options): number[] {
   switch (op) {
-    case PCode.not:
+    case 'not':
       if (program.language === 'C' || program.language === 'Python') {
         // PCode.not assumes TRUE is -1, but in C and Python TRUE is 1
         return [PCode.ldin, 0, PCode.eqal]
@@ -260,6 +289,6 @@ function operator (op: PCode, program: Program, options: Options): number[] {
       return [PCode.not]
 
     default:
-      return [op]
+      return [PCode[op as any] as any as PCode]
   }
 }

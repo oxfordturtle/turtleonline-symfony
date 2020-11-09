@@ -1,6 +1,7 @@
 PROGRAM SolarSystem;
-CONST sunradius = 50000;
-VAR radius, distanceFromSun, colr, rotation, speed: array[1..8] of integer;
+CONST sunRadius = 50000;
+CONST planets = 8;
+VAR radius, distanceFromSun, colr, rotation, speed: array[1..planets] of integer;
 VAR i: integer;
 
   {sets up the planet property arrays}
@@ -62,17 +63,17 @@ BEGIN
       {draw sun}
       home;
       colour(yellow);
-      blot(sunradius);
+      blot(sunRadius);
       {draw each planet}
-      for i := 1 to 8 do
+      for i := 1 to planets do
         begin
           home;
           {draw a white circle for the orbit}
           colour(white);
-          circle(distanceFromSun[i] + sunradius);
+          circle(distanceFromSun[i] + sunRadius);
           {move to next position and draw the planet}
           right(rotation[i]);
-          forward(distanceFromSun[i] + sunradius);
+          forward(distanceFromSun[i] + sunRadius);
           rotation[i] := (rotation[i] + speed[i]) mod 360000;
           colour(colr[i]);
           if i <= 4 then

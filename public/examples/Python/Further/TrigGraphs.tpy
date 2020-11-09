@@ -1,8 +1,8 @@
-xOrigin: int = 500
-yOrigin: int = 500
-halfWidth: int = 400
-yScale: int = 200
-radians: bool = False # make true for x-axis in radians
+xOrigin: Final[int] = 500
+yOrigin: Final[int] = 500
+halfWidth: Final[int] = 400
+yScale: Final[int] = 200
+radians: Final[bool] = False # make true for x-axis in radians
 
 # draws graph axes
 def drawAxes():

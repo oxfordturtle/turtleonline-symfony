@@ -1,5 +1,5 @@
 // draws n steps
-function steps (n: number) {
+function steps (n: number): void {
   var size: number = 1000 / n;
   setXY(0, 1000);
   thickness(1);
@@ -17,7 +17,7 @@ function steps (n: number) {
 }
 
 // simulates the movement of a ball with the effect of gravity
-function throwBall (xVelocity: number, yVelocity: number, gravity: number, floor: number) {
+function throwBall (xVelocity: number, yVelocity: number, gravity: number, floor: number): void {
   do {
     colour(white);
     blot(25);

@@ -16,7 +16,7 @@ WHILE 0 < 1
   COLOUR(RED)
   BLOT(50)
   UPDATE
-  PAUSE(5)
+  PAUSE(10)
   REM "bounce" (i.e. invert velocity) at canvas edges
   IF (x% < 50) OR (x% > 949) THEN
     xvel% = -xvel%

@@ -1,9 +1,9 @@
 /*
  * Arrays of native Turtle commands and their categories.
  */
-import { Language } from './languages'
+import type { Language } from './languages'
 import { PCode } from './pcodes'
-import { Type } from '../parser/type'
+import type { Type } from '../lexer/lexeme'
 
 /** command class definition */
 export class Command {
@@ -813,7 +813,18 @@ export const commands: Command[] = [
     'Returns a copy of the characters in the input <code>string</code>, starting on the right and of the specified <code>length</code>.'
   ),
   new Command(
-    { BASIC: 'INS$', C: 'strins', Java: 'insert', Pascal: null, Python: 'insert', TypeScript: 'insert' },
+    { BASIC: 'INS$', C: null, Java: null, Pascal: null, Python: null, TypeScript: null },
+    [PCode.rota, PCode.rota, PCode.swap, PCode.rota, PCode.inss],
+    [
+      new Parameter('string', 'string', false, 1),
+      new Parameter('substr', 'string', false, 1),
+      new Parameter('index', 'integer', false, 1)
+    ],
+    'string', 7, 2,
+    'Returns the input <code>string</code> with the specified <code>substring</code> inserted at the given <code>index</code>.'
+  ),
+  new Command(
+    { BASIC: null, C: 'strins', Java: 'insert', Pascal: null, Python: 'insert', TypeScript: 'insert' },
     [PCode.rota, PCode.rota, PCode.swap, PCode.rota, PCode.incr, PCode.inss],
     [
       new Parameter('string', 'string', false, 1),
@@ -1214,7 +1225,7 @@ export const commands: Command[] = [
     'Reads a line from a file.'
   ),
   new Command(
-    { BASIC: 'PRINT#', C: null, Java: null, Pascal: 'fwrite', Python: null, TypeScript: null },
+    { BASIC: 'FWRITE#', C: null, Java: null, Pascal: 'fwrite', Python: null, TypeScript: null },
     [PCode.fwrs],
     [
       new Parameter('file handle', 'integer', false, 1),
@@ -1226,7 +1237,7 @@ export const commands: Command[] = [
     'Writes a string to a file.'
   ),
   new Command(
-    { BASIC: 'PRINTLN#', C: null, Java: null, Pascal: 'fwriteln', Python: null, TypeScript: null },
+    { BASIC: 'FWRITELN#', C: null, Java: null, Pascal: 'fwriteln', Python: null, TypeScript: null },
     [PCode.fwln],
     [
       new Parameter('file handle', 'integer', false, 1),

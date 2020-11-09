@@ -1,7 +1,3 @@
-/**
- * Miscellaneous functions needed by the machine at runtime.
- */
-
 /** mixes two colours */
 export function mixBytes (byte1: number, byte2: number, proportion1: number, proportion2: number): number {
   return Math.round(((byte1 * proportion1) + (byte2 * proportion2)) / (proportion1 + proportion2))

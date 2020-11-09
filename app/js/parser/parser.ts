@@ -1,58 +1,42 @@
-/**
- * The parser function. Lexemes go in, array of routines comes out.
- */
-import { Program } from './routine'
-import BASIC1 from './parsers1/basic'
-import C1 from './parsers1/c'
-import Java1 from './parsers1/java'
-import Pascal1 from './parsers1/pascal'
-import Python1 from './parsers1/python'
-import TypeScript1 from './parsers1/typescript'
-import BASIC2 from './parsers2/basic'
-import CandJava2 from './parsers2/candjava'
-import Pascal2 from './parsers2/pascal'
-import Python2 from './parsers2/python'
-import TypeScript2 from './parsers2/typescript'
-import { Language } from '../constants/languages'
-import { Lexeme } from '../lexer/lexeme'
-import javaParser from '../parser2/java/parser'
+// type imports
+import type { Language } from '../constants/languages'
+import type { Lexeme } from '../lexer/lexeme'
+import type Program from './definitions/program'
 
-export default function parser (lexemes: Lexeme[], language: Language): Program {
-  let program: Program
+// submodule imports
+import basicParser from './basic/parser'
+import cParser from './c/parser'
+import javaParser from './java/parser'
+import pascalParser from './pascal/parser'
+import pythonParser from './python/parser'
+import typeScriptParser from './typescript/parser'
+import Lexemes from './definitions/lexemes'
+
+// other module imports
+import lexify from '../lexer/lexify'
+
+/** parses codes string or lexemes and returns a program object */
+export default function parser (code: string|Lexeme[], language: Language): Program {
+  const rawLexemes = (typeof code === 'string') ? lexify(code, language) : code
+  const lexemes = new Lexemes(rawLexemes)
 
   switch (language) {
     case 'BASIC':
-      program = BASIC1(lexemes.filter(x => x.type !== 'comment'))
-      BASIC2(program)
-      break
+      return basicParser(lexemes)
 
     case 'C':
-      program = C1(lexemes.filter(x => x.type !== 'comment'))
-      CandJava2(program)
-      break
+      return cParser(lexemes)
 
     case 'Java':
-      // program = Java1(lexemes.filter(x => x.type !== 'comment'))
-      // CandJava2(program)
-      program = (javaParser(lexemes) as any) as Program
-      console.log(program)
-      break
+      return javaParser(lexemes)
 
-      case 'Pascal':
-      program = Pascal1(lexemes.filter(x => x.type !== 'comment'))
-      Pascal2(program)
-      break
+    case 'Pascal':
+      return pascalParser(lexemes)
 
     case 'Python':
-      program = Python1(lexemes.filter(x => x.type !== 'comment'))
-      Python2(program)
-      break
+      return pythonParser(lexemes)
 
     case 'TypeScript':
-      program = TypeScript1(lexemes.filter(x => x.type !== 'comment'))
-      TypeScript2(program)
-      break
+      return typeScriptParser(lexemes)
   }
-
-  return program
 }

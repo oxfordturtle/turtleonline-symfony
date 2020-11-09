@@ -1,11 +1,10 @@
-/*
- * The program code component.
- */
+// module imports
 import highlight from '../../lexer/highlight'
 import state from '../../state/index'
 import { fill, li } from '../../tools/elements'
 import { on } from '../../tools/hub'
 
+// get the editor element
 const editor = document.querySelector('[data-component="editor"]') as HTMLElement
 
 if (editor) {
@@ -16,10 +15,11 @@ if (editor) {
   const pre = editor.querySelector('pre') as HTMLPreElement
   const code = editor.querySelector('code') as HTMLElement
 
+  // define the update code display function
   function updateCodeDisplay (): void {
     const lines = state.code.split('\n')
     fill(lineNumbers, lines.map((x, y) => li({ content: (y + 1).toString(10) })))
-    fill(code, highlight(state.code, state.language))
+    fill(code, highlight(state.tokens, state.language))
     window.requestAnimationFrame(function (): void {
       textarea.value = state.code
       textarea.style.height = `${lines.length * 1.5}em`

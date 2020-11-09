@@ -1,5 +1,5 @@
 // draws circle or blot at Turtle position
-function drawit (doblot: boolean) {
+function drawit (doblot: boolean): void {
   // doblot is equal to either true or false
   if (doblot) {
     // draw a randomly coloured blot

@@ -1,43 +1,32 @@
-/*
- * The system state is a load of variables, representing the current state of
- * the system (not including the virtual machine, which for clarity has its own
- * module). Getters and setters for these state variables are defined here, as
- * well as other more complex methods for changing the system state. This module
- * also initializes the variables and saves them to local storage, so that the
- * state is maintained between sessions.
- */
-// submodules
-import File from './file'
+// type imports
+import type { Language } from '../constants/languages'
+import type { Mode } from '../constants/modes'
+import type { Property } from '../constants/properties'
+import type { Options as CompilerOptions } from '../encoder/options'
+import type { Options as MachineOptions } from '../machine/options'
+import type { Token } from '../lexer/token'
+import type { CommentLexeme, Lexeme } from '../lexer/lexeme'
+import type { UsageCategory } from '../analyser/usage'
+
+// module imports
+import { File, skeletons } from './file'
 import { load, save } from './storage'
-
-// constants
-import { examples } from '../constants/examples'
-import { Language, languages, extensions } from '../constants/languages'
-import { Mode } from '../constants/modes'
-import { Property, defaults } from '../constants/properties'
-
-// tools
+import { groups, examples } from '../constants/examples'
+import { languages, extensions } from '../constants/languages'
+import { defaults } from '../constants/properties'
 import { input } from '../tools/elements'
 import { SystemError } from '../tools/error'
 import { send } from '../tools/hub'
-
-// machine
 import * as machine from '../machine/index'
 import * as memory from '../machine/memory'
-import { Options as MachineOptions } from '../machine/options'
-
-// compiler
-import { Options as CompilerOptions } from '../encoder/options'
+import tokenize from '../lexer/tokenize'
 import lexify from '../lexer/lexify'
-import { Lexeme } from '../lexer/lexeme'
 import parser from '../parser/parser'
-import { Program } from '../parser/routine'
+import Program from '../parser/definitions/program'
 import analyse from '../analyser/analyse'
-import { UsageCategory } from '../analyser/usage'
 import encoder from '../encoder/program'
-import encoder2 from '../encoder2/program'
 
-/** the system state object */
+/** system state */
 class State {
   // whether user's saved settings have been loaded in this session
   #savedSettingsHaveBeenLoaded: boolean
@@ -64,6 +53,7 @@ class State {
   // file memory
   #files: File[]
   #currentFileIndex: number
+  #tokens: Token[]
   #lexemes: Lexeme[]
   #program: Program
   #usage: UsageCategory[]
@@ -117,6 +107,7 @@ class State {
     // file memory
     this.#files = load('files')
     this.#currentFileIndex = load('currentFileIndex')
+    this.#tokens = []
     this.#lexemes = []
     this.#program = new Program(this.#language, '')
     this.#usage = []
@@ -160,6 +151,8 @@ class State {
       this.#files.push(new File(this.language))
     } else if (this.#files.length === 1 && this.file.code === '') {
       this.file.language = this.language
+    } else {
+      this.#tokens = tokenize(this.code, this.language)
     }
     if (this.file.compiled) {
       // the session doesn't save the results of compilation, so we need to
@@ -189,6 +182,7 @@ class State {
     // file memory
     send('filesChanged')
     send('currentFileIndexChanged')
+    send('tokensChanged')
     send('lexemesChanged')
     send('programChanged')
     send('usageChanged')
@@ -249,8 +243,9 @@ class State {
   get file (): File { return this.files[this.currentFileIndex] }
   get filename (): string { return this.files[this.currentFileIndex].name }
   get code (): string { return this.files[this.currentFileIndex].code }
+  get tokens (): Token[] { return this.#tokens }
   get lexemes (): Lexeme[] { return this.#lexemes.filter(x => x.type !== 'comment') }
-  get comments (): Lexeme[] { return this.#lexemes.filter(x => x.type === 'comment') }
+  get comments (): CommentLexeme[] { return this.#lexemes.filter(x => x.type === 'comment') as CommentLexeme[] }
   get program (): Program { return this.#program }
   get usage (): UsageCategory[] { return this.#usage }
   get pcode (): number[][] { return this.#pcode }
@@ -463,6 +458,7 @@ class State {
     if (this.file.compiled) {
       this.compileCurrentFile()
     } else {
+      this.tokens = tokenize(this.code, this.language)
       this.lexemes = []
       this.program = new Program(this.language, '')
       this.usage = []
@@ -483,8 +479,14 @@ class State {
     this.file.code = code
     this.file.edited = true
     this.file.compiled = false
+    this.tokens = tokenize(code, this.language)
     save('files', this.files)
     send('codeChanged')
+  }
+
+  set tokens (tokens: Token[]) {
+    this.#tokens = tokens
+    send('tokensChanged')
   }
 
   set lexemes (lexemes: Lexeme[]) {
@@ -795,12 +797,14 @@ class State {
       this.files.push(file)
       this.files = this.files // to update session
       this.currentFileIndex = this.files.length - 1
-      }
+      this.code = file.code
+    }
     send('closeMenu', 'system')
   }
 
   // close the current file (and update current file index)
   closeCurrentFile (): void {
+    machine.halt()
     this.files = this.files.slice(0, this.currentFileIndex).concat(this.files.slice(this.currentFileIndex + 1))
     if (this.files.length === 0) {
       this.newFile()
@@ -818,7 +822,7 @@ class State {
   newFile (skeleton: boolean = false) {
     const file = new File(this.language)
     if (skeleton) {
-      file.code = File.skeletons[this.language]
+      file.code = skeletons[this.language]
     }
     this.addFile(file)
   }
@@ -942,6 +946,17 @@ class State {
     }
   }
 
+  openExampleGroup (groupId: string) {
+    const group = groups.find(x => x.id === groupId)
+    if (!group) {
+      send('error', new SystemError(`Group ID ${groupId} not found.`))
+    } else {
+      for (const example of group.examples) {
+        this.openExampleFile(example.id)
+      }
+    }
+  }
+
   saveLocalFile () {
     const a = document.createElement('a')
     const blob = new window.Blob([this.file.code], { type: 'text/plain;charset=utf-8' })
@@ -959,12 +974,11 @@ class State {
     // time to make it match
     this.file.language = this.language
     try {
-      this.lexemes = lexify(this.code, this.language)
+      this.tokens = tokenize(this.code, this.language)
+      this.lexemes = lexify(this.tokens, this.language)
       this.program = parser(this.lexemes, this.language)
       this.usage = analyse(this.lexemes, this.program)
-      this.pcode = (this.language === 'Java')
-        ? encoder2(this.program as any, this.compilerOptions)
-        : encoder(this.program, this.compilerOptions)
+      this.pcode = encoder(this.program, this.compilerOptions)
       this.file.language = this.language
       this.file.compiled = true
       this.files = this.files // to update the session storage

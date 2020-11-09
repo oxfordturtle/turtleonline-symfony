@@ -1,6 +1,4 @@
-/**
- * Machine runtime options.
- */
+// module imports
 import { defaults } from '../constants/properties'
 
 export type Options = {

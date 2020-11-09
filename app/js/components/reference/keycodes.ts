@@ -1,7 +1,8 @@
 /**
  * Keycodes reference table.
  */
-import { inputs, Input } from '../../constants/inputs'
+import type { Input } from '../../constants/inputs'
+import { inputs } from '../../constants/inputs'
 import { fill, tr, td, code } from '../../tools/elements'
 import state from '../../state/index'
 import { on } from '../../tools/hub'

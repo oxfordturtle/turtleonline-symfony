@@ -1,44 +1,46 @@
-/**
- * Syntax highlighting function.
- */
+// type imports
+import type { Language } from '../constants/languages'
+import type { Token } from './token'
+import type { Colour } from '../constants/colours'
+
+// submodule imports
 import tokenize from './tokenize'
-import { Language } from '../constants/languages'
-import hex from '../tools/hex'
+
+// other module imports
+import { colours } from '../constants/colours'
 
 /** returns highlighted code */
-export default function highlight (code: string, language: Language): string {
-  const tokens = tokenize(code, language)
+export default function highlight (code: string|Token[], language: Language): string {
+  const tokens = (typeof code === 'string') ? tokenize(code, language) : code
   return tokens.map((token) => {
     switch (token.type) {
-      case 'newline': // fallthrough
-      case 'spaces': // fallthrough
-      case 'delimiter':
+      case 'spaces':
+      case 'newline':
         return token.content
 
-      case 'comment': // fallthrough
-      case 'operator': // fallthrough
-      case 'keyword': // fallthrough
-      case 'character': // fallthrough
-      case 'string': // fallthrough
-      case 'boolean': // fallthrough
-      case 'integer': // fallthrough
-      case 'keycode': // fallthrough
-      case 'query': // fallthrough
+      case 'unterminated-comment':
+      case 'unterminated-string':
+      case 'bad-binary':
+      case 'bad-octal':
+      case 'bad-hexadecimal':
+      case 'real':
+      case 'bad-keycode':
+      case 'bad-query':
       case 'illegal':
-        return `<span class="${token.type}${token.ok ? '' : ' error'}">${token.content}</span>`
+        return `<span class="error">${token.content}</span>`
 
-      case 'identifier':
-        switch (token.subtype) {
-          case 'colour':
-            return token.value
-              ? `<span class="colour" style="border-color:${hex(token.value as number)};">${token.content}</span>`
-              : `<span class="colour">${token.content}</span>`
+      case 'binary':
+      case 'octal':
+      case 'hexadecimal':
+      case 'decimal':
+        return `<span class="integer">${token.content}</span>`
 
-          default:
-            return token.subtype
-              ? `<span class="${token.subtype}">${token.content}</span>`
-              : token.content
-        }
+      case 'colour':
+        const colour = colours.find(x => x.names[language] === token.content) as Colour
+        return `<span class="colour" style="border-color:#${colour.hex};">${token.content}</span>`
+
+      default:
+        return `<span class="${token.type}">${token.content}</span>`
     }
   }).join('')
 }

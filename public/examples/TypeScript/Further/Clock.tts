@@ -1,5 +1,5 @@
 // draws hour and minute hands on a clock face
-function showHands (hours: number, minutes: number) {
+function showHands (hours: number, minutes: number): void {
   // rub out previous hands
   colour(white);
   blot(360);

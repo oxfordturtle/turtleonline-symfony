@@ -1,4 +1,4 @@
-delay: int = 500
+delay: Final[int] = 500
 output(True, cream, True)
 # set initial string
 s1: str = 'Turtle Python'
@@ -20,7 +20,7 @@ pause(delay)
 writeline('In lower case it is "' + lower(s1) + '".')
 writeline('In upper case it is "' + upper(s1) + '".')
 pause(delay)
-# illustrate use of POS function
+# illustrate use of FIND function
 posn: int = find(s1, s3)
 if posn > 0:
   writeline('"' + s3 + '" occurs within "' + s1 + '" at position ' + str(posn) + '.')

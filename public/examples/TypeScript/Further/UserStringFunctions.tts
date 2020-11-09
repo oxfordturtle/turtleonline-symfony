@@ -67,7 +67,7 @@ function caesar (s: string, n: number): string {
 }
 
 // shows the results of applying the above functions to a string
-function process(s: string) {
+function process (s: string): void {
   writeln('');
   writeln('ORIGINAL STRING:               "' + s + '"');
   writeln('REVERSED (by iteration):       "' + reverse(s) + '"');

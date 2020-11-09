@@ -1,107 +1,117 @@
-/*
- * Tokenizer.
- */
+// type imports
+import type { Language } from '../constants/languages'
+
+// submodule imports
 import { Token } from './token'
+
+// other modules
 import { colours } from '../constants/colours'
 import { commands } from '../constants/commands'
 import { inputs } from '../constants/inputs'
 import { keywords } from '../constants/keywords'
-import { Language } from '../constants/languages'
 
 /** generates an array of tokens from a string of code */
 export default function tokenize (code: string, language: Language): Token[] {
   const tokens: Token[] = []
+  let line = 1
+  let character = 1
   while (code.length > 0) {
-    const token = spaces(code, language) ||
-      newline(code, language) ||
-      comment(code, language) ||
-      operatorOrDelimiter(code, language) ||
-      string(code, language) ||
-      boolean(code, language) ||
-      binary(code,language) ||
-      octal(code, language) ||
-      hexadecimal(code, language) ||
-      decimal(code, language) ||
-      keyword(code, language) ||
-      keycode(code, language) ||
-      query(code, language) ||
-      command(code, language) ||
-      turtle(code, language) ||
-      colour(code, language) ||
-      custom(code, language) ||
-      variable(code, language) ||
-      identifier(code, language) ||
-      illegal(code, language)
+    const token =
+      spaces(code, language, line, character) ||
+      newline(code, language, line, character) ||
+      comment(code, language, line, character) ||
+      operatorOrDelimiter(code, language, line, character) ||
+      string(code, language, line, character) ||
+      boolean(code, language, line, character) ||
+      binary(code,language, line, character) ||
+      octal(code, language, line, character) ||
+      hexadecimal(code, language, line, character) ||
+      decimal(code, language, line, character) ||
+      keyword(code, language, line, character) ||
+      type(code, language, line, character) ||
+      keycode(code, language, line, character) ||
+      query(code, language, line, character) ||
+      turtle(code, language, line, character) ||
+      command(code, language, line, character) ||
+      colour(code, language, line, character) ||
+      identifier(code, language, line, character) ||
+      illegal(code, language, line, character)
     tokens.push(token)
-    code = code.slice(token.content?.length)
+    code = code.slice(token.content.length)
+    if (token.type === 'newline') {
+      line += 1
+      character = 1
+    } else {
+      character += token.content.length
+    }
   }
   return tokens
 }
 
 /** tests for spaces and returns the token if matched */
-function spaces (code: string, language: Language): Token|false {
+function spaces (code: string, language: Language, line: number, character: number): Token|false {
   const test = code.match(/^( +)/)
-  return test ? new Token('spaces', null, true, test[0], language) : false
+  return test ? new Token('spaces', test[0], line, character) : false
 }
 
 /** tests for a newline and returns the token if matched */
-function newline (code: string, language: Language): Token|false {
+function newline (code: string, language: Language, line: number, character: number): Token|false {
   const test = (code[0] === '\n')
-  return test ? new Token('newline', null, true, '\n', language) : false
+  return test ? new Token('newline', '\n', line, character) : false
 }
 
 /** tests for a comment and returns the token if matched */
-function comment (code: string, language: Language): Token|false {
+function comment (code: string, language: Language, line: number, character: number): Token|false {
   switch (language) {
     case 'BASIC':
       const startBASIC = code.match(/^REM/)
-      return startBASIC ? new Token('comment', null, true, code.split('\n')[0], language) : false
+      return startBASIC ? new Token('comment', code.split('\n')[0], line, character) : false
 
     case 'C': // fallthrough
     case 'Java': // fallthrough
     case 'TypeScript':
       const startCorTS = code.match(/^\/\//)
-      return startCorTS ? new Token('comment', null, true, code.split('\n')[0], language) : false
+      return startCorTS ? new Token('comment', code.split('\n')[0], line, character) : false
 
     case 'Pascal':
       const start = code[0] === '{'
       const end = code.match(/}/)
       if (start && end) {
-        return new Token('comment', null, true, code.slice(0, end.index as number + 1), language)
+        return new Token('comment', code.slice(0, end.index as number + 1), line, character)
       }
       if (start) {
-        return new Token('comment', null, false, code.split('\n')[0], language)
+        return new Token('unterminated-comment', code.split('\n')[0], line, character)
       }
       return false
     
     case 'Python':
       const startPython = code.match(/^#/)
-      return startPython ? new Token('comment', null, true, code.split('\n')[0], language) : false
+      return startPython ? new Token('comment', code.split('\n')[0], line, character) : false
   }
 }
 
 /** tests for an operator or delimiter and returns the token if matched */
-function operatorOrDelimiter (code: string, language: Language): Token|false {
+function operatorOrDelimiter (code: string, language: Language, line: number, character: number): Token|false {
   switch (language) {
     case 'BASIC': // fallthrough
     case 'C': // fallthrough
     case 'Java': // fallthrough
     case 'TypeScript':
       // the order doesn't matter
-      return operator(code, language) || delimiter(code, language)
+      return operator(code, language, line, character) || delimiter(code, language, line, character)
 
     case 'Pascal':
       // check for operator ':=' before delimiter ':'
-      return operator(code, language) || delimiter(code, language)
+      return operator(code, language, line, character) || delimiter(code, language, line, character)
 
     case 'Python':
       // check for delimiter '->' before operator '-'
-      return delimiter(code, language) || operator(code, language)
+      return delimiter(code, language, line, character) || operator(code, language, line, character)
   }
 }
 
 /** tests for an operator and returns the token if matched */
-function operator (code: string, language: Language): Token|false {
+function operator (code: string, language: Language, line: number, character: number): Token|false {
   const tests = {
     BASIC: /^(\+|-|\*|\/|DIV\b|MOD\b|=|<>|<=|>=|<|>|NOT\b|AND\b|OR\b|EOR\b)/,
     C: /^(\+|-|\*|\/|%|==|!=|<=|>=|<|>|=|!|&&|\|\||~|&|\||\^)/,
@@ -111,11 +121,11 @@ function operator (code: string, language: Language): Token|false {
     TypeScript: /^(\+|-|\*|\/|%|==|!=|<=|>=|<|>|=|!|&&|\|\||~|&|\||\^)/
   }
   const test = code.match(tests[language])
-  return test ? new Token('operator', null, true, test[0], language) : false
+  return test ? new Token('operator', test[0], line, character) : false
 }
 
 /** tests for a delimiter and returns the token if matched */
-function delimiter (code: string, language: Language): Token|false {
+function delimiter (code: string, language: Language, line: number, character: number): Token|false {
   const tests = {
     BASIC: /^(\(|\)|,|:)/,
     C: /^(\(|\)|{|}|\[|\]|,|;)/,
@@ -125,56 +135,50 @@ function delimiter (code: string, language: Language): Token|false {
     TypeScript: /^(\(|\)|{|}|\[|\]|,|;|:)/
   }
   const test = code.match(tests[language])
-  return test ? new Token('delimiter', null, true, test[0], language) : false
+  return test ? new Token('delimiter', test[0], line, character) : false
 }
 
 /** tests for a string literal and returns the token if matched */
-function string (code: string, language: Language): Token|false {
+function string (code: string, language: Language, line: number, character: number): Token|false {
   code = code.split('\n')[0]
   switch (language) {
     case 'BASIC':
-      // single quoted strings are not allowed
-      if (code[0] === '\'') {
-        const test = code.match(/'(.*?)'/)
-        const content = test ? test[0] : code
-        return new Token('string', 'single', false, content, language)
-      }
       // awkward cases
-      if (code.match(/^""""/)) return new Token('string', 'double', true, '""""', language)
-      if (code.match(/^""([^"]|$)/)) return new Token('string', 'double', true, '""', language)
+      if (code.match(/^""""/)) return new Token('string', '""""', line, character)
+      if (code.match(/^""([^"]|$)/)) return new Token('string', '""', line, character)
       // normal cases
       const startBASIC = code[0] === '"'
       const endBASIC = code.match(/[^"](")([^"]|$)/)
       if (startBASIC && endBASIC) {
-        return new Token('string', 'double', true, code.slice(0, endBASIC.index as number + 2), language)
+        return new Token('string', code.slice(0, endBASIC.index as number + 2), line, character)
       }
       if (startBASIC) {
-        return new Token('string', 'double', false, code.split('\n')[0], language)
+        return new Token('unterminated-string', code.split('\n')[0], line, character)
       }
       return false
 
     case 'Pascal':
       // awkward cases
-      if (code.match(/^''''/)) return new Token('string', 'single', true, '\'\'\'\'', language)
-      if (code.match(/^''([^']|$)/)) return new Token('string', 'single', true, '\'\'', language)
-      if (code.match(/^""""/)) return new Token('string', 'double', true, '""""', language)
-      if (code.match(/^""([^"]|$)/)) return new Token('string', 'double', true, '""', language)
+      if (code.match(/^''''/)) return new Token('string', '\'\'\'\'', line, character)
+      if (code.match(/^''([^']|$)/)) return new Token('string', '\'\'', line, character)
+      if (code.match(/^""""/)) return new Token('string', '""""', line, character)
+      if (code.match(/^""([^"]|$)/)) return new Token('string', '""', line, character)
       // normal cases
       const start1Pascal = code[0] === '\''
       const start2Pascal = code[0] === '"'
       const end1Pascal = code.match(/[^'](')([^']|$)/)
       const end2Pascal = code.match(/[^"](")([^"]|$)/)
       if (start1Pascal && end1Pascal) {
-        return new Token('string', 'single', true, code.slice(0, end1Pascal.index as number + 2), language)
+        return new Token('string', code.slice(0, end1Pascal.index as number + 2), line, character)
       }
       if (start1Pascal) {
-        return new Token('string', 'single', false, code.split('\n')[0], language)
+        return new Token('unterminated-string', code.split('\n')[0], line, character)
       }
       if (start2Pascal && end2Pascal) {
-        return new Token('string', 'double', true, code.slice(0, end2Pascal.index as number + 2), language)
+        return new Token('string', code.slice(0, end2Pascal.index as number + 2), line, character)
       }
       if (start2Pascal) {
-        return new Token('string', 'double', false, code.split('\n')[0], language)
+        return new Token('unterminated-string', code.split('\n')[0], line, character)
       }
       return false
 
@@ -187,23 +191,23 @@ function string (code: string, language: Language): Token|false {
       const end1 = code.match(/[^\\](')/)
       const end2 = code.match(/[^\\](")/)
       if (start1 && end1) {
-        return new Token('string', 'single', true, code.slice(0, end1.index as number + 2), language)
+        return new Token('string', code.slice(0, end1.index as number + 2), line, character)
       }
       if (start1) {
-        return new Token('string', 'single', false, code.split('\n')[0], language)
+        return new Token('unterminated-string', code.split('\n')[0], line, character)
       }
       if (start2 && end2) {
-        return new Token('string', 'double', true, code.slice(0, end2.index as number + 2), language)
+        return new Token('string', code.slice(0, end2.index as number + 2), line, character)
       }
       if (start2) {
-        return new Token('string', 'double', false, code.split('\n')[0], language)
+        return new Token('unterminated-string', code.split('\n')[0], line, character)
       }
       return false
     }
 }
 
 /** tests for a boolean literal and returns the token if matched */
-function boolean (code: string, language: Language): Token|false {
+function boolean (code: string, language: Language, line: number, character: number): Token|false {
   const tests = {
     BASIC: /^(TRUE|FALSE)\b/,
     C: /^(true|false)\b/,
@@ -213,11 +217,11 @@ function boolean (code: string, language: Language): Token|false {
     TypeScript: /^(true|false)\b/
   }
   const test = code.match(tests[language])
-  return test ? new Token('boolean', null, true, test[0], language) : false
+  return test ? new Token('boolean', test[0], line, character) : false
 }
 
 /** tests for a binary integer literal and returns the token if matched */
-function binary (code: string, language: Language): Token|false {
+function binary (code: string, language: Language, line: number, character: number): Token|false {
   // TODO: errors for binary numbers with digits > 1
   switch (language) {
     case 'BASIC': // fallthrough
@@ -225,10 +229,10 @@ function binary (code: string, language: Language): Token|false {
       const good = code.match(/^(%[01]+)\b/)
       const bad = code.match(/^(0b[01]+)\b/)
       if (good) {
-        return new Token('integer', 'binary', true, good[0], language)
+        return new Token('binary', good[0], line, character)
       }
       if (bad) {
-        return new Token('integer', 'binary', false, bad[0], language)
+        return new Token('bad-binary', bad[0], line, character)
       }
       return false
 
@@ -239,31 +243,28 @@ function binary (code: string, language: Language): Token|false {
       // N.B. there's no bad binary in these languages, since '%' will match the MOD operator
       const test = code.match(/^(0b[01]+)\b/)
       if (test) {
-        return new Token('integer', 'binary', true, test[0], language)
+        return new Token('binary', test[0], line, character)
       }
       return false
   }
 }
 
 /** tests for an octal integer literal and returns the token if matched */
-function octal (code: string, language: Language): Token|false {
+function octal (code: string, language: Language, line: number, character: number): Token|false {
   // TODO: errors for octal numbers with digits > 7
   switch (language) {
     case 'BASIC':
-      const testBASIC = code.match(/^(0o[0-7]+)\b/)
-      if (testBASIC) {
-        return new Token('integer', 'octal', false, testBASIC[0], language)
-      }
+      // BASIC doesn't support octal numbers
       return false
 
     case 'Pascal':
       const goodPascal = code.match(/^(&[0-7]+)\b/)
       const badPascal = code.match(/^(0o[0-7]+)\b/)
       if (goodPascal) {
-        return new Token('integer', 'octal', true, goodPascal[0], language)
+        return new Token('octal', goodPascal[0], line, character)
       }
       if (badPascal) {
-        return new Token('integer', 'octal', false, badPascal[0], language)
+        return new Token('bad-octal', badPascal[0], line, character)
       }
       return false
 
@@ -274,14 +275,14 @@ function octal (code: string, language: Language): Token|false {
       // N.B. there's no bad octal in these languages, since '&' will match the boolean AND operator
       const testPython = code.match(/^(0o[0-7]+)\b/)
       if (testPython) {
-        return new Token('integer', 'octal', true, testPython[0], language)
+        return new Token('octal', testPython[0], line, character)
       }
       return false
   }
 }
 
 /** tests for a hexadecimal integer literal and returns the token if matched */
-function hexadecimal (code: string, language: Language): Token|false {
+function hexadecimal (code: string, language: Language, line: number, character: number): Token|false {
   const bads = {
     BASIC: /^((\$|(0x))[A-Fa-f0-9]+)\b/,
     C: /^((&|#|\$)[A-Fa-f0-9]+)\b/,
@@ -301,37 +302,57 @@ function hexadecimal (code: string, language: Language): Token|false {
   const bad = code.match(bads[language])
   const good = code.match(goods[language])
   if (bad) {
-    return new Token('integer', 'hexadecimal', false, bad[0], language)
+    return new Token('bad-hexadecimal', bad[0], line, character)
   }
   if (good) {
-    return new Token('integer', 'hexadecimal', true, good[0], language)
+    return new Token('hexadecimal', good[0], line, character)
   }
   return false
 }
 
 /** tests for a decimal integer literal and returns the token if matched */
-function decimal (code: string, language: Language): Token|false {
+function decimal (code: string, language: Language, line: number, character: number): Token|false {
   const good = code.match(/^(\d+)\b/)
   const bad = code.match(/^(\d+\.\d+)/)
   if (bad) { // good will also match if bad matches, so give this priority
-    return new Token('integer', 'decimal', false, bad[0], language)
+    return new Token('real', bad[0], line, character)
   }
   if (good) {
-    return new Token('integer', 'decimal', true, good[0], language)
+    return new Token('decimal', good[0], line, character)
   }
   return false
 }
 
 /** tests for a keyword and returns the token if matched */
-function keyword (code: string, language: Language): Token|false {
+function keyword (code: string, language: Language, line: number, character: number): Token|false {
   const names = keywords[language].map(x => x.name).join('|')
   const regex = (language === 'Pascal') ? new RegExp(`^(${names})\\b`, 'i') : new RegExp(`^(${names})\\b`)
   const test = code.match(regex)
-  return test ? new Token('keyword', null, true, test[0], language) : false
+  return test ? new Token('keyword', test[0], line, character) : false
+}
+
+/** tests for a type keyword and returns the token if matched */
+function type (code: string, language: Language, line: number, character: number): Token|false {
+  let test: RegExpMatchArray|null = null
+  switch (language) {
+    case 'C':
+      test = code.match(/^(void|bool|char|int|string)\b/)
+      break
+    case 'Java':
+      test = code.match(/^(void|boolean|char|int|String)\b/)
+      break
+    case 'Pascal':
+      test = code.match(/^(boolean|char|integer|string)\b/i)
+      break
+    case 'TypeScript':
+      test = code.match(/^(void|boolean|number|string)\b/)
+      break
+  }
+  return test ? new Token('type', test[0], line, character) : false
 }
 
 /** tests for a native keycode constant and returns the token if matched */
-function keycode (code: string, language: Language): Token|false {
+function keycode (code: string, language: Language, line: number, character: number): Token|false {
   const names = inputs
     .filter(x => x.value >= 0)
     .map(x => x.names[language].replace(/\\/, '\\\\'))
@@ -340,16 +361,16 @@ function keycode (code: string, language: Language): Token|false {
   const good = code.match(regex)
   const bad = code.match(/^(\\[#a-zA-Z0-9]*)\b/)
   if (good) {
-    return new Token('keycode', null, true, good[0], language)
+    return new Token('keycode', good[0], line, character)
   }
   if (bad) {
-    return new Token('keycode', null, false, bad[0], language)
+    return new Token('bad-keycode', bad[0], line, character)
   }
   return false
 }
 
 /** tests for a native query code and returns the token if matched */
-function query (code: string, language: Language): Token|false {
+function query (code: string, language: Language, line: number, character: number): Token|false {
   const names = inputs
     .filter(x => x.value < 0)
     .map(x => x.names[language].replace(/\?/, '\\?'))
@@ -358,37 +379,16 @@ function query (code: string, language: Language): Token|false {
   const good = code.match(regex)
   const bad = code.match(/^(\?[#a-zA-Z0-9]*)\b/)
   if (good) {
-    return new Token('query', null, true, good[0], language)
+    return new Token('query', good[0], line, character)
   }
   if (bad) {
-    return new Token('query', null, false, bad[0], language)
+    return new Token('bad-query', bad[0], line, character)
   }
   return false
 }
 
-/** tests for a native turtle command (identifier) and returns the token if matched */
-function command (code: string, language: Language): Token|false {
-  let names: string = commands.filter(x => x.names[language]).map(x => x.names[language]).join('|')
-  let regex: RegExp = new RegExp(`^(${names})\\b`)
-  if (language === 'BASIC') {
-    names = commands
-      .filter(x => x.names[language])
-      .map(x => x.names[language])
-      .map(x => (x as string).slice(-1) === '$' ? (x as string).replace(/\$/, '\\$') : `${x}\\b`)
-      .join('|')
-    regex = new RegExp(`^(${names})`)
-  } else if (language === 'Pascal') {
-    regex = new RegExp(`^(${names})\\b`, 'i')
-  } else if (language === 'Python') {
-    // pretend "range" is also a command
-    regex = new RegExp(`^(${names}|range)\\b`)
-  }
-  const test = code.match(regex)
-  return test ? new Token('identifier', 'command', true, test[0], language) : false
-}
-
 /** tests for a built-in turtle variable (identifier) and returns the token if matched */
-function turtle (code: string, language: Language): Token|false {
+function turtle (code: string, language: Language, line: number, character: number): Token|false {
   const tests = {
     BASIC: /^(turt[xydatc]%)/,
     C: /^(turt[xydatc])\b/,
@@ -398,40 +398,57 @@ function turtle (code: string, language: Language): Token|false {
     TypeScript: /^(turt[xydatc])\b/
   }
   const test = code.match(tests[language])
-  return test ? new Token('identifier', 'turtle', true, test[0], language) : false
+  return test ? new Token('turtle', test[0], line, character) : false
+}
+
+/** tests for a native turtle command (identifier) and returns the token if matched */
+function command (code: string, language: Language, line: number, character: number): Token|false {
+  let names: string = commands.filter(x => x.names[language]).map(x => x.names[language]).join('|')
+  let regex: RegExp = new RegExp(`^(${names})\\b`)
+  if (language === 'BASIC') {
+    names = commands
+      .filter(x => x.names[language])
+      .map(x => x.names[language])
+      .map((x) => {
+        if ((x as string).slice(-1) === '$') {
+          return (x as string).replace(/\$/, '\\$')
+        }
+        if ((x as string).slice(-1) === '#') {
+          return x
+        }
+        return `${x}\\b`
+      })
+      .join('|')
+    regex = new RegExp(`^(${names})`)
+  } else if (language === 'Pascal') {
+    regex = new RegExp(`^(${names})\\b`, 'i')
+  } else if (language === 'Python') {
+    // pretend "range" is also a command
+    regex = new RegExp(`^(${names}|range)\\b`)
+  }
+  const test = code.match(regex)
+  return test ? new Token('command', test[0], line, character) : false
 }
 
 /** tests for a native colour constant (identifier) and returns the token if matched */
-function colour (code: string, language: Language): Token|false {
+function colour (code: string, language: Language, line: number, character: number): Token|false {
   const names = colours
     .map(x => x.names[language])
     .join('|')
   const regex = (language === 'Pascal') ? new RegExp(`^(${names})\\b`, 'i') : new RegExp(`^(${names})\\b`)
   const test = code.match(regex)
-  return test ? new Token('identifier', 'colour', true, test[0], language) : false
-}
-
-/** tests for a custom command and returns the token if matched */
-function custom (code: string, language: Language): Token|false {
-  if (language !== 'BASIC') return false // BASIC only
-  const test = code.match(/^((PROC|FN)[_a-zA-Z0-9]+[%|$]?)/)
-  return test ? new Token('identifier', 'custom', true, test[0], language) : false
-}
-
-/** tests for a custom variable or constant and returns the token if matched */
-function variable (code: string, language: Language): Token|false {
-  if (language !== 'BASIC') return false // BASIC only
-  const test = code.match(/^([_a-zA-Z][_a-zA-Z0-9]*[%|$]?)/)
-  return test ? new Token('identifier', 'variable', true, test[0], language) : false
+  return test ? new Token('colour', test[0], line, character) : false
 }
 
 /** tests for any other identifier and returns the token if matched */
-function identifier (code: string, language: Language): Token|false {
-  const test = code.match(/^([_a-zA-Z][_a-zA-Z0-9]*)\b/)
-  return test ? new Token('identifier', null, true, test[0], language) : false
+function identifier (code: string, language: Language, line: number, character: number): Token|false {
+  const test = (language === 'BASIC')
+    ? code.match(/^([_a-zA-Z][_a-zA-Z0-9]*\$\d*|[_a-zA-Z][_a-zA-Z0-9]*%?)/)
+    : code.match(/^([_a-zA-Z][_a-zA-Z0-9]*)\b/)
+  return test ? new Token('identifier', test[0], line, character) : false
 }
 
 /** returns an illegal token (for use if none of the above matched) */
-function illegal (code: string, language: Language): Token {
-  return new Token('illegal', null, false, code.split(/\b/)[0], language)
+function illegal (code: string, language: Language, line: number, character: number): Token {
+  return new Token('illegal', code.split(/\s/)[0], line, character)
 }

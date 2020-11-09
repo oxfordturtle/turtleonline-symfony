@@ -6,5 +6,5 @@ test('Parser: Pascal: error test 1', function (): void {
   const lexemes = lexify(code, 'Pascal')
   expect(() => {
     parser(lexemes, 'Pascal')
-  }).toThrow('Program must start with keyword "PROGRAM".')
+  }).toThrow('Program must begin with keyword "PROGRAM".')
 })

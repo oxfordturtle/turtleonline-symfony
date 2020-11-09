@@ -1,7 +1,6 @@
-function face (radius: number) {
-
+function face (radius: number): void {
   // draws an eye sized relative to the face
-  function eye() {
+  function eye(): void {
     colour(white);
     ellblot(radius * 3 / 20, radius / 10);
     colour(emerald);

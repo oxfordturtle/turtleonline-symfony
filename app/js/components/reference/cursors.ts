@@ -1,7 +1,8 @@
 /**
  * Cursors reference table.
  */
-import { cursors, Cursor } from '../../constants/cursors'
+import type { Cursor } from '../../constants/cursors'
+import { cursors } from '../../constants/cursors'
 import { fill, tr } from '../../tools/elements'
 import { on } from '../../tools/hub'
 

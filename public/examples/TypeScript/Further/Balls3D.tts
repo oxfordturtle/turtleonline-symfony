@@ -1,5 +1,5 @@
 // draw a 3d-style coloured ball
-function ball3d (colr: number, step: number) {
+function ball3d (colr: number, step: number): void {
   // start with specified colour code
   colour(colr);
   // draw 40 progressively smaller blots

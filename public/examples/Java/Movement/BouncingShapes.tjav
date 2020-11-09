@@ -23,18 +23,18 @@ class BouncingShapes {
   }
 
   void main () {
-    const int minSize = 70;
-    const int maxSize = 130;
-    const int shapes = 6;
-    int[] x = new int[shapes];
-    int[] y = new int[shapes];
-    int[] d = new int[shapes];
-    int[] xVelocity = new int[shapes];
-    int[] yVelocity = new int[shapes];
-    int[] dVelocity = new int[shapes];
-    int[] sides = new int[shapes];
-    int[] size = new int[shapes];
-    int[] colr = new int[shapes];
+    final int minSize = 70;
+    final int maxSize = 130;
+    final int shapes = 6;
+    int[shapes] x;
+    int[shapes] y;
+    int[shapes] d;
+    int[shapes] xVelocity;
+    int[shapes] yVelocity;
+    int[shapes] dVelocity;
+    int[shapes] sides;
+    int[shapes] size;
+    int[shapes] colr;
     // set initial properties for each shape
     for (int n = 1; n < shapes; n = n + 1) {
       sides[n] = n + 2;

@@ -1,20 +1,20 @@
-const int minSize = 70;
-const int maxSize = 130;
-const int shapes = 6;
-var x: number[];
-var y: number[];
-var d: number[];
-var xVelocity: number[];
-var yVelocity: number[];
-var dVelocity: number[];
-var sides: number[];
-var size: number[];
-var colr: number[];
+const minSize: number = 70;
+const maxSize: number = 130;
+const shapes: number = 6;
+var x: number[shapes];
+var y: number[shapes];
+var d: number[shapes];
+var xVelocity: number[shapes];
+var yVelocity: number[shapes];
+var dVelocity: number[shapes];
+var sides: number[shapes];
+var size: number[shapes];
+var colr: number[shapes];
 var xEdge: boolean;
 var yEdge: boolean;
 
 // draws a polygon, and checks whether it meets the edge of the canvas
-function drawShape(sides: number, size: number, colr: number) {
+function drawShape (sides: number, size: number, colr: number): void {
   xEdge = false;
   yEdge = false;
   colour(colr);

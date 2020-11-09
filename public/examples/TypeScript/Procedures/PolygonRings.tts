@@ -1,5 +1,5 @@
 // draws a multi-coloured annulus (a ring shape)
-function annulus (inner: number, width: number, angle: number) {
+function annulus (inner: number, width: number, angle: number): void {
   for (var count: number = 0; count < (360 / angle); count = count + 1) {
     forward(inner + width);
     back(width);

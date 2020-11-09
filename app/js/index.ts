@@ -1,11 +1,12 @@
-/*
- * Javscript entry point.
- */
+// type imports
+import type { Language } from './constants/languages'
+
+// module imports
 import state from './state/index'
-import { languages, Language } from './constants/languages'
+import { languages } from './constants/languages'
 import { on } from './tools/hub'
 
-// general site components
+// load general site components
 import './components/actions'
 import './components/bindings'
 import './components/download'
@@ -13,14 +14,14 @@ import './components/languages'
 import './components/modes'
 import './components/preview'
 
-// help page components
+// load help page components
 import './components/reference/colours'
 import './components/reference/commands'
 import './components/reference/cursors'
 import './components/reference/fonts'
 import './components/reference/keycodes'
 
-// system components
+// load system components
 import './components/system/canvas'
 import './components/system/comments'
 import './components/system/console'

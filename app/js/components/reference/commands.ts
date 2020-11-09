@@ -1,8 +1,9 @@
 /**
  * Native commands reference table.
  */
-import { Command } from '../../constants/commands'
-import { commandCategories, Expression } from '../../constants/categories'
+import type { Command } from '../../constants/commands'
+import type { Expression } from '../../constants/categories'
+import { commandCategories } from '../../constants/categories'
 import { fill, tr, td, code } from '../../tools/elements'
 import highlight from '../../lexer/highlight'
 import state from '../../state/index'

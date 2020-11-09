@@ -1,22 +1,22 @@
-minSize: int = 70
-maxSize: int = 130
-balls: int = 10
-x: List[int]
-y: List[int]
-xVelocity: List[int]
-yVelocity: List[int]
-size: List[int]
-colr: List[int]
+minSize: Final[int] = 70
+maxSize: Final[int] = 130
+balls: Final[int] = 10
+x: List[int, balls]
+y: List[int, balls]
+xVelocity: List[int, balls]
+yVelocity: List[int, balls]
+size: List[int, balls]
+colr: List[int, balls]
 
 # set initial properties for each ball
 for n in range(0, balls, 1):
-  size[n] = minSize + random(maxSize - minSize)
-  colr[n] = rgb(n)
-  x[n] = randint(1000 - 1 * size[n], size[n])
-  y[n] = randint(1000 - 1 * size[n], size[n])
-  xVelocity[n] = random(7, 14)
-  yVelocity[n] = random(7, 14)
-while true:
+  size[n] = randint(minSize, maxSize)
+  colr[n] = rgb(n + 1)
+  x[n] = randint(0, 1000 - 2 * size[n]) + size[n]
+  y[n] = randint(0, 1000 - 2 * size[n]) + size[n]
+  xVelocity[n] = randint(-7, 7)
+  yVelocity[n] = randint(-7, 7)
+while True:
   noupdate()
   # rub out previous balls
   blank(white)
@@ -36,3 +36,4 @@ while true:
       yVelocity[n] = -yVelocity[n]
   update()
   pause(5)
+  

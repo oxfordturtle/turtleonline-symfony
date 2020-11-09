@@ -1,7 +1,3 @@
-// Reference parameters are indicated with the operator "*"; changing these 
-// within a subroutine also changes the external variable that was passed in.
-// This program illustrates the principle by passing in Turtle properties.
-
 void lines (int *turtleProperty, bool isColour) {
   // draw 8 short lines, modifying passed-in Turtle property each time
   for (int n = 1; n <= 8; n = n + 1) {
@@ -31,11 +27,11 @@ void main () {
   // set initial position
   setxy(100, 900);
   // draw lines of varying thickness - TURTT property is modified
-  lines(turtt, false);
+  lines(&turtt, false);
   // draw lines of varying colour - TURTC property is modified
-  lines(turtc, true);
+  lines(&turtc, true);
   // draw dots with different x coordinates - TURTX property is modified
-  dots(turtx);
+  dots(&turtx);
   // draw dots with different y coordinates - TURTY property is modified
-  dots(turty);
+  dots(&turty);
 }

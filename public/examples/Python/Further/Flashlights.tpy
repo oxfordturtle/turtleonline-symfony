@@ -16,7 +16,7 @@ def drawit(doblot: bool):
 # blacken the entire canvas
 blank(black)
 # set thickness for drawing circles
-thickness(8)
+thickness(10)
 # repeatedly draw circles or blots in a grid
 while True:
   # randint(1, 8) returns a value between 1 and 8

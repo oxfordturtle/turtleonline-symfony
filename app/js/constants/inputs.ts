@@ -1,7 +1,7 @@
 /*
  * An array of input code constants.
  */
-import { Language } from './languages'
+import type { Language } from './languages'
 
 /** input class definition */
 export class Input {

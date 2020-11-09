@@ -1,8 +1,9 @@
 /**
  * Colour constants reference table.
  */
-import { colours, Colour } from '../../constants/colours'
-import { Language } from '../../constants/languages'
+import type { Colour } from '../../constants/colours'
+import { colours } from '../../constants/colours'
+import type { Language } from '../../constants/languages'
 import state from '../../state/index'
 import { on } from '../../tools/hub'
 

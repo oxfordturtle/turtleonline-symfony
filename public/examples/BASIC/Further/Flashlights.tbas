@@ -1,7 +1,7 @@
 REM blacken the entire canvas
 BLOT(1000)
 REM set thickness for drawing circles
-THICKNESS(8)
+THICKNESS(10)
 REM repeatedly draw circles or blots in a grid
 REPEAT
   REM RND(8) returns a value between 1 and 8

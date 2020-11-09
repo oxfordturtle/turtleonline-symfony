@@ -1,45 +1,45 @@
-/**
- * Generates the pcode for a statement.
- */
-import { Options } from './options'
+// type imports
+import type { Options } from './options'
+import type Program from '../parser/definitions/program'
+import type {
+  Statement,
+  ProcedureCall,
+  IfStatement,
+  ForStatement,
+  RepeatStatement,
+  WhileStatement,
+  ReturnStatement
+} from '../parser/definitions/statement'
+
+// submodule imports
 import { merge, expression } from './expression'
+
+// other module imports
 import { PCode } from '../constants/pcodes'
-import { Program, Subroutine } from '../parser/routine'
-import { CommandCall, VariableAddress, VariableValue } from '../parser/expression'
-import { Statement, VariableAssignment, IfStatement, ForStatement, RepeatStatement, WhileStatement, ReturnStatement } from '../parser/statement'
+import { Subroutine } from '../parser/definitions/subroutine'
+import { VariableValue } from '../parser/definitions/expression'
+import { VariableAssignment } from '../parser/definitions/statement'
 
 /** generates the pcode for a statement of any kind */
 export default function statement (stmt: Statement, program: Program, startLine: number, options: Options): number[][] {
-  if (stmt instanceof VariableAssignment) {
-    return variableAssignment(stmt, program, options)
+  switch (stmt.statementType) {
+    case 'variableAssignment':
+      return variableAssignment(stmt, program, options)
+    case 'procedureCall':
+      return procedureCall(stmt, program, options)
+    case 'ifStatement':
+      return ifStatement(stmt, program, startLine, options)
+    case 'forStatement':
+      return forStatement(stmt, program, startLine, options)
+    case 'repeatStatement':
+      return repeatStatement(stmt, program, startLine, options)
+    case 'whileStatement':
+      return whileStatement(stmt, program, startLine, options)
+    case 'returnStatement':
+      return returnStatement(stmt, program, options)
+    case 'passStatement':
+      return []
   }
-  
-  if (stmt instanceof CommandCall) {
-    return procedureCall(stmt, program, options)
-  }
-  
-  if (stmt instanceof IfStatement) {
-    return ifStatement(stmt, program, startLine, options)
-  }
-  
-  if (stmt instanceof ForStatement) {
-    return forStatement(stmt, program, startLine, options)
-  }
-  
-  if (stmt instanceof RepeatStatement) {
-    return repeatStatement(stmt, program, startLine, options)
-  }
-  
-  if (stmt instanceof WhileStatement) {
-    return whileStatement(stmt, program, startLine, options)
-  }
-
-  if (stmt instanceof ReturnStatement) {
-    return returnStatement(stmt, program, options)
-  }
-
-  // pass statement - do nothing
-  return []
 }
 
 /** generates the pcode for a variable assignment */
@@ -80,8 +80,7 @@ function globalVariableAssignment (stmt: VariableAssignment, program: Program, o
 
   // global array
   if (stmt.variable.isArray || (stmt.variable.type === 'string' && stmt.indexes.length > 0)) {
-    // TODO: multi dimensional stuff
-    const exp = new VariableValue(stmt.variable)
+    const exp = new VariableValue(stmt.lexeme as any, stmt.variable)
     exp.indexes.push(...stmt.indexes)
     const element = expression(exp, program, options)
     const lastLine = element[element.length - 1]
@@ -104,10 +103,11 @@ function globalVariableAssignment (stmt: VariableAssignment, program: Program, o
 
 /** generates the pcode for a pointer variable assignment */
 function pointerVariableAssignment (stmt: VariableAssignment, program: Program, options: Options): number[][] {
-  const pcode = expression(stmt.value, program, options)
+  const variableValue = new VariableValue(stmt.lexeme as any, stmt.variable)
+  const pcode = expression(variableValue, program, options)
+  pcode[pcode.length - 1].pop() // pop off PCode.peek
 
-  const variableAddress = new VariableAddress(stmt.variable)
-  merge(pcode, expression(variableAddress, program, options))
+  merge(pcode, expression(stmt.value, program, options))
 
   if (stmt.variable.type === 'string') {
     merge(pcode, [[PCode.cstr]])
@@ -135,7 +135,7 @@ function localVariableAssignment (stmt: VariableAssignment, program: Program, op
   // local array
   if (stmt.variable.isArray || (stmt.variable.type === 'string' && stmt.indexes.length > 0)) {
     // TODO: multi dimensional stuff
-    const exp = new VariableValue(stmt.variable)
+    const exp = new VariableValue(stmt.lexeme as any, stmt.variable)
     exp.indexes.push(...stmt.indexes)
     const element = expression(exp, program, options)
     const lastLine = element[element.length - 1]
@@ -157,7 +157,7 @@ function localVariableAssignment (stmt: VariableAssignment, program: Program, op
 }
 
 /** generates the pcode for a procedure call */
-function procedureCall (stmt: CommandCall, program: Program, options: Options): number[][] {
+function procedureCall (stmt: ProcedureCall, program: Program, options: Options): number[][] {
   const pcode: number[][] = []
 
   // first: load arguments onto the stack
@@ -293,8 +293,9 @@ function whileStatement (stmt: WhileStatement, program: Program, startLine: numb
 
 /** generates the pcode for a RETURN statement */
 function returnStatement (stmt: ReturnStatement, program: Program, options: Options): number[][] {
-  const variableAssignment = new VariableAssignment(stmt.routine.variables[0])
-  variableAssignment.value = stmt.value
+  // N.B. stmt.lexeme is a KeywordLexeme, but VariableAssignment constructor
+  // requires an IdentifierLexeme; it makes no difference here
+  const variableAssignment = new VariableAssignment(stmt.lexeme as any, stmt.routine.variables[0], [], stmt.value)
 
   const pcode = localVariableAssignment(variableAssignment, program, options)
   pcode.push([

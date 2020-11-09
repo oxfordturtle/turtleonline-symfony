@@ -11,6 +11,6 @@ FOR count% = 1 TO 100
   COLOUR(RED)
   BLOT(50)
   UPDATE
-  PAUSE(5)
+  PAUSE(10)
 NEXT
 END

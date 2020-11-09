@@ -2,7 +2,7 @@
  * The program lexemes component.
  */
 import highlight from '../../lexer/highlight'
-import { Lexeme } from '../../lexer/lexeme'
+import type { Lexeme } from '../../lexer/lexeme'
 import state from '../../state/index'
 import { fill, tr, td, code } from '../../tools/elements'
 import { on } from '../../tools/hub'
@@ -29,7 +29,7 @@ function tableBodyRow (lexeme: Lexeme, index: number): HTMLTableRowElement {
           code({ content: lexeme.content ? highlight(lexeme.content, state.language) : '' })
         ]
       }),
-      td({ className: 'wide', content: `${lexeme.type}${lexeme.subtype ? ` (${lexeme.subtype})` : ''}` })
+      td({ className: 'wide', content: `${lexeme.type}${(lexeme as any).subtype ? ` (${(lexeme as any).subtype})` : ''}` })
     ]
   })
 }

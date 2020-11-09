@@ -1,5 +1,5 @@
 // draws a prong of the given size
-function prong (size: number) {
+function prong (size: number): void {
   forward(size);
   // blot radius is 1/20 of prong length
   blot(size / 20);
