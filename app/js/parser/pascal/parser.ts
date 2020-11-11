@@ -1,5 +1,5 @@
 import identifier from './identifier'
-import constants from './constant'
+import constant from './constant'
 import subroutine from './subroutine'
 import { variables } from './variable'
 import { semicolon, statement } from './statement'
@@ -33,7 +33,7 @@ export default function pascal (lexemes: Lexemes): Program {
     switch (lexeme.type) {
       case 'keyword':
         switch (lexeme.subtype) {
-          // constant definition
+          // constant definitions
           case 'const':
             if (program.variables.length > 0) {
               throw new CompilerError('Constant definitions must be placed above any variable declarations.', lexemes.get())
@@ -42,7 +42,13 @@ export default function pascal (lexemes: Lexemes): Program {
               throw new CompilerError('Constant definitions must be placed above any subroutine definitions.', lexemes.get())
             }
             lexemes.next()
-            program.constants.push(...constants(lexemes, program))
+            const constantsSoFar = program.constants.length
+            while (lexemes.get()?.type === 'identifier') {
+              program.constants.push(constant(lexemes, program))
+            }
+            if (program.constants.length === constantsSoFar) {
+              throw new CompilerError('"CONST" must be followed by an identifier.', lexemes.get(-1))
+            }
             break
 
           // variable declarations

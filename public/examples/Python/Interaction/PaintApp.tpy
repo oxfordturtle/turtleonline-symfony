@@ -1,5 +1,3 @@
-# PaintApp
-
 brushwidth: int
 brushcolour: int
 

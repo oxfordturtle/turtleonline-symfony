@@ -1,52 +1,68 @@
-REM Schelling
-
-CONST WIDTH% = 50
-CONST HEIGHT% = 50
-CONST EMPTY% = GREEN
-CANVAS(-1, -1, WIDTH% + 2, HEIGHT% + 2)
-RESOLUTION(WIDTH% + 2, HEIGHT% + 2)
+CONST WIDTH% = 100
+CONST HEIGHT% = 100
+CONST SUSCEPTIBLE% = LIGHTGREEN
+CONST INFECTED% = RED
+CONST RECOVERED% = BLUE
+CONST STARTRADIUS% = 10
+CONST INFECTPROB% = 2
+CONST CONTACTS% = 50
+CONST REPORT% = FALSE
+CANVAS(0, 0, WIDTH%, HEIGHT%)
+RESOLUTION(WIDTH%, HEIGHT%)
+WRITELN("Contacts per person:       " + STR$(CONTACTS%))
+WRITELN("Transmission probability:  " + STR$(INFECTPROB%) + "%")
+WRITELN("R0 (reproduction number):  " + QSTR$(CONTACTS% * INFECTPROB%, 100, 2))
+IF REPORT% THEN
+  WRITELN("")
+ENDIF
+n% = RNDSEED(3)
+TIMESET(0)
+numimmune% = 0
+numinfected% = 0
+numinfectious% = 0
 NOUPDATE
-BLANK(EMPTY%)
-FOR i% = 0 TO WIDTH% - 1
-  FOR j% = 0 TO WIDTH% - 1
-    test% = RND(25)
-    IF test% = 1 THEN
-      PIXSET(i%, j%, EMPTY%)
+FOR x% = 0 TO WIDTH% - 1
+  FOR y% = 0 TO HEIGHT% - 1
+    IF (RND(100) <= INFECTPROB%) AND (HYPOT(x% - WIDTH% / 2, y% - HEIGHT% / 2, 1) <= STARTRADIUS%) THEN
+      PROCinfect(x%, y%)
     ELSE
-      IF (i% + j%) MOD 2 = 0 THEN PIXSET(i%, j%, RED) ELSE PIXSET(i%, j%, BLUE)
+      PIXSET(x%, y%, SUSCEPTIBLE%)
     ENDIF
   NEXT
 NEXT
-PAUSE(2000)
-WHILE ?KEY <> \ESCAPE
-  NOUPDATE
-  REPEAT
-    tryi% = RND(WIDTH%) - 1
-    tryj% = RND(HEIGHT%) - 1
-    this% = PIXCOL(tryi%, tryj%)
-  UNTIL (this% <> EMPTY%) AND (NOT(FNhappy(tryi%, tryj%, this%)))
-  PIXSET(tryi%, tryj%, EMPTY%)
-  REPEAT
-    tryi% = RND(WIDTH%) - 1
-    tryj% = RND(HEIGHT%) - 1
-  UNTIL (PIXCOL(tryi%, tryj%) = EMPTY%) AND FNhappy(tryi%, tryj%, this%)
-  PIXSET(tryi%, tryj%, this%)
-  UPDATE
-ENDWHILE
-END
-
-DEF FNhappy(x%, y%, c%)
-  LOCAL like%, unlike%, neighbour%, i%, j%
-  like% = 0
-  unlike% = 0
-  FOR i% = -1 TO 1
-    FOR j% = -1 TO 1
-      IF (i% <> 0) OR (j% <> 0) THEN
-        neighbour% = PIXCOL(x% + i%, y% + j%)
-        IF neighbour% <> EMPTY% THEN
-          IF neighbour% = c% THEN INC(like%) ELSE INC(unlike%)
+UPDATE
+REPEAT
+  x% = RND(WIDTH%) - 1
+  y% = RND(HEIGHT%) - 1
+  IF PIXCOL(x%, y%) = INFECTED% THEN
+    FOR n% = 1 TO CONTACTS%
+      IF RND(100) <= INFECTPROB% THEN
+        i% = RND(WIDTH%) - 1
+        j% = RND(HEIGHT%) - 1
+        IF PIXCOL(i%, j%) = SUSCEPTIBLE% THEN
+          PROCinfect(i%, j%)
         ENDIF
       ENDIF
     NEXT
-  NEXT
-= (like% >= unlike% - 1)
+    PIXSET(x%, y%, RECOVERED%)
+    numinfectious% = numinfectious% - 1
+    IF REPORT% THEN
+      WRITELN("                    Infectious: " + PAD$(STR$(numinfectious%), " ", 4))
+    ENDIF
+  ENDIF
+UNTIL numinfectious% = 0
+IF REPORT% THEN
+  WRITELN("")
+ENDIF
+WRITELN("Total infected overall:    " + STR$(numinfected%) + " (" + QSTR$(TIME, 1000, 2) + " sec)")
+WRITELN("Proportion infected:       " + QSTR$(numinfected% * 100, WIDTH% * HEIGHT% - numimmune%, 2) + "%")
+END
+
+DEF PROCinfect (x%, y%)
+  PIXSET(x%, y%, INFECTED%)
+  numinfected% = numinfected% + 1
+  numinfectious% = numinfectious% + 1
+  IF REPORT% THEN
+    WRITELN("Infected: " + PAD$(STR$(numinfected%), " ", 4) + "      Infectious: " + PAD$(STR$(numinfectious%), " ", 4))
+  ENDIF
+ENDPROC

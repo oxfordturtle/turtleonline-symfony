@@ -44,7 +44,7 @@ REPEAT
       latest% = 3 * latest% + 1
     ENDIF
     REM increment the count variable
-    INC(count%)
+    count% = count% + 1
     REM print subsequent numbers in green
     COLOUR(GREEN)
   UNTIL latest% = 1

@@ -8,7 +8,7 @@ import evaluate from '../evaluate'
 import { CompilerError } from '../../tools/error'
 
 /** parses lexemes as constant definitions (after "const") */
-export default function constants (lexemes: Lexemes, routine: Program): Constant[] {
+export default function constant (lexemes: Lexemes, routine: Program): Constant {
   // expecting constant name
   const name = identifier(lexemes, routine)
 
@@ -30,14 +30,6 @@ export default function constants (lexemes: Lexemes, routine: Program): Constant
   // expecting a semicolon
   semicolon(lexemes, true, 'constant defintiion')
 
-  // an identifier next means more constant definitions
-  const foos: Constant[] = (lexemes.get() && lexemes.get()?.type === 'identifier')
-    ? constants(lexemes, routine).concat([])
-    : []
-
-  // add this constant
-  foos.unshift(foo)
-
-  // return all constants
-  return foos
+  // return the constant
+  return foo
 }

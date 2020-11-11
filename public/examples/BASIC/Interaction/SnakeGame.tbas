@@ -35,7 +35,7 @@ REPEAT
   REM if snake reaches an apple...
   IF PIXCOL(turtx%, turty%) = APPLECOLOUR% THEN
   REM increase snake length
-    INC(snakeLength%)
+    snakeLength% = snakeLength% + 1
     REM "eat" the apple
     PIXSET(turtx%, turty%, SNAKECOLOUR%)
     REM place a new apple

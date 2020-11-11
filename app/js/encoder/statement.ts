@@ -75,7 +75,6 @@ function turtleVariableAssignment (stmt: VariableAssignment, program: Program, o
 
 /** generates the pcode for a global variable assignment */
 function globalVariableAssignment (stmt: VariableAssignment, program: Program, options: Options): number[][] {
-  const address = program.turtleAddress + program.turtleVariables.length + stmt.variable.index
   const pcode = expression(stmt.value, program, options)
 
   // global array
@@ -84,18 +83,22 @@ function globalVariableAssignment (stmt: VariableAssignment, program: Program, o
     exp.indexes.push(...stmt.indexes)
     const element = expression(exp, program, options)
     const lastLine = element[element.length - 1]
-    lastLine[lastLine.length - 1] = PCode.sptr // change LPTR to SPTR
+    if (stmt.variable.isArray && stmt.variable.type === 'string') {
+      lastLine.push(PCode.cstr)
+    } else {
+      lastLine[lastLine.length - 1] = PCode.sptr // change LPTR to SPTR
+    }
     merge(pcode, element)
   }
 
   // global string
   else if (stmt.variable.type === 'string') {
-    merge(pcode, [[PCode.ldvg, address, PCode.cstr]])
+    merge(pcode, [[PCode.ldvg, stmt.variable.address, PCode.cstr]])
   }
 
   // global boolean/character/integer
   else {
-    merge(pcode, [[PCode.stvg, address]])
+    merge(pcode, [[PCode.stvg, stmt.variable.address]])
   }
 
   return pcode
@@ -123,7 +126,7 @@ function referenceVariableAssignment (stmt: VariableAssignment, program: Program
   const pcode = expression(stmt.value, program, options)
 
   // TODO: array reference parameters
-  merge(pcode, [[PCode.stvr, stmt.variable.routine.index + program.baseOffset, stmt.variable.index]])
+  merge(pcode, [[PCode.stvr, (stmt.variable.routine as Subroutine).address, stmt.variable.address]])
 
   return pcode
 }
@@ -134,23 +137,26 @@ function localVariableAssignment (stmt: VariableAssignment, program: Program, op
 
   // local array
   if (stmt.variable.isArray || (stmt.variable.type === 'string' && stmt.indexes.length > 0)) {
-    // TODO: multi dimensional stuff
     const exp = new VariableValue(stmt.lexeme as any, stmt.variable)
     exp.indexes.push(...stmt.indexes)
     const element = expression(exp, program, options)
     const lastLine = element[element.length - 1]
-    lastLine[lastLine.length - 1] = PCode.sptr // change LPTR to SPTR
+    if (stmt.variable.isArray && stmt.variable.type === 'string') {
+      lastLine.push(PCode.cstr)
+    } else {
+      lastLine[lastLine.length - 1] = PCode.sptr // change LPTR to SPTR
+    }
     merge(pcode, element)
   }
 
   // local string
   else if (stmt.variable.type === 'string') {
-    merge(pcode, [[PCode.ldvv, stmt.variable.routine.index + program.baseOffset, stmt.variable.index, PCode.cstr]])
+    merge(pcode, [[PCode.ldvv, (stmt.variable.routine as Subroutine).address, stmt.variable.address, PCode.cstr]])
   }
 
   // local boolean/character/integer
   else {
-    merge(pcode, [[PCode.stvv, stmt.variable.routine.index + program.baseOffset, stmt.variable.index]])
+    merge(pcode, [[PCode.stvv, (stmt.variable.routine as Subroutine).address, stmt.variable.address]])
   }
 
   return pcode

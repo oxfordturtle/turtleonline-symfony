@@ -109,7 +109,7 @@ DEF PROCsetup
     PROCsquare(RGB(count% + 30))
     MOVEXY(50, -50)
   NEXT
-  REM initialise brish width and colour, and their displays
-  PROCsetBrushWidth(8)
+  REM initialise brush colour and width, and their displays
   PROCsetBrushColour(BLACK)
+  PROCsetBrushWidth(8)
 ENDPROC

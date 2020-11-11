@@ -5,46 +5,46 @@ export function mixBytes (byte1: number, byte2: number, proportion1: number, pro
 
 /** gets a keycode from a KeyboardEvent.key property */
 export function keycodeFromKey (key: string): number {
-  switch (key.toLowerCase()) {
-    case 'backspace':
+  switch (key) {
+    case 'Backspace':
       return 8
-    case 'tab':
+    case 'Tab':
       return 9
-    case 'enter':
+    case 'Enter':
       return 13
-    case 'shift':
+    case 'Shift':
       return 16
-    case 'control':
+    case 'Control':
       return 17
-    case 'alt':
+    case 'Alt':
       return 18
-    case 'pause': // check
+    case 'Pause':
       return 19
-    case 'capslock':
+    case 'CapsLock':
       return 20
-    case 'escape':
+    case 'Escape':
       return 27
     case ' ': // space
       return 32
-    case 'pgup': // check
+    case 'PageUp':
       return 33
-    case 'pgdn': // check
+    case 'PageDown':
       return 34
-    case 'end': // check
+    case 'End':
       return 35
-    case 'home': // check
+    case 'Home':
       return 36
-    case 'arrowleft':
+    case 'ArrowLeft':
       return 37
-    case 'arrowup':
+    case 'ArrowUp':
       return 38
-    case 'arrowright':
+    case 'ArrowRight':
       return 39
-    case 'arrowdown':
+    case 'ArrowDown':
       return 40
-    case 'insert': // check
+    case 'Insert':
       return 45
-    case 'delete': // check
+    case 'Delete':
       return 46
     case '0':
       return 48
@@ -66,94 +66,45 @@ export function keycodeFromKey (key: string): number {
       return 56
     case '9':
       return 57
-    case 'a': //fallthrough
-    case 'b': //fallthrough
-    case 'c': //fallthrough
-    case 'd': //fallthrough
-    case 'e': //fallthrough
-    case 'f': //fallthrough //fallthrough
-    case 'g': //fallthrough
-    case 'h': //fallthrough
-    case 'i': //fallthrough
-    case 'j': //fallthrough
-    case 'k': //fallthrough
-    case 'l': //fallthrough
-    case 'm': //fallthrough
-    case 'n': //fallthrough
-    case 'o': //fallthrough
-    case 'p': //fallthrough
-    case 'q': //fallthrough
-    case 'r': //fallthrough
-    case 's': //fallthrough
-    case 't': //fallthrough
-    case 'u': //fallthrough
-    case 'v': //fallthrough
-    case 'w': //fallthrough
-    case 'x': //fallthrough
-    case 'y': //fallthrough
-    case 'z':
-      return key.charCodeAt(0)
-    case 'lwin': // check
+    case 'Meta':
       return 91
-    case 'rwin': // check
-      return 92
-    case '#0': //check
-      return 96
-    case '#1': //check
-      return 97
-    case '#2': //check
-      return 98
-    case '#3': //check
-      return 99
-    case '#4': //check
-      return 100
-    case '#5': //check
-      return 101
-    case '#6': //check
-      return 102
-    case '#7': //check
-      return 103
-    case '#8': //check
-      return 104
-    case '#9': //check
-      return 105
-    case 'multiply': //check
+    case '*': //check
       return 106
-    case 'add': //check
+    case '+': //check
       return 107
-    case 'subtract': //check
+    case '-': //check
       return 109
-    case 'decimal': //check
+    case '.': //check
       return 110
-    case 'divide': //check
+    case '/': //check
       return 111
-    case 'f1':
+    case 'F1':
       return 112
-    case 'f2':
+    case 'F2':
       return 113
-    case 'f3':
+    case 'F3':
       return 114
-    case 'f4':
+    case 'F4':
       return 115
-    case 'f5':
+    case 'F5':
       return 116
-    case 'f6':
+    case 'F6':
       return 117
-    case 'f7':
+    case 'F7':
       return 118
-    case 'f8':
+    case 'F8':
       return 119
-    case 'f9':
+    case 'F9':
       return 120
-    case 'f10':
+    case 'F10':
       return 121
-    case 'f11':
+    case 'F11':
       return 122
-    case 'f12':
+    case 'F12':
       return 123
-    case 'numlock': //check
+    case 'NumLock':
       return 144
-    case 'scrolllock': //check
+    case 'ScrollLock':
       return 145
     case ';':
       return 186
@@ -180,6 +131,6 @@ export function keycodeFromKey (key: string): number {
     case '`':
       return 223
     default:
-      return 0
+      return key.charCodeAt(0)
   }
 }

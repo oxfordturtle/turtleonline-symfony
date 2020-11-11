@@ -1,5 +1,3 @@
-REM Dendrites
-
 CONST HALF% = 100
 CONST CRYSTAL% = CYAN
 CONST MOLECULE% = WHITE
@@ -37,7 +35,7 @@ REPEAT
       ENDIF
       NOUPDATE
     ENDIF
-    INC(cycle%)
+    cycle% = cycle% + 1
     PIXSET(turtx%, turty%, SOLUTION%)
     PROCbiasedwalk
   ENDWHILE
@@ -60,7 +58,7 @@ DEF FNattached(x%, y%)
   IF (PIXCOL(x% - 1, y%) = CRYSTAL%) OR (PIXCOL(x% + 1, y%) = CRYSTAL%) OR (PIXCOL(x%, y% - 1) = CRYSTAL%) OR (PIXCOL(x%, y% + 1) = CRYSTAL%) THEN
     result% = TRUE
     PIXSET(x%, y%, CRYSTAL%)
-    INC(numattached%)
+    numattached% = numattached% + 1
     IF HYPOT(x%, y%, 1) >= maxsofar% THEN
       maxsofar% = HYPOT(x%, y%, 1)
     ENDIF

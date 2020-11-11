@@ -1,5 +1,3 @@
-REM LifeArrays
-
 CONST WIDTH% = 32
 CONST HEIGHT% = 32
 DIM thisgen%(WIDTH%, HEIGHT%)
@@ -30,7 +28,7 @@ WHILE ?KEY <> \ESCAPE
       FOR i% = -1 TO 1
         FOR j% = -1 TO 1
           IF thisgen%((x% + i% + WIDTH%) MOD WIDTH%, (y% + j% + HEIGHT%) MOD HEIGHT%) THEN
-            INC(livenb%)
+            livenb% = livenb% + 1
           ENDIF
         NEXT
       NEXT

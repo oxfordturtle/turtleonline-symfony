@@ -1,5 +1,3 @@
-# QuickClick
-
 blank(cream)
 setxy(15, 200)
 print('This reaction game will display a sequence', 4, 36)

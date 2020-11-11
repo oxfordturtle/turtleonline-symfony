@@ -17,8 +17,7 @@ VAR x, y, n, i, j: integer;
     inc(numinfected);
     inc(numinfectious);
     if report then
-      writeln('Infected: ' + pad(str(numinfected), ' ', 4) + '      Infectious: ' + pad(str(numinfectious),
-     ' ', 4))
+      writeln('Infected: ' + pad(str(numinfected), ' ', 4) + '      Infectious: ' + pad(str(numinfectious), ' ', 4))
   End;
 
 BEGIN
@@ -37,8 +36,7 @@ BEGIN
   noupdate;
   for x := 0 to width - 1 do
     for y := 0 to height - 1 do
-      if (random(100) < infectprob) and (hypot(x - width / 2, y - height / 2, 1) <= startradius)
-     then
+      if (random(100) < infectprob) and (hypot(x - width / 2, y - height / 2, 1) <= startradius) then
         infect(x, y)
       else
         pixset(x, y, susceptible);
@@ -66,8 +64,6 @@ BEGIN
   until numinfectious = 0;
   if report then
     writeln('');
-  writeln('Total infected overall:    ' + str(numinfected) + ' (' + qstr(time, 1000, 2) +
-     ' sec)');
-  writeln('Proportion infected:       ' + qstr(numinfected * 100, width * height - numimmune, 2)
-     + '%')
+  writeln('Total infected overall:    ' + str(numinfected) + ' (' + qstr(time, 1000, 2) + ' sec)');
+  writeln('Proportion infected:       ' + qstr(numinfected * 100, width * height - numimmune, 2) + '%')
 END.

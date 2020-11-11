@@ -24,17 +24,17 @@ export default class Routine {
     }
   }
 
-  /** gets this routine's parameters */
+  /** this routine's parameters */
   get parameters (): Variable[] {
     return this.variables.filter(x => x.isParameter)
   }
 
-  /** gets how much memory this routine needs (i.e. the length of all variables) */
+  /** how much memory this routine needs (i.e. the length of all variables) */
   get memoryNeeded (): number {
     return this.variables.reduce((x, y) => x + y.length, 0)
   }
 
-  /** gets all subroutines of this routine (collapsed into one array) */
+  /** all subroutines of this routine (collapsed into one array) */
   get allSubroutines (): Subroutine[] {
     const allSubroutines: Subroutine[] = []
     for (const subroutine of this.subroutines) {

@@ -162,18 +162,7 @@ function factor (lexemes: Lexemes, routine: Program|Subroutine): Expression {
         const open = (routine.language === 'BASIC') ? '(' : '['
         const close = (routine.language === 'BASIC') ? ')' : ']'
         if (lexemes.get() && lexemes.get()?.content === open) {
-          if (variable.type === 'string') {
-            lexemes.next()
-            // expecting integer expression for the character index
-            exp = expression(lexemes, routine)
-            exp = typeCheck(exp, 'integer')
-            variableValue.indexes.push(exp)
-            // expecting closing bracket
-            if (!lexemes.get() || (lexemes.get()?.content !== close)) {
-              throw new CompilerError(`Closing bracket "${close}" missing after string variable index.`, exp.lexeme)
-            }
-            lexemes.next()
-          } else if (variable.isArray) {
+          if (variable.isArray) {
             lexemes.next()
             while (lexemes.get() && lexemes.get()?.content !== close) {
               // expecting integer expression for the element index
@@ -203,19 +192,25 @@ function factor (lexemes: Lexemes, routine: Program|Subroutine): Expression {
             }
             // move past the closing bracket
             lexemes.next()
+          } else if (variable.type === 'string') {
+            lexemes.next()
+            // expecting integer expression for the character index
+            exp = expression(lexemes, routine)
+            exp = typeCheck(exp, 'integer')
+            variableValue.indexes.push(exp)
+            // expecting closing bracket
+            if (!lexemes.get() || (lexemes.get()?.content !== close)) {
+              throw new CompilerError(`Closing bracket "${close}" missing after string variable index.`, exp.lexeme)
+            }
+            lexemes.next()
           } else {
             throw new CompilerError('{lex} is not a string or array variable.', lexeme)
           }
         }
         // check the right number of array variable indexes have been given
         if (variable.isArray) {
-          if (variableValue.indexes.length === 0) {
-            throw new CompilerError('Array variable {lex} cannot be assigned a value.', lexeme)
-          }
-          if (variableValue.indexes.length < variable.arrayDimensions.length) {
-            throw new CompilerError('Too few indexes for array variable {lex}.', lexeme)
-          }
           if (variableValue.indexes.length > variable.arrayDimensions.length) {
+            // TODO: allow one more index for arrays of strings (to refer to characters within the string)
             throw new CompilerError('Too many indexes for array variable {lex}.', lexeme)
           }
         }

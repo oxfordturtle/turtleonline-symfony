@@ -69,10 +69,10 @@ BEGIN
         pixset(i, j, $00FF02)
       else
         pixset(i, j, $FF0001);
+  update;
   pause(1000);
   while ?key <> \escape do
     begin
-      timeset(0);
       noupdate;
       for i := 0 to width - 1 do
         for j := 0 to height - 1 do
@@ -83,7 +83,6 @@ BEGIN
       for i := 0 to width - 1 do
         for j := 0 to height - 1 do
           fixbest(i, j);
-      update;
-      noupdate
+      update
     end
 END.

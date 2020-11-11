@@ -1,5 +1,3 @@
-# Arcade
-
 facex: int = -100
 facey: int = 625
 facexspeed: int = 5

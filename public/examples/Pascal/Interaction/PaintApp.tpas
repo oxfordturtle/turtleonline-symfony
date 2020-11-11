@@ -89,9 +89,9 @@ VAR brushWidth: integer;
         square(rgb(count + 30));
         movexy(50, -50)
       end;
-    {initialise brish width and colour, and their displays}
-    setBrushWidth(8);
-    setBrushColour(black)
+    {initialise brush colour and width, and their displays}
+    setBrushColour(black);
+    setBrushWidth(8)
   End;
 
 BEGIN

@@ -1,5 +1,5 @@
 import Routine from './routine'
-import type Program from './program'
+import Program from './program'
 import type { Subroutine } from './subroutine'
 import type { Type } from '../../lexer/lexeme'
 
@@ -29,17 +29,29 @@ export default class Variable {
 
   /** whether the variable is a global */
   get isGlobal (): boolean {
-    return this.routine.index === 0
+    return this.routine instanceof Program
   }
 
-  /** base length of the variable (i.e. how many "bytes" of memory its elements require) */
+  /** length of each of the variable's ultimate elements */
   get baseLength (): number {
     return (this.type === 'string')
       ? this.stringLength + 3 // 3 = pointer + max length byte + actual length byte
       : 1
   }
 
-  /** full length of the variable (longer than baseLength for arrays) */
+  /** length of each of the variable's immediate elements */
+  get elementLength (): number {
+    return (this.arrayDimensions.length > 1) ? 1 : this.baseLength
+  }
+
+  /** internal length of an array variable (i.e. how many elements it contains) */
+  get elementCount (): number {
+    return this.isArray
+      ? (this.arrayDimensions[0][1] - this.arrayDimensions[0][0] + 1)
+      : 0
+  }
+
+  /** full length of the variable (i.e. how many "bytes" of memory it requires) */
   get length (): number {
     // reference parameters and pointers (simply hold the address to the varaiable)
     if (this.isReferenceParameter || this.isPointer) {
@@ -48,30 +60,24 @@ export default class Variable {
 
     // arrays
     if (this.isArray) {
-      let length = this.baseLength
+      return (this.subVariables[0].length * this.elementCount) + 2 // +2 for pointer and length byte
+      /*let length = this.baseLength
       for (const dimensions of this.arrayDimensions) {
         const size = dimensions[1] - dimensions[0] + 1
-        length = (length * size) + 2
+        length = (length * size) + 2 // 2 = pointer + array length byte
       }
-      return length
+      return length*/
     }
 
     // all other variables
     return this.baseLength
   }
 
-  /** internal length of an array variable (i.e. how many elements it contains) */
-  get arrayLength (): number {
-    return this.isArray
-      ? (this.arrayDimensions[0][1] - this.arrayDimensions[0][0] + 1)
-      : 0
-  }
-
   /** sub variables (for arrays) */
   get subVariables (): SubVariable[] {
     const subVariables: SubVariable[] = []
     if (this.isArray) {
-      for (let i = 0; i < this.arrayLength; i += 1) {
+      for (let i = 0; i < this.elementCount; i += 1) {
         const subVariable = new SubVariable(this, i)
         subVariables.push(subVariable)
       }
@@ -79,23 +85,34 @@ export default class Variable {
     return subVariables
   }
 
-  /** index of the variable */
-  get index (): number {
+  /** address of the variable (absolute for globals, relative for subroutines) */
+  get address (): number {
+    // N.B. this is different for subvariables
     const arrayIndex = this.routine.variables.indexOf(this)
     const routine = new Routine(this.routine.language)
     routine.variables = this.routine.variables.slice(0, arrayIndex)
-    return routine.memoryNeeded + 1
+    return (this.routine instanceof Program)
+      ? this.routine.turtleAddress + this.routine.turtleVariables.length + routine.memoryNeeded + 1
+      : routine.memoryNeeded + 1
+  }
+
+  /** address of the length byte of the variable (for strings and arrays) */
+  get lengthByteAddress (): number {
+    // N.B. this is different for subvariables
+    return this.address + 1
   }
 }
 
 /** subvariable (element of array variable) */
 class SubVariable extends Variable {
   readonly variable: Variable|SubVariable
+  readonly index: number
 
   /** constructor */
-  constructor (variable: Variable|SubVariable, depth: number) {
-    super(`${variable.name}_${depth.toString(10)}`, variable.routine)
+  constructor (variable: Variable|SubVariable, index: number) {
+    super(`${variable.name}_${index.toString(10)}`, variable.routine)
     this.variable = variable
+    this.index = index
     this.type = variable.type
     this.isParameter = variable.isParameter
     this.isReferenceParameter = variable.isReferenceParameter
@@ -104,11 +121,17 @@ class SubVariable extends Variable {
     this.private = variable.private
   }
 
-  /** index of the subvariable */
-  get index (): number {
-    const arrayIndex = this.variable.subVariables.indexOf(this)
-    const routine = new Routine(this.variable.routine.language)
-    routine.variables = this.variable.subVariables.slice(0, arrayIndex)
-    return this.variable.index + routine.memoryNeeded + 1
+  /** address of the subvariable (absolute for globals, relative for subroutines) */
+  get address (): number {
+    //const base = this.variable.lengthByteAddress + 1
+    //return base + (this.index * this.variable.elementLength)
+    return this.variable.lengthByteAddress + this.index + 1
+  }
+
+  /** address of the length byte of the variable (for strings and arrays) */
+  get lengthByteAddress (): number {
+    //const base = this.variable.lengthByteAddress + (this.variable.elementLength * this.variable.elementCount) + 1
+    const base = this.variable.lengthByteAddress + this.variable.elementCount + 1
+    return base + ((this.length - 1) * this.index) // length - 1 because we don't want to count the pointer here
   }
 }

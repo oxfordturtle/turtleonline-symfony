@@ -1,5 +1,3 @@
-# AskInput
-
 write('What is your name?  ')
 s: str = readline()
 writeline('')

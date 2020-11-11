@@ -1,6 +1,5 @@
 // type imports
 import type { Options } from './options'
-import type Program from '../parser/definitions/program'
 import type { Operator } from '../lexer/lexeme'
 import type {
   Expression,
@@ -15,6 +14,7 @@ import type {
 
 // other module imports
 import { PCode } from '../constants/pcodes'
+import Program from '../parser/definitions/program'
 import { Subroutine } from '../parser/definitions/subroutine'
 import { IntegerValue, StringValue, VariableValue } from '../parser/definitions/expression'
 
@@ -109,13 +109,13 @@ function variableAddress (exp: VariableAddress|VariableValue, program: Program, 
   }
 
   // global variable
-  else if (exp.variable.routine.index === 0) {
-    pcode.push([PCode.ldag, program.turtleAddress + program.turtleVariables.length + exp.variable.index])
+  else if (exp.variable.routine instanceof Program) {
+    pcode.push([PCode.ldag, exp.variable.address])
   }
 
   // local variable
   else {
-    pcode.push([PCode.ldav, exp.variable.routine.index + program.baseOffset, exp.variable.index])
+    pcode.push([PCode.ldav, exp.variable.routine.address, exp.variable.address])
   }
 
   // return the pcode
@@ -168,18 +168,18 @@ function variableValue (exp: VariableValue, program: Program, options: Options):
   }
 
   // global variable
-  else if (exp.variable.routine.index === 0) {
-    pcode.push([PCode.ldvg, program.turtleAddress + program.turtleVariables.length + exp.variable.index])
+  else if (exp.variable.routine instanceof Program) {
+    pcode.push([PCode.ldvg, exp.variable.address])
   }
 
   // local reference variable
   else if (exp.variable.isReferenceParameter) {
-    pcode.push([PCode.ldvr, exp.variable.routine.index + program.baseOffset, exp.variable.index])
+    pcode.push([PCode.ldvr, exp.variable.routine.address, exp.variable.address])
   }
 
   // local value variable
   else {
-    pcode.push([PCode.ldvv, exp.variable.routine.index + program.baseOffset, exp.variable.index])
+    pcode.push([PCode.ldvv, exp.variable.routine.address, exp.variable.address])
   }
 
   // add peek code for pointer variables

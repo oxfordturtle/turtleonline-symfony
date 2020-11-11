@@ -3,7 +3,7 @@ import { CompilerError } from '../tools/error'
 import { Expression } from './definitions/expression'
 
 /** evaluates an expression */
-export default function evaluate (expression: Expression, language: Language, context: 'constant'|'array'|'step'): number|string {
+export default function evaluate (expression: Expression, language: Language, context: 'constant'|'string'|'array'|'step'): number|string {
   const True = (language === 'BASIC' || language === 'Pascal') ? -1 : 1
   const False = 0
 
@@ -13,6 +13,8 @@ export default function evaluate (expression: Expression, language: Language, co
     case 'variable':
       if (context === 'constant') {
         throw new CompilerError('Constant value cannot refer to any variables.', expression.lexeme)
+      } else if (context === 'string') {
+        throw new CompilerError('String size specification cannot refer to any variables.', expression.lexeme)
       } else if (context === 'array') {
         throw new CompilerError('Array size specification cannot refer to any variables.', expression.lexeme)
       } else {
@@ -23,6 +25,8 @@ export default function evaluate (expression: Expression, language: Language, co
     case 'function':
       if (context === 'constant') {
         throw new CompilerError('Constant value cannot invoke any functions.', expression.lexeme)
+      } else if (context === 'string') {
+        throw new CompilerError('String size specification cannot invoke any functions.', expression.lexeme)
       } else if (context === 'array') {
         throw new CompilerError('Array size specification cannot invoke any functions.', expression.lexeme)
       } else {

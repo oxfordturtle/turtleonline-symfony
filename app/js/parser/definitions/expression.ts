@@ -131,7 +131,7 @@ export class VariableValue {
       case 'C':
       case 'Java':
       case 'Pascal':
-        return (this.variable.type === 'string' && this.indexes.length > 0) ? 'character' : this.variable.type
+        return (!this.variable.isArray && this.variable.type === 'string' && this.indexes.length > 0) ? 'character' : this.variable.type
       default:
         return this.variable.type
     }

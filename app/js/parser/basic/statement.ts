@@ -155,14 +155,14 @@ export function statement (lexeme: Lexeme, lexemes: Lexemes, routine: Program|Su
 /** parses lexemes as a simple statement (variable assignment or procedure call) */
 function simpleStatement (lexeme: IdentifierLexeme, lexemes: Lexemes, routine: Program|Subroutine): VariableAssignment|ProcedureCall {
   // check for command
-  const foo = find.command(routine, lexemes.get()?.content as string)
+  const foo = find.command(routine, lexeme.content)
   if (foo) {
     lexemes.next()
     return procedureCall(lexeme, lexemes, routine, foo)
   }
 
   // check for variable
-  const bar = find.variable(routine, lexemes.get()?.content as string)
+  const bar = find.variable(routine, lexeme.content)
   if (bar) {
     lexemes.next()
     return variableAssignment(lexeme, lexemes, routine, bar)
@@ -176,24 +176,47 @@ function simpleStatement (lexeme: IdentifierLexeme, lexemes: Lexemes, routine: P
 }
 
 /** parses lexemes as a variable assignment */
-function variableAssignment (lexeme: IdentifierLexeme, lexemes: Lexemes, routine: Program|Subroutine, variable: Variable): VariableAssignment {
-  const indexes: Expression[] = []
-
+function variableAssignment (variableLexeme: IdentifierLexeme, lexemes: Lexemes, routine: Program|Subroutine, variable: Variable): VariableAssignment {
   // array variables permit element indexes at this point
-  if (variable.isArray) {
-    if (lexemes.get() && lexemes.get()?.content === '(') {
+  const indexes: Expression[] = []
+  if (lexemes.get()?.content === '(') {
+    if (variable.isArray) {
       lexemes.next()
-      let exp = expression(lexemes, routine)
-      exp = typeCheck(exp, 'integer')
-      indexes.push(exp)
-      // TODO: multi-dimensional stuff
+      while (lexemes.get() && lexemes.get()?.content !== ')') {
+        // expecting integer expression for the element index
+        let exp = expression(lexemes, routine)
+        exp = typeCheck(exp, 'integer')
+        indexes.push(exp)
+        // maybe move past comma
+        if (lexemes.get()?.content === ',') {
+          lexemes.next()
+          // check for trailing comma
+          if (lexemes.get()?.content === ')') {
+            throw new CompilerError('Trailing comma at the end of array indexes.', lexemes.get(-1))
+          }
+        }
+      }
+      // check we came out of the loop above for the right reason
       if (!lexemes.get()) {
-        throw new CompilerError('Closing bracket ")" missing after array index.', lexemes.get(-1))
+        throw new CompilerError('Closing bracket ")" needed after array indexes.', lexemes.get(-1))
       }
-      if (lexemes.get()?.content !== ')') {
-        throw new CompilerError('Closing bracket ")" missing after array index.', lexemes.get())
-      }
+      // move past the closing bracket
       lexemes.next()
+    } else {
+      throw new CompilerError('{lex} is not an array variable.', variableLexeme)
+    }
+  }
+
+  // check the right number of array variable indexes have been given
+  if (variable.isArray) {
+    if (indexes.length === 0) {
+      throw new CompilerError('Array variable {lex} cannot be assigned a value.', variableLexeme)
+    }
+    if (indexes.length < variable.arrayDimensions.length) {
+      throw new CompilerError('Too few indexes for array variable {lex}.', variableLexeme)
+    }
+    if (indexes.length > variable.arrayDimensions.length) {
+      throw new CompilerError('Too many indexes for array variable {lex}.', variableLexeme)
     }
   }
 

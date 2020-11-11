@@ -77,19 +77,10 @@ export default function type (lexemes: Lexemes, routine: Program|Subroutine): [T
   if (type === 'string') {
     if (lexemes.get()?.content === '[') {
       lexemes.next()
-      // expecting positive integer literal
-      const integer = lexemes.get()
-      if (!integer) {
-        throw new CompilerError('Expected string size specification.', lexemes.get(-1))
-      }
-      if (integer.type !== 'literal' || integer.subtype !== 'integer') {
-        throw new CompilerError('String size must be an integer.', lexemes.get())
-      }
-      if (integer.value <= 0) {
-        throw new CompilerError('String size must be greater than zero.', lexemes.get())
-      }
-      stringLength = integer.value
-      lexemes.next()
+      // expecting positive integer
+      const stringLengthExp = expression(lexemes, routine)
+      typeCheck(stringLengthExp, 'integer')
+      stringLength = evaluate(stringLengthExp, 'Pascal', 'string') as number
       // expecting closing bracket
       if (!lexemes.get()) {
         throw new CompilerError('Closing bracket "]" missing after string size specification.', lexemes.get(-1))

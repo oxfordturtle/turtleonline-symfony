@@ -2220,7 +2220,7 @@ function storeKey (event: KeyboardEvent): void {
     event.preventDefault() // don't scroll the page
   }
   // normal case
-  const keycode = keycodeFromKey(event.key)
+  const keycode = event.keyCode // keycodeFromKey(event.key)
   memory.query[9] = keycode
   memory.query[10] = 128
   if (event.shiftKey) {
@@ -2237,7 +2237,7 @@ function storeKey (event: KeyboardEvent): void {
 
 /** stores that a key has been released */
 function releaseKey (event: KeyboardEvent): void {
-  const keycode = keycodeFromKey(event.key)
+  const keycode = event.keyCode // keycodeFromKey(event.key)
   // keyup should set positive value to negative; use Math.abs to ensure the result is negative,
   // in case two keydown events fire close together, before the first keyup event fires
   memory.query[9] = -Math.abs(memory.query[9])
@@ -2247,7 +2247,7 @@ function releaseKey (event: KeyboardEvent): void {
 
 /** puts a key in the keybuffer */
 function putInBuffer (event: KeyboardEvent): void {
-  const keycode = keycodeFromKey(event.key)
+  const keycode = event.keyCode // keycodeFromKey(event.key)
   const buffer = memory.main[1]
   if (buffer > 0) { // there is a keybuffer
     let next = 0
@@ -2379,7 +2379,7 @@ function preventDefault (event: Event): void {
 
 /** breaks out of DETECT loop and resumes program execution if the right key is pressed */
 function detect (event: KeyboardEvent): void {
-  if (keycodeFromKey(event.key) === detectKeycode) {
+  if (event.keyCode === detectKeycode) { // keycodeFromKey(event.key) === detectKeycode) {
     memory.stack.pop()
     memory.stack.push(-1) // -1 for true
     window.clearTimeout(detectTimeoutID)

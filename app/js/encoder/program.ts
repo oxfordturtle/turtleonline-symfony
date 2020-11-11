@@ -1,6 +1,5 @@
 // type imports
 import type Program from '../parser/definitions/program'
-import type Variable from '../parser/definitions/variable'
 import type { Options } from './options'
 
 // submodule imports
@@ -8,8 +7,10 @@ import { defaultOptions } from './options'
 import statement from './statement'
 
 // other module imports
+import Variable from '../parser/definitions/variable'
 import { Subroutine } from '../parser/definitions/subroutine'
 import { PCode, pcodeArgs } from '../constants/pcodes'
+import { merge } from './expression'
 
 /** generates the pcode for a turtle program */
 export default function program (program: Program, options: Options = defaultOptions): number[][] {
@@ -125,45 +126,39 @@ function programStart (program: Program, options: Options): number[][] {
 }
 
 /** generates pcode for setting up a global variable */
-function setupGlobalVariable (variable: Variable, indexOffset: number = 0): number[][] {
-  const program = (variable.routine instanceof Subroutine) ? variable.routine.program : variable.routine
+function setupGlobalVariable (variable: Variable): number[][] {
   const pcode: number[][] = []
 
   if (variable.isArray) {
-    const index = program.turtleAddress + program.turtleVariables.length + variable.index + indexOffset
     pcode.push([
       PCode.ldag,
-      index + 1,
+      variable.lengthByteAddress,
       PCode.stvg,
-      index,
+      variable.address,
       PCode.ldin,
-      variable.arrayLength,
+      variable.elementCount,
       PCode.stvg,
-      index + 1
+      variable.lengthByteAddress
     ])
-    let offset = 0
     for (const subVariable of variable.subVariables) {
-      const subPcode = setupGlobalVariable(subVariable, offset)
-      offset += subVariable.length
+      const subPcode = setupGlobalVariable(subVariable)
       if (subPcode.length > 0) {
         pcode.push(...subPcode)
       }
     }
   }
 
-  if (variable.type === 'string') {
-    const index = program.turtleAddress + program.turtleVariables.length + indexOffset + variable.index
+  else if (variable.type === 'string') {
     pcode.push([
       PCode.ldag,
-      index + 2,
+      variable.lengthByteAddress + 1,
       PCode.stvg,
-      index,
+      variable.address,
       PCode.ldin,
-      variable.length - 2, // 2 = pointer + max length byte
+      variable.stringLength + 1, // +1 for the actual length byte (??)
       PCode.stvg,
-      index + 1
+      variable.lengthByteAddress
     ])
-    return pcode
   }
 
   return pcode
@@ -248,9 +243,9 @@ function subroutineStartCode (subroutine: Subroutine, options: Options): number[
         if (parameter.isArray && !parameter.isReferenceParameter) {
           // TODO: copy the array
         } else if (parameter.type === 'string') {
-          lastStartLine.push(PCode.ldvv, subroutine.index + subroutine.program.baseOffset, parameter.index, PCode.cstr)
+          lastStartLine.push(PCode.ldvv, subroutine.address, parameter.address, PCode.cstr)
         } else {
-          lastStartLine.push(PCode.stvv, subroutine.index + subroutine.program.baseOffset, parameter.index)
+          lastStartLine.push(PCode.stvv, subroutine.address, parameter.address)
         }
       }
     }
@@ -260,28 +255,26 @@ function subroutineStartCode (subroutine: Subroutine, options: Options): number[
 }
 
 /** generates pcode for setting up a local variable */
-function setupLocalVariable(variable: Variable, indexOffset: number = 0): number[][] {
+function setupLocalVariable(variable: Variable): number[][] {
   const subroutine = variable.routine as Subroutine
-  const index = indexOffset + variable.index
   const pcode: number[][] = []
 
   if (variable.isArray && !variable.isReferenceParameter) {
-    const index = indexOffset + variable.index
     pcode.push([
       PCode.ldav,
       subroutine.address,
-      index + 1,
+      variable.lengthByteAddress,
       PCode.stvv,
       subroutine.address,
-      index,
+      variable.address,
       PCode.ldin,
-      variable.arrayLength,
+      variable.elementCount,
       PCode.stvv,
       subroutine.address,
-      index + 1
+      variable.lengthByteAddress
     ])
     for (const subVariable of variable.subVariables) {
-      const subPcode = setupLocalVariable(subVariable, index)
+      const subPcode = setupLocalVariable(subVariable)
       if (subPcode.length > 0) {
         pcode.push(...subPcode)
       }
@@ -293,15 +286,15 @@ function setupLocalVariable(variable: Variable, indexOffset: number = 0): number
     pcode.push([
       PCode.ldav,
       subroutine.address,
-      index + 2,
+      variable.lengthByteAddress + 1,
       PCode.stvv,
       subroutine.address,
-      index,
+      variable.address,
       PCode.ldin,
-      variable.length - 2, // 2 = pointer + max length byte
+      variable.stringLength + 1, // +1 for the actual length byte (??)
       PCode.stvv,
       subroutine.address,
-      index + 1
+      variable.lengthByteAddress
     ])
   }
 
