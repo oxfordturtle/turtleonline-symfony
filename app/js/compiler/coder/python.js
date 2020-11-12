@@ -97,8 +97,6 @@ const coder = (routine, lex, startLine) => {
 
         // anything else is an error
         default:
-          console.log(lex)
-          console.log(routine.lexemes)
           throw error('Statement cannot begin with {lex}.', routine.lexemes[lex])
       }
       break
