@@ -72,7 +72,7 @@ export default function (code: string, language: Language): { lexemes: Lexeme[],
           } else {
             while (indent < indents[indents.length - 1]) {
               indents.pop()
-              lexemes.push(new Lexeme('INDENT', line, language))
+              lexemes.push(new Lexeme('DEDENT', line, language))
             }
             if (indent !== indents[indents.length - 1]) {
               throw new CompilerError(`Inconsistent indentation at line ${line}.`)
