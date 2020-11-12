@@ -1,3 +1,113 @@
-# BarnsleyIFS
+xleft: Final[int] = -236
+xright: Final[int] = 263
+ytop: Final[int] = 1
+ybottom: Final[int] = 1000
+scaledown: Final[int] = 3
+mappings: Final[int] = 4
+label: Final[str] = 'Barnsley fern'
+live: Final[int] = green
+copied: Final[int] = emerald
+pauseval: Final[int] = 2000
+coeffdiv: int
+mapxx: List[int, mappings]
+mapxy: List[int, mappings]
+mapxc: List[int, mappings]
+mapyx: List[int, mappings]
+mapyy: List[int, mappings]
+mapyc: List[int, mappings]
+xl: int
+xr: int
+yt: int
+yb: int
 
-# not yet available in Turtle Python
+def setmaps ():
+  coeffdiv = 100
+  mapxx[1] = 0
+  mapyx[1] = 0
+  mapxy[1] = 0
+  mapyy[1] = 16
+  mapxc[1] = 0
+  mapyc[1] = 0
+  mapxx[2] = 85
+  mapyx[2] = -4
+  mapxy[2] = 4
+  mapyy[2] = 85
+  mapxc[2] = 0
+  mapyc[2] = 160
+  mapxx[3] = 20
+  mapyx[3] = 23
+  mapxy[3] = -26
+  mapyy[3] = 22
+  mapxc[3] = 0
+  mapyc[3] = 160
+  mapxx[4] = -15
+  mapyx[4] = 26
+  mapxy[4] = 28
+  mapyy[4] = 24
+  mapxc[4] = 0
+  mapyc[4] = 44
+
+def setscale ():
+  global xl, xr, yt, yb
+  xl = xleft / scaledown
+  xr = xright / scaledown
+  yt = ytop / scaledown
+  yb = ybottom / scaledown
+  for i = 1 to mappings do
+    mapxc[i] = mapxc[i] / scaledown
+    mapyc[i] = mapyc[i] / scaledown
+
+def map (a: int, x: int, y: int, newxadd: int, newyadd: int):
+  poke(newxadd, divmult(x, coeffdiv, mapxx[a]) + divmult(y, coeffdiv, mapxy[a]) + mapxc[a])
+  poke(newyadd, divmult(x, coeffdiv, mapyx[a]) + divmult(y, coeffdiv, mapyy[a]) + mapyc[a])
+
+def domap (mapnum: int):
+  newx: int
+  newy: int
+  noupdate()
+  for y in range(yt, yb + 1, 1):
+    for x in range(xl, xr + 1, 1):
+      if pixcol(x, y) != white:
+        map(mapnum, x, y, address(newx), address(newy))
+        if pixcol(newx, newy) = white:
+          numborn = numborn + 1
+        pixset(newx, newy, copied)
+  update()
+
+def cleanup ():
+  noupdate()
+  for y in range(yt, yb + 1, 1):
+    for x in range(xl, xr + 1, 1):
+      if pixcol(x, y) = live:
+        pixset(x, y, white)
+        numkilled = numkilled + 1
+      else:
+        if pixcol(x, y) = copied:
+          pixset(x, y, live)
+  update()
+
+setmaps()
+setscale()
+canvas(xl, yt, xr - xl + 1, yb - yt + 1)
+resolution(xr - xl + 1, yb - yt + 1)
+pixset(1, 1, live)
+iteration: int = 0
+writeline(label + ' by iterative mapping')
+timeset(0)
+while numborn > numkilled:
+  starttimeL int = time()
+  iteration = iteration + 1
+  writeline('')
+  writeline('Iteration ' + str(iteration) + ':')
+  numborn: int = 0
+  for count in range(0, mappings, 1):
+    domap(count)
+  numkilled = 0
+  cleanup()
+  writeline('  ' + str(numborn) + ' pixels born ' + str(numkilled) + ' pixels killed')
+  writeline('  (took ' + str((time() - starttime) / 1000) + ' seconds - total ' + str(time() / 1000) + ' seconds so far)')
+  if (numborn + numkilled > 0) and (pauseval >= 1000):
+    write('  (now pausing ' + qstr(pauseval, 1000, 1) + ' seconds to allow halting if desired ...)')
+    pause(pauseval)
+    writeline('')
+writeline('FINISH - fixed point of iterative mapping has been reached')

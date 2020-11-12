@@ -5,8 +5,8 @@ CONST YBOTTOM% = 999
 CONST SCALEDOWN% = 4
 CONST MAPPINGS% = 3
 CONST TITLE$ = "Sierpinski triangle"
-CONST gridlines = 5
-CONST gridthick = 64
+CONST GRIDLINES% = 5
+CONST GRIDTHICK% = 64
 DIM mapxx%(MAPPINGS%)
 DIM mapxy%(MAPPINGS%)
 DIM mapxc%(MAPPINGS%)
@@ -17,14 +17,14 @@ PROCsetmaps
 PROCsetscale
 CANVAS(xl%, yt%, xr% - xl% + 1, yb% - yt% + 1)
 RESOLUTION(xr% - xl% + 1, yb% - yt% + 1)
-background(6)
+PROCbackground
 WRITELN(TITLE$ + " MAPPINGS% in colour")
 FOR count% = 1 TO MAPPINGS%
-  domap(count%)
+  PROCdomap(count%)
+NEXT
 END
 
-Procedure PROCsetmaps
-Begin
+DEF PROCsetmaps
   coeffdiv% = 100
   mapxx%(1) = 50
   mapyx%(1) = 0
@@ -44,71 +44,64 @@ Begin
   mapyy%(3) = 50
   mapxc%(3) = 500
   mapyc%(3) = 500
-End
+ENDPROC
 
-Procedure PROCsetscale
-Var i: integer
-Begin
+DEF PROCsetscale
+  LOCAL i%
   xl% = XLEFT% / SCALEDOWN%
   xr% = XRIGHT% / SCALEDOWN%
   yt% = YTOP% / SCALEDOWN%
   yb% = YBOTTOM% / SCALEDOWN%
-  FOR i = 1 TO MAPPINGS%
-    begin
-      mapxc%(i) = mapxc%(i) / SCALEDOWN%
-      mapyc%(i) = mapyc%(i) / SCALEDOWN%
-    end
-  gt = gridthick / SCALEDOWN%
-End
+  FOR i% = 1 TO MAPPINGS%
+    mapxc%(i%) = mapxc%(i%) / SCALEDOWN%
+    mapyc%(i%) = mapyc%(i%) / SCALEDOWN%
+  NEXT
+  gt% = GRIDTHICK% / SCALEDOWN%
+ENDPROC
 
-Procedure background(rad: integer)
-Var x, y, cx, cy, r, g, b: integer
-Begin
-  thickness(gt)
-  colour(darkgrey)
-  FOR x = 1 TO gridlines - 1
-    begin
-      setxy(xl% + DIVMULT(xr% - xl%, gridlines, x), yt%)
-      drawxy(0, yb% - yt%)
-    end
-  FOR y = 1 TO gridlines - 1
-    begin
-      setxy(xl% + gt / 2, yt% + DIVMULT(yb% - yt%, gridlines, y))
-      drawxy(xr% - xl% - gt, 0)
-    end
-  colour(BLACK)
-  setxy(xl%, yt%)
-  drawxy(xr% - xl%, 0)
-  drawxy(0, yb% - yt%)
-  drawxy(xl% - xr%, 0)
-  drawxy(0, yt% - yb%)
-  FOR x = 0 TO gridlines - 1
-    FOR y = 0 TO gridlines - 1
-      begin
-        cx = xl% + DIVMULT(xr% - xl%, gridlines, x) + gt
-        cy = yt% + DIVMULT(yb% - yt%, gridlines, y) + gt
-        r = DIVMULT(255, gridlines - 1, x)
-        g = DIVMULT(255, gridlines - 1, y)
-        b = DIVMULT(255, 2 * gridlines - 2, 2 * gridlines - 2 - x - y)
-        recolour(cx, cy, (r * $10000) + (g * $100) + (b * $1))
-      end
-End
+DEF PROCbackground
+  LOCAL x%, y%, cx%, cy%, r%, g%, b%
+  THICKNESS(gt%)
+  COLOUR(DARKGREY)
+  FOR x% = 1 TO GRIDLINES% - 1
+    SETXY(xl% + DIVMULT(xr% - xl%, GRIDLINES%, x%), yt%)
+    DRAWXY(0, yb% - yt%)
+  NEXT
+  FOR y% = 1 TO GRIDLINES% - 1
+    SETXY(xl% + gt% / 2, yt% + DIVMULT(yb% - yt%, GRIDLINES%, y%))
+    DRAWXY(xr% - xl% - gt%, 0)
+  NEXT
+  COLOUR(BLACK)
+  SETXY(xl%, yt%)
+  DRAWXY(xr% - xl%, 0)
+  DRAWXY(0, yb% - yt%)
+  DRAWXY(xl% - xr%, 0)
+  DRAWXY(0, yt% - yb%)
+  FOR x% = 0 TO GRIDLINES% - 1
+    FOR y% = 0 TO GRIDLINES% - 1
+      cx% = xl% + DIVMULT(xr% - xl%, GRIDLINES%, x%) + gt%
+      cy% = yt% + DIVMULT(yb% - yt%, GRIDLINES%, y%) + gt%
+      r% = DIVMULT(255, GRIDLINES% - 1, x%)
+      g% = DIVMULT(255, GRIDLINES% - 1, y%)
+      b% = DIVMULT(255, 2 * GRIDLINES% - 2, 2 * GRIDLINES% - 2 - x% - y%)
+      RECOLOUR(cx%, cy%, (r% * &10000) + (g% * &100) + (b% * &1))
+    NEXT
+  NEXT
+ENDPROC
 
-Procedure map(a, x, y: integer var newx, newy: integer)
-Begin
-  newx = DIVMULT(x, coeffdiv%, mapxx%(a)) + DIVMULT(y, coeffdiv%, mapxy%(a)) + mapxc%(a)
-  newy = DIVMULT(x, coeffdiv%, mapyx%(a)) + DIVMULT(y, coeffdiv%, mapyy%(a)) + mapyc%(a)
-End
+DEF PROCmap (a%, x%, y%, RETURN newx%, RETURN newy%)
+  newx% = DIVMULT(x%, coeffdiv%, mapxx%(a%)) + DIVMULT(y%, coeffdiv%, mapxy%(a%)) + mapxc%(a%)
+  newy% = DIVMULT(x%, coeffdiv%, mapyx%(a%)) + DIVMULT(y%, coeffdiv%, mapyy%(a%)) + mapyc%(a%)
+ENDPROC
 
-Procedure domap(mapnum: integer)
-Var x, y, newx, newy: integer
-Begin
+DEF PROCdomap (mapnum%)
+  LOCAL x%, y%, newx%, newy%
   NOUPDATE
-  FOR y = yt% TO yb%
-    FOR x = xl% TO xr%
-      begin
-        map(mapnum, x, y, newx, newy)
-        PIXSET(newx, newy, pixcol(x, y))
-      end
+  FOR y% = yt% TO yb%
+    FOR x% = xl% TO xr%
+      PROCmap(mapnum%, x%, y%, newx%, newy%)
+      PIXSET(newx%, newy%, PIXCOL(x%, y%))
+    NEXT
+  NEXT
   UPDATE
-End
+ENDPROC

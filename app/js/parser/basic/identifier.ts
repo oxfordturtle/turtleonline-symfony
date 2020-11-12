@@ -35,7 +35,7 @@ export function subroutineName (lexemes: Lexemes): [string, SubroutineType, Type
   } else if (name.slice(0, 2) === 'FN') {
     subroutineType = 'function'
   } else {
-    throw new CompilerError('{lex} is not a valid subroutine name. (Procedure names must begin with "PROC", and function names must begin with "FN".)')
+    throw new CompilerError('{lex} is not a valid subroutine name. (Procedure names must begin with "PROC", and function names must begin with "FN".)', lexemes.get(-1))
   }
 
   const test = name.match(/\$(\d+)$/)
@@ -66,7 +66,7 @@ export function variableName (lexemes: Lexemes): [string, Type, number] {
     type = 'string'
     stringLength = parseInt(test[1], 10)
   } else {
-    throw new CompilerError('{lex} is not a valid variable name. (Boolean and integer variables end with "%", and string variables end with "$".)', lexemes.get(-1))
+    throw new CompilerError('{lex} is not the name of any recognised command or a valid variable name. (Boolean and integer variables end with "%", and string variables end with "$".)', lexemes.get(-1))
   }
 
   return [name, type, stringLength]

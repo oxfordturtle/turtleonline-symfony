@@ -1,5 +1,3 @@
-# LifeStart
-
 width: int = 32
 height: int = 32
 canvas(0, 0, width, height)

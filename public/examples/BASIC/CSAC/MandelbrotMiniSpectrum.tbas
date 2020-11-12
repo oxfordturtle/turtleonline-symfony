@@ -20,7 +20,7 @@ FOR a% = xstart% TO xyfinish%
     x% = a%
     y% = b%
     iterations% = 0
-    WHILE (hypot(x%, y%, 1) < 2 * SCALE%) AND (iterations% <= MAXCOL%)
+    WHILE (HYPOT(x%, y%, 1) < 2 * SCALE%) AND (iterations% <= MAXCOL%)
       temp% = DIVMULT(x% + y%, SCALE%, x% - y%)
       y% = DIVMULT(2 * x%, SCALE%, y%) + b%
       x% = temp% + a%
@@ -34,7 +34,7 @@ FOR a% = xstart% TO xyfinish%
   NEXT
   UPDATE
 NEXT
-WRITELN("Resolution: " + STR$(SCALE% * 3) + " Time taken: " + QSTR$(time, 1000, 1) + " seconds.")
+WRITELN("Resolution: " + STR$(SCALE% * 3) + " Time taken: " + QSTR$(TIME, 1000, 1) + " seconds.")
 END
 
 DEF PROCcolsetup

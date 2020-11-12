@@ -25,6 +25,7 @@ if (editor) {
       textarea.style.height = `${lines.length * 1.5}em`
       textarea.style.width = `${pre.scrollWidth.toString(10)}px`
       pre.style.height = `${lines.length * 1.5}em`
+      lineNumbers.style.height = `${lines.length * 1.5}em`
     })
   }
 

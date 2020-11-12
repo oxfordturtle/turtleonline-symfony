@@ -6,7 +6,7 @@ CONST SCALEDOWN% = 4
 CONST MAPPINGS% = 3
 CONST TITLE$ = "Dragon curve"
 CONST LIVE% = BLACK
-CONST COPIED% = silver
+CONST COPIED% = SILVER
 CONST PAUSEVAL% = 2000
 DIM mapxx%(MAPPINGS%)
 DIM mapxy%(MAPPINGS%)
@@ -18,7 +18,7 @@ PROCsetmaps
 PROCsetscale
 CANVAS(xl%, yt%, xr% - xl% + 1, yb% - yt% + 1)
 RESOLUTION(xr% - xl% + 1, yb% - yt% + 1)
-blank(LIVE%)
+BLANK(LIVE%)
 iteration% = 0
 WRITELN(TITLE$ + " by iterative mapping")
 TIMESET(0)
@@ -29,25 +29,22 @@ REPEAT
   WRITELN("iteration% " + STR$(iteration%) + ":")
   numborn% = 0
   FOR count% = 1 TO MAPPINGS%
-    domap(count%)
+    PROCdomap(count%)
+  NEXT
   numkilled% = 0
-  cleanup
+  PROCcleanup
   WRITELN("  " + STR$(numborn%) + " pixels born " + STR$(numkilled%) + " pixels killed")
   WRITELN("  (took " + STR$((TIME - starttime%) / 1000) + " seconds - total " + STR$(TIME / 1000) + " seconds so far)")
   IF (numborn% + numkilled% > 0) AND (PAUSEVAL% >= 1000) THEN
-    begin
-      write("  (now pausing " + QSTR$(PAUSEVAL%, 1000, 1) + " seconds TO allow halting IF desired ...)")
-      pause(PAUSEVAL%)
-      WRITELN("")
-    end
+    WRITE("  (now pausing " + QSTR$(PAUSEVAL%, 1000, 1) + " seconds to allow halting if desired ...)")
+    PAUSE(PAUSEVAL%)
+    WRITELN("")
+  ENDIF
 UNTIL numborn% + numkilled% = 0
 WRITELN("FINISH - fixed point of iterative mapping has been reached")
-FOR count% = 1 TO MAPPINGS%
-  domap(count%)
 END
 
-Procedure PROCsetmaps
-Begin
+DEF PROCsetmaps
   coeffdiv% = 1000
   mapxx%(1) = 0
   mapyx%(1) = -577
@@ -67,57 +64,56 @@ Begin
   mapyy%(3) = 0
   mapxc%(3) = 95
   mapyc%(3) = 989
-End
+ENDPROC
 
-Procedure PROCsetscale
-Var i: integer
-Begin
+DEF PROCsetscale
+  LOCAL i%
   xl% = XLEFT% / SCALEDOWN%
   xr% = XRIGHT% / SCALEDOWN%
   yt% = YTOP% / SCALEDOWN%
   yb% = YBOTTOM% / SCALEDOWN%
-  FOR i = 1 TO MAPPINGS%
-    begin
-      mapxc%(i) = mapxc%(i) / SCALEDOWN%
-      mapyc%(i) = mapyc%(i) / SCALEDOWN%
-    end
-End
+  FOR i% = 1 TO MAPPINGS%
+    mapxc%(i%) = mapxc%(i%) / SCALEDOWN%
+    mapyc%(i%) = mapyc%(i%) / SCALEDOWN%
+  NEXT
+ENDPROC
 
-Procedure map(a, x, y: integer var newx, newy: integer)
-Begin
-  newx = DIVMULT(x, coeffdiv%, mapxx%(a)) + DIVMULT(y, coeffdiv%, mapxy%(a)) + mapxc%(a)
-  newy = DIVMULT(x, coeffdiv%, mapyx%(a)) + DIVMULT(y, coeffdiv%, mapyy%(a)) + mapyc%(a)
-End
+DEF PROCmap (a%, x%, y%, RETURN newx%, RETURN newy%)
+  newx% = DIVMULT(x%, coeffdiv%, mapxx%(a%)) + DIVMULT(y%, coeffdiv%, mapxy%(a%)) + mapxc%(a%)
+  newy% = DIVMULT(x%, coeffdiv%, mapyx%(a%)) + DIVMULT(y%, coeffdiv%, mapyy%(a%)) + mapyc%(a%)
+ENDPROC
 
-Procedure domap(mapnum: integer)
-Var x, y, newx, newy: integer
-Begin
+DEF PROCdomap (mapnum%)
+  LOCAL x%, y%, newx%, newy%
   NOUPDATE
-  FOR y = yt% TO yb%
-    FOR x = xl% TO xr%
-      IF pixcol(x, y) <> white THEN
-        begin
-          map(mapnum, x, y, newx, newy)
-          IF pixcol(newx, newy) = white THEN
-            numborn% = numborn% + 1
-          PIXSET(newx, newy, rgb(mapnum))
-        end
+  FOR y% = yt% TO yb%
+    FOR x% = xl% TO xr%
+      IF PIXCOL(x%, y%) <> WHITE THEN
+        PROCmap(mapnum%, x%, y%, newx%, newy%)
+        IF PIXCOL(newx%, newy%) = WHITE THEN
+          numborn% = numborn% + 1
+        ENDIF
+        PIXSET(newx%, newy%, RGB(mapnum%))
+      ENDIF
+    NEXT
+  NEXT
   UPDATE
-End
+ENDPROC
 
-Procedure cleanup
-Var x, y: integer
-Begin
+DEF PROCcleanup
+  LOCAL x%, y%
   NOUPDATE
-  FOR y = yt% TO yb%
-    FOR x = xl% TO xr%
-      IF pixcol(x, y) = LIVE% THEN
-        begin
-          PIXSET(x, y, white)
-          numkilled% = numkilled% + 1
-        end
+  FOR y% = yt% TO yb%
+    FOR x% = xl% TO xr%
+      IF PIXCOL(x%, y%) = LIVE% THEN
+        PIXSET(x%, y%, WHITE)
+        numkilled% = numkilled% + 1
       ELSE
-      IF pixcol(x, y) <> white THEN
-        PIXSET(x, y, LIVE%)
+        IF PIXCOL(x%, y%) <> WHITE THEN
+          PIXSET(x%, y%, LIVE%)
+        ENDIF
+      ENDIF
+    NEXT
+  NEXT
   UPDATE
-End
+ENDPROC
