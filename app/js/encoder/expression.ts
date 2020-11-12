@@ -130,11 +130,12 @@ function variableValue (exp: VariableValue, program: Program, options: Options):
   if (exp.variable.isArray && exp.indexes.length > 0) {
     const baseVariableExp = new VariableValue(exp.lexeme, exp.variable) // same variable, no indexes
     pcode.push(...expression(baseVariableExp, program, options))
-    for (const index of exp.indexes) {
+    for (let i = 0; i < exp.indexes.length; i += 1) {
+      const index = exp.indexes[i]
       const indexExp = expression(index, program, options)
       merge(pcode, indexExp)
-      if (exp.variable.arrayDimensions[0][0] > 0) { // wrong!!
-        merge(pcode, [[PCode.ldin, exp.variable.arrayDimensions[0][0], PCode.subt]])
+      if (exp.variable.arrayDimensions[i][0] > 0) {
+        merge(pcode, [[PCode.ldin, exp.variable.arrayDimensions[i][0], PCode.subt]])
       }
       merge(pcode, [[PCode.swap, PCode.test, PCode.plus, PCode.incr, PCode.lptr]])
     }
@@ -145,6 +146,7 @@ function variableValue (exp: VariableValue, program: Program, options: Options):
     pcode.push(...expression(exp.indexes[0], program, options))
     if (program.language === 'Pascal') {
       // Pascal string indexes start from 1 instead of 0
+      // (is this right?? what about the actual length byte?)
       merge(pcode, [[PCode.ldin, 1, PCode.subt]])
     }
     const baseVariableExp = new VariableValue(exp.lexeme, exp.variable) // same variable, no indexes

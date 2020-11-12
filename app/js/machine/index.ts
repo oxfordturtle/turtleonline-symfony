@@ -1346,7 +1346,7 @@ function execute (): void {
           n2 = memory.stack.pop()
           n1 = memory.stack.pop()
           if (n1 !== undefined && n2 !== undefined && n3 !== undefined) {
-            send('flood', { x: n1, y: n2, c1: n3, c2: 0, boundary: false })
+            send('flood', { x: turtx(n1), y: turty(n2), c1: n3, c2: 0, boundary: false })
             if (update) {
               drawCount += 1
             }
@@ -1361,7 +1361,7 @@ function execute (): void {
           n2 = memory.stack.pop()
           n1 = memory.stack.pop()
           if (n1 !== undefined && n2 !== undefined && n3 !== undefined && n4 !== undefined) {
-            send('flood', { x: n1, y: n2, c1: n3, c2: n4, boundary: true })
+            send('flood', { x: turtx(n1), y: turty(n2), c1: n3, c2: n4, boundary: true })
             if (update) {
               drawCount += 1
             }

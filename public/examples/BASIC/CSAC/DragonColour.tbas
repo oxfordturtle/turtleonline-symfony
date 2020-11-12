@@ -1,3 +1,111 @@
-REM DragonColour
+CONST XLEFT% = 0
+CONST XRIGHT% = 999
+CONST YTOP% = 0
+CONST YBOTTOM% = 999
+CONST SCALEDOWN% = 4
+CONST MAPPINGS% = 3
+CONST TITLE$ = "Dragon curve"
+CONST gridlines = 5
+CONST gridthick = 64
+DIM mapxx%(MAPPINGS%)
+DIM mapxy%(MAPPINGS%)
+DIM mapxc%(MAPPINGS%)
+DIM mapyx%(MAPPINGS%)
+DIM mapyy%(MAPPINGS%)
+DIM mapyc%(MAPPINGS%)
+PROCsetmaps
+PROCsetscale
+CANVAS(xl%, yt%, xr% - xl% + 1, yb% - yt% + 1)
+RESOLUTION(xr% - xl% + 1, yb% - yt% + 1)
+background(6)
+WRITELN(TITLE$ + " MAPPINGS% in colour")
+FOR count% = 1 TO MAPPINGS%
+  domap(count%)
+END
 
-REM not yet available in Turtle BASIC
+Procedure PROCsetmaps
+Begin
+  coeffdiv% = 1000
+  mapxx%(1) = 0
+  mapyx%(1) = -577
+  mapxy%(1) = 577
+  mapyy%(1) = 0
+  mapxc%(1) = 95
+  mapyc%(1) = 589
+  mapxx%(2) = 0
+  mapyx%(2) = -577
+  mapxy%(2) = 577
+  mapyy%(2) = 0
+  mapxc%(2) = 441
+  mapyc%(2) = 789
+  mapxx%(3) = 0
+  mapyx%(3) = -577
+  mapxy%(3) = 577
+  mapyy%(3) = 0
+  mapxc%(3) = 95
+  mapyc%(3) = 989
+End
+
+Procedure PROCsetscale
+Var i: integer
+Begin
+  xl% = XLEFT% / SCALEDOWN%
+  xr% = XRIGHT% / SCALEDOWN%
+  yt% = YTOP% / SCALEDOWN%
+  yb% = YBOTTOM% / SCALEDOWN%
+  FOR i = 1 TO MAPPINGS%
+    begin
+      mapxc%(i) = mapxc%(i) / SCALEDOWN%
+      mapyc%(i) = mapyc%(i) / SCALEDOWN%
+    end
+  gt = gridthick / SCALEDOWN%
+End
+
+Procedure background(rad: integer)
+Var x, y: integer
+Begin
+  thickness(gt)
+  colour(darkgrey)
+  FOR x = 1 TO gridlines - 1
+    begin
+      setxy(xl% + DIVMULT(xr% - xl%, gridlines, x), yt%)
+      drawxy(0, yb% - yt%)
+    end
+  FOR y = 1 TO gridlines - 1
+    begin
+      setxy(xl% + gt / 2, yt% + DIVMULT(yb% - yt%, gridlines, y))
+      drawxy(xr% - xl% - gt, 0)
+    end
+  colour(BLACK)
+  setxy(xl%, yt%)
+  drawxy(xr% - xl%, 0)
+  drawxy(0, yb% - yt%)
+  drawxy(xl% - xr%, 0)
+  drawxy(0, yt% - yb%)
+  FOR x = 0 TO gridlines - 1
+    FOR y = 0 TO gridlines - 1
+      recolour(xl% + DIVMULT(xr% - xl%, gridlines, x) + gt,
+                yt% + DIVMULT(yb% - yt%, gridlines, y) + gt,
+                DIVMULT(255, gridlines - 1, x) * $10000
+                + DIVMULT(255, gridlines - 1, y) * $100
+                + DIVMULT(255, 2 * gridlines - 2, 2 * gridlines - 2 - x - y) * $1)
+End
+
+Procedure map(a, x, y: integer var newx, newy: integer)
+Begin
+  newx = DIVMULT(x, coeffdiv%, mapxx%(a)) + DIVMULT(y, coeffdiv%, mapxy%(a)) + mapxc%(a)
+  newy = DIVMULT(x, coeffdiv%, mapyx%(a)) + DIVMULT(y, coeffdiv%, mapyy%(a)) + mapyc%(a)
+End
+
+Procedure domap(mapnum: integer)
+Var x, y, newx, newy: integer
+Begin
+  NOUPDATE
+  FOR y = yt% TO yb%
+    FOR x = xl% TO xr%
+      begin
+        map(mapnum, x, y, newx, newy)
+        PIXSET(newx, newy, pixcol(x, y))
+      end
+  UPDATE
+End

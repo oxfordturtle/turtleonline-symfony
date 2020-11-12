@@ -1,3 +1,127 @@
-REM BarnsleyIFS
+CONST XLEFT% = -236
+CONST XRIGHT% = 263
+CONST YTOP% = 1
+CONST YBOTTOM% = 1000
+CONST SCALEDOWN% = 3
+CONST MAPPINGS% = 4
+CONST TITLE$ = "Barnsley fern"
+CONST LIVE% = green
+CONST COPIED% = emerald
+CONST PAUSEVAL% = 2000
+DIM mapxx%(MAPPINGS%)
+DIM mapxy%(MAPPINGS%)
+DIM mapxc%(MAPPINGS%)
+DIM mapyx%(MAPPINGS%)
+DIM mapyy%(MAPPINGS%)
+DIM mapyc%(MAPPINGS%)
+PROCsetmaps
+PROCsetscale
+CANVAS(xl%, yt%, xr% - xl% + 1, yb% - yt% + 1)
+RESOLUTION(xr% - xl% + 1, yb% - yt% + 1)
+PIXSET(1, 1, LIVE%)
+iteration% = 0
+WRITELN(TITLE$ + " by iterative mapping")
+TIMESET(0)
+REPEAT
+  starttime% = TIME
+  iteration% = iteration% + 1
+  WRITELN("")
+  WRITELN("iteration% " + STR$(iteration%) + ":")
+  numborn% = 0
+  FOR count% = 1 TO MAPPINGS%
+    domap(count%)
+  numkilled% = 0
+  cleanup
+  WRITELN("  " + STR$(numborn%) + " pixels born " + STR$(numkilled%) + " pixels killed")
+  WRITELN("  (took " + STR$((TIME - starttime%) / 1000) + " seconds - total " + STR$(TIME / 1000) + " seconds so far)")
+  IF (numborn% + numkilled% > 0) AND (PAUSEVAL% >= 1000) THEN
+    begin
+      write("  (now pausing " + QSTR$(PAUSEVAL%, 1000, 1) + " seconds TO allow halting IF desired ...)")
+      pause(PAUSEVAL%)
+      WRITELN("")
+    end
+UNTIL numborn% + numkilled% = 0
+WRITELN("FINISH - fixed point of iterative mapping has been reached")
+END
 
-REM not yet available in Turtle BASIC
+Procedure PROCsetmaps
+Begin
+  coeffdiv% = 100
+  mapxx%(1) = 0
+  mapyx%(1) = 0
+  mapxy%(1) = 0
+  mapyy%(1) = 16
+  mapxc%(1) = 0
+  mapyc%(1) = 0
+  mapxx%(2) = 85
+  mapyx%(2) = -4
+  mapxy%(2) = 4
+  mapyy%(2) = 85
+  mapxc%(2) = 0
+  mapyc%(2) = 160
+  mapxx%(3) = 20
+  mapyx%(3) = 23
+  mapxy%(3) = -26
+  mapyy%(3) = 22
+  mapxc%(3) = 0
+  mapyc%(3) = 160
+  mapxx%(4) = -15
+  mapyx%(4) = 26
+  mapxy%(4) = 28
+  mapyy%(4) = 24
+  mapxc%(4) = 0
+  mapyc%(4) = 44
+End
+
+Procedure PROCsetscale
+Var i: integer
+Begin
+  xl% = XLEFT% / SCALEDOWN%
+  xr% = XRIGHT% / SCALEDOWN%
+  yt% = YTOP% / SCALEDOWN%
+  yb% = YBOTTOM% / SCALEDOWN%
+  FOR i = 1 TO MAPPINGS%
+    begin
+      mapxc%(i) = mapxc%(i) / SCALEDOWN%
+      mapyc%(i) = mapyc%(i) / SCALEDOWN%
+    end
+End
+
+Procedure map(a, x, y: integer var newx, newy: integer)
+Begin
+  newx = DIVMULT(x, coeffdiv%, mapxx%(a)) + DIVMULT(y, coeffdiv%, mapxy%(a)) + mapxc%(a)
+  newy = DIVMULT(x, coeffdiv%, mapyx%(a)) + DIVMULT(y, coeffdiv%, mapyy%(a)) + mapyc%(a)
+End
+
+Procedure domap(mapnum: integer)
+Var x, y, newx, newy: integer
+Begin
+  NOUPDATE
+  FOR y = yt% TO yb%
+    FOR x = xl% TO xr%
+      IF pixcol(x, y) <> white THEN
+        begin
+          map(mapnum, x, y, newx, newy)
+          IF pixcol(newx, newy) = white THEN
+            numborn% = numborn% + 1
+          PIXSET(newx, newy, COPIED%)
+        end
+  UPDATE
+End
+
+Procedure cleanup
+Var x, y: integer
+Begin
+  NOUPDATE
+  FOR y = yt% TO yb%
+    FOR x = xl% TO xr%
+      IF pixcol(x, y) = LIVE% THEN
+        begin
+          PIXSET(x, y, white)
+          numkilled% = numkilled% + 1
+        end
+      ELSE
+      IF pixcol(x, y) = COPIED% THEN
+        PIXSET(x, y, LIVE%)
+  UPDATE
+End

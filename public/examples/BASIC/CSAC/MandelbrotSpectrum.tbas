@@ -1,5 +1,3 @@
-REM MandelbrotSpectrum
-
 CONST MAXCOL% = 40
 CONST SCALE% = 250
 CONST PIXELS% = 750
