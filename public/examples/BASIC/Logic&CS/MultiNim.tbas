@@ -93,7 +93,7 @@ DEF PROCdrawpiles
   FOR p% = 1 TO PILES%
     c% = pile%(p%)
     WHILE c% > 0
-      DEC(autocount%)
+      autocount% = autocount% - 1
       IF autocount% = 0 THEN
         autopile% = p%
         autocoin% = c%
@@ -111,7 +111,7 @@ DEF PROCdrawpiles
         COLOUR(BLACK)
         PRINT(STR$(xorscore% EOR pile%(p%) EOR (c% - 1)), 4, 20)
       ENDIF
-      DEC(c%)
+      c% = c% - 1
     ENDWHILE
   NEXT
   COLOUR(BLACK)

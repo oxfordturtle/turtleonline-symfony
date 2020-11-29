@@ -32,8 +32,6 @@ export default function tokenize (code: string, language: Language): Token[] {
       keycode(code, language, line, character) ||
       query(code, language, line, character) ||
       turtle(code, language, line, character) ||
-      command(code, language, line, character) ||
-      colour(code, language, line, character) ||
       identifier(code, language, line, character) ||
       illegal(code, language, line, character)
     tokens.push(token)
@@ -390,51 +388,27 @@ function turtle (code: string, language: Language, line: number, character: numb
   return test ? new Token('turtle', test[0], line, character) : false
 }
 
-/** tests for a native turtle command (identifier) and returns the token if matched */
-function command (code: string, language: Language, line: number, character: number): Token|false {
-  let names: string = commands.filter(x => x.names[language]).map(x => x.names[language]).join('|')
-  let regex: RegExp = new RegExp(`^(${names})\\b`)
-  if (language === 'BASIC') {
-    names = commands
-      .filter(x => x.names[language])
-      .map(x => x.names[language])
-      .map((x) => {
-        if ((x as string).slice(-1) === '$') {
-          return (x as string).replace(/\$/, '\\$')
-        }
-        if ((x as string).slice(-1) === '#') {
-          return x
-        }
-        return `${x}\\b`
-      })
-      .join('|')
-    regex = new RegExp(`^(${names})`)
-  } else if (language === 'Pascal') {
-    regex = new RegExp(`^(${names})\\b`, 'i')
-  } else if (language === 'Python') {
-    // pretend "range" is also a command
-    regex = new RegExp(`^(${names}|range)\\b`)
-  }
-  const test = code.match(regex)
-  return test ? new Token('command', test[0], line, character) : false
-}
-
-/** tests for a native colour constant (identifier) and returns the token if matched */
-function colour (code: string, language: Language, line: number, character: number): Token|false {
-  const names = colours
-    .map(x => x.names[language])
-    .join('|')
-  const regex = (language === 'Pascal') ? new RegExp(`^(${names})\\b`, 'i') : new RegExp(`^(${names})\\b`)
-  const test = code.match(regex)
-  return test ? new Token('colour', test[0], line, character) : false
-}
-
 /** tests for any other identifier and returns the token if matched */
 function identifier (code: string, language: Language, line: number, character: number): Token|false {
   const test = (language === 'BASIC')
     ? code.match(/^([_a-zA-Z][_a-zA-Z0-9]*\$\d*|[_a-zA-Z][_a-zA-Z0-9]*%?)/)
     : code.match(/^([_a-zA-Z][_a-zA-Z0-9]*)\b/)
-  return test ? new Token('identifier', test[0], line, character) : false
+  if (test) {
+    const name = (language === 'Pascal') ? test[0].toLowerCase() : test[0]
+    const colour = colours.find(x => x.names[language] === name)
+    const command = commands.find(x => x.names[language] === name)
+    if (colour) {
+      return new Token('colour', test[0], line, character)
+    }
+    if (command) {
+      return new Token('command', test[0], line, character)
+    }
+    if (language === 'Python' && name === 'range') { // pretend 'range' is a command in Python
+      return new Token('command', test[0], line, character)
+    }
+    return new Token('identifier', test[0], line, character)
+  }
+  return false
 }
 
 /** returns an illegal token (for use if none of the above matched) */

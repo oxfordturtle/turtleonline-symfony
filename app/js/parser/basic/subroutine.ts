@@ -92,6 +92,15 @@ function parameters (lexemes: Lexemes, subroutine: Subroutine): Variable[] {
     const parameter = variable(lexemes, subroutine)
     parameter.isParameter = true
     parameter.isReferenceParameter = isReferenceParameter
+    // brackets here "()" means array parameter
+    if (lexemes.get()?.content === '(') {
+      parameter.arrayDimensions.push([0,0]) // give dummy array dimensions
+      lexemes.next()
+      if (!lexemes.get() || lexemes.get()?.content !== ')') {
+        throw new CompilerError('Closing bracket missing after array parameter specification.', lexemes.get(-1))
+      }
+      lexemes.next()
+    }
     parameters.push(parameter)
     if (lexemes.get()?.content === ',') {
       lexemes.next()
