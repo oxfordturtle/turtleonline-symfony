@@ -1,5 +1,3 @@
-REM Sorting
-
 CONST METHODS% = 4
 CONST N% = 100
 CONST COLS% = 10

@@ -91,12 +91,23 @@ export class ConstantValue {
   readonly expressionType = 'constant'
   readonly lexeme: IdentifierLexeme
   readonly constant: Constant
-  readonly type: Type
+  readonly indexes: Expression[] = [] // for indexing characters in string constants
 
   constructor (lexeme: IdentifierLexeme, constant: Constant) {
     this.lexeme = lexeme
     this.constant = constant
-    this.type = constant.type
+  }
+
+  get type (): Type {
+    // type is not known in advance, as it depends on this.indexes.length
+    switch (this.constant.language) {
+      case 'C':
+      case 'Java':
+      case 'Pascal':
+        return (this.constant.type === 'string' && this.indexes.length > 0) ? 'character' : this.constant.type
+      default:
+        return this.constant.type
+    }
   }
 }
 
@@ -105,6 +116,7 @@ export class VariableAddress {
   readonly expressionType = 'address'
   readonly lexeme: IdentifierLexeme
   readonly variable: Variable
+  readonly indexes: Expression[] = [] // for array variables
   readonly type: Type = 'integer'
 
   constructor (lexeme: IdentifierLexeme, variable: Variable) {
@@ -131,7 +143,9 @@ export class VariableValue {
       case 'C':
       case 'Java':
       case 'Pascal':
-        return (!this.variable.isArray && this.variable.type === 'string' && this.indexes.length > 0) ? 'character' : this.variable.type
+        return (this.variable.type === 'string' && this.indexes.length > this.variable.arrayDimensions.length)
+          ? 'character'
+          : this.variable.type
       default:
         return this.variable.type
     }

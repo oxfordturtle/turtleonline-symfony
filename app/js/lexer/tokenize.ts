@@ -142,43 +142,32 @@ function delimiter (code: string, language: Language, line: number, character: n
 function string (code: string, language: Language, line: number, character: number): Token|false {
   code = code.split('\n')[0]
   switch (language) {
-    case 'BASIC':
-      // awkward cases
-      if (code.match(/^""""/)) return new Token('string', '""""', line, character)
-      if (code.match(/^""([^"]|$)/)) return new Token('string', '""', line, character)
-      // normal cases
-      const startBASIC = code[0] === '"'
-      const endBASIC = code.match(/[^"](")([^"]|$)/)
-      if (startBASIC && endBASIC) {
-        return new Token('string', code.slice(0, endBASIC.index as number + 2), line, character)
-      }
-      if (startBASIC) {
-        return new Token('unterminated-string', code.split('\n')[0], line, character)
-      }
-      return false
-
+    case 'BASIC': // fallthrough
     case 'Pascal':
-      // awkward cases
-      if (code.match(/^''''/)) return new Token('string', '\'\'\'\'', line, character)
-      if (code.match(/^''([^']|$)/)) return new Token('string', '\'\'', line, character)
-      if (code.match(/^""""/)) return new Token('string', '""""', line, character)
-      if (code.match(/^""([^"]|$)/)) return new Token('string', '""', line, character)
-      // normal cases
-      const start1Pascal = code[0] === '\''
-      const start2Pascal = code[0] === '"'
-      const end1Pascal = code.match(/[^'](')([^']|$)/)
-      const end2Pascal = code.match(/[^"](")([^"]|$)/)
-      if (start1Pascal && end1Pascal) {
-        return new Token('string', code.slice(0, end1Pascal.index as number + 2), line, character)
-      }
-      if (start1Pascal) {
-        return new Token('unterminated-string', code.split('\n')[0], line, character)
-      }
-      if (start2Pascal && end2Pascal) {
-        return new Token('string', code.slice(0, end2Pascal.index as number + 2), line, character)
-      }
-      if (start2Pascal) {
-        return new Token('unterminated-string', code.split('\n')[0], line, character)
+      // TODO: rule out single-quoted strings in BASIC ??
+      if (code[0] === '\'' || code[0] === '"') {
+        const quote = code[0]
+        let length = 1
+        let end = false
+        while (code[length] && !end) {
+          if (code[length] === '\n') {
+            return new Token('unterminated-string', code.slice(0, length), line, character)
+          }
+          if (code[length] !== quote) {
+            length += 1
+          } else {
+            length += 1
+            if (code[length] !== quote) {
+              end = true
+            } else {
+              length += 1
+            }
+          }
+        }
+        if (!end) {
+          return new Token('unterminated-string', code.slice(0, length), line, character)
+        }
+        return new Token('string', code.slice(0, length), line, character)
       }
       return false
 

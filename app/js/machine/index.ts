@@ -1674,6 +1674,7 @@ function execute (): void {
           n1 = memory.stack[memory.stack.length - 2]
           if (n1 !== undefined && n2 !== undefined) {
             if ((n1 < 0) || (n1 > memory.main[n2])) {
+              console.log(`n1: ${n1}, n2: ${n2}, memory[n2]: ${memory.main[n2]}`)
               // TODO: make range check a runtime option
               throw new MachineError(`Array index out of range (${line}, ${code}).`)
             }

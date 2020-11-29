@@ -1,5 +1,3 @@
-REM MandelbrotSpectrumDemo
-
 CONST MAXCOL% = 40
 CONST SPECTRUM% = 7
 DIM spectcol%(SPECTRUM%)

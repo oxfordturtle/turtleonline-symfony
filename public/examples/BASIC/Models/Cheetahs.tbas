@@ -1,5 +1,3 @@
-REM Cheetahs
-
 CONST MAXANIMALS% = 500
 CONST MNGAZELLES% = 10
 CONST STARTCHEETAHS% = 50
@@ -33,11 +31,11 @@ DIM gage%(MAXANIMALS%)
 DIM cfood%(MAXANIMALS%)
 DIM cspeednum%(MAXSPEED%)
 DIM gspeednum%(MAXSPEED%)
+gen% = 0
 PROCsetup
 PROCgraph
-gen% = 0
 REPEAT
-  INC(gen%)
+  gen% = gen% + 1
   PROCgeneration
   PROCgraph
 UNTIL 0 = 1
@@ -56,7 +54,7 @@ DEF PROCsetup
     cspeed%(n%) = cgenspeed%(n%)
     cage%(n%) = RND(SLOWAGE%) - 1
     cfood%(n%) = RND(CFOODADD%)
-    INC(cspeednum%(cspeed%(n%)))
+    cspeednum%(cspeed%(n%)) = cspeednum%(cspeed%(n%)) + 1
   NEXT
   FOR n% = cnum% TO MAXANIMALS%
     cspeed%(n%) = 0
@@ -65,7 +63,7 @@ DEF PROCsetup
     ggenspeed%(n%) = RND(STARTFAST% - STARTSLOW%) + STARTSLOW%
     gspeed%(n%) = ggenspeed%(n%)
     gage%(n%) = RND(SLOWAGE%) - 1
-    INC(gspeednum%(gspeed%(n%)))
+    gspeednum%(gspeed%(n%)) = gspeednum%(gspeed%(n%)) + 1
   NEXT
   FOR n% = gnum% TO MAXANIMALS%
     gspeed%(n%) = 0
@@ -143,31 +141,31 @@ DEF PROCgraph
 ENDPROC
 
 DEF PROCdeadcheetah(c%)
-  DEC(cspeednum%(cspeed%(c%)))
+  cspeednum%(cspeed%(c%)) = cspeednum%(cspeed%(c%)) - 1
   cspeed%(c%) = 0
-  DEC(cnum%)
+  cnum% = cnum% - 1
 ENDPROC
 
 DEF PROCdeadgazelle(g%)
-  DEC(gspeednum%(gspeed%(g%)))
+  gspeednum%(gspeed%(g%)) = gspeednum%(gspeed%(g%)) - 1
   gspeed%(g%) = 0
-  DEC(gnum%)
+  gnum% = gnum% - 1
 ENDPROC
 
 DEF PROCbabycheetah(speed%)
   LOCAL b%
   b% = 0
   REPEAT
-    INC(b%)
+    b% = b% + 1
   UNTIL (cspeed%(b%) = 0) OR (b% = MAXANIMALS%)
   IF cspeed%(b%) = 0 THEN
-    INC(cnum%)
+    cnum% = cnum% + 1
     cgenspeed%(b%) = speed% + RND(2 * RANDMARGINC%) - RANDMARGINC%
     cgenspeed%(b%) = MAX(1, MIN(MAXSPEED%, cgenspeed%(b%)))
     cspeed%(b%) = cgenspeed%(b%)
     cage%(b%) = 0
     cfood%(b%) = CFOODADD%
-    INC(cspeednum%(cspeed%(b%)))
+    cspeednum%(cspeed%(b%)) = cspeednum%(cspeed%(b%)) + 1
   ENDIF
 ENDPROC
 
@@ -175,15 +173,15 @@ DEF PROCbabygazelle(speed%)
   LOCAL b%
   b% = 0
   REPEAT
-    INC(b%)
+    b% = b% + 1
   UNTIL (gspeed%(b%) = 0) OR (b% = MAXANIMALS%)
   IF gspeed%(b%) = 0 THEN
-    INC(gnum%)
+    gnum% = gnum% + 1
     ggenspeed%(b%) = speed% + RND(2 * RANDMARGING%) - RANDMARGING%
     ggenspeed%(b%) = MAX(1, MIN(MAXSPEED%, ggenspeed%(b%)))
     gspeed%(b%) = ggenspeed%(b%)
     gage%(b%) = 0
-    INC(gspeednum%(gspeed%(b%)))
+    gspeednum%(gspeed%(b%)) = gspeednum%(gspeed%(b%)) + 1
   ENDIF
 ENDPROC
 
@@ -195,7 +193,7 @@ DEF PROCgeneration
     IF (cspeed%(c%) > 0) AND (gnum% > MNGAZELLES%) THEN
       tries% = 0
       REPEAT
-        INC(tries%)
+        tries% = tries% + 1
         g% = RND(MAXANIMALS%)
       UNTIL (gspeed%(g%) > 0) OR (tries% = HUNTINGTRIES%)
       IF (gspeed%(g%) > 0) AND (cspeed%(c%) >= gspeed%(g%) + CATCHMARGIN%) THEN
@@ -219,26 +217,26 @@ DEF PROCgeneration
   NEXT
   FOR n% = 0 TO MAXANIMALS%
     IF cspeed%(n%) > 0 THEN
-      INC(cage%(n%))
+      cage%(n%) = cage%(n%) + 1
       IF cage%(n%) > SLOWAGE% THEN
-        DEC(cspeednum%(cspeed%(n%)))
+        cspeednum%(cspeed%(n%)) = cspeednum%(cspeed%(n%)) - 1
         cspeed%(n%) = cspeed%(n%) * AGEFACTOR% / 100
-        INC(cspeednum%(cspeed%(n%)))
+        cspeednum%(cspeed%(n%)) = cspeednum%(cspeed%(n%)) + 1
         IF cspeed%(n%) = 0 THEN
           PROCdeadcheetah(n%)
         ENDIF
       ENDIF
-      DEC(cfood%(n%))
+      cfood%(n%) = cfood%(n%) - 1
       IF cfood%(n%) < 0 THEN
         PROCdeadcheetah(n%)
       ENDIF
     ENDIF
     IF gspeed%(n%) > 0 THEN
-      INC(gage%(n%))
+      gage%(n%) = gage%(n%) + 1
       IF gage%(n%) > SLOWAGE% THEN
-        DEC(gspeednum%(gspeed%(n%)))
+        gspeednum%(gspeed%(n%)) = gspeednum%(gspeed%(n%)) - 1
         gspeed%(n%) = gspeed%(n%) * AGEFACTOR% / 100
-        INC(gspeednum%(gspeed%(n%)))
+        gspeednum%(gspeed%(n%)) = gspeednum%(gspeed%(n%)) + 1
         IF gspeed%(n%) = 0 THEN
           PROCdeadgazelle(n%)
         ENDIF

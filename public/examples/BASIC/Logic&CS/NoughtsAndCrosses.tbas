@@ -1,5 +1,3 @@
-REM NoughtsAndCrosses
-
 CONST CROSS% = 33
 CONST NOUGHT% = 2
 DIM board%(11)

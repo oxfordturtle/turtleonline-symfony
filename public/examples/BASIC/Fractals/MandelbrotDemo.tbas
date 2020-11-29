@@ -1,5 +1,3 @@
-REM MandelbrotDemo
-
 CONST MAXCOL% = 40
 PROCstartprompt
 xstart% = DIVMULT(xcentre%, 1000000, scale%) - pixels% / 2

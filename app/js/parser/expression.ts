@@ -80,7 +80,7 @@ export function expression (lexemes: Lexemes, routine: Program|Subroutine, level
     nextExp = typeCheck(nextExp, exp.type)
 
     // maybe replace provisional operator with its string equivalent
-    if (exp.type === 'string' || nextExp.type === 'string') {
+    if (exp.type === 'string' || nextExp.type === 'string' || exp.type === 'character' || nextExp.type === 'character') {
       op = stringOperator(op)
     }
 
@@ -122,10 +122,9 @@ function factor (lexemes: Lexemes, routine: Program|Subroutine): Expression {
           if (!(exp instanceof VariableValue)) {
             throw new CompilerError('Address operator "&" must be followed by a variable.', lexeme)
           }
-          if (exp.indexes.length > 0) {
-            throw new CompilerError('Variable following address operator "&" cannot include array indexes.', lexeme)
-          }
-          return new VariableAddress(exp.lexeme, exp.variable)
+          const variableAddress = new VariableAddress(exp.lexeme, exp.variable)
+          variableAddress.indexes.push(...exp.indexes)
+          return variableAddress
 
         default:
           throw new CompilerError('Expression cannot begin with {lex}.', lexeme)
@@ -150,8 +149,28 @@ function factor (lexemes: Lexemes, routine: Program|Subroutine): Expression {
       // look for a constant
       const constant = find.constant(routine, lexeme.value)
       if (constant) {
+        const constantValue = new ConstantValue(lexeme, constant)
         lexemes.next()
-        return new ConstantValue(lexeme, constant)
+        // check for reference to a character
+        const open = (routine.language === 'BASIC') ? '(' : '['
+        const close = (routine.language === 'BASIC') ? ')' : ']'
+        if (lexemes.get() && lexemes.get()?.content === open) {
+          if (constant.type === 'string') {
+            lexemes.next()
+            // expecting an integer expression for the character index
+            let exp = expression(lexemes, routine)
+            exp = typeCheck(exp, 'integer')
+            constantValue.indexes.push(exp)
+            // expecting closing bracket
+            if (!lexemes.get() || (lexemes.get()?.content !== close)) {
+              throw new CompilerError(`Closing bracket "${close}" missing after string variable index.`, exp.lexeme)
+            }
+            lexemes.next()
+          } else {
+            throw new CompilerError('{lex} is not a string constant.', lexeme)
+          }
+        }
+        return constantValue
       }
 
       // look for a variable
@@ -209,8 +228,10 @@ function factor (lexemes: Lexemes, routine: Program|Subroutine): Expression {
         }
         // check the right number of array variable indexes have been given
         if (variable.isArray) {
-          if (variableValue.indexes.length > variable.arrayDimensions.length) {
-            // TODO: allow one more index for arrays of strings (to refer to characters within the string)
+          const allowedIndexes = (variable.type === 'string')
+            ? variable.arrayDimensions.length + 1 // one more for characters within strings
+            : variable.arrayDimensions.length
+          if (variableValue.indexes.length > allowedIndexes) {
             throw new CompilerError('Too many indexes for array variable {lex}.', lexeme)
           }
         }

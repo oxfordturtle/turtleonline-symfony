@@ -3,7 +3,7 @@ import basicBody from './basic/body'
 import type Program from './definitions/program'
 import { Subroutine } from './definitions/subroutine'
 import { ProcedureCall } from './definitions/statement'
-import { FunctionCall } from './definitions/expression'
+import { FunctionCall, VariableValue } from './definitions/expression'
 import { Command } from '../constants/commands'
 import { CompilerError } from '../tools/error'
 import type Lexemes from './definitions/lexemes'
@@ -104,9 +104,26 @@ function _arguments (lexemes: Lexemes, routine: Program|Subroutine, commandCall:
   while ((argsGiven < argsExpected) && (lexemes.get()?.content !== ')')) {
     const parameter = commandCall.command.parameters[argsGiven]
     let argument = expression(lexemes, routine)
-    const bypassTypeCheck = (commandCall.command instanceof Command)
-      && (commandCall.command.names[routine.language]?.toLowerCase() === 'address')
-    if (!bypassTypeCheck) { // variable passed (by reference) to built-in address function can be of any type
+    if (commandCall.command instanceof Command) {
+      switch (commandCall.command.names[routine.language]?.toLowerCase()) {
+        case 'address':
+          // variable passed (by reference) to built-in address function can be of any type
+          // so no type check is needed
+          break
+
+        case 'length':
+          // length command allows string or array arguments
+          if (!(argument instanceof VariableValue) || !argument.variable.isArray) {
+            argument = typeCheck(argument, parameter.type)
+          }
+          break
+
+        default:
+          // standard type check by default
+          argument = typeCheck(argument, parameter.type)
+          break
+      }
+    } else {
       argument = typeCheck(argument, parameter.type)
     }
     commandCall.arguments.push(argument)

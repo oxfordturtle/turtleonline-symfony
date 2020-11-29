@@ -304,7 +304,7 @@ export const commands: Command[] = [
   new Command(
     { BASIC: 'NEWTURTLE', C: 'newturtle', Java: 'newTurtle', Pascal: 'newturtle', Python: 'newturtle', TypeScript: 'newTurtle' },
     [PCode.ldin, 0, PCode.sptr],
-    [new Parameter('array', 'integer', true, 5)],
+    [new Parameter('array', 'integer', false, 5)],
     null, 3, 2,
     'Points the Turtle to a custom array in memory (this must be an array of five integers, corresponding to the Turtle&rsquo;s five properties, <code>turtx</code>, <code>turty</code>, <code>turtd</code>, <code>turtt</code>, and <code>turtc</code>). Use repeatedly to simulate multiple Turtles.'
   ),

@@ -1,5 +1,3 @@
-REM IFSBackground
-
 CONST XLEFT% = 0
 CONST XRIGHT% = 999
 CONST YTOP% = 0

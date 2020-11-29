@@ -23,7 +23,7 @@ export function variables (lexemes: Lexemes, routine: Program|Subroutine): Varia
   }
 
   // expecting type specification
-  const [variableType, stringLength, arrayDimensions] = type(lexemes, routine)
+  const [variableType, stringLength, arrayDimensions] = type(lexemes, routine, false)
   for (const foo of vars) {
     foo.type = variableType
     foo.stringLength = stringLength

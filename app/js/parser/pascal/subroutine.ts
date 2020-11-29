@@ -27,7 +27,7 @@ export default function subroutine (lexeme: KeywordLexeme, lexemes: Lexemes, par
 
   // for functions, expecting return type
   if (sub.type === 'function') {
-    const [returnType, stringLength, arrayDimensions] = type(lexemes, sub)
+    const [returnType, stringLength, arrayDimensions] = type(lexemes, sub, false)
     if (arrayDimensions.length > 0) {
       throw new CompilerError('Functions cannot return arrays.', lexemes.get(-1))
     }
@@ -163,7 +163,7 @@ function parameterSet (lexemes: Lexemes, subroutine: Subroutine): Variable[] {
 
   // expecting type specification
   // TODO: array parameters (don't specify the dimensions)
-  const [parameterType, stringLength, arrayDimensions] = type(lexemes, subroutine)
+  const [parameterType, stringLength, arrayDimensions] = type(lexemes, subroutine, true)
   for (const foo of parameters) {
     foo.type = parameterType
     foo.stringLength = stringLength

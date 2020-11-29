@@ -1,5 +1,3 @@
-REM RecursiveTree
-
 BLANK(BLACK)
 MOVEXY(0, 400)
 COLOUR(EMERALD)

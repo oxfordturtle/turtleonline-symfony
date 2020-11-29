@@ -1,5 +1,3 @@
-REM Launch
-
 CONST EARTHRADIUS% = 6371000
 CONST EARTHGM% = 398600442
 CONST INITDIRECTION% = 2000
@@ -16,6 +14,7 @@ d% = INITDIRECTION%
 t% = 0
 prevdiff% = 1
 thrust% = INITTHRUST%
+dist% = 0
 REPEAT
   PROCdrawrocket
   prevdist% = dist%

@@ -1,5 +1,3 @@
-# GameOfLife
-
 width: int = 32
 height: int = 32
 dn: int

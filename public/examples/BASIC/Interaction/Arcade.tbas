@@ -1,5 +1,3 @@
-REM Arcade
-
 CONST TARGETS% = 10
 FaceX% = -100
 FaceY% = 625

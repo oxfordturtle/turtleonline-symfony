@@ -53,6 +53,7 @@ export const examples: Example[] = [
   new Example('CSAC', 'DragonColour', 'Dragon colour'),
   new Example('CSAC', 'DragonIFS', 'Dragon IFS'),
   new Example('CSAC', 'TreeIFS', 'Tree IFS'),
+  new Example('CASC', 'WaveSuperposer', 'Hugh Wallis’s wave superposer'),
   // examples 1 - Drawing
   new Example('Drawing', 'DrawPause', 'Simple drawing with pauses'),
   new Example('Drawing', 'SmileyFace', 'Smiley face (using PENUP and ELLBLOT)'),
@@ -142,7 +143,6 @@ export const examples: Example[] = [
   new Example('Models', 'Roads', 'Town road simulation'),
   new Example('Models', 'Interference', 'Wave interference tutor'),
   new Example('Models', 'TwoSlits', 'Interference from two slits'),
-  new Example('Models', 'WaveSuperposer', 'Hugh Wallis’s wave superposer'),
   // examples 9 - Fractals
   new Example('Fractals', 'RecursionFactory', 'Recursion factory'),
   new Example('Fractals', 'RecursiveTree', 'Recursive tree'),

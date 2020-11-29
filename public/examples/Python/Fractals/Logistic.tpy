@@ -1,5 +1,3 @@
-# Logistic
-
 maxpop: int = 100000
 maxgen: int = 100
 lmargin: int = 105

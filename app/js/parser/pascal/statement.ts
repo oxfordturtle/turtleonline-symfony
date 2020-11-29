@@ -180,13 +180,10 @@ function variableAssignment (variableLexeme: IdentifierLexeme, lexemes: Lexemes,
 
   // check the right number of array variable indexes have been given
   if (variable.isArray) {
-    if (indexes.length === 0) {
-      throw new CompilerError('Array variable {lex} cannot be assigned a value.', variableLexeme)
-    }
-    if (indexes.length < variable.arrayDimensions.length) {
-      throw new CompilerError('Too few indexes for array variable {lex}.', variableLexeme)
-    }
-    if (indexes.length > variable.arrayDimensions.length) {
+    const allowedIndexes = (variable.type === 'string')
+      ? variable.arrayDimensions.length + 1 // one more for characters within strings
+      : variable.arrayDimensions.length
+    if (indexes.length > allowedIndexes) {
       throw new CompilerError('Too many indexes for array variable {lex}.', variableLexeme)
     }
   }
