@@ -33,7 +33,7 @@ string initCaps (string s) {
   bool newword = true;
   for (int posn = 0; posn < strlen(s); posn = posn + 1) {
     if (newword && (testCase(s[posn]) == 0)) {
-      s[posn] = (char) s[posn] - 32;
+      s[posn] = (char) ((int) s[posn]) - 32;
     }
     newword = (testCase(s[posn]) == -1);
   }
@@ -44,16 +44,16 @@ string initCaps (string s) {
 string caesar (string s, int n) {
   for (int posn = 0; posn < strlen(s); posn = posn + 1) {
     if (testCase(s[posn]) == 1) {
-      s[posn] = (char) s[posn] + n;
+      s[posn] = (char) ((int) s[posn]) + n;
       if (s[posn] > 'Z') {
-        s[posn] = (char) s[posn] - 26;
+        s[posn] = (char) ((int) s[posn]) - 26;
       }
     }
     else {
       if (testCase(s[posn]) == 0) {
-        s[posn] = (char) s[posn] + n;
+        s[posn] = (char) ((int) s[posn]) + n;
         if (s[posn] > 'z') {
-          s[posn] = (char) s[posn] - 26;
+          s[posn] = (char) ((int) s[posn]) - 26;
         }
       }
     }
