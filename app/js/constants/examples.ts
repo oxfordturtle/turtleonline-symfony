@@ -167,9 +167,10 @@ export const examples: Example[] = [
   new Example('Logic&CS', 'NoughtsAndCrosses', 'Noughts and crosses'),
   new Example('Logic&CS', 'NimLearn', 'Nim learning program'),
   new Example('Logic&CS', 'MultiNim', 'Nim with multiple piles'),
-  new Example('Logic&CS', 'KnightsTour', 'Knight’s Tour program'),
-  new Example('Logic&CS', 'TuringMachines', 'Turing machine simulator'),
-  new Example('Logic&CS', 'Syllogisms', 'Syllogism testing program')
+  new Example('Logic&CS', 'KnightsTour', 'Knight’s Tour program')
+  // these last two examples don't yet compile properly :(
+  // new Example('Logic&CS', 'TuringMachines', 'Turing machine simulator'),
+  // new Example('Logic&CS', 'Syllogisms', 'Syllogism testing program')
 ]
 
 /** array of example groups */
@@ -179,10 +180,10 @@ export const groups: Group[] = [
   new Group(2, 'Procedures', 'procedures and simple recursion'),
   new Group(3, 'Further', 'further commands and structures'),
   new Group(4, 'Movement', 'smooth movement and bouncing'),
-  //new Group(5, 'Files', 'file and directory handling'),
+  // new Group(5, 'Files', 'file and directory handling'),
   new Group(5, 'Interaction', 'user input, interaction and games'),
   new Group(6, 'Cellular', 'cellular models'),
   new Group(7, 'Models', 'other models'),
   new Group(8, 'Fractals', 'self-similarity and chaos'),
-  //new Group(10, 'Logic&CS', 'computer science and logic')
+  new Group(9, 'Logic&CS', 'computer science and logic')
 ]
