@@ -80,8 +80,16 @@ export function expression (lexemes: Lexemes, routine: Program|Subroutine, level
     nextExp = typeCheck(nextExp, exp.type)
 
     // maybe replace provisional operator with its string equivalent
-    if (exp.type === 'string' || nextExp.type === 'string' || exp.type === 'character' || nextExp.type === 'character') {
+    if (exp.type === 'string' || nextExp.type === 'string') {
       op = stringOperator(op)
+    }
+    if (exp.type === 'character' || nextExp.type === 'character') {
+      // TODO: reconsider this, as this behaviour is not ideal
+      // whether to use the string operator should be determined by the context
+      // i.e. if we're expecting a string, use the string equivalent ??
+      if (op === 'plus') {
+        op = stringOperator(op)
+      }
     }
 
     // create a compound expression with the operator
