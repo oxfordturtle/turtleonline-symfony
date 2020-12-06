@@ -162,12 +162,11 @@ function parameterSet (lexemes: Lexemes, subroutine: Subroutine): Variable[] {
   }
 
   // expecting type specification
-  // TODO: array parameters (don't specify the dimensions)
   const [parameterType, stringLength, arrayDimensions] = type(lexemes, subroutine, true)
   for (const foo of parameters) {
     foo.type = parameterType
     foo.stringLength = stringLength
-    foo.arrayDimensions = arrayDimensions // WRONG!!
+    foo.arrayDimensions = arrayDimensions
     foo.isParameter = true
     foo.isReferenceParameter = isReferenceParameter
   }
