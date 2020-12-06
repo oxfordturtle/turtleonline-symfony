@@ -1,44 +1,49 @@
-# BouncingTriangle
+size: Final[int] = 100
+x: int = 300
+y: int = 700
+d: int = 0
+xEdge: bool
+yEdge: bool
 
+# draws a triangle, and checks whether it meets the edge of the canvas
 def triangle(col: int):
-  global bouncex, bouncey
-  bouncex = False
-  bouncey = False
+  global xEdge, yEdge
+  xEdge = False
+  yEdge = False
   setxy(x, y)
   direction(d)
   colour(col)
   for count in range(0, 3, 1):
     forward(size)
     if abs(turtx - 500) > 495:
-      bouncex = True
+      xEdge = True
     if abs(turty - 500) > 495:
-      bouncey = True
+      yEdge = True
     back(size)
     forget(1)
     right(120)
   polygon(3)
 
-bouncex: bool
-bouncey: bool
-size: int = 100
-x: int = 300
-y: int = 700
-d: int = 0
-xvel: int = 8
-yvel: int = -4
-dvel: int = 5
+# set starting velocity
+xVelocity: int = 8
+yVelocity: int = -4
+dVelocity: int = 5
 while 0 < 1:
   noupdate()
+  # rub out existing triangle
   blank(white)
-  x = x + xvel
-  y = y + yvel
-  d = (d + dvel) % 360
+  # move to next location
+  x = x + xVelocity
+  y = y + yVelocity
+  d = (d + dVelocity) % 360
+  # draw new triangle
   triangle(red)
   update()
   pause(10)
-  if bouncex:
-    xvel = -xvel;
-    dvel = -dvel
-  if bouncey:
-    yvel = -yvel
-    dvel = -dvel
+  # "bounce" (i.e. invert velocity) at canvas edges
+  if xEdge:
+    xVelocity = -xVelocity;
+    dVelocity = -dVelocity
+  if yEdge:
+    yVelocity = -yVelocity
+    dVelocity = -dVelocity

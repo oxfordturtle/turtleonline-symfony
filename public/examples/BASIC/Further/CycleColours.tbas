@@ -1,0 +1,20 @@
+REM black out canvas
+BLANK(BLACK)
+REM initialise variables
+colourInc% = RND(5) - 1
+colourCode% = RND(20)
+lineLength% = 0
+THICKNESS(16)
+REM draw a multi-coloured spiral by repeatedly ...
+REPEAT
+  REM cycling through some standard Turtle colours
+  colourCode% = ((colourCode% + colourInc%) MOD 20) + 1
+  COLOUR(RGB(colourCode%))
+  REM moving forward by an increasing amount
+  lineLength% = lineLength% + 1
+  FORWARD(lineLength%)
+  REM turning right by 30 degrees
+  RIGHT(30)
+REM ... until the move forward distance > 250
+UNTIL lineLength% > 250
+END

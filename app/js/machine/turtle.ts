@@ -1,3 +1,4 @@
+/** all turtle properties */
 export type Turtle = {
   x: number,
   y: number,

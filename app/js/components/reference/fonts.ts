@@ -1,15 +1,16 @@
 /**
  * Fonts reference table.
  */
-import { fonts, Font } from '../../machine/fonts'
+import type { Font } from '../../constants/fonts'
+import { fonts } from '../../constants/fonts'
 import { fill, tr, td } from '../../tools/elements'
-import state from '../../state/index'
+import { on } from '../../tools/hub'
 
 // get relevant elements
 const fontsTableBody = document.querySelector('[data-component="fontsTableBody"]') as HTMLElement
 
 if (fontsTableBody) {
-  state.on('languageChanged', updateTable)
+  on('languageChanged', updateTable)
 }
 
 function updateTable (): void {

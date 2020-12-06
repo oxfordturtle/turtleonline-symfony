@@ -1,14 +1,18 @@
-# CycleColours
-
-colinc: int = randint(0, 4)
-colcode: int = randint(1, 20)
+# black out canvas
 blank(black)
-colour(rgb(colcode))
+# initialise variables
+colourInc: int = randint(0, 4)
+colourCode: int = randint(1, 20)
+lineLength: int = 0
 thickness(16)
-length: int = 0
-while not(length > 250):
-  colcode = (colcode + colinc) % 20 + 1
-  colour(rgb(colcode))
-  length = length + 1
-  forward(length)
+# draw a multi-coloured spiral by repeating the
+# following until the move forward distance > 250
+while not(lineLength > 250):
+  # cycle through some standard Turtle colours
+  colourCode = (colourCode + colourInc) % 20 + 1
+  colour(rgb(colourCode))
+  # move forward by an increasing amount
+  lineLength = lineLength + 1
+  forward(lineLength)
+  # turn right by 30 degrees
   right(30)

@@ -1,5 +1,3 @@
-# IFSBackground
-
 xleft : int = 0
 xright : int = 999
 ytop : int = 0

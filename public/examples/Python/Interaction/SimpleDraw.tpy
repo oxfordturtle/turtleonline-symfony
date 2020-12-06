@@ -1,5 +1,3 @@
-# SimpleDraw
-
 def palette():
   for col in range(1, 11, 1):
     setxy(col * 100 - 50, 950)

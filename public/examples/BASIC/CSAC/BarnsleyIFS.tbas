@@ -1,0 +1,125 @@
+CONST XLEFT% = -236
+CONST XRIGHT% = 263
+CONST YTOP% = 1
+CONST YBOTTOM% = 1000
+CONST SCALEDOWN% = 3
+CONST MAPPINGS% = 4
+CONST TITLE$ = "Barnsley fern"
+CONST LIVE% = GREEN
+CONST COPIED% = EMERALD
+CONST PAUSEVAL% = 2000
+DIM mapxx%(MAPPINGS%)
+DIM mapxy%(MAPPINGS%)
+DIM mapxc%(MAPPINGS%)
+DIM mapyx%(MAPPINGS%)
+DIM mapyy%(MAPPINGS%)
+DIM mapyc%(MAPPINGS%)
+PROCsetmaps
+PROCsetscale
+CANVAS(xl%, yt%, xr% - xl% + 1, yb% - yt% + 1)
+RESOLUTION(xr% - xl% + 1, yb% - yt% + 1)
+PIXSET(1, 1, LIVE%)
+iteration% = 0
+WRITELN(TITLE$ + " by iterative mapping")
+TIMESET(0)
+REPEAT
+  starttime% = TIME
+  iteration% = iteration% + 1
+  WRITELN("")
+  WRITELN("iteration% " + STR$(iteration%) + ":")
+  numborn% = 0
+  FOR count% = 1 TO MAPPINGS%
+    PROCdomap(count%)
+  NEXT
+  numkilled% = 0
+  PROCcleanup
+  WRITELN("  " + STR$(numborn%) + " pixels born " + STR$(numkilled%) + " pixels killed")
+  WRITELN("  (took " + STR$((TIME - starttime%) / 1000) + " seconds - total " + STR$(TIME / 1000) + " seconds so far)")
+  IF (numborn% + numkilled% > 0) AND (PAUSEVAL% >= 1000) THEN
+    WRITE("  (now pausing " + QSTR$(PAUSEVAL%, 1000, 1) + " seconds to allow halting if desired ...)")
+    PAUSE(PAUSEVAL%)
+    WRITELN("")
+  ENDIF
+UNTIL numborn% + numkilled% = 0
+WRITELN("FINISH - fixed point of iterative mapping has been reached")
+END
+
+DEF PROCsetmaps
+  coeffdiv% = 100
+  mapxx%(1) = 0
+  mapyx%(1) = 0
+  mapxy%(1) = 0
+  mapyy%(1) = 16
+  mapxc%(1) = 0
+  mapyc%(1) = 0
+  mapxx%(2) = 85
+  mapyx%(2) = -4
+  mapxy%(2) = 4
+  mapyy%(2) = 85
+  mapxc%(2) = 0
+  mapyc%(2) = 160
+  mapxx%(3) = 20
+  mapyx%(3) = 23
+  mapxy%(3) = -26
+  mapyy%(3) = 22
+  mapxc%(3) = 0
+  mapyc%(3) = 160
+  mapxx%(4) = -15
+  mapyx%(4) = 26
+  mapxy%(4) = 28
+  mapyy%(4) = 24
+  mapxc%(4) = 0
+  mapyc%(4) = 44
+ENDPROC
+
+DEF PROCsetscale
+  LOCAL i%
+  xl% = XLEFT% / SCALEDOWN%
+  xr% = XRIGHT% / SCALEDOWN%
+  yt% = YTOP% / SCALEDOWN%
+  yb% = YBOTTOM% / SCALEDOWN%
+  FOR i% = 1 TO MAPPINGS%
+    mapxc%(i%) = mapxc%(i%) / SCALEDOWN%
+    mapyc%(i%) = mapyc%(i%) / SCALEDOWN%
+  NEXT
+ENDPROC
+
+DEF PROCmap (a%, x%, y%, RETURN newx%, RETURN newy%)
+  newx% = DIVMULT(x%, coeffdiv%, mapxx%(a%)) + DIVMULT(y%, coeffdiv%, mapxy%(a%)) + mapxc%(a%)
+  newy% = DIVMULT(x%, coeffdiv%, mapyx%(a%)) + DIVMULT(y%, coeffdiv%, mapyy%(a%)) + mapyc%(a%)
+ENDPROC
+
+DEF PROCdomap (mapnum%)
+  LOCAL x%, y%, newx%, newy%
+  NOUPDATE
+  FOR y% = yt% TO yb%
+    FOR x% = xl% TO xr%
+      IF PIXCOL(x%, y%) <> WHITE THEN
+        PROCmap(mapnum%, x%, y%, newx%, newy%)
+        IF PIXCOL(newx%, newy%) = WHITE THEN
+          numborn% = numborn% + 1
+        ENDIF
+        PIXSET(newx%, newy%, COPIED%)
+      ENDIF
+    NEXT
+  NEXT
+  UPDATE
+ENDPROC
+
+DEF PROCcleanup
+  LOCAL x%, y%
+  NOUPDATE
+  FOR y% = yt% TO yb%
+    FOR x% = xl% TO xr%
+      IF PIXCOL(x%, y%) = LIVE% THEN
+        PIXSET(x%, y%, WHITE)
+        numkilled% = numkilled% + 1
+      ELSE
+        IF PIXCOL(x%, y%) = COPIED% THEN
+          PIXSET(x%, y%, LIVE%)
+        ENDIF
+      ENDIF
+    NEXT
+  NEXT
+  UPDATE
+ENDPROC

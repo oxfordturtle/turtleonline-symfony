@@ -1,0 +1,40 @@
+REM declare constants and arrays
+CONST LASTNUM% = 25
+DIM fibSave%(LASTNUM%)
+REM set up and show the canvas
+OUTPUT(TRUE, CREAM, TRUE)
+REM calculate and display the Fibonacci series recursively (slow)
+WRITELN("First, by recursion:")
+TIMESET(0)
+FOR count% = 1 TO LASTNUM%
+  WRITELN("fib(" + STR$(count%) + ") = " + STR$(FNfibRecursive(count%)))
+NEXT
+WRITELN("Time taken: " + QSTR$(TIME, 1000, 2) + " seconds")
+WRITELN("")
+REM calculate and display the Fibonacci series iteratively (fast)
+WRITELN("Then, by iteration:")
+TIMESET(0)
+FOR count% = 1 TO LASTNUM%
+  WRITELN("fib(" + STR$(count%) + ") = " + STR$(FNfibIterative(count%)))
+NEXT
+WRITELN("Time taken: " + QSTR$(TIME, 1000, 2) + " seconds")
+END
+
+REM calculates the nth Fibonacci number recursively
+DEF FNfibRecursive(n%)
+  IF (n% = 1) OR (n% = 2) THEN
+    result% = 1
+  ELSE
+    result% = FNfibRecursive(n% - 1) + FNfibRecursive(n% - 2)
+  ENDIF
+= result%
+
+REM calculates the nth Fibonacci number iteratively, using the fibSave array
+REM N.B. assumes the values for n-1 and n-2 have already been calculated
+DEF FNfibIterative(n%)
+  IF (n% = 1) OR (n% = 2) THEN
+    fibSave%(n%) = 1
+  ELSE
+    fibSave%(n%) = fibSave%(n% - 1) + fibSave%(n% - 2)
+  ENDIF
+= fibSave%(n%)

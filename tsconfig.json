@@ -2,9 +2,11 @@
   "compilerOptions": {
     "outDir": "./public/",
     "sourceMap": true,
-    "noImplicitAny": false,
+    "strict": true,
     "module": "es6",
-    "target": "es6"
+    "target": "es6",
+    "lib": ["DOM", "DOM.Iterable", "ES2016", "ES2019"],
+    "esModuleInterop": true
   },
   "exclude": [
     "node_modules",

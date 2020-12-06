@@ -1,15 +1,17 @@
 /**
  * Colour constants reference table.
  */
-import { colours, Colour } from '../../machine/colours'
-import { Language } from '../../state/languages'
+import type { Colour } from '../../constants/colours'
+import { colours } from '../../constants/colours'
+import type { Language } from '../../constants/languages'
 import state from '../../state/index'
+import { on } from '../../tools/hub'
 
 // get relevant elements
 const coloursTableBody = document.querySelector('[data-component="coloursTableBody"]') as HTMLElement
 
 if (coloursTableBody) {
-  state.on('languageChanged', updateTable)
+  on('languageChanged', updateTable)
 }
 
 function updateTable (): void {

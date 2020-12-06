@@ -1,3 +1,106 @@
-# BarnsleyColour
+xleft: Final[int] = -236
+xright: Final[int] = 263
+ytop: Final[int] = 1
+ybottom: Final[int] = 1000
+scaledown: Final[int] = 3
+mappings: Final[int] = 4
+label: Final[str] = 'Barnsley fern'
+gridlines: Final[int] = 5
+gridthick: Final[int] = 32
+coeffdiv: int
+mapxx: List[int, mappings]
+mapxy: List[int, mappings]
+mapxc: List[int, mappings]
+mapyx: List[int, mappings]
+mapyy: List[int, mappings]
+mapyc: List[int, mappings]
+xl: int
+xr: int
+yt: int
+yb: int
+gt: int
 
-# not yet available in Turtle Python
+def setmaps ():
+  coeffdiv = 100
+  mapxx[0] = 0
+  mapyx[0] = 0
+  mapxy[0] = 0
+  mapyy[0] = 16
+  mapxc[0] = 0
+  mapyc[0] = 0
+  mapxx[1] = 85
+  mapyx[1] = -4
+  mapxy[1] = 4
+  mapyy[1] = 85
+  mapxc[1] = 0
+  mapyc[1] = 160
+  mapxx[2] = 20
+  mapyx[2] = 23
+  mapxy[2] = -26
+  mapyy[2] = 22
+  mapxc[2] = 0
+  mapyc[2] = 160
+  mapxx[3] = -15
+  mapyx[3] = 26
+  mapxy[3] = 28
+  mapyy[3] = 24
+  mapxc[3] = 0
+  mapyc[3] = 44
+
+def setscale ():
+  global xl, xr, yt, yb, gt
+  xl = xleft / scaledown
+  xr = xright / scaledown
+  yt = ytop / scaledown
+  yb = ybottom / scaledown
+  for i in range(0, mappings, 1):
+    mapxc[i] = mapxc[i] / scaledown
+    mapyc[i] = mapyc[i] / scaledown
+  gt = gridthick / scaledown
+
+def background ():
+  thickness(gt)
+  colour(darkgrey)
+  for x in range(1, gridlines, 1):
+    setxy(xl + divmult(xr - xl, gridlines, x), yt)
+    drawxy(0, yb - yt)
+    for y in range(1, gridlines, 1):
+      setxy(xl + gt / 2, yt + divmult(yb - yt, gridlines, y))
+      drawxy(xr - xl - gt, 0)
+  colour(black)
+  setxy(xl, yt)
+  drawxy(xr - xl, 0)
+  drawxy(0, yb - yt)
+  drawxy(xl - xr, 0)
+  drawxy(0, yt - yb)
+  for x in range(0, gridlines, 1):
+    for y in range(0, gridlines, 1):
+      cx: int = xl + divmult(xr - xl, gridlines, x) + gt
+      cy: int = yt + divmult(yb - yt, gridlines, y) + gt
+      r: int = divmult(255, gridlines - 1, x)
+      g: int = divmult(255, gridlines - 1, y)
+      b: int = divmult(255, 2 * gridlines - 2, 2 * gridlines - 2 - x - y)
+      recolour(cx, cy, r * 0x10000 + g * 0x100 + b * 0x1)
+
+def map (a: int, x: int, y: int, newxadd: int, newyadd: int):
+  poke(newxadd, divmult(x, coeffdiv, mapxx[a]) + divmult(y, coeffdiv, mapxy[a]) + mapxc[a])
+  poke(newyadd, divmult(x, coeffdiv, mapyx[a]) + divmult(y, coeffdiv, mapyy[a]) + mapyc[a])
+
+def domap (mapnum: int):
+  newx: int
+  newy: int
+  noupdate()
+  for y in range(yt, yb + 1, 1):
+    for x in range(xl, xr + 1, 1):
+      map(mapnum, x, y, address(newx), address(newy))
+      pixset(newx, newy, pixcol(x, y))
+  update()
+
+setmaps()
+setscale()
+canvas(xl, yt, xr - xl + 1, yb - yt + 1)
+resolution(xr - xl + 1, yb - yt + 1)
+background()
+writeline(label + ' mappings in colour')
+for count in range(0, mappings, 1):
+  domap(count + 1)

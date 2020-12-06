@@ -1,0 +1,75 @@
+PROGRAM TypingTestKeys;
+VAR count: integer;
+    letters: string;
+    c, m, n: integer;
+    temp: char;
+    lowerCase, shiftOk: boolean;
+    x, y: integer;
+BEGIN
+  {show instructions}
+  blank(cream);
+  setxy(15, 200);
+  print('In this typing test, you will be shown the', 4, 36);
+  setxy(20, 270);
+  print('letters of the alphabet in a random order,', 4, 36);
+  setxy(20, 340);
+  print('and in a mixture of upper- and lower-case.', 4, 36);
+  setxy(20, 410);
+  print('Type them as fast as you can, and see how', 4, 36);
+  setxy(20, 480);
+  print('quickly you can finish the entire alphabet.', 4, 36);
+  setxy(100, 620);
+  print('Now press the "Esc" key to start ...', 4, 36);
+  {disable key echo in console}
+  keyecho(false);
+  {wait for escape key to be pressed}
+  repeat
+  until (abs(?key) = \escape);
+  {create a string containing all letters of the alphabet}
+  letters := '';
+  for c := 65 to 90 do
+    letters := letters + chr(c);
+  {randomize the order of the letters}
+  for count := 1 to 50 do
+    begin
+     m := random(26) + 1;
+     n := random(26) + 1;
+     if m <> n then
+       begin
+         temp := letters[m];
+         letters[m] := letters[n];
+         letters[n] := temp
+       end
+    end;
+  {set timer to zero}
+  timeset(0);
+  {for each letter in turn...}
+  for count := 1 to 26 do
+    begin
+      {get character code of that letter}
+      c := ord(letters[count]);
+      {select case at random}
+      lowerCase := (random(2) = 0);
+      {rub out previous letter}
+      blank(black);
+      {print letter at random coordinates}
+      setxy(100 + random(300), random(250));
+      colour(yellow);
+      {print in either lowercase or uppercase}
+      if lowerCase then
+        print(chr(c + 32), 3, 450)
+      else
+        print(chr(c), 3, 450);
+      {wait for user to type that letter, with shift down for uppercase}
+      repeat
+        shiftOk := ((abs(?kshift) and 8) > 0) xor lowerCase
+      until (abs(?key) = c) and shiftOk;
+      {reset kshift value}
+      reset(?kshift)
+    end;
+  {show time taken}
+  blank(lightblue);
+  setxy(60, 460);
+  colour(lightred);
+  print('Your time was ' + qstr(time, 1000, 2) + ' seconds', 4, 50)
+END.

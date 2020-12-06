@@ -1,0 +1,66 @@
+REM disable key output in the console
+KEYECHO(FALSE)
+REM repeatedly...
+REPEAT
+  REM rub out previous frame
+  BLANK(WHITE)
+  SETXY(50, 20)
+  COLOUR(BLUE)
+  PRINT("Type in a starting integer (>1):", 4, 36)
+  SETXY(800, 20)
+  COLOUR(BLACK)
+  REM while waiting for input of integer greater than 1...
+  REPEAT
+    REM empty the keybuffer
+    RESET(\KEYBUFFER)
+    REM print contents of keybuffer on canvas
+    REPEAT
+      BOX(200, 60, WHITE, FALSE)
+      PRINT(GET$(0), 4, 36)
+      PAUSE(100)
+    UNTIL ABS(?KEY) = \RETURN
+    REM read value of keybuffer into string
+    s$ = GETLINE$
+    REM reset key status array
+    RESET(?KEY)
+    REM try to convert s to integer
+    first% = VALDEF(s$, -1)
+  UNTIL first% > 1
+  REM set latest number to user's input
+  latest% = first%
+  REM initialise count variable
+  count% = 0
+  REM print first number in blue
+  COLOUR(BLUE)
+  REM until the sequence reaches 1...
+  REPEAT
+    REM print the latest number
+    SETXY((count% MOD 10) * 100 + 20, (count% DIV 10) * 45 + 300)
+    PRINT(STR$(latest%), 4, 24)
+    REM move to the next number in the sequence
+    IF latest% MOD 2 = 0 THEN
+      latest% = latest% / 2
+    ELSE
+      latest% = 3 * latest% + 1
+    ENDIF
+    REM increment the count variable
+    count% = count% + 1
+    REM print subsequent numbers in green
+    COLOUR(GREEN)
+  UNTIL latest% = 1
+  REM print final number (1) in red
+  SETXY((count% MOD 10) * 100 + 20, (count% DIV 10) * 45 + 300)
+  COLOUR(RED)
+  PRINT(STR$(latest%), 4, 24)
+  REM print length of sequence
+  SETXY(100, 100)
+  PRINT("That took " + STR$(count%) + " iterations to reach 1", 4, 36)
+  COLOUR(BLACK)
+  SETXY(250, 200)
+  REM wait for key press to start again
+  PRINT("[Press a key to continue]", 4, 30)
+  REPEAT
+  UNTIL ?KEY > 0
+  RESET(?KEY)
+UNTIL FALSE
+END

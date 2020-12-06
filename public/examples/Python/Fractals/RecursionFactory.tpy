@@ -1,5 +1,3 @@
-# RecursionFactory
-
 numsides: int = 6
 initsize: int = 240
 shrink: int = 40

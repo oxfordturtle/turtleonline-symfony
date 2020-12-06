@@ -1,5 +1,3 @@
-# AimCannon
-
 gunlength: int = 1000
 distancecol: int = green
 timecol: int = red

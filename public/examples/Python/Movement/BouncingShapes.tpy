@@ -1,3 +1,67 @@
-# BouncingShapes
+minSize: Final[int] = 70
+maxSize: Final[int] = 130
+shapes: Final[int] = 6
+x: List[int, shapes]
+y: List[int, shapes]
+d: List[int, shapes]
+xVelocity: List[int, shapes]
+yVelocity: List[int, shapes]
+dVelocity: List[int, shapes]
+sides: List[int, shapes]
+size: List[int, shapes]
+colr: List[int, shapes]
+xEdge: bool
+yEdge: bool
 
-# not yet available in Turtle Python
+# draws a polygon, and checks whether it meets the edge of the canvas
+def drawShape (sides: int, size: int, colr: int):
+  global xEdge, yEdge
+  xEdge = False
+  yEdge = False
+  colour(colr)
+  for count in range(0, sides, 1):
+    forward(size)
+    if abs(turtx - 500) > 495:
+      xEdge = True
+    if abs(turty - 500) > 495:
+      yEdge = True
+    back(size)
+    forget(1)
+    right(360 / sides)
+  polygon(sides)
+
+# set initial properties for each shape
+for n in range(0, shapes, 1):
+  sides[n] = n + 2
+  size[n] = randint(minSize, maxSize)
+  colr[n] = rgb(n + 1)
+  x[n] = randint(0, 1000 - 2 * size[n]) + size[n]
+  y[n] = randint(0, 1000 - 2 * size[n]) + size[n]
+  d[n] = randint(0, 360)
+  xVelocity[n] = randint(-7, 7)
+  yVelocity[n] = randint(-7, 7)
+  dVelocity[n] = randint(3, 7)
+while 0 < 1:
+  noupdate()
+  # rub out previous shapes
+  blank(white)
+  # draw each shape in its next position
+  for n in range(1, shapes, 1):
+    # move to next position
+    x[n] = x[n] + xVelocity[n]
+    y[n] = y[n] + yVelocity[n]
+    d[n] = (d[n] + dVelocity[n]) % 360
+    setxy(x[n], y[n])
+    direction(d[n])
+    # draw shape
+    drawShape(sides[n], size[n], colr[n])
+    # "bounce" (i.e. invert velocity) at canvas edges
+    if xEdge:
+      xVelocity[n] = -xVelocity[n]
+      dVelocity[n] = -dVelocity[n]
+    if yEdge:
+      yVelocity[n] = -yVelocity[n]
+      dVelocity[n] = -dVelocity[n]
+  update()
+  pause(5)
+  

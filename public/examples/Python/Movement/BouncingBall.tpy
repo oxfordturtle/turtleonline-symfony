@@ -1,21 +1,24 @@
-# BouncingBall
-
+# set starting point and velocity
 x: int = 100
 y: int = 700
-xvel: int = 8
-yvel: int = -4
+xVelocity: int = 8
+yVelocity: int = -4
 while 0 < 1:
   noupdate()
+  # rub out existing ball
   colour(white)
   blot(51)
-  x = x + xvel
-  y = y + yvel
+  # move to next location
+  x = x + xVelocity
+  y = y + yVelocity
   setxy(x, y)
+  # draw new ball
   colour(red)
   blot(50)
   update()
-  pause(5)
+  pause(10)
+  # "bounce" (i.e. invert velocity) at canvas edges
   if (x < 50) or (x > 949):
-    xvel = -xvel
+    xVelocity = -xVelocity
   if (y < 50) or (y > 949):
-    yvel = -yvel
+    yVelocity = -yVelocity

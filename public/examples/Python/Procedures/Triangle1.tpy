@@ -1,9 +1,11 @@
-# Triangle1
-
+# move to start, without drawing
 movexy(-100, 150)
+# draw first side, and turn
 forward(256)
 right(120)
+# draw second side, and turn
 forward(256)
 right(120)
+# draw third side, and turn
 forward(256)
 right(120)

@@ -1,3 +1,73 @@
-# UserStringFunctions
+# generates the reverse of a string
+def reverse (s: str) -> str:
+  result: str = ''
+  for posn in range(0, len(s), 1):
+    result = s[posn] + result
+  return result
 
-# not yet available in Turtle Python
+# generates the reverse of a string recursively
+def reverseRecursive (s: str) -> str:
+  if (s == ''):
+    return s
+  return reverseRecursive(delete(s, 0, 1)) + s[0]
+
+# tests whether a character is uppercase (1), lowercase (0), or neither (-1)
+def testCase (c: str) -> int:
+  if ((ord(c) >= ord('A')) and (ord(c) <= ord('Z'))):
+    return 1
+  if ((ord(c) >= ord('a')) and (ord(c) <= ord('z'))):
+    return 0
+  return -1
+
+# capitalises first letter of each word, leaving other letters unchanged and
+# treating any non-letter as a word separator; the native TITLE function
+# treats only spaces as word separators, making subsequent letters lowercase
+def initCaps (s: str) -> str:
+  newword: bool = True
+  result: str = ''
+  for posn in range(0, len(s), 1):
+    c: str = s[posn]
+    if (newword and (testCase(c) == 0)):
+      c = chr(ord(s[posn]) - 32)
+    result = result + c
+    newword = (testCase(c) == -1)
+  return result
+
+# generates the Caesar cipher of a string
+def caesar (s: str, n: int) -> str:
+  result: str = ''
+  for posn in range(0, len(s), 1):
+    c: str = s[posn]
+    if (testCase(c) == 1):
+      c = chr(ord(c) + n)
+      if (ord(c) > ord('Z')):
+        c = chr(ord(c) - 26)
+    else:
+      if (testCase(c) == 0):
+        c = chr(ord(c) + n)
+        if (ord(c) > ord('z')):
+          c = chr(ord(c) - 26)
+    result = result + c
+  return result
+
+# shows the results of applying the above functions to a string
+def process(s: str):
+  writeline('')
+  writeline('ORIGINAL STRING:               "' + s + '"')
+  writeline('REVERSED (by iteration):       "' + reverse(s) + '"')
+  writeline('REVERSED (by recursion):       "' + reverseRecursive(s) + '"')
+  writeline('INITIAL CAPITAL ALL WORDS:     "' + initCaps(s) + '"')
+  writeline('TITLE CASE:                    "' + title(s) + '"')
+  writeline('REVERSED THEN INITIAL CAPITAL: "' + initCaps(reverse(s)) + '"')
+  writeline('REVERSED THEN TITLE CASE:      "' + title(reverse(s)) + '"')
+  writeline('CAESAR CIPHER (1 letter):      "' + caesar(s, 1) + '"')
+  writeline('CAESAR DECRYPT (1+25 = 26):    "' + caesar(caesar(s, 1), 25) + '"')
+  writeline('CAESAR CIPHER (4 letters):     "' + caesar(s, 4) + '"')
+  writeline('CAESAR DECRYPT (4+22 = 26):    "' + caesar(caesar(s, 4), 22) + '"')
+
+# show the output
+output(True, cream, True)
+writeline('Some User-Defined String Functions')
+# process some example strings
+process('CREATING is better than LEARNING')
+process('indeed it\'s the Essence of Life!')

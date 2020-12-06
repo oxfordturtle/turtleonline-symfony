@@ -1,5 +1,3 @@
-# SpongeThrow
-
 facesize: int = 100
 spongesize: int = 40
 

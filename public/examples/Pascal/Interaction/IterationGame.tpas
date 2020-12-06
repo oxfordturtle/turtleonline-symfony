@@ -1,0 +1,70 @@
+PROGRAM IterationGame;
+VAR s: string;
+    first, count, latest: integer;
+BEGIN
+  {disable key output in the console}
+  keyecho(false);
+  {repeatedly...}
+  repeat
+    {rub out previous frame}
+    blank(white);
+    setxy(50, 20);
+    colour(blue);
+    print('Type in a starting integer (>1):', 4, 36);
+    setxy(800, 20);
+    colour(black);
+    {while waiting for input of integer greater than 1...}
+    repeat
+      {empty the keybuffer}
+      reset(\keybuffer);
+      {print contents of keybuffer on canvas}
+      repeat
+        box(200, 60, white, false);
+        print(read(0), 4, 36);
+        pause(100)
+      until abs(?key) = \return;
+      {read value of keybuffer into string}
+      s := readln;
+      {try to convert s to integer}
+      first := valdef(s, -1);
+      {reset key input value}
+      reset(?key)
+    until first > 1;
+    {set latest number to user's input}
+    latest := first;
+    {initialise count variable}
+    count := 0;
+    {print first number in blue}
+    colour(blue);
+    {until the sequence reaches 1...}
+    repeat
+      {print the latest number}
+      setxy((count mod 10) * 100 + 20, (count div 10) * 45 + 300);
+      print(str(latest), 4, 24);
+      {move to the next number in the sequence}
+      if latest mod 2 = 0 then
+        latest := latest / 2
+      else
+        latest := 3 * latest + 1;
+      {increment the count variable}
+      inc(count);
+      {print subsequent numbers in green}
+      colour(green)
+    until latest = 1;
+    {print final number (1) in red}
+    setxy((count mod 10) * 100 + 20, (count div 10) * 45 + 300);
+    colour(red);
+    print(str(latest), 4, 24);
+    {print length of sequence}
+    setxy(100, 100);
+    print('That took ' + str(count) + ' iterations to reach 1', 4, 36);
+    colour(black);
+    setxy(250, 200);
+    {wait for key press to start again}
+    print('[Press a key to continue]', 4, 30);
+    repeat
+    until ?key > 0;
+    {reset key input value}
+    reset(?key)
+  until false
+END.

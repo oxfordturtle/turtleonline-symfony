@@ -2,12 +2,14 @@
  * Binds select/input elements to state properties.
  */
 import state from '../state/index'
-import { Property } from '../state/properties'
-import { languages, Language } from '../state/languages'
-import { Mode } from '../state/modes'
+import type { Property } from '../constants/properties'
+import type { Language } from '../constants/languages'
+import { languages } from '../constants/languages'
+import type { Mode } from '../constants/modes'
 import { option, fill } from '../tools/elements'
-import { categories } from '../compiler/categories'
-import SystemError from '../state/error'
+import { commandCategories } from '../constants/categories'
+import { SystemError } from '../tools/error'
+import { on, send } from '../tools/hub'
 
 for (const element of document.querySelectorAll('[data-binding]')) {
   switch ((element as HTMLElement).dataset.binding as Property) {
@@ -17,7 +19,7 @@ for (const element of document.querySelectorAll('[data-binding]')) {
       element.addEventListener('change', function (): void {
         state.language = (element as HTMLSelectElement).value as Language
       })
-      state.on('languageChanged', function (): void {
+      on('languageChanged', function (): void {
         (element as HTMLSelectElement).value = state.language
       })
       break
@@ -28,7 +30,7 @@ for (const element of document.querySelectorAll('[data-binding]')) {
           state.mode = (element as HTMLInputElement).value as Mode
         }
       })
-      state.on('modeChanged', function (): void {
+      on('modeChanged', function (): void {
         if ((element as HTMLInputElement).value === state.mode) {
           (element as HTMLInputElement).checked = true
         }
@@ -40,7 +42,7 @@ for (const element of document.querySelectorAll('[data-binding]')) {
       element.addEventListener('change', function (): void {
         state.editorFontFamily = (element as HTMLSelectElement).value
       })
-      state.on('editorFontFamilyChanged', function (): void {
+      on('editorFontFamilyChanged', function (): void {
         (element as HTMLSelectElement).value = state.editorFontFamily
       })
       break
@@ -49,7 +51,7 @@ for (const element of document.querySelectorAll('[data-binding]')) {
       element.addEventListener('change', function (): void {
         state.editorFontSize = parseInt((element as HTMLSelectElement).value)
       })
-      state.on('editorFontSizeChanged', function (): void {
+      on('editorFontSizeChanged', function (): void {
         (element as HTMLSelectElement).value = state.editorFontSize.toString(10)
       })
       break
@@ -59,7 +61,7 @@ for (const element of document.querySelectorAll('[data-binding]')) {
       element.addEventListener('change', function (): void {
         state.outputFontFamily = (element as HTMLSelectElement).value
       })
-      state.on('outputFontFamilyChanged', function (): void {
+      on('outputFontFamilyChanged', function (): void {
         (element as HTMLSelectElement).value = state.outputFontFamily
       })
       break
@@ -68,7 +70,7 @@ for (const element of document.querySelectorAll('[data-binding]')) {
       element.addEventListener('change', function (): void {
         state.outputFontSize = parseInt((element as HTMLSelectElement).value)
       })
-      state.on('outputFontSizeChanged', function (): void {
+      on('outputFontSizeChanged', function (): void {
         (element as HTMLSelectElement).value = state.outputFontSize.toString(10)
       })
       break
@@ -78,7 +80,7 @@ for (const element of document.querySelectorAll('[data-binding]')) {
       element.addEventListener('change', function (): void {
         state.includeCommentsInExamples = (element as HTMLInputElement).checked
       })
-      state.on('includeCommentsInExamplesChanged', function (): void {
+      on('includeCommentsInExamplesChanged', function (): void {
         (element as HTMLInputElement).checked = state.includeCommentsInExamples
       })
       break
@@ -87,7 +89,7 @@ for (const element of document.querySelectorAll('[data-binding]')) {
       element.addEventListener('change', function (): void {
         state.loadCorrespondingExample = (element as HTMLInputElement).checked
       })
-      state.on('loadCorrespondingExampleChanged', function (): void {
+      on('loadCorrespondingExampleChanged', function (): void {
         (element as HTMLInputElement).checked = state.loadCorrespondingExample
       })
       break
@@ -98,7 +100,7 @@ for (const element of document.querySelectorAll('[data-binding]')) {
           state.assembler = ((element as HTMLInputElement).value === 'assembler')
         }
       })
-      state.on('assemblerChanged', function (): void {
+      on('assemblerChanged', function (): void {
         if (state.assembler) {
           (element as HTMLInputElement).checked = (element as HTMLInputElement).value === 'assembler'
         } else {
@@ -113,7 +115,7 @@ for (const element of document.querySelectorAll('[data-binding]')) {
           state.decimal = ((element as HTMLInputElement).value === 'decimal')
         }
       })
-      state.on('decimalChanged', function (): void {
+      on('decimalChanged', function (): void {
         if (state.decimal) {
           (element as HTMLInputElement).checked = (element as HTMLInputElement).value === 'decimal'
         } else {
@@ -127,7 +129,7 @@ for (const element of document.querySelectorAll('[data-binding]')) {
       element.addEventListener('change', function (): void {
         state.autoCompileOnLoad = (element as HTMLInputElement).checked
       })
-      state.on('autoCompileOnLoadChanged', function (): void {
+      on('autoCompileOnLoadChanged', function (): void {
         (element as HTMLInputElement).checked = state.autoCompileOnLoad
       })
       break
@@ -137,7 +139,7 @@ for (const element of document.querySelectorAll('[data-binding]')) {
       element.addEventListener('change', function (): void {
         state.autoRunOnLoad = (element as HTMLInputElement).checked
       })
-      state.on('autoRunOnLoadChanged', function (): void {
+      on('autoRunOnLoadChanged', function (): void {
         (element as HTMLInputElement).checked = state.autoRunOnLoad
       })
       break
@@ -147,7 +149,7 @@ for (const element of document.querySelectorAll('[data-binding]')) {
       element.addEventListener('change', function (): void {
         state.autoFormatOnLoad = (element as HTMLInputElement).checked
       })
-      state.on('autoFormatOnLoadChanged', function (): void {
+      on('autoFormatOnLoadChanged', function (): void {
         (element as HTMLInputElement).checked = state.autoFormatOnLoad
       })
       break
@@ -157,7 +159,7 @@ for (const element of document.querySelectorAll('[data-binding]')) {
       element.addEventListener('change', function (): void {
         state.alwaysSaveSettings = (element as HTMLInputElement).checked
       })
-      state.on('alwaysSaveSettingsChanged', function (): void {
+      on('alwaysSaveSettingsChanged', function (): void {
         (element as HTMLInputElement).checked = state.alwaysSaveSettings
       })
       break
@@ -168,7 +170,7 @@ for (const element of document.querySelectorAll('[data-binding]')) {
       element.addEventListener('change', function (): void {
         state.commandsCategoryIndex = parseInt((element as HTMLSelectElement).value)
       })
-      state.on('commandsCategoryIndexChanged', function (): void {
+      on('commandsCategoryIndexChanged', function (): void {
         (element as HTMLSelectElement).value = state.commandsCategoryIndex.toString(10)
       })
       break
@@ -177,7 +179,7 @@ for (const element of document.querySelectorAll('[data-binding]')) {
       element.addEventListener('change', function (): void {
         state.showSimpleCommands = (element as HTMLInputElement).checked
       })
-      state.on('showSimpleCommandsChanged', function (): void {
+      on('showSimpleCommandsChanged', function (): void {
         (element as HTMLInputElement).checked = state.showSimpleCommands
       })
       break
@@ -186,7 +188,7 @@ for (const element of document.querySelectorAll('[data-binding]')) {
       element.addEventListener('change', function (): void {
         state.showIntermediateCommands = (element as HTMLInputElement).checked
       })
-      state.on('showIntermediateCommandsChanged', function (): void {
+      on('showIntermediateCommandsChanged', function (): void {
         (element as HTMLInputElement).checked = state.showIntermediateCommands
       })
       break
@@ -195,7 +197,7 @@ for (const element of document.querySelectorAll('[data-binding]')) {
       element.addEventListener('change', function (): void {
         state.showAdvancedCommands = (element as HTMLInputElement).checked
       })
-      state.on('showAdvancedCommandsChanged', function (): void {
+      on('showAdvancedCommandsChanged', function (): void {
         (element as HTMLInputElement).checked = state.showAdvancedCommands
       })
       break
@@ -206,10 +208,10 @@ for (const element of document.querySelectorAll('[data-binding]')) {
       element.addEventListener('change', function () {
         state.currentFileIndex = parseInt((element as HTMLSelectElement).value)
       })
-      state.on('filesChanged', function () {
+      on('filesChanged', function () {
         fillFile(element as HTMLSelectElement)
       })
-      state.on('currentFileIndexChanged', function () {
+      on('currentFileIndexChanged', function () {
         (element as HTMLSelectElement).value = state.currentFileIndex.toString(10)
       })
       break
@@ -218,7 +220,7 @@ for (const element of document.querySelectorAll('[data-binding]')) {
       element.addEventListener('change', function () {
         state.filename = (element as HTMLInputElement).value
       })
-      state.on('filenameChanged', function () {
+      on('filenameChanged', function () {
         (element as HTMLInputElement).value = state.filename
       })
       break
@@ -228,7 +230,7 @@ for (const element of document.querySelectorAll('[data-binding]')) {
       element.addEventListener('change', function (): void {
         state.showCanvasOnRun = (element as HTMLInputElement).checked
       })
-      state.on('showCanvasOnRunChanged', function (): void {
+      on('showCanvasOnRunChanged', function (): void {
         (element as HTMLInputElement).checked = state.showCanvasOnRun
       })
       break
@@ -237,7 +239,7 @@ for (const element of document.querySelectorAll('[data-binding]')) {
       element.addEventListener('change', function (): void {
         state.showOutputOnWrite = (element as HTMLInputElement).checked
       })
-      state.on('showOutputOnWriteChanged', function (): void {
+      on('showOutputOnWriteChanged', function (): void {
         (element as HTMLInputElement).checked = state.showOutputOnWrite
       })
       break
@@ -246,7 +248,7 @@ for (const element of document.querySelectorAll('[data-binding]')) {
       element.addEventListener('change', function (): void {
         state.showMemoryOnDump = (element as HTMLInputElement).checked
       })
-      state.on('showMemoryOnDumpChanged', function (): void {
+      on('showMemoryOnDumpChanged', function (): void {
         (element as HTMLInputElement).checked = state.showMemoryOnDump
       })
       break
@@ -255,7 +257,7 @@ for (const element of document.querySelectorAll('[data-binding]')) {
       element.addEventListener('change', function (): void {
         state.drawCountMax = parseInt((element as HTMLInputElement).value)
       })
-      state.on('drawCountMaxChanged', function (): void {
+      on('drawCountMaxChanged', function (): void {
         (element as HTMLInputElement).value = state.drawCountMax.toString(10)
       })
       break
@@ -264,7 +266,7 @@ for (const element of document.querySelectorAll('[data-binding]')) {
       element.addEventListener('change', function (): void {
         state.codeCountMax = parseInt((element as HTMLInputElement).value)
       })
-      state.on('codeCountMaxChanged', function (): void {
+      on('codeCountMaxChanged', function (): void {
         (element as HTMLInputElement).value = state.codeCountMax.toString(10)
       })
       break
@@ -273,7 +275,7 @@ for (const element of document.querySelectorAll('[data-binding]')) {
       element.addEventListener('change', function (): void {
         state.smallSize = parseInt((element as HTMLInputElement).value)
       })
-      state.on('smallSizeChanged', function (): void {
+      on('smallSizeChanged', function (): void {
         (element as HTMLInputElement).value = state.smallSize.toString(10)
       })
       break
@@ -282,7 +284,7 @@ for (const element of document.querySelectorAll('[data-binding]')) {
       element.addEventListener('change', function (): void {
         state.stackSize = parseInt((element as HTMLInputElement).value)
       })
-      state.on('stackSizeChanged', function (): void {
+      on('stackSizeChanged', function (): void {
         (element as HTMLInputElement).value = state.stackSize.toString(10)
       })
       break
@@ -292,7 +294,7 @@ for (const element of document.querySelectorAll('[data-binding]')) {
       element.addEventListener('change', function (): void {
         state.traceOnRun = (element as HTMLInputElement).checked
       })
-      state.on('traceOnRunChanged', function (): void {
+      on('traceOnRunChanged', function (): void {
         (element as HTMLInputElement).checked = state.traceOnRun
       })
       break
@@ -302,7 +304,7 @@ for (const element of document.querySelectorAll('[data-binding]')) {
       element.addEventListener('change', function (): void {
         state.activateHCLR = (element as HTMLInputElement).checked
       })
-      state.on('activateHCLRChanged', function (): void {
+      on('activateHCLRChanged', function (): void {
         (element as HTMLInputElement).checked = state.activateHCLR
       })
       break
@@ -312,7 +314,7 @@ for (const element of document.querySelectorAll('[data-binding]')) {
       element.addEventListener('change', function (): void {
         state.preventStackCollision = (element as HTMLInputElement).checked
       })
-      state.on('preventStackCollisionChanged', function (): void {
+      on('preventStackCollisionChanged', function (): void {
         (element as HTMLInputElement).checked = state.preventStackCollision
       })
       break
@@ -322,7 +324,7 @@ for (const element of document.querySelectorAll('[data-binding]')) {
       element.addEventListener('change', function (): void {
         state.rangeCheckArrays = (element as HTMLInputElement).checked
       })
-      state.on('rangeCheckArraysChanged', function (): void {
+      on('rangeCheckArraysChanged', function (): void {
         (element as HTMLInputElement).checked = state.rangeCheckArrays
       })
       break
@@ -334,7 +336,7 @@ for (const element of document.querySelectorAll('[data-binding]')) {
           state.canvasStartSize = parseInt((element as HTMLInputElement).value)
         }
       })
-      state.on('canvasStartSizeChanged', function (): void {
+      on('canvasStartSizeChanged', function (): void {
         if ((element as HTMLInputElement).value === state.canvasStartSize.toString(10)) {
           (element as HTMLInputElement).checked = true
         }
@@ -346,7 +348,7 @@ for (const element of document.querySelectorAll('[data-binding]')) {
       element.addEventListener('change', function (): void {
         state.setupDefaultKeyBuffer = (element as HTMLInputElement).checked
       })
-      state.on('setupDefaultKeyBufferChanged', function (): void {
+      on('setupDefaultKeyBufferChanged', function (): void {
         (element as HTMLInputElement).checked = state.setupDefaultKeyBuffer
       })
       break
@@ -356,7 +358,7 @@ for (const element of document.querySelectorAll('[data-binding]')) {
       element.addEventListener('change', function (): void {
         state.turtleAttributesAsGlobals = (element as HTMLInputElement).checked
       })
-      state.on('turtleAttributesAsGlobalsChanged', function (): void {
+      on('turtleAttributesAsGlobalsChanged', function (): void {
         (element as HTMLInputElement).checked = state.turtleAttributesAsGlobals
       })
       break
@@ -366,7 +368,7 @@ for (const element of document.querySelectorAll('[data-binding]')) {
       element.addEventListener('change', function (): void {
         state.initialiseLocals = (element as HTMLInputElement).checked
       })
-      state.on('initialiseLocalsChanged', function (): void {
+      on('initialiseLocalsChanged', function (): void {
         (element as HTMLInputElement).checked = state.initialiseLocals
       })
       break
@@ -376,7 +378,7 @@ for (const element of document.querySelectorAll('[data-binding]')) {
       element.addEventListener('change', function (): void {
         state.allowCSTR = (element as HTMLInputElement).checked
       })
-      state.on('allowCSTRChanged', function (): void {
+      on('allowCSTRChanged', function (): void {
         (element as HTMLInputElement).checked = state.allowCSTR
       })
       break
@@ -386,7 +388,7 @@ for (const element of document.querySelectorAll('[data-binding]')) {
       element.addEventListener('change', function (): void {
         state.separateReturnStack = (element as HTMLInputElement).checked
       })
-      state.on('separateReturnStackChanged', function (): void {
+      on('separateReturnStackChanged', function (): void {
         (element as HTMLInputElement).checked = state.separateReturnStack
       })
       break
@@ -396,7 +398,7 @@ for (const element of document.querySelectorAll('[data-binding]')) {
       element.addEventListener('change', function (): void {
         state.separateMemoryControlStack = (element as HTMLInputElement).checked
       })
-      state.on('separateMemoryControlStackChanged', function (): void {
+      on('separateMemoryControlStackChanged', function (): void {
         (element as HTMLInputElement).checked = state.separateMemoryControlStack
       })
       break
@@ -406,7 +408,7 @@ for (const element of document.querySelectorAll('[data-binding]')) {
       element.addEventListener('change', function (): void {
         state.separateSubroutineRegisterStack = (element as HTMLInputElement).checked
       })
-      state.on('separateSubroutineRegisterStackChanged', function (): void {
+      on('separateSubroutineRegisterStackChanged', function (): void {
         (element as HTMLInputElement).checked = state.separateSubroutineRegisterStack
       })
       break
@@ -431,7 +433,7 @@ function fillFont (input: HTMLSelectElement): void {
 }
 
 function fillCommandsCategory (input: HTMLSelectElement): void {
-  fill(input, categories.map(x => option({ value: x.index.toString(10), content: `${(x.index + 1).toString(10)}. ${x.title}` })))
+  fill(input, commandCategories.map(x => option({ value: x.index.toString(10), content: `${(x.index + 1).toString(10)}. ${x.title}` })))
 }
 
 function fillFile (input: HTMLSelectElement): void {
@@ -444,9 +446,11 @@ function fillFile (input: HTMLSelectElement): void {
 
 function disableInput (input: Element): void {
   input.setAttribute('disabled', 'disabled')
-  input.parentElement.addEventListener('click', function () {
-    state.send('error', new SystemError('This option cannot yet be modified in the online system.'))
-  })
+  if (input.parentElement) {
+    input.parentElement.addEventListener('click', function () {
+      send('error', new SystemError('This option cannot yet be modified in the online system.'))
+    })
+  }
 }
 
 async function disableInputIfNotLoggedIn (input: Element): Promise<void> {
@@ -454,8 +458,10 @@ async function disableInputIfNotLoggedIn (input: Element): Promise<void> {
   const user = response.ok ? await response.json() : null
   if (user === null) {
     input.setAttribute('disabled', 'disabled')
-    input.parentElement.addEventListener('click', function () {
-      state.send('error', new SystemError('You must be logged in to change this setting.'))
-    })
+    if (input.parentElement) {
+      input.parentElement.addEventListener('click', function () {
+        send('error', new SystemError('You must be logged in to change this setting.'))
+      })
+    }
   }
 }

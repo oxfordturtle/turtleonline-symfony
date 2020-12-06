@@ -1,10 +1,11 @@
-/*
- * Files in system memory.
- */
-import { Language } from './languages'
+// type imports
+import type { Language } from '../constants/languages'
 
-/** File class */
-export default class File {
+// module imports
+import { extensions } from '../constants/languages'
+
+/** turtle system file */
+export class File {
   language: Language
   example: string|null
   name: string
@@ -24,27 +25,23 @@ export default class File {
     this.edited = false
   }
 
-  /** skeleton programs */
-  static skeletons: Record<Language, string> = {
-    BASIC: 'var1% = 100\nCOLOUR(GREEN)\nBLOT(var1%)\nEND',
-    Pascal: 'PROGRAM progname;\nVAR var1: integer;\nBEGIN\n  var1 := 100;\n  colour(green);\n  blot(var1)\nEND.',
-    Python: 'var1: int = 100\ncolour(green)\nblot(var1)'
-  }
-
-  /** file extensions */
-  static extensions: Record<Language, string> = {
-    BASIC: 'tbas',
-    Pascal: 'tpas',
-    Python: 'tpy'
-  }
-
   /** file extension */
   get extension (): string {
-    return File.extensions[this.language]
+    return extensions[this.language]
   }
 
   /** filename */
   get filename (): string {
     return `${(this.name || 'filename')}.${this.extension}`
   }
+}
+
+/** skeleton programs */
+export const skeletons: Record<Language, string> = {
+  BASIC: 'var1% = 100\nCOLOUR(GREEN)\nBLOT(var1%)\nEND',
+  C: 'void main () {\n  int var1 = 100;\n  colour(green);\n  blot(var1);\n}',
+  Java: 'class ProgramName {\n  void main () {\n    int var1 = 100;\n    colour(green);\n    blot(var1);\n  }\n}',
+  Pascal: 'PROGRAM programName;\nVAR var1: integer;\nBEGIN\n  var1 := 100;\n  colour(green);\n  blot(var1)\nEND.',
+  Python: 'var1: int = 100\ncolour(green)\nblot(var1)',
+  TypeScript: 'var var1 = 100;\ncolour(green);\nblot(var1);'
 }

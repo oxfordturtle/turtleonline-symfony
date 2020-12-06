@@ -2,9 +2,10 @@
  * System mode toggling.
  */
 import state from '../state/index'
+import { on, send } from '../tools/hub'
 
 // register to keep in sync with system state
-state.on('modeChanged', mode)
+on('modeChanged', mode)
 
 /** updates the page to reflect mode change */
 function mode (): void {
@@ -14,13 +15,15 @@ function mode (): void {
 
   // show/hide elements according to mode
   for (const element of modeElements) {
-    const modes = element.dataset.mode.split(',')
-    if (modes.includes(state.mode) || element.id === 'turtle') {
-      element.classList.remove('hidden')
-    } else {
-      element.classList.add('hidden')
-      if (element.classList.contains('system-tab-pane') && element.classList.contains('active')) {
-        state.send('selectTab', 'canvas')
+    if (element.dataset.mode) {
+      const modes = element.dataset.mode.split(',')
+      if (modes.includes(state.mode) || element.id === 'turtle') {
+        element.classList.remove('hidden')
+      } else {
+        element.classList.add('hidden')
+        if (element.classList.contains('system-tab-pane') && element.classList.contains('active')) {
+          send('selectTab', 'canvas')
+        }
       }
     }
   }

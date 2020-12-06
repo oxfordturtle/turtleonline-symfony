@@ -1,0 +1,68 @@
+CONST WIDTH% = 100
+CONST HEIGHT% = 100
+CONST SUSCEPTIBLE% = LIGHTGREEN
+CONST INFECTED% = RED
+CONST RECOVERED% = BLUE
+CONST STARTRADIUS% = 10
+CONST INFECTPROB% = 2
+CONST CONTACTS% = 50
+CONST REPORT% = FALSE
+CANVAS(0, 0, WIDTH%, HEIGHT%)
+RESOLUTION(WIDTH%, HEIGHT%)
+WRITELN("Contacts per person:       " + STR$(CONTACTS%))
+WRITELN("Transmission probability:  " + STR$(INFECTPROB%) + "%")
+WRITELN("R0 (reproduction number):  " + QSTR$(CONTACTS% * INFECTPROB%, 100, 2))
+IF REPORT% THEN
+  WRITELN("")
+ENDIF
+n% = RNDSEED(3)
+TIMESET(0)
+numimmune% = 0
+numinfected% = 0
+numinfectious% = 0
+NOUPDATE
+FOR x% = 0 TO WIDTH% - 1
+  FOR y% = 0 TO HEIGHT% - 1
+    IF (RND(100) <= INFECTPROB%) AND (HYPOT(x% - WIDTH% / 2, y% - HEIGHT% / 2, 1) <= STARTRADIUS%) THEN
+      PROCinfect(x%, y%)
+    ELSE
+      PIXSET(x%, y%, SUSCEPTIBLE%)
+    ENDIF
+  NEXT
+NEXT
+UPDATE
+REPEAT
+  x% = RND(WIDTH%) - 1
+  y% = RND(HEIGHT%) - 1
+  IF PIXCOL(x%, y%) = INFECTED% THEN
+    FOR n% = 1 TO CONTACTS%
+      IF RND(100) <= INFECTPROB% THEN
+        i% = RND(WIDTH%) - 1
+        j% = RND(HEIGHT%) - 1
+        IF PIXCOL(i%, j%) = SUSCEPTIBLE% THEN
+          PROCinfect(i%, j%)
+        ENDIF
+      ENDIF
+    NEXT
+    PIXSET(x%, y%, RECOVERED%)
+    numinfectious% = numinfectious% - 1
+    IF REPORT% THEN
+      WRITELN("                    Infectious: " + PAD$(STR$(numinfectious%), " ", 4))
+    ENDIF
+  ENDIF
+UNTIL numinfectious% = 0
+IF REPORT% THEN
+  WRITELN("")
+ENDIF
+WRITELN("Total infected overall:    " + STR$(numinfected%) + " (" + QSTR$(TIME, 1000, 2) + " sec)")
+WRITELN("Proportion infected:       " + QSTR$(numinfected% * 100, WIDTH% * HEIGHT% - numimmune%, 2) + "%")
+END
+
+DEF PROCinfect (x%, y%)
+  PIXSET(x%, y%, INFECTED%)
+  numinfected% = numinfected% + 1
+  numinfectious% = numinfectious% + 1
+  IF REPORT% THEN
+    WRITELN("Infected: " + PAD$(STR$(numinfected%), " ", 4) + "      Infectious: " + PAD$(STR$(numinfectious%), " ", 4))
+  ENDIF
+ENDPROC

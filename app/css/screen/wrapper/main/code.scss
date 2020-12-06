@@ -1,52 +1,42 @@
 .main code {
   .comment {
-    color: gray;
+    color: blue;
   }
-  .string {
-    color: seagreen;
-  }
-  .operator {
-    color: steelblue;
-  }
-  .punctuation {}
-  .binary,
-  .octal,
-  .decimal,
-  .hexadecimal {
-    color: peru;
-  }
-  .type {
-    color: firebrick;
-  }
+
   .keyword {
     color: firebrick;
     font-weight: bold;
   }
-  .command,
-  .custom {
-    color: purple;
+
+  .type {
+    color: firebrick;
   }
-  .turtle,
-  .variable {
+
+  .operator {
+    color: cornflowerblue;
+  }
+
+  .command {
+    color: darkviolet;
+  }
+
+  .integer {
+    color: chocolate;
+  }
+
+  .character, .string {
+    color: seagreen;
+  }
+
+  .keycode, .query, .turtle {
     font-weight: bold;
   }
-  .constant {
-    color: steelblue;
+
+  .colour {
+    border-bottom: .125em solid transparent;
   }
-  .keycode {
-    color: steelblue;
-  }
-  .query {
-    font-weight: bold;
-  }
-  .identifier {}
-  .unterminated-comment,
-  .unterminated-string,
-  .bad-binary,
-  .bad-octal,
-  .bad-hexadecimal,
-  .bad-decimal,
-  .illegal {
+
+  .illegal, .error {
     background: rgba(200, 0, 0, .2);
   }
 }

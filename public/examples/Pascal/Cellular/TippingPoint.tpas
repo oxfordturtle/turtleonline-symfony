@@ -1,0 +1,69 @@
+PROGRAM TippingPoint;
+CONST width = 100;
+      height = 100;
+      susceptible = lightgreen;
+      infected = red;
+      recovered = blue;
+      startradius = 10;
+      infectprob = 2;
+      contacts = 50;
+      report = false;
+VAR x, y, n, i, j: integer;
+    numimmune, numinfected, numinfectious: integer;
+
+  Procedure infect(x, y: integer);
+  Begin
+    pixset(x, y, infected);
+    inc(numinfected);
+    inc(numinfectious);
+    if report then
+      writeln('Infected: ' + pad(str(numinfected), ' ', 4) + '      Infectious: ' + pad(str(numinfectious), ' ', 4))
+  End;
+
+BEGIN
+  canvas(0, 0, width, height);
+  resolution(width, height);
+  writeln('Contacts per person:       ' + str(contacts));
+  writeln('Transmission probability:  ' + str(infectprob) + '%');
+  writeln('R0 (reproduction number):  ' + qstr(contacts * infectprob, 100, 2));
+  if report then
+    writeln('');
+  n := randseed(3);
+  timeset(0);
+  numimmune := 0;
+  numinfected := 0;
+  numinfectious := 0;
+  noupdate;
+  for x := 0 to width - 1 do
+    for y := 0 to height - 1 do
+      if (random(100) < infectprob) and (hypot(x - width / 2, y - height / 2, 1) <= startradius) then
+        infect(x, y)
+      else
+        pixset(x, y, susceptible);
+  update;
+  repeat
+    x := random(width);
+    y := random(height);
+    if pixcol(x, y) = infected then
+      begin
+        for n := 1 to contacts do
+          begin
+            if random(100) < infectprob then
+              begin
+                i := random(width);
+                j := random(height);
+                if pixcol(i, j) = susceptible then
+                  infect(i, j)
+              end
+          end;
+        pixset(x, y, recovered);
+        dec(numinfectious);
+        if report then
+          writeln('                    Infectious: ' + pad(str(numinfectious), ' ', 4))
+      end
+  until numinfectious = 0;
+  if report then
+    writeln('');
+  writeln('Total infected overall:    ' + str(numinfected) + ' (' + qstr(time, 1000, 2) + ' sec)');
+  writeln('Proportion infected:       ' + qstr(numinfected * 100, width * height - numimmune, 2) + '%')
+END.

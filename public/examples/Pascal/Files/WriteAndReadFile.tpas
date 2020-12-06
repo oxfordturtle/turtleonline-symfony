@@ -1,0 +1,57 @@
+PROGRAM WriteAndReadFile;
+VAR myfilename: string;
+    handle: integer;
+
+  Procedure writefile;
+  Begin
+    handle := openfile(myfilename, 3);
+    if handle > 0 then
+      begin
+        writeln(myfilename + ' has been opened for writing ...');
+        fwriteln(handle, 'This is the first line to be written.');
+        fwriteln(handle, 'This is the second line to be written.');
+        fwriteln(handle, 'This is the third line to be written.');
+        closefile(handle)
+      end
+    else
+      begin
+        writeln(myfilename + ' could not be opened for writing');
+        handle := openfile(myfilename, 2);
+        if handle > 0 then
+          begin
+            writeln(myfilename + ' has been opened for appending ...');
+            fwriteln(handle, 'This is the first line to be written.');
+            fwriteln(handle, 'This is the second line to be written.');
+            fwriteln(handle, 'This is the third line to be written.');
+            closefile(handle)
+          end
+        else
+          writeln('Nor could it be opened for appending')
+      end
+  End;
+
+  Procedure readfile;
+  Var s: string[255];
+  Begin
+    handle := openfile(myfilename, 1);
+    if handle > 0 then
+      begin
+        writeln('Contents read from ' + myfilename + ':');
+        while not(eof(handle)) do
+          begin
+            s := freadln(handle);
+            writeln('  ' + s)
+          end;
+        closefile(handle)
+      end
+    else
+      writeln(myfilename + ' could not be opened for reading')
+  End;
+
+BEGIN
+  output(true, cream, true);
+  myfilename := 'TestFile.txt';
+  writefile;
+  writeln('');
+  readfile
+END.

@@ -1,5 +1,3 @@
-# SnakeGame
-
 snakecolour: int = purple
 applecolour: int = green
 boardsize: int = 30

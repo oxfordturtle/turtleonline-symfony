@@ -1,5 +1,3 @@
-# Mandelbrot
-
 maxcol: int = 40
 scale: int = 250
 pixels: int = 750

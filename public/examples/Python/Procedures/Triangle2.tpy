@@ -1,12 +1,16 @@
-# Triangle2
-
+# draws a triangle of the given size
 def triangle(size: int):
-  forward(size)
+  # draw first side, and turn
+  forward(256)
   right(120)
-  forward(size)
+  # draw second side, and turn
+  forward(256)
   right(120)
-  forward(size)
+  # draw third side, and turn
+  forward(256)
   right(120)
 
+# move to start, without drawing
 movexy(-100, 150)
+# draw a triangle of size 256
 triangle(256)

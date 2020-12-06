@@ -1,16 +1,13 @@
-# RandomEllipses
-
+# draw 10 random ellipses
 for count in range(1, 10, 1):
-  x: int = randint(0, 1500) - 250
-  y: int = randint(0, 1500) - 250
-  rx: int = randint(0, 500) + 500
-  ry: int = randint(0, 500) + 500
-  setxy(x, y)
-  ellipse(rx, ry)
-nextcol: int = 0
+  setxy(randint(0, 1500) - 250, randint(0, 1500) - 250)
+  ellipse(randint(0, 500) + 500, randint(0, 500) + 500)
+# try to fill all the ellipses with colours
 for count in range(1, 10000, 1):
-  x = randint(0, 1000)
-  y = randint(0, 1000)
+  # pick a random point
+  x: int = randint(0, 1000)
+  y: int = randint(0, 1000)
+  # if it's white, set the next colour and fill the shape with it
   if (pixcol(x, y) == white):
-    nextcol = nextcol % 20 + 1
-    recolour(x, y, rgb(nextcol))
+    nextColour: int = nextColour % 20 + 1
+    recolour(x, y, rgb(nextColour))

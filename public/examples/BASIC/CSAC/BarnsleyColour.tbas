@@ -1,0 +1,111 @@
+CONST XLEFT% = -236
+CONST XRIGHT% = 263
+CONST YTOP% = 1
+CONST YBOTTOM% = 1000
+CONST SCALEDOWN% = 3
+CONST MAPPINGS% = 4
+CONST TITLE$ = "Barnsley fern"
+CONST GRIDLINES% = 5
+CONST GRIDTHICK% = 32
+DIM mapxx%(MAPPINGS%)
+DIM mapxy%(MAPPINGS%)
+DIM mapxc%(MAPPINGS%)
+DIM mapyx%(MAPPINGS%)
+DIM mapyy%(MAPPINGS%)
+DIM mapyc%(MAPPINGS%)
+PROCsetmaps
+PROCsetscale
+CANVAS(xl%, yt%, xr% - xl% + 1, yb% - yt% + 1)
+RESOLUTION(xr% - xl% + 1, yb% - yt% + 1)
+PROCbackground
+WRITELN(TITLE$ + " MAPPINGS% in COLOUR")
+FOR count% = 1 TO MAPPINGS%
+  PROCdomap(count%)
+NEXT
+END
+
+DEF PROCsetmaps
+  coeffdiv% = 100
+  mapxx%(1) = 0
+  mapyx%(1) = 0
+  mapxy%(1) = 0
+  mapyy%(1) = 16
+  mapxc%(1) = 0
+  mapyc%(1) = 0
+  mapxx%(2) = 85
+  mapyx%(2) = -4
+  mapxy%(2) = 4
+  mapyy%(2) = 85
+  mapxc%(2) = 0
+  mapyc%(2) = 160
+  mapxx%(3) = 20
+  mapyx%(3) = 23
+  mapxy%(3) = -26
+  mapyy%(3) = 22
+  mapxc%(3) = 0
+  mapyc%(3) = 160
+  mapxx%(4) = -15
+  mapyx%(4) = 26
+  mapxy%(4) = 28
+  mapyy%(4) = 24
+  mapxc%(4) = 0
+  mapyc%(4) = 44
+ENDPROC
+
+DEF PROCsetscale
+  LOCAL i%
+  xl% = XLEFT% / SCALEDOWN%
+  xr% = XRIGHT% / SCALEDOWN%
+  yt% = YTOP% / SCALEDOWN%
+  yb% = YBOTTOM% / SCALEDOWN%
+  FOR i% = 1 TO MAPPINGS%
+    mapxc%(i%) = mapxc%(i%) / SCALEDOWN%
+    mapyc%(i%) = mapyc%(i%) / SCALEDOWN%
+  NEXT
+  gt% = GRIDTHICK% / SCALEDOWN%
+ENDPROC
+
+DEF PROCbackground
+  LOCAL x%, y%, rx%, ry%, col%
+  THICKNESS(gt%)
+  COLOUR(DARKGREY)
+  FOR x% = 1 TO GRIDLINES% - 1
+    SETXY(xl% + DIVMULT(xr% - xl%, GRIDLINES%, x%), yt%)
+    DRAWXY(0, yb% - yt%)
+  NEXT
+  FOR y% = 1 TO GRIDLINES% - 1
+    SETXY(xl% + gt% / 2, yt% + DIVMULT(yb% - yt%, GRIDLINES%, y%))
+    DRAWXY(xr% - xl% - gt%, 0)
+  NEXT
+  COLOUR(BLACK)
+  SETXY(xl%, yt%)
+  DRAWXY(xr% - xl%, 0)
+  DRAWXY(0, yb% - yt%)
+  DRAWXY(xl% - xr%, 0)
+  DRAWXY(0, yt%- yb%)
+  FOR x% = 0 TO GRIDLINES% - 1
+    FOR y% = 0 TO GRIDLINES% - 1
+      rx% = xl% + DIVMULT(xr% - xl%, GRIDLINES%, x%) + gt%
+      ry% = yt% + DIVMULT(yb% - yt%, GRIDLINES%, y%) + gt%
+      col% = DIVMULT(255, GRIDLINES% - 1, x%) * &10000 + DIVMULT(255, GRIDLINES% - 1, y%) * &100 + DIVMULT(255, 2 * GRIDLINES% - 2, 2 * GRIDLINES% - 2 - x% - y%) * &1
+      RECOLOUR(rx%, ry%, col%)
+    NEXT
+  NEXT
+ENDPROC
+
+DEF PROCmap (a%, x%, y%, RETURN newx%, RETURN newy%)
+  newx% = DIVMULT(x%, coeffdiv%, mapxx%(a%)) + DIVMULT(y%, coeffdiv%, mapxy%(a%)) + mapxc%(a%)
+  newy% = DIVMULT(x%, coeffdiv%, mapyx%(a%)) + DIVMULT(y%, coeffdiv%, mapyy%(a%)) + mapyc%(a%)
+ENDPROC
+
+DEF PROCdomap (mapnum%)
+  LOCAL x%, y%, newx%, newy%
+  NOUPDATE
+  FOR y% = yt% TO yb%
+    FOR x% = xl% TO xr%
+      PROCmap(mapnum%, x%, y%, newx%, newy%)
+      PIXSET(newx%, newy%, PIXCOL(x%, y%))
+    NEXT
+  NEXT
+  UPDATE
+ENDPROC

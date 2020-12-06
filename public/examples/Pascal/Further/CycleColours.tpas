@@ -1,0 +1,24 @@
+PROGRAM CycleColours;
+VAR lineLength: integer;
+    colourInc, colourCode: integer;
+BEGIN
+  {black out canvas}
+  blank(black);
+  {initialise variables}
+  colourInc := random(5);
+  colourCode := random(20) + 1;
+  lineLength := 0;
+  thickness(16);
+  {draw a multi-coloured spiral by repeatedly ...}
+  repeat
+    {cycling through some standard Turtle colours}
+    colourCode := ((colourCode + colourInc) mod 20) + 1;
+    colour(rgb(colourCode));
+    {moving forward by an increasing amount}
+    lineLength := lineLength + 1;
+    forward(lineLength);
+    {turning right by 30 degrees}
+    right(30)
+  {... until the move forward distance > 250}
+  until lineLength > 250
+END.
