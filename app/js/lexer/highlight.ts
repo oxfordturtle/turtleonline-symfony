@@ -36,8 +36,10 @@ export default function highlight (code: string|Token[], language: Language): st
         return `<span class="integer">${token.content}</span>`
 
       case 'colour':
-        const colour = colours.find(x => x.names[language] === token.content) as Colour
-        return `<span class="colour" style="border-color:#${colour.hex};">${token.content}</span>`
+        const colour = colours.find(x => x.names[language] === token.content)
+        return colour
+          ? `<span class="colour" style="border-color:#${colour.hex};">${token.content}</span>`
+          : `<span class="colour">${token.content}</span>`
 
       default:
         return `<span class="${token.type}">${token.content}</span>`
