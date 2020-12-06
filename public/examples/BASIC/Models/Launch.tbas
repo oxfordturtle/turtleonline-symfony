@@ -14,6 +14,11 @@ d% = INITDIRECTION%
 t% = 0
 prevdiff% = 1
 thrust% = INITTHRUST%
+xthrust% = 0
+ythrust% = 0
+gravity% = 0
+xgravity% = 0
+ygravity% = 0
 dist% = 0
 REPEAT
   PROCdrawrocket
@@ -35,7 +40,7 @@ REPEAT
   ELSE
     d% = ATN(xvel%, -yvel%, 1)
   ENDIF
-  INC(t%)
+  t% = t% + 1
   IF t% = THRUSTTIME% THEN thrust% = 0
 UNTIL (0 = 1) OR (dist% < EARTHRADIUS%) OR (dist% > 40000000)
 IF dist% < EARTHRADIUS% THEN

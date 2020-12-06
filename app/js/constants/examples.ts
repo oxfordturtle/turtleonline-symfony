@@ -179,10 +179,10 @@ export const groups: Group[] = [
   new Group(2, 'Procedures', 'procedures and simple recursion'),
   new Group(3, 'Further', 'further commands and structures'),
   new Group(4, 'Movement', 'smooth movement and bouncing'),
-  new Group(5, 'Files', 'file and directory handling'),
-  new Group(6, 'Interaction', 'user input, interaction and games'),
-  new Group(7, 'Cellular', 'cellular models'),
-  new Group(8, 'Models', 'other models'),
-  new Group(9, 'Fractals', 'self-similarity and chaos'),
-  new Group(10, 'Logic&CS', 'computer science and logic')
+  //new Group(5, 'Files', 'file and directory handling'),
+  new Group(5, 'Interaction', 'user input, interaction and games'),
+  new Group(6, 'Cellular', 'cellular models'),
+  new Group(7, 'Models', 'other models'),
+  new Group(8, 'Fractals', 'self-similarity and chaos'),
+  //new Group(10, 'Logic&CS', 'computer science and logic')
 ]

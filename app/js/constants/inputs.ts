@@ -10,7 +10,7 @@ export class Input {
 
   constructor (name: string, value: number) {
     this.names = {
-      BASIC: name.toUpperCase(),
+      BASIC: (value < 0) ? name.toUpperCase() : name,
       C: name,
       Java: name,
       Pascal: name,

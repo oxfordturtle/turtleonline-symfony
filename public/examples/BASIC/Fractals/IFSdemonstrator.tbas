@@ -19,7 +19,7 @@ iteration% = 0
 TIMESET(0)
 REPEAT
   starttime% = TIME
-  INC(iteration%)
+  iteration% = iteration% + 1
   WRITELN("")
   WRITELN("Iteration " + STR$(iteration%) + ":")
   numborn% = 0
@@ -207,7 +207,7 @@ LOCAL x%, y%, newx%, newy%
     FOR x% = xl% TO xr%
       IF PIXCOL(x%, y%) <> WHITE THEN
         PROCmap(mapnum%, x%, y%, newx%, newy%)
-        IF PIXCOL(newx%, newy%) = WHITE THEN INC(numborn%)
+        IF PIXCOL(newx%, newy%) = WHITE THEN numborn% = numborn% + 1
         IF uniform% THEN
           PIXSET(newx%, newy%, copied%)
         ELSE
@@ -226,7 +226,7 @@ LOCAL x%, y%
     FOR x% = xl% TO xr%
       IF PIXCOL(x%, y%) = live% THEN
         PIXSET(x%, y%, WHITE)
-        INC(numkilled%)
+        numkilled% = numkilled% + 1
       ELSE
         IF PIXCOL(x%, y%) <> WHITE THEN
           PIXSET(x%, y%, live%)

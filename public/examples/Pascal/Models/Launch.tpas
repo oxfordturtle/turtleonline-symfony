@@ -64,6 +64,12 @@ BEGIN
   t := 0;
   prevdiff := 1;
   thrust := initthrust;
+  xthrust := 0;
+  ythrust := 0;
+  gravity := 0;
+  xgravity := 0;
+  ygravity := 0;
+  dist := 0;
   repeat
     drawrocket;
     prevdist := dist;

@@ -31,8 +31,8 @@ WRITELN("Averages from sorting " + STR$(N%) + " items, over " + STR$(TRIES%) + "
 WRITELN("")
 WRITELN("               COMPARISONS    SWAPS")
 FOR m% = 1 TO METHODS%
-  WRITE(PAD(caption$(m%), " ", -17) + PAD(QSTR$(comptotal%(m%), TRIES%, 1), " ", 7))
-  WRITELN(PAD(QSTR$(swaptotal%(m%), TRIES%, 1), " ", 11))
+  WRITE(PAD$(caption$(m%), " ", -17) + PAD$(QSTR$(comptotal%(m%), TRIES%, 1), " ", 7))
+  WRITELN(PAD$(QSTR$(swaptotal%(m%), TRIES%, 1), " ", 11))
 NEXT
 END
 
@@ -55,7 +55,7 @@ DEF PROCinit
 ENDPROC
 
 DEF FNlessthan(x%, y%)
-  INC(comps%)
+  comps% = comps% + 1
 = (x% < y%)
 
 DEF PROCswap(x%, y%)
@@ -63,7 +63,7 @@ DEF PROCswap(x%, y%)
   t% = a%(x%)
   a%(x%) = a%(y%)
   a%(y%) = t%
-  INC(swaps%)
+  swaps% = swaps% + 1
 ENDPROC
 
 DEF FNordered
@@ -121,7 +121,7 @@ DEF PROCinsertionsort
     j% = i%
     WHILE (j% > 1) AND FNlessthan(a%(j%), a%(j% - 1))
       PROCswap(j% - 1, j%)
-      DEC(j%)
+      j% = j% - 1
     ENDWHILE
   NEXT
 ENDPROC
@@ -132,7 +132,7 @@ DEF PROCqsort(left%, right%)
     m% = left%
     FOR i% = left% + 1 TO right%
       IF FNlessthan(a%(i%), a%(left%)) THEN
-        INC(m%)
+        m% = m% + 1
         PROCswap(m%, i%)
       ENDIF
     NEXT
@@ -164,8 +164,8 @@ DEF PROCsort(method%)
       ENDIF
     ENDIF
   ENDIF
-  WRITE(PAD(caption$(method%), " ", -17) + PAD(STR$(comps%), " ", 4) + " comparisons")
-  WRITELN(PAD(STR$(swaps%), " ", 6) + " swaps%")
+  WRITE(PAD$(caption$(method%), " ", -17) + PAD$(STR$(comps%), " ", 4) + " comparisons")
+  WRITELN(PAD$(STR$(swaps%), " ", 6) + " swaps%")
   IF CHECKING% THEN
     IF NOT(FNordered) THEN
       WRITELN("     Sort failed:")
