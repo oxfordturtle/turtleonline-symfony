@@ -158,22 +158,51 @@ export function statement (lexeme: Lexeme, lexemes: Lexemes, routine: Program|Su
 
 /** parses lexemes as a variable assignment */
 export function variableAssignment (variableLexeme: IdentifierLexeme, lexemes: Lexemes, routine: Program|Subroutine, variable: Variable): VariableAssignment|PassStatement {
-  // strings and list variables permit element indexes at this point
+  // strings and array variables permit element indexes at this point
   const indexes: Expression[] = []
-  if (variable.isArray || variable.type === 'string') {
-    if (lexemes.get() && lexemes.get()?.content === '[') {
+  if (lexemes.get()?.content === '[') {
+    if (variable.isArray) {
       lexemes.next()
+      while (lexemes.get() && lexemes.get()?.content !== ']') {
+        // expecting integer expression for the element index
+        let exp = expression(lexemes, routine)
+        exp = typeCheck(exp, 'integer')
+        indexes.push(exp)
+        // maybe move past "]["
+        if (lexemes.get()?.content === ']' && lexemes.get(1)?.content === '[') {
+          lexemes.next()
+          lexemes.next()
+        }
+      }
+      // check we came out of the loop above for the right reason
+      if (!lexemes.get()) {
+        throw new CompilerError('Closing bracket "]" needed after array indexes.', lexemes.get(-1))
+      }
+      // move past the closing bracket
+      lexemes.next()
+    } else if (variable.type === 'string') {
+      lexemes.next()
+      // expecting integer expression for the character index
       let exp = expression(lexemes, routine)
       exp = typeCheck(exp, 'integer')
       indexes.push(exp)
-      // TODO: multi-dimensional stuff
-      if (!lexemes.get()) {
-        throw new CompilerError('Closing bracket "]" missing after string/array index.', lexemes.get(-1))
-      }
-      if (lexemes.get()?.content !== ']') {
-        throw new CompilerError('Closing bracket "]" missing after string/array index.', lexemes.get())
+      // expecting closing bracket
+      if (!lexemes.get() || (lexemes.get()?.content !== ']')) {
+        throw new CompilerError('Closing bracket "]" missing after string variable index.', exp.lexeme)
       }
       lexemes.next()
+    } else {
+      throw new CompilerError('{lex} is not a string or array variable.', variableLexeme)
+    }
+  }
+
+  // check the right number of array variable indexes have been given
+  if (variable.isArray) {
+    const allowedIndexes = (variable.type === 'string')
+      ? variable.arrayDimensions.length + 1 // one more for characters within strings
+      : variable.arrayDimensions.length
+    if (indexes.length > allowedIndexes) {
+      throw new CompilerError('Too many indexes for array variable {lex}.', variableLexeme)
     }
   }
 
