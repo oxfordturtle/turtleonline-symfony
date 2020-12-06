@@ -16,7 +16,7 @@ VAR board: array[0..11] of integer;
   Procedure copy(var fromarray, toarray: array of integer);
   Var i: integer;
   Begin
-    for i := 0 to fromarray.length - 1 do
+    for i := 0 to length(fromarray) - 1 do
       toarray[i] := fromarray[i]
   End;
 

@@ -242,9 +242,11 @@ function subroutineStartCode (subroutine: Subroutine, options: Options): number[
         const lastStartLine = pcode[pcode.length - 1]
         if (parameter.isArray && !parameter.isReferenceParameter) {
           // TODO: copy the array
-        } else if (parameter.type === 'string') {
+        } else if (parameter.type === 'string' && !parameter.isReferenceParameter) {
+          // copy the string
           lastStartLine.push(PCode.ldvv, subroutine.address, parameter.address, PCode.cstr)
         } else {
+          // for booleans and integers, or longer reference parameters, just store the value/address
           lastStartLine.push(PCode.stvv, subroutine.address, parameter.address)
         }
       }

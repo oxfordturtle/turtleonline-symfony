@@ -56,7 +56,7 @@ function variableAssignment (stmt: VariableAssignment, program: Program, options
     return pointerVariableAssignment(stmt, program, options)
   }
 
-  if (stmt.variable.isReferenceParameter) {
+  if (stmt.variable.isReferenceParameter && !stmt.variable.isArray && stmt.variable.type !== 'string') {
     return referenceVariableAssignment(stmt, program, options)
   }
 
@@ -125,7 +125,6 @@ function pointerVariableAssignment (stmt: VariableAssignment, program: Program, 
 function referenceVariableAssignment (stmt: VariableAssignment, program: Program, options: Options): number[][] {
   const pcode = expression(stmt.value, program, options)
 
-  // TODO: array reference parameters
   merge(pcode, [[PCode.stvr, (stmt.variable.routine as Subroutine).address, stmt.variable.address]])
 
   return pcode

@@ -55,7 +55,7 @@ export function expression (exp: Expression, program: Program, options: Options,
       return variableAddress(exp, program, options)
 
     case 'variable':
-      return reference
+      return (reference && !exp.variable.isArray && exp.variable.type !== 'string')
         ? variableAddress(exp, program, options)
         : variableValue(exp, program, options)
 
@@ -229,12 +229,12 @@ function variableValue (exp: VariableValue, program: Program, options: Options):
     pcode.push([PCode.ldvg, exp.variable.address])
   }
 
-  // local reference variable
-  else if (exp.variable.isReferenceParameter) {
+  // local reference variable (except arrays and strings)
+  else if (exp.variable.isReferenceParameter && !exp.variable.isArray && exp.variable.type !== 'string') {
     pcode.push([PCode.ldvr, exp.variable.routine.address, exp.variable.address])
   }
 
-  // local value variable
+  // local value variable (and arrays and strings passed by reference)
   else {
     pcode.push([PCode.ldvv, exp.variable.routine.address, exp.variable.address])
   }
