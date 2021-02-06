@@ -73,11 +73,12 @@ DEF PROChandleClick
   IF thisTurtle% > 0 THEN
     REM select this turtle
     NEWTURTLE(turtles%(thisTurtle%))
-    REM change angles, which will set direction to the closest possible angle
-    ANGLES(RND(46) + 46)
-    REM log the change in the console
+    REM start logging the change in the console
     WRITE("Turtle " + STR$(thisTurtle%) + " changing direction,")
     WRITE("  from " + STR$(turtles%(thisTurtle%, D%)) + "/" + STR$(turtles%(thisTurtle%, A%)))
+    REM change angles, which will set direction to the closest possible angle
+    ANGLES(RND(46) + 46)
+    REM finish logging the change
     WRITELN("  to " + STR$(turtles%(thisTurtle%, D%)) + "/" + STR$(turtles%(thisTurtle%, A%)))
     PAUSE(200)
   ENDIF

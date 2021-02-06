@@ -70,11 +70,11 @@ DEF PROCsetup
   DRAWXY(0, WIDTH% + 1)
   RECOLOUR(LEFTAXIS% + 2, bottom%, COLOUR1%)
   RECOLOUR(WIDTH% + LEFTAXIS% - 4, bottom%, COLOUR2%)
-  FOR x1% = 0 TO boundary% - 1
-    num1%(x1%) = x1% + 1
+  FOR x% = 0 TO boundary% - 1
+    num1%(x%) = x% + 1
   NEXT
-  FOR x1% = boundary% TO WIDTH% - 1
-    num1%(x1%) = 0
+  FOR x% = boundary% TO WIDTH% - 1
+    num1%(x%) = 0
   NEXT
   COLOUR(BLACK)
   SETXY(0, 0)
@@ -128,15 +128,15 @@ DEF PROCgraphit(x%, show%)
 ENDPROC
 
 DEF PROCshowswap(x%, origcol%)
-  PROCgraphit(x1%, FALSE)
-  PROCgraphit(x1% + 1, FALSE)
+  PROCgraphit(x%, FALSE)
+  PROCgraphit(x% + 1, FALSE)
   IF origcol% = COLOUR1% THEN
-    num1%(x1%) = num1%(x1%) - 1
-    num1%(x1% + 1) = num1%(x1% + 1) + 1
+    num1%(x%) = num1%(x%) - 1
+    num1%(x% + 1) = num1%(x% + 1) + 1
   ELSE
-    num1%(x1%) = num1%(x1%) + 1
-    num1%(x1% + 1) = num1%(x1% + 1) - 1
+    num1%(x%) = num1%(x%) + 1
+    num1%(x% + 1) = num1%(x% + 1) - 1
   ENDIF
-  PROCgraphit(x1%, TRUE)
-  PROCgraphit(x1% + 1, TRUE)
+  PROCgraphit(x%, TRUE)
+  PROCgraphit(x% + 1, TRUE)
 ENDPROC

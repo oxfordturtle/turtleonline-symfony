@@ -49,11 +49,12 @@ VAR turtles: array[1..numTurtles, x..c] of integer;
       begin
         {select this turtle}
         newturtle(turtles[thisTurtle]);
-        {change angles, which will set direction to the closest possible angle}
-        angles(random(46) + 45);
-        {log the change in the console}
+        {start loggin the change in the console}
         write('Turtle ' + str(thisTurtle) + ' changing direction,');
         write('  from ' + str(turtles[thisTurtle, d]) + '/' + str(turtles[thisTurtle, a]));
+        {change angles, which will set direction to the closest possible angle}
+        angles(random(46) + 45);
+        {finish logging the change}
         writeln('  to ' + str(turtles[thisTurtle, d]) + '/' + str(turtles[thisTurtle, a]));
         pause(200)
       end

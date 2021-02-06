@@ -106,20 +106,20 @@ VAR xorval: integer;
 
   Procedure showswap(x, origcol: integer);
   Begin
-    graphit(x1, false);
-    graphit(x1 + 1, false);
+    graphit(x, false);
+    graphit(x + 1, false);
     if origcol = colour1 then
       begin
-        dec(num1[x1]);
-        inc(num1[x1 + 1])
+        dec(num1[x]);
+        inc(num1[x + 1])
       end
     else
       begin
-        inc(num1[x1]);
-        dec(num1[x1 + 1])
+        inc(num1[x]);
+        dec(num1[x + 1])
       end;
-    graphit(x1, true);
-    graphit(x1 + 1, true)
+    graphit(x, true);
+    graphit(x + 1, true)
   End;
 
 BEGIN
