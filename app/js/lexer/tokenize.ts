@@ -111,12 +111,12 @@ function operatorOrDelimiter (code: string, language: Language, line: number, ch
 /** tests for an operator and returns the token if matched */
 function operator (code: string, language: Language, line: number, character: number): Token|false {
   const tests = {
-    BASIC: /^(\+|-|\*|\/|DIV\b|MOD\b|=|<>|<=|>=|<|>|NOT\b|AND\b|OR\b|EOR\b)/,
-    C: /^(\+|-|\*|\/|%|==|!=|<=|>=|<|>|=|!|&&|\|\||~|&|\||\^)/,
-    Java: /^(\+|-|\*|\/|%|==|!=|<=|>=|<|>|=|!|&&|\|\||~|&|\||\^)/,
-    Pascal: /^(\+|-|\*|\/|div\b|mod\b|=|<>|<=|>=|<|>|:=|not\b|and\b|or\b|xor\b)/i,
+    BASIC: /^(\+|-|\*|\/|DIV\b|MOD\b|=|<>|<=|>=|<|>|ANDL\b|ORL\b|NOT\b|AND\b|OR\b|EOR\b)/,
+    C: /^(\+|-|\*|\/|div\b|%|==|!=|<=|>=|<|>|=|!|&&|\|\||~|&|\||\^)/,
+    Java: /^(\+|-|\*|\/|div\b|%|==|!=|<=|>=|<|>|=|!|&&|\|\||~|&|\||\^)/,
+    Pascal: /^(\+|-|\*|\/|div\b|mod\b|=|<>|<=|>=|<|>|:=|andl\b|orl\b|not\b|and\b|or\b|xor\b)/i,
     Python: /^(\+|-|\*|\/\/|\/|%|==|!=|<=|>=|<|>|=|not\b|and\b|or\b|~|&|\||\^)/,
-    TypeScript: /^(\+|-|\*|\/|%|==|!=|<=|>=|<|>|=|!|&&|\|\||~|&|\||\^)/
+    TypeScript: /^(\+|-|\*|\/|div\b|%|==|!=|<=|>=|<|>|=|!|&&|\|\||~|&|\||\^)/
   }
   const test = code.match(tests[language])
   return test ? new Token('operator', test[0], line, character) : false

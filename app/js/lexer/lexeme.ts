@@ -146,9 +146,7 @@ export class OperatorLexeme extends LexemeClass {
         this.subtype = 'mult'
         break
       case '/':
-        this.subtype = (language === 'C' || language === 'Java' || language === 'TypeScript')
-          ? 'div' // C, Java, and TypeScript don't distinguish integer and real division
-          : 'divr'
+        this.subtype = 'divr'
         break
       case 'div': // fallthrough
       case '//':
@@ -191,12 +189,14 @@ export class OperatorLexeme extends LexemeClass {
       case 'or': // BASIC, Pascal, and Python
         this.subtype = (language === 'Python') ? 'orl' : 'or'
         break
+      case 'andl': // fallthrough
       case '&&':
         this.subtype = 'andl'
         break
       case '&':
         this.subtype = 'and'
         break
+      case 'orl': // fallthrough
       case '||':
         this.subtype = 'orl'
         break
