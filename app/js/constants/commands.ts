@@ -689,7 +689,7 @@ export const commands: Command[] = [
     'Writes the input <code>string</code> to the console and textual output area of the System.'
   ),
   new Command(
-    { BASIC: 'WRITELN', C: 'writeline', Java: 'writeln', Pascal: 'writeln', Python: 'writeline', TypeScript: 'writeln' },
+    { BASIC: 'WRITELN', C: 'writeline', Java: 'writeLine', Pascal: 'writeln', Python: 'writeline', TypeScript: 'writeLine' },
     [PCode.writ, PCode.newl],
     [new Parameter('string', 'string', false, 1)],
     null, 7, 0,
