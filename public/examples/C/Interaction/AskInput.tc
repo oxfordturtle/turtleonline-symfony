@@ -1,1 +1,11 @@
-// this example is not yet available in Turtle C
+void main () {
+  // write question to console
+  write('What is your name?  ');
+  // read characters from keybuffer until ENTER key is pressed
+  string name = gets();
+  // write a greeting (on a new line)
+  writeline('');
+  write('Hello, ' + name + ', ...  ');
+  pause(500);
+  writeline('How are you?');
+}
