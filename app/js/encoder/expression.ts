@@ -55,9 +55,18 @@ export function expression (exp: Expression, program: Program, options: Options,
       return variableAddress(exp, program, options)
 
     case 'variable':
-      return (reference && !exp.variable.isArray && exp.variable.type !== 'string')
-        ? variableAddress(exp, program, options)
-        : variableValue(exp, program, options)
+      if (reference) {
+        if (exp.variable.isArray && exp.indexes.length < exp.variable.arrayDimensions.length) {
+          // in this case the value is the address
+          return variableValue(exp, program, options)
+        } else if (exp.variable.type === 'string' && exp.indexes.length === 0) {
+          // in this case the value is the address
+          return variableValue(exp, program, options)
+        } else {
+          return variableAddress(exp, program, options)
+        }
+      }
+      return variableValue(exp, program, options)
 
     case 'function':
       return functionValue(exp, program, options)
