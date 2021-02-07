@@ -1,2 +1,171 @@
-REM this example is not yet available in Turtle
-REM BASIC
+CONST sectors% = 7
+CONST wavecol1% = RED
+CONST wavecol2% = SKYBLUE
+CONST waveaddcol% = INDIGO
+CONST clocks% = 16
+CONST report% = FALSE
+DIM sectcol%(sectors%)
+DIM boundary%(sectors%)
+DIM clockx%(clocks%)
+PROCcolsetup
+PROCclocksetup
+dimensions% = 1
+wavelength1% = 300
+wavelength2% = 420
+REPEAT
+  BLANK(WHITE)
+  NOUPDATE
+  SETXY(leftx%, 25)
+  COLOUR(BLACK)
+  PRINT("Component waves (wavelengths " + STR$(wavelength1%) + ", " + STR$(wavelength2%) + ")", 4, 30)
+  PROCdrawwave("Wave 1", 100, wavelength1%, wavecol1%)
+  PROCdrawwave("Wave 2", 300, wavelength2%, wavecol2%)
+  SETXY(leftx%, 505)
+  COLOUR(BLACK)
+  PRINT("Resultant wave", 4, 30)
+  PROCdrawresult(580)
+  PROCchangeprompt
+UNTIL 0 = 1
+END
+
+DEF PROCcolsetup
+  sectcol%(0) = VIOLET
+  sectcol%(1) = BLUE
+  sectcol%(2) = CYAN
+  sectcol%(3) = LIME
+  sectcol%(4) = YELLOW
+  sectcol%(5) = ORANGE
+  sectcol%(6) = RED
+  sectcol%(7) = VIOLET
+  FOR n% = 0 TO sectors%
+    boundary%(n%) = DIVMULT(360, sectors%, n%)
+  NEXT
+ENDPROC
+
+DEF FNwavecolour (n%)
+  col2% = 0
+  REPEAT
+    col2% = col2% + 1
+  UNTIL boundary%(col2%) >= n%
+  col1% = col2% - 1
+= MIXCOLS(sectcol%(col1%), sectcol%(col2%), boundary%(col2%) - n%, n% - boundary%(col1%))
+
+DEF PROCclocksetup
+  FOR n% = 1 TO clocks%
+    clockx%(n%) = DIVMULT(1000, clocks% * 2 + 2, n% * 2)
+  NEXT
+  leftx% = clockx%(1)
+  rightx% = clockx%(clocks%)
+  cradius% = (rightx% - leftx%) / clocks% / 2
+  hand% = cradius% * 6 / 7
+ENDPROC
+
+DEF PROCdrawwave(s$, top%, wavelength%, wavecol%)
+  IF dimensions% = 1 THEN
+    SETXY(leftx%, top% + 25)
+    COLOUR(BLACK)
+    DRAWXY(rightx% - leftx%, 0)
+    SETXY(leftx%, top%)
+    COLOUR(wavecol%)
+  ENDIF
+  FOR n% = 0 TO rightx% - leftx%
+    IF dimensions% = 1 THEN
+      SETXY(leftx% + n%, top% + 25 - COS(DIVMULT(n% MOD wavelength%, wavelength%, 360), 1, 25))
+      POLYLINE(2)
+    ELSE
+      SETXY(leftx% + n%, top%)
+      COLOUR(FNwavecolour(DIVMULT(n% MOD wavelength%, wavelength%, 360)))
+      DRAWXY(0, 50)
+    ENDIF
+  NEXT
+  FOR n% = 1 TO clocks%
+    SETXY(clockx%(n%), top% + 70 + cradius%)
+    COLOUR(BLACK)
+    CIRCLE(cradius%)
+    BLOT(5)
+    turn% = DIVMULT((clockx%(n%) - leftx%) MOD wavelength%, wavelength%, 360)
+    IF report% THEN
+      WRITELN(s$ + ', clock ' + STR$(n%) + ': dist=' + STR$(clockx%(n%)) + ' turn%=' + STR$(turn%))
+    ENDIF
+    TURNXY(SIN(turn%, 1, 1000), -COS(turn%, 1, 1000))
+    COLOUR(wavecol%)
+    FORWARD(hand%)
+  NEXT
+ENDPROC
+
+DEF PROCdrawresult (top%)
+  IF dimensions% = 1 THEN
+    SETXY(leftx%, top% + 50)
+    COLOUR(BLACK)
+    DRAWXY(rightx% - leftx%, 0)
+    SETXY(leftx%, top%)
+    COLOUR(waveaddcol%)
+  ENDIF
+  FOR n% = 0 TO rightx% - leftx%
+    turn1% = DIVMULT(n% MOD wavelength1%, wavelength1%, 360)
+    turn2% = DIVMULT(n% MOD wavelength2%, wavelength2%, 360)
+    waveaddi% = SIN(turn1%, 1, 500) + SIN(turn2%, 1, 500)
+    waveaddj% = COS(turn1%, 1, 500) + COS(turn2%, 1, 500)
+    waveadd% = HYPOT(waveaddi%, waveaddj%, 1)
+    IF dimensions% = 1 THEN
+      SETXY(leftx% + n%, top% + 50 - DIVMULT(waveaddj%, 1000, 50))
+      POLYLINE(2)
+    ELSE
+      SETXY(leftx% + n%, top%)
+      TURNXY(waveaddi%, -waveaddj%)
+      COLOUR(MIXCOLS(FNwavecolour(turtd%), BLACK, waveadd%, 1000 - waveadd%))
+      IF MIXCOLS(FNwavecolour(turtd%), BLACK, waveadd%, 1000 - waveadd%) < 51 THEN
+        COLOUR(BLACK)
+      ENDIF
+      DRAWXY(0, 100)
+    ENDIF
+  NEXT
+  FOR n% = 1 TO clocks%
+    SETXY(clockx%(n%), top% + 280 + 2 * cradius% - (150 * (n% MOD 2)))
+    COLOUR(BLACK)
+    CIRCLE(cradius% * 2)
+    BLOT(5)
+    turn1% = DIVMULT((clockx%(n%) - leftx%) MOD wavelength1%, wavelength1%, 360)
+    turn2% = DIVMULT((clockx%(n%) - leftx%) MOD wavelength2%, wavelength2%, 360)
+    waveaddi% = SIN(turn1%, 1, 500) + SIN(turn2%, 1, 500)
+    waveaddj% = COS(turn1%, 1, 500) + COS(turn2%, 1, 500)
+    waveadd% = HYPOT(waveaddi%, waveaddj%, 1)
+    TURNXY(waveaddi%, -waveaddj%)
+    THICKNESS(6)
+    COLOUR(waveaddcol%)
+    FORWARD(DIVMULT(waveadd%, 1000, hand% * 2))
+    SETXY(clockx%(n%), top% + 280 + 2 * cradius% - (150 * (n% MOD 2)))
+    THICKNESS(4)
+    DIRECTION(turn1%)
+    COLOUR(wavecol1%)
+    FORWARD(hand%)
+    DIRECTION(turn2%)
+    COLOUR(wavecol2%)
+    FORWARD(hand%)
+    THICKNESS(2)
+  NEXT
+ENDPROC
+
+DEF PROCrandomwaves
+  wavelength1% = RND(30) * 10 + 200
+  wavelength2% = RND(30) * 10 + 200
+ENDPROC
+
+DEF PROCchangeprompt
+  CONSOLE(TRUE, WHITE)
+  WRITELN("Press '1' or '2' FOR the dimensionality required,")
+  WRITE("or press 'R' to pick random new wavelengths: ")
+  REPEAT
+  UNTIL (ABS(?KEY) = \1) OR (ABS(?KEY) = \2) OR (ABS(?KEY) = \r)
+  IF ABS(?KEY) = \1 THEN
+    dimensions% = 1
+  ELSE
+    IF ABS(?KEY) = \2 THEN
+      dimensions% = 2
+    ELSE
+      PROCrandomwaves
+    ENDIF
+  ENDIF
+  RESET(?KEY)
+  RESET(\KEYBUFFER)
+ENDPROC

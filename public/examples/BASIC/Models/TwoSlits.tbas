@@ -1,2 +1,85 @@
-REM this example is not yet available in Turtle
-REM BASIC
+CONST sectors% = 7
+CONST wavelength% = 100
+CONST sourcey% = 730
+CONST source1x% = 275
+CONST source2x% = 725
+DIM sectcol%(sectors%)
+DIM boundary%(sectors%)
+PROCcolsetup
+PROCbackground
+NOUPDATE
+FOR y% = 0 TO sourcey%
+  disty% = sourcey% - y%
+  FOR x% = 0 TO 999
+    dist1% = HYPOT(x% - source1x%, disty%, 1)
+    dist2% = HYPOT(x% - source2x%, disty%, 1)
+    wave1% = dist1% MOD wavelength%
+    wave2% = dist2% MOD wavelength%
+    waveaddi% = SIN(wave1% * 360, wavelength%, 500) + SIN(wave2% * 360, wavelength%, 500)
+    waveaddj% = COS(wave1% * 360, wavelength%, 500) + COS(wave2% * 360, wavelength%, 500)
+    waveadd% = HYPOT(waveaddi%, waveaddj%, 1)
+    angleadd% = (ATN(waveaddi%, waveaddj%, 1) + 360) MOD 360
+    PIXSET(x%, y%, MIXCOLS(FNwavecolour(angleadd%), BLACK, waveadd%, 1000 - waveadd%))
+  NEXT
+NEXT
+END
+
+DEF PROCcolsetup
+  sectcol%(0) = VIOLET
+  sectcol%(1) = BLUE
+  sectcol%(2) = CYAN
+  sectcol%(3) = LIME
+  sectcol%(4) = YELLOW
+  sectcol%(5) = ORANGE
+  sectcol%(6) = RED
+  sectcol%(7) = VIOLET
+  FOR n% = 0 TO sectors%
+    boundary%(n%) = DIVMULT(360, sectors%, n%)
+  NEXT
+ENDPROC
+
+DEF FNwavecolour (n%)
+  col2% = 0
+  REPEAT
+    col2% = col2% + 1
+  UNTIL boundary%(col2%) >= n%
+  col1% = col2% - 1
+= MIXCOLS(sectcol%(col1%), sectcol%(col2%), boundary%(col2%) - n%, n% - boundary%(col1%))
+
+DEF PROCbackground
+  lampx% = (source1x% + source2x%) / 2
+  BLANK(BLACK)
+  COLOUR(WHITE)
+  THICKNESS(5)
+  SETXY(0, 733)
+  DRAWXY(1000, 0)
+  SETXY(source1x%, 732)
+  FOR dist1% = 1 TO 4
+    COLOUR(FNwavecolour(wavelength% - dist1%))
+    DRAWXY(0, 1)
+  NEXT
+  diagx% = lampx% - source1x%
+  diag% = HYPOT(diagx%, 250, 1)
+  FOR n% = 1 TO 250
+    dist1% = DIVMULT(diag%, 250, n%)
+    wave1% = wavelength% - ((dist1% + 5) MOD wavelength%)
+    COLOUR(FNwavecolour(DIVMULT(wave1%, wavelength%, 360)))
+    DRAWXY(source1x% + DIVMULT(diagx%, 250, n%) - turtx%, 1)
+  NEXT
+  SETXY(source2x%, 732)
+  FOR dist2% = 1 TO 4
+    COLOUR(FNwavecolour(wavelength% - dist2%))
+    DRAWXY(0, 1)
+  NEXT
+  diagx% = source2x% - lampx%
+  diag% = HYPOT(diagx%, 250, 1)
+  FOR n% = 1 TO 250
+    dist2% = DIVMULT(diag%, 250, n%)
+    wave2% = wavelength% - ((dist2% + 5) MOD wavelength%)
+    COLOUR(FNwavecolour(DIVMULT(wave2%, wavelength%, 360)))
+    DRAWXY(source2x% - DIVMULT(diagx%, 250, n%) - turtx%, 1)
+  NEXT
+  COLOUR(YELLOW)
+  SETXY(lampx%, 984)
+  BLOT(10)
+ENDPROC
