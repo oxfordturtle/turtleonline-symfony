@@ -1,0 +1,79 @@
+PROGRAM CoinTossGame;
+CONST width=8;
+      height=8;
+      maxIter=100;
+VAR x,y,index,index1,index2,cIter,numBroke: integer;
+    players: array[0..width*height-1] of integer;
+    wealths: array[0..width*height-1] of integer;
+
+ procedure displayWealth(index: integer);
+ var color,x,y,wealth: integer;
+ begin
+  wealth:=wealths[index];
+  if (wealth = 0) then
+   color:=red
+  else if (wealth = 1) then
+   color:=yellow
+  else
+   color:=green;
+
+  if (wealth=0) then
+   numBroke:=numBroke+1;
+
+  x:=index div width;
+  y:=index mod width;
+  pixset(x, y, color);
+  { setxy(x, y);
+  colour(white);
+  print('$'+str(wealth), 4, 25); }
+  writeln('#broke: '+str(numBroke));
+ end;
+ 
+ procedure tossCoin(p1,p2: integer);
+ begin
+  if(random(2) = 0) then { p1 wins }
+  begin
+   wealths[p1]:=wealths[p1]+1;
+   wealths[p2]:=wealths[p2]-1;
+  end
+  else { p2 wins }
+  begin
+   wealths[p2]:=wealths[p2]+1;
+   wealths[p1]:=wealths[p1]-1;
+  end;
+ 
+  displayWealth(p1);
+  displayWealth(p2);
+ end;
+
+BEGIN
+ canvas(0,0,width,height);
+ resolution(width,height);
+ numBroke:=0;
+
+ { Initialize player indices and wealth arrays }
+ for index:=0 to width*height-1 do
+ begin
+   players[index]:=index;
+   wealths[index]:=1;
+   displayWealth(index);
+ end;
+
+ { Until game is stopped }
+ while (?key<>\escape) or (numBroke>=width*height-1) do
+ begin
+  noupdate;
+
+  { Select pairs of players at random, and for each pair, play the coin toss game }
+  cIter:=0;
+  repeat
+   index1:= random(width*height);
+   index2:= random(width*height);
+   cIter:=cIter+1;
+  until(((index1<>index2) and (wealths[index1]<>0) and (wealths[index2]<>0)) or (cIter>=maxIter));
+  if (cIter<maxIter) then
+   tossCoin(players[index1], players[index2]);
+
+  update;
+ end;
+END.
