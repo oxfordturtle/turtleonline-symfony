@@ -10,6 +10,7 @@ VAR x,y,index,index1,index2,cIter,numBroke: integer;
  var color,x,y,wealth: integer;
  begin
   wealth:=wealths[index];
+
   if (wealth = 0) then
    color:=red
   else if (wealth = 1) then
@@ -17,16 +18,21 @@ VAR x,y,index,index1,index2,cIter,numBroke: integer;
   else
    color:=green;
 
+  { keep a count of the number of people that have gone broke }
   if (wealth=0) then
    numBroke:=numBroke+1;
 
-  x:=index div width;
-  y:=index mod width;
-  pixset(x, y, color);
-  { setxy(x, y);
-  colour(white);
-  print('$'+str(wealth), 4, 25); }
-  writeln('#broke: '+str(numBroke));
+  { represent each player with a blot and their wealth amount }
+  x:=(index div width)*100;
+  y:=(index mod width)*100;
+
+  setxy(x+50, y+50);
+  colour(color);
+  blot(48);
+
+  setxy(x+20, y+25);
+  colour(black);
+  print('$'+str(wealth), 4, 25);
  end;
  
  procedure tossCoin(p1,p2: integer);
@@ -47,8 +53,8 @@ VAR x,y,index,index1,index2,cIter,numBroke: integer;
  end;
 
 BEGIN
- canvas(0,0,width,height);
- resolution(width,height);
+ canvas(0,0,width*100,height*100);
+ resolution(width*100,height*100);
  numBroke:=0;
 
  { Initialize player indices and wealth arrays }
@@ -59,9 +65,7 @@ BEGIN
    displayWealth(index);
  end;
 
- { Until game is stopped }
- while (?key<>\escape) or (numBroke>=width*height-1) do
- begin
+ repeat
   noupdate;
 
   { Select pairs of players at random, and for each pair, play the coin toss game }
@@ -75,5 +79,6 @@ BEGIN
    tossCoin(players[index1], players[index2]);
 
   update;
- end;
+ { Until all but one player are broke or the game is stopped }
+ until (abs(?key)=\escape) or (numBroke>=width*height-1);
 END.
