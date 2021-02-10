@@ -1,10 +1,13 @@
 PROGRAM CoinTossGame;
-CONST width=8;
-      height=8;
+CONST playerCols=8;
+      playerRows=8;
+      numPlayers=playerRows*playerCols;
+      canvasWidth=playerCols*100;
+      canvasHeight=playerRows*100;
       maxIter=100;
 VAR x,y,index,index1,index2,cIter,numBroke: integer;
-    players: array[0..width*height-1] of integer;
-    wealths: array[0..width*height-1] of integer;
+    players: array[0..numPlayers-1] of integer;
+    wealths: array[0..numPlayers-1] of integer;
 
  procedure displayWealth(index: integer);
  var color,x,y,wealth: integer;
@@ -23,8 +26,8 @@ VAR x,y,index,index1,index2,cIter,numBroke: integer;
    numBroke:=numBroke+1;
 
   { represent each player with a blot and their wealth amount }
-  x:=(index div width)*100;
-  y:=(index mod width)*100;
+  x:=(index div playerCols)*(canvasWidth/playerCols);
+  y:=(index mod playerCols)*(canvasHeight/playerRows);
 
   setxy(x+50, y+50);
   colour(color);
@@ -53,12 +56,12 @@ VAR x,y,index,index1,index2,cIter,numBroke: integer;
  end;
 
 BEGIN
- canvas(0,0,width*100,height*100);
- resolution(width*100,height*100);
+ canvas(0,0,canvasWidth,canvasHeight);
+ resolution(canvasWidth,canvasHeight);
  numBroke:=0;
 
  { Initialize player indices and wealth arrays }
- for index:=0 to width*height-1 do
+ for index:=0 to numPlayers-1 do
  begin
    players[index]:=index;
    wealths[index]:=1;
@@ -71,8 +74,8 @@ BEGIN
   { Select pairs of players at random, and for each pair, play the coin toss game }
   cIter:=0;
   repeat
-   index1:= random(width*height);
-   index2:= random(width*height);
+   index1:= random(numPlayers);
+   index2:= random(numPlayers);
    cIter:=cIter+1;
   until(((index1<>index2) and (wealths[index1]<>0) and (wealths[index2]<>0)) or (cIter>=maxIter));
   if (cIter<maxIter) then
@@ -80,5 +83,5 @@ BEGIN
 
   update;
  { Until all but one player are broke or the game is stopped }
- until (abs(?key)=\escape) or (numBroke>=width*height-1);
+ until (abs(?key)=\escape) or (numBroke>=numPlayers-1);
 END.
