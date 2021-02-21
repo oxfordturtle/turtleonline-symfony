@@ -1,2 +1,31 @@
-REM this example is not yet available in Turtle
-REM BASIC
+REPEAT
+  CONSOLE(TRUE, CREAM)
+  WRITELN("CALCULATION OF APPROXIMATE SQUARE ROOTS, BY ITERATION")
+  WRITELN("")
+  WRITE("Which square% root would you like to calculate? ")
+  s$ = GETLINE$
+UNTIL STR$(VAL(s$)) = s$
+OUTPUT(FALSE, CREAM, TRUE)
+WRITELN(s$)
+WRITELN("")
+WRITELN("")
+WRITELN("   guess%    " + s$ + "/guess%")
+square% = VAL(s$) * 1000000
+guess% = 1000
+REPEAT
+  quotient% = square% / guess%
+  WRITELN("")
+  WRITE(PAD$(QSTR$(guess%, 1000, 3), " ", 8) + "   " + PAD$(QSTR$(quotient%, 1000, 3), " ", 8))
+  PAUSE(2000)
+  IF guess% = quotient% THEN
+    WRITELN("")
+  ELSE
+    WRITE(PAD$("  sum = ", " ", 14) + PAD$(QSTR$(guess% + quotient%, 1000, 3), " ", -8))
+    WRITELN("  average = " + QSTR$(guess% + quotient%, 2000, 3))
+  ENDIF
+  guess% = (guess% + quotient%) / 2
+UNTIL (guess% = quotient%) OR (guess% = (guess% + quotient%) / 2)
+WRITELN("")
+WRITELN("")
+WRITELN("The square% root of " + s$ + " is approximately " + QSTR$(guess%, 1000, 3))
+END

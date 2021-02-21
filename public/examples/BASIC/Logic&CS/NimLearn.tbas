@@ -1,2 +1,286 @@
-REM this example is not yet available in Turtle
-REM BASIC
+PROGRAM NimLearn
+CONST maxcoins = 20
+      maxtake = 3
+      columns = 10
+      margin = 35
+      menutype = 4
+      menusize = 36
+VAR prob: array(1..maxcoins, 1..maxtake) of integer
+    taken: array(1..maxcoins) of integer
+    numcoins, move: integer
+    h, v, r, font: integer
+    max: integer
+    youwin: integer
+    myscore, yourscore: integer
+    opponent: integer
+    total, count: integer
+
+ Procedure menu
+ Var choice: integer
+ Begin
+  BLANK(white)
+  SETXY(margin, 50)
+  COLOUR(brown)
+  print("   NIM LEARNING PROGRAM", menutype OR 16, 42)
+  COLOUR(darkred)
+  SETXY(margin, 150)
+  print("This program learns to play NIM, and can be", menutype, 32)
+  SETXY(margin, 200)
+  print("configured to play either against you (human", menutype, 32)
+  SETXY(margin, 250)
+  print("opponent), or against a simulated computer", menutype, 32)
+  SETXY(margin, 300)
+  print("opponent, which either plays randomly or", menutype, 32)
+  SETXY(margin, 350)
+  print("itself learns from experience.", menutype, 32)
+  COLOUR(black)
+  SETXY(margin, 525)
+  print("Choose from the following:", menutype OR 16, menusize)
+  SETXY(margin, 650)
+  print("  1.  Human opponent", menutype, menusize)
+  SETXY(margin, 750)
+  print("  2.  Random opponent", menutype, menusize)
+  SETXY(margin, 850)
+  print("  3.  Opponent that also learns", menutype, menusize)
+  REPEAT
+   choice = abs(?key) - 48
+  UNTIL (choice > 0) and (choice < 4)
+  opponent = choice
+  BLANK(white)
+ End
+
+ Procedure initialise
+ Var i, j: integer
+ Begin
+  FOR i = 1 TO maxcoins
+   FOR j = 1 TO maxtake
+    IF j > i THEN
+     prob(i, j) = 0
+    ELSE
+     prob(i, j) = 5
+  numcoins = maxcoins
+  h = 1000 / (columns + 1)
+  v = 50
+  r = (h * 3) / 8
+  font = 28
+  myscore = 0
+  yourscore = 0
+ End
+
+ Procedure display
+ Var i, j: integer
+ Begin
+  noupdate
+  BLANK(white)
+  FOR i = 0 TO maxcoins - 1
+   begin
+    SETXY(3 * h / 2 + (i mod columns) * h, v + (i div columns) * v * (maxtake + 3))
+    IF i < numcoins THEN
+     begin
+      COLOUR(red)
+      blot(r)
+     end
+    ELSE
+     begin
+      COLOUR(white)
+      blot(r)
+     end
+    MOVEXY(-3 * font / 4, 0)
+    FOR j = 1 TO maxtake
+     begin
+      MOVEXY(0, v)
+      COLOUR(black)
+      box(h / 2, v, cream, true)
+      IF taken(i + 1) = j THEN
+       box(h / 2, v, lime, true)
+      ELSE
+      IF taken(i + 1) = -j THEN
+       box(h / 2, v, cyan, true)
+      ELSE
+       box(h / 2, v, cream, true)
+      print(" " + STR$(prob(i + 1, j)), 4, font)
+     end
+    IF i mod columns = 0 THEN
+     begin
+      SETXY(h / 2 - font / 2, v + (i / columns) * v * (maxtake + 3))
+      COLOUR(blue)
+      FOR j = 1 TO maxtake
+       begin
+        MOVEXY(0, v)
+        print(STR$(j), 4, font)
+       end
+     end
+   end
+  update
+ End
+
+ Function coins(n: integer): string
+ Begin
+  IF n = 1 THEN
+   result = "1 coin"
+  ELSE
+   result = STR$(n) + " coins"
+ End
+
+ Function usermove(max: integer): integer
+ Var n: integer
+ Begin
+  COLOUR(black)
+  SETXY(h, v + (((maxcoins - 1) div columns) + 1) * v * (maxtake + 3))
+  box(1000, 500, white, false)
+  IF numcoins = 1 THEN
+   begin
+    print("Since there is only one coin left, you must take it", 4, font)
+    PAUSE(2000)
+    result = 1
+   end
+  ELSE
+   begin
+    print("There are " + coins(numcoins) + ", of which you may take up to " + STR$(max) + ".", 4, font)
+    MOVEXY(0, v)
+    print("How many would you like to take? ", 4, font)
+    reset(\keybuffer)
+    REPEAT
+     n = val(read(1))
+    UNTIL (n > 0) and (n <= max)
+    reset(\keybuffer)
+    MOVEXY(0, v * 2)
+    print("OK - you are taking " + coins(n) + " ...", 4, font)
+    MOVEXY(0, v)
+    result = n
+   end
+ End
+
+ Function randommove(max: integer): integer
+ Begin
+  result = random(max) + 1
+ End
+
+ Function machinemove: integer
+ Var i, total, choose: integer
+ Begin
+  total = 0
+  FOR i = 1 TO maxtake
+   total = total + prob(numcoins, i)
+  choose = random(total)
+  i = 0
+  REPEAT
+   inc(i)
+   choose = choose - prob(numcoins, i)
+  UNTIL choose < 0
+  result = i
+ End
+
+ Procedure showresult
+ Var s: string
+ Begin
+  IF opponent = 1 THEN
+   begin
+    COLOUR(black)
+    SETXY(200, v + (((maxcoins - 1) div columns) + 1) * v * (maxtake + 3))
+    IF youwin > 0 THEN
+     print("YOU WIN!!", 4, font * 3)
+    ELSE
+     print(" I WIN!!", 4, font * 3)
+    MOVEXY(0, 4 * v)
+    print("Press <RETURN> or <ENTER> to continue ...", 4, font)
+    s = READLN
+   end
+  ELSE
+   WRITELN("PROGRAM: " + STR$(myscore) + "  OPPONENT: " + STR$(yourscore))
+ End
+
+ Procedure startgame
+ Var i: integer
+ Begin
+  FOR i = 1 TO maxcoins
+   taken(i) = 0
+  numcoins = maxcoins
+ End
+
+ Procedure adjustweights
+ Var i, j: integer
+     add: integer
+ Begin
+  FOR i = 1 TO maxcoins
+   IF taken(i) <> 0 THEN
+    begin
+     IF taken(i) * youwin > 0 THEN
+      add = 1
+     ELSE
+      add = -1
+     FOR j = 1 TO maxtake
+      begin
+       IF j <= i THEN
+        begin
+         IF (j = abs(taken(i))) THEN
+          prob(i, j) = prob(i, j) + add
+         ELSE
+          prob(i, j) = prob(i, j) - add
+         IF prob(i, j) < 0 THEN
+          prob(i, j) = 0
+         IF prob(i, j) > 9 THEN
+          prob(i, j) = 9
+        end
+      end
+    end
+ End
+
+BEGIN
+ keyecho(false)
+ menu
+ initialise
+ REPEAT
+  startgame
+  REPEAT
+   display
+   IF numcoins > maxtake THEN
+    max = maxtake
+   ELSE
+    max = numcoins
+   IF opponent = 1 THEN
+    move = usermove(max)
+   ELSE
+   IF opponent = 2 THEN
+    move = randommove(max)
+   ELSE
+    move = machinemove
+   taken(numcoins) = move
+   numcoins = numcoins - move
+   IF numcoins = 0 THEN
+    youwin = 1
+   ELSE
+    begin
+     youwin = -1
+     move = machinemove
+     IF opponent = 1 THEN
+      begin
+       PAUSE(2000)
+       display
+       SETXY(h, v + (((maxcoins - 1) div columns) + 1) * v * (maxtake + 3))
+       print("The computer will choose on these probabilities:", 4, font)
+       MOVEXY(0, v / 2)
+       total = prob(numcoins, 1) + prob(numcoins, 2) + prob(numcoins, 3)
+       FOR count = 1 TO 3
+        begin
+         MOVEXY(0, v)
+         print("     " + coins(count) + ": " + STR$(prob(numcoins, count)) + "/" + STR$(total), 4, font)
+        end
+       PAUSE(2000)
+       MOVEXY(0, 3 * v / 2)
+       print("OK, in response, the computer takes " + coins(move) + " ...", 4, font)
+       PAUSE(2000)
+      end
+     taken(numcoins) = -move
+     numcoins = numcoins - move
+    end
+   display
+  UNTIL numcoins = 0
+  IF youwin > 0 THEN
+   inc(yourscore)
+  ELSE
+   inc(myscore)
+  showresult
+  adjustweights
+ UNTIL 0 = 1
+END.
