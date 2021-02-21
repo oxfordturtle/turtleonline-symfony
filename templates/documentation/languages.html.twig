@@ -1,9 +1,64 @@
 {% extends 'base.html.twig' %}
 
 {% block header %}
-  <h1>Turtle Language Specifications</h1>
+  <div class="title">
+    <h1>Turtle Language Specifications</h1>
+    <select data-action="selectTab">
+      <option value="introduction"{% if tab == 'introduction' %} selected{% endif %}>Introduction</option>
+      <option value="lexicon"{% if tab == 'lexicon' %} selected{% endif %}>Lexicon</option>
+      <option value="structure"{% if tab == 'structure' %} selected{% endif %}>Program Structure</option>
+      <option value="expressions"{% if tab == 'expressions' %} selected{% endif %}>Expressions</option>
+      <option value="variables"{% if tab == 'variables' %} selected{% endif %}>Variables</option>
+      <option value="subroutines"{% if tab == 'subroutines' %} selected{% endif %}>Built-in Commands and Subroutines</option>
+      <option value="control"{% if tab == 'control' %} selected{% endif %}>Control Flow Statements</option>
+    </select>
+    <select data-binding="language"></select>
+  </div>
+  <p>The <em>Turtle System</em> supports programming in several specially designed languages. These languages all mimic an existing language, but incorporate native Turtle Graphics support, and are pared down to facilitate teaching and learning in a simpler and less daunting environment (and to enable the compilers to produce much more precise and detailed error messages). The specifications on this page, together with the <a href="{{ path('documentation_reference') }}">Commands &amp; Constants Reference</a>, provide a semi-formal description of these languages. For a more didactic introduction to the languages, see the <a href="{{ path('documentation_help') }}">Turtle Languages Help</a>.</p>
 {% endblock %}
 
 {% block main %}
-  <p>Updated specifications for the Turtle languages are currently being prepared. Please check back here soon.</p>
+  <div class="tab-panes">
+    <div class="tab-pane{% if tab == 'introduction' %} active{% endif %}" data-tab="introduction">
+      {% include 'documentation/languages/introduction.html.twig' %}
+    </div>
+    <div class="tab-pane{% if tab == 'lexicon' %} active{% endif %}" data-tab="lexicon">
+      {% include 'documentation/languages/lexicon.html.twig' %}
+    </div>
+    <div class="tab-pane{% if tab == 'structure' %} active{% endif %}" data-tab="structure">
+      <div data-language="BASIC">{% include 'documentation/languages/BASIC/structure.html.twig' %}</div>
+      <div data-language="C">{% include 'documentation/languages/C/structure.html.twig' %}</div>
+      <div data-language="Java">{% include 'documentation/languages/Java/structure.html.twig' %}</div>
+      <div data-language="Pascal">{% include 'documentation/languages/Pascal/structure.html.twig' %}</div>
+      <div data-language="Python">{% include 'documentation/languages/Python/structure.html.twig' %}</div>
+      <div data-language="TypeScript">{% include 'documentation/languages/TypeScript/structure.html.twig' %}</div>
+    </div>
+    <div class="tab-pane{% if tab == 'expressions' %} active{% endif %}" data-tab="expressions">
+      {% include 'documentation/languages/expressions.html.twig' %}
+    </div>
+    <div class="tab-pane{% if tab == 'variables' %} active{% endif %}" data-tab="variables">
+      <div data-language="BASIC">{% include 'documentation/languages/BASIC/variables.html.twig' %}</div>
+      <div data-language="C">{% include 'documentation/languages/C/variables.html.twig' %}</div>
+      <div data-language="Java">{% include 'documentation/languages/Java/variables.html.twig' %}</div>
+      <div data-language="Pascal">{% include 'documentation/languages/Pascal/variables.html.twig' %}</div>
+      <div data-language="Python">{% include 'documentation/languages/Python/variables.html.twig' %}</div>
+      <div data-language="TypeScript">{% include 'documentation/languages/TypeScript/struvariablescture.html.twig' %}</div>
+    </div>
+    <div class="tab-pane{% if tab == 'subroutines' %} active{% endif %}" data-tab="subroutines">
+      <div data-language="BASIC">{% include 'documentation/languages/BASIC/subroutines.html.twig' %}</div>
+      <div data-language="C">{% include 'documentation/languages/C/subroutines.html.twig' %}</div>
+      <div data-language="Java">{% include 'documentation/languages/Java/subroutines.html.twig' %}</div>
+      <div data-language="Pascal">{% include 'documentation/languages/Pascal/subroutines.html.twig' %}</div>
+      <div data-language="Python">{% include 'documentation/languages/Python/subroutines.html.twig' %}</div>
+      <div data-language="TypeScript">{% include 'documentation/languages/TypeScript/subroutines.html.twig' %}</div>
+    </div>
+    <div class="tab-pane{% if tab == 'control' %} active{% endif %}" data-tab="control">
+      <div data-language="BASIC">{% include 'documentation/languages/BASIC/control.html.twig' %}</div>
+      <div data-language="C">{% include 'documentation/languages/C/control.html.twig' %}</div>
+      <div data-language="Java">{% include 'documentation/languages/Java/control.html.twig' %}</div>
+      <div data-language="Pascal">{% include 'documentation/languages/Pascal/control.html.twig' %}</div>
+      <div data-language="Python">{% include 'documentation/languages/Python/control.html.twig' %}</div>
+      <div data-language="TypeScript">{% include 'documentation/languages/TypeScript/control.html.twig' %}</div>
+    </div>
+  </div>
 {% endblock %}

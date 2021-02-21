@@ -1,0 +1,44 @@
+<h2>Lexicon</h2>
+
+<p>Turtle <span data-language="BASIC">BASIC</span><span data-language="C">C</span><span data-language="Java">Java</span><span data-language="Pascal">Pascal</span><span data-language="Python">Python</span><span data-language="TypeScript">TypeScript</span> programs are compiled by a <em>parser</em>. Input to the parser is a sequence of <em>lexemes</em>, generated from the program code by a <em>lexical analyser</em>. The following lexical types are distinguished:</p>
+
+<ol>
+  <li>comments</li>
+  <li>whitespace</li>
+  <li>keywords</li>
+  <li>operators</li>
+  <li>delimiters</li>
+  <li>literals (Boolean literals, integer literals, and string literals)</li>
+  <li>input codes (key codes and query codes)</li>
+  <li>identifiers</li>
+</ol>
+
+<h3>1. Comments</h3>
+
+<p><span data-language="BASIC">Comments begin with the text <code>REM</code> (for “remark”) and continue to the end of the line.</span><span data-language="C,Java,TypeScript">Comments begin with two forward slashes <code>//</code> and continue to the end of the line.</span><span data-language="Pascal">Comments begin with and open curly bracket <code>{</code> and end with a closing curly bracket <code>}</code>.</span><span data-language="Python">Comments begin with a hash <code>#</code> and continue to the end of the line.</span> They can be used to make human-readable notes on your program. They are ignored by the parser.</p>
+
+<h3>2. Whitespace</h3>
+
+<p data-language="BASIC">Linebreaks are significant in Turtle BASIC, being used to separate statements. (Simple statements can also be placed on the same line, separated by a colon.) Spaces are used to distinguish adjacent lexemes, but are then discarded.</p>
+
+<p data-language="C,Java,Pascal">Linebreaks and spaces are meaningless in Turtle <span data-language="C">C</span><span data-language="Java">Java</span><span data-language="Pascal">Pascal</span>. They can be used to distinguish adjacent lexemes, but are discarded by the lexical analyser.</p>
+
+<p data-language="Python">Whitespace in the program code is converted by the lexical analyser into three special lexemes <code>NEWLINE</code>, <code>INDENT</code>, and <code>DEDENT</code>. The significance of these lexemes, and how they are generated from the code, is explained in the section on Program Structure.</p>
+
+<p data-language="TypeScript">Linebreaks are significant in Turtle TypeScript, being used to separate statements. (Simple statements can also be placed on the same line, separated by a semicolon. It is common practice to use a semicolon followed by a linebreak, but in fact only one is required.) Spaces are used to distinguish adjacent lexemes, but are then discarded.</p>
+
+<h3>3. Keywords</h3>
+
+<p><span data-language="BASIC">The following keywords are recognised by Turtle BASIC: <code data-language="BASIC">CONST</code>, <code data-language="BASIC">DEF</code>, <code data-language="BASIC">DIM</code>, <code data-language="BASIC">ELSE</code>, <code data-language="BASIC">END</code>, <code data-language="BASIC">ENDIF</code>, <code data-language="BASIC">ENDPROC</code>, <code data-language="BASIC">ENDWHILE</code>, <code data-language="BASIC">FOR</code>, <code data-language="BASIC">IF</code>, <code data-language="BASIC">LOCAL</code>, <code data-language="BASIC">NEXT</code>, <code data-language="BASIC">PRIVATE</code>, <code data-language="BASIC">REPEAT</code>, <code data-language="BASIC">RETURN</code>, <code data-language="BASIC">STEP</code>, <code data-language="BASIC">THEN</code>, <code data-language="BASIC">TO</code>, <code data-language="BASIC">UNTIL</code>, and <code data-language="BASIC">WHILE</code>.</span><span data-language="C">The following keywords are recognised by Turtle C: <code data-language="C">bool<code>, <code data-language="C">const<code>, 
+<code data-language="C">do<code>, <code data-language="C">else<code>, <code data-language="C">for<code>, <code data-language="C">if<code>, <code data-language="C">int<code>, <code data-language="C">return<code>, <code data-language="C">string<code>, <code data-language="C">void<code>, and <code data-language="C">while<code>.</span><span data-language="Java">The following keywords are recognised by Turtle Java: <code data-language="Java">boolean<code>, <code data-language="Java">class<code>, <code data-language="Java">do<code>, <code data-language="Java">else<code>, <code data-language="Java">final<code>, <code data-language="Java">for<code>, <code data-language="Java">if<code>, <code data-language="Java">int<code>, <code data-language="Java">return<code>, <code data-language="Java">String<code>, <code data-language="Java">void<code>, and <code data-language="Java">while<code>.</span><span data-language="Pascal">The following keywords are recognised by Turtle Pascal: <code data-language="Pascal">array<code>, <code data-language="Pascal">begin<code>, <code data-language="Pascal">const<code>, <code data-language="Pascal">do<code>, <code data-language="Pascal">downto<code>, <code data-language="Pascal">else<code>, <code data-language="Pascal">end<code>, <code data-language="Pascal">for<code>, <code data-language="Pascal">function<code>, <code data-language="Pascal">if<code>, <code data-language="Pascal">of<code>, <code data-language="Pascal">procedure<code>, <code data-language="Pascal">program<code>, <code data-language="Pascal">repeat<code>, <code data-language="Pascal">then<code>, <code data-language="Pascal">to<code>, <code data-language="Pascal">until<code>, <code data-language="Pascal">var<code>, and <code data-language="Pascal">while<code>.</span><span data-language="Python">The following keywords are recognised by Turtle Python: <code data-language="Python">def<code>, <code data-language="Python">else<code>, <code data-language="Python">elif<code>, <code data-language="Python">for<code>, <code data-language="Python">global<code>, <code data-language="Python">if<code>, <code data-language="Python">in<code>, <code data-language="Python">nonlocal<code>, <code data-language="Python">pass<code>, <code data-language="Python">return<code>, and <code data-language="Python">while<code>.</span><span data-language="TypeScript">The following keywords are recognised by Turtle TypeScript: <code data-language="TypeScript">boolean<code>, <code data-language="TypeScript">const<code>, <code data-language="TypeScript">do<code>, <code data-language="TypeScript">else<code>, <code data-language="TypeScript">for<code>, <code data-language="TypeScript">function<code>, <code data-language="TypeScript">if<code>, <code data-language="TypeScript">number<code>, <code data-language="TypeScript">return<code>, <code data-language="TypeScript">string<code>, <code data-language="TypeScript">while<code>, and <code data-language="TypeScript">var<code>.</span> These are reserved words with a special meaning, and cannot be used as identfiers (see below).</p>
+
+<h3>4. Operators</h3>
+
+<h3>5. Delimiters</h3>
+
+<h3>6. Literals</h3>
+
+<h3>7. Input codes</h3>
+
+<h3>8. Identifiers</h3>
+
