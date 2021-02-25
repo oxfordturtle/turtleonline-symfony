@@ -1,0 +1,138 @@
+PROGRAM BankSimulation;
+CONST maxTellers=5;
+      serviceTimeMean=10;
+      customerLambda=6; { 5.8 }
+      canvasWidth=800;
+      canvasHeight=800;
+      maxQueueSize=5;
+VAR numTellersPresent,index,savedTime,nextCustomerTime,timeDelta,numWaiting: integer;
+    tellersPresent: array[0..maxTellers-1] of boolean;
+    queueSizes: array[0..maxTellers-1] of integer;
+    nextServiceTimes: array[0..maxTellers-1] of integer;
+
+ procedure addTeller(tellerIndex,present: integer);
+ var color,x,y: integer;
+ begin
+  if present=1 then
+  begin
+   color:=blue;
+   tellersPresent[tellerIndex]:=true;
+  end
+  else
+  begin
+   color:=silver;
+   tellersPresent[tellerIndex]:=false;
+  end;
+
+  { represent each teller with a blot }
+  x:=(tellerIndex)*(canvasWidth/maxTellers)+60;
+  y:=60;
+
+  setxy(x,y);
+  colour(color);
+  blot(40);
+ end;
+
+ procedure addCustomer;
+ var shortestQueueSize,shortestQueueIndex,color,x,y:integer;
+ begin
+  shortestQueueSize:=maxQueueSize;
+  shortestQueueIndex:=0;
+  
+  { put the customer at the end of the shortest queue }
+  for index:=0 to maxTellers-1 do
+  begin
+   if tellersPresent[index] and (queueSizes[index]<shortestQueueSize) then
+    shortestQueueIndex:=index;
+  end;
+  
+  queueSizes[shortestQueueIndex]:=queueSizes[shortestQueueIndex]+1;
+  
+  { each customer is a blot }
+  x:=(shortestQueueIndex)*(canvasWidth/maxTellers)+60;
+  y:=queueSizes[shortestQueueIndex]*100+100;
+
+  setxy(x,y);
+  colour(green);
+  blot(40);
+ end;
+ 
+ procedure removeCustomer(tellerIndex: integer);
+ var x,y: integer;
+ begin
+  x:=tellerIndex*(canvasWidth/maxTellers)+60;
+  y:=queueSizes[tellerIndex]*100+100;
+  setxy(x,y);
+  colour(white);
+  blot(40);
+ end;
+ 
+ procedure calcNextArrivalTime;
+ begin
+  nextCustomerTime:=1500;
+ end;
+ 
+ procedure calcNextServiceTime(index:integer);
+ begin
+  nextServiceTimes[index]:=1000;
+ end; 
+
+BEGIN
+ canvas(0,0,canvasWidth,canvasHeight);
+ resolution(canvasWidth,canvasHeight);
+ 
+ { Init }
+ numTellersPresent:=3;
+ numWaiting:=0;
+ nextCustomerTime:=0;
+ 
+ { Create tellers } 
+ for index:= 0 to maxTellers-1 do
+ begin
+  if (index<numTellersPresent) then
+  begin
+   addTeller(index,1);
+  end
+  else
+  begin
+   addTeller(index,0);
+  end;
+  nextServiceTimes[index]:=0;
+ end;
+
+ { draw line between tellers and customers }
+ colour(silver);
+ thickness(5);
+ setxy(10,130);
+ drawxy(canvasWidth-20,0);
+ 
+ { Customer service loop }
+ savedTime:=time;
+
+ repeat
+  noupdate;
+
+  { check time lapsed and decide which actions to perform based on that }
+  timeDelta:=time-savedTime;
+  
+  if (timeDelta>=nextCustomerTime) then
+  begin
+   addCustomer;
+   numWaiting:=numWaiting+1;
+   calcNextArrivalTime;
+  end;
+   
+  for index:=0 to maxTellers-1 do
+  begin
+   if (timeDelta>=nextServiceTimes[index]) then
+   begin
+    removeCustomer(index);
+    numWaiting:=numWaiting-1;
+    calcNextServiceTime(index);
+   end;
+  end;
+     
+  update;
+ { Until all queues are full }
+ until (abs(?key)=\escape) or (numWaiting>=numTellersPresent*maxQueueSize);
+END.
