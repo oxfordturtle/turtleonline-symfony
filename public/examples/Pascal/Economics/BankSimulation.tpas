@@ -43,18 +43,21 @@ VAR numTellersPresent,index,savedTime,nextCustomerTime,timeDelta,numWaiting: int
   for index:=0 to maxTellers-1 do
   begin
    if tellersPresent[index] and (queueSizes[index]<shortestQueueSize) then
+   begin
     shortestQueueIndex:=index;
+    shortestQueueSize:=queueSizes[index];
+   end;
   end;
   
   queueSizes[shortestQueueIndex]:=queueSizes[shortestQueueIndex]+1;
   
-  { each customer is a blot }
   x:=(shortestQueueIndex)*(canvasWidth/maxTellers)+60;
   y:=queueSizes[shortestQueueIndex]*100+100;
 
   setxy(x,y);
   colour(green);
   blot(40);
+  writeln('added: '+str(shortestQueueIndex));
  end;
  
  procedure removeCustomer(tellerIndex: integer);
@@ -65,16 +68,19 @@ VAR numTellersPresent,index,savedTime,nextCustomerTime,timeDelta,numWaiting: int
   setxy(x,y);
   colour(white);
   blot(40);
+
+  queueSizes[tellerIndex]:=queueSizes[tellerIndex]-1;
+  writeln('removed: '+str(tellerIndex));
  end;
  
  procedure calcNextArrivalTime;
  begin
-  nextCustomerTime:=1500;
+  nextCustomerTime:=990+random(500);
  end;
  
  procedure calcNextServiceTime(index:integer);
  begin
-  nextServiceTimes[index]:=1000;
+  nextServiceTimes[index]:=1000+random(1000);
  end; 
 
 BEGIN
@@ -82,7 +88,7 @@ BEGIN
  resolution(canvasWidth,canvasHeight);
  
  { Init }
- numTellersPresent:=3;
+ numTellersPresent:=1;
  numWaiting:=0;
  nextCustomerTime:=0;
  
@@ -124,7 +130,7 @@ BEGIN
    
   for index:=0 to maxTellers-1 do
   begin
-   if (timeDelta>=nextServiceTimes[index]) then
+   if tellersPresent[index] and (timeDelta>=nextServiceTimes[index]) and (queueSizes[index]>0) then
    begin
     removeCustomer(index);
     numWaiting:=numWaiting-1;
@@ -132,7 +138,9 @@ BEGIN
    end;
   end;
      
+  { writeln('waiting: '+str(numWaiting)); }
   update;
+  pause(200);
  { Until all queues are full }
  until (abs(?key)=\escape) or (numWaiting>=numTellersPresent*maxQueueSize);
 END.
