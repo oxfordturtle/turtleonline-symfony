@@ -11,13 +11,17 @@ VAR numTellersPresent,index,curTime,nextArrivalTime,numWaiting: integer;
     serviceTimes: array[0..maxTellers-1] of integer;
 
  procedure calcNextArrivalTime;
+ var delta: integer;
  begin
-  nextArrivalTime:=time+arrivalTimeMean+random(1000);
+  delta:=arrivalTimeMean-500+random(1000); { range: mean +/- 500 ms }
+  nextArrivalTime:=time+delta;
  end;
  
  procedure calcServiceTime(index:integer);
+ var delta: integer;
  begin
-  serviceTimes[index]:=time+serviceTimeMean+random(1000);
+  delta:=serviceTimeMean-500+random(1000); { range: mean +/- 500 ms }
+  serviceTimes[index]:=time+delta;
  end; 
 
  procedure addTeller(tellerIndex,present: integer);
@@ -94,7 +98,7 @@ BEGIN
  resolution(canvasWidth,canvasHeight);
  
  { Init }
- numTellersPresent:=2;
+ numTellersPresent:=1;
  numWaiting:=0;
  calcNextArrivalTime;
  
