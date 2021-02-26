@@ -1,14 +1,24 @@
 PROGRAM BankSimulation;
 CONST maxTellers=5;
-      serviceTimeMean=10;
-      customerLambda=6; { 5.8 }
+      arrivalTimeMean=1000;
+      serviceTimeMean=1100;
       canvasWidth=800;
       canvasHeight=800;
       maxQueueSize=5;
-VAR numTellersPresent,index,savedTime,nextCustomerTime,timeDelta,numWaiting: integer;
+VAR numTellersPresent,index,curTime,nextArrivalTime,numWaiting: integer;
     tellersPresent: array[0..maxTellers-1] of boolean;
     queueSizes: array[0..maxTellers-1] of integer;
-    nextServiceTimes: array[0..maxTellers-1] of integer;
+    serviceTimes: array[0..maxTellers-1] of integer;
+
+ procedure calcNextArrivalTime;
+ begin
+  nextArrivalTime:=time+arrivalTimeMean+random(1000);
+ end;
+ 
+ procedure calcServiceTime(index:integer);
+ begin
+  serviceTimes[index]:=time+serviceTimeMean+random(1000);
+ end; 
 
  procedure addTeller(tellerIndex,present: integer);
  var color,x,y: integer;
@@ -23,6 +33,8 @@ VAR numTellersPresent,index,savedTime,nextCustomerTime,timeDelta,numWaiting: int
    color:=silver;
    tellersPresent[tellerIndex]:=false;
   end;
+
+  serviceTimes[tellerIndex]:=0;
 
   { represent each teller with a blot }
   x:=(tellerIndex)*(canvasWidth/maxTellers)+60;
@@ -57,6 +69,9 @@ VAR numTellersPresent,index,savedTime,nextCustomerTime,timeDelta,numWaiting: int
   setxy(x,y);
   colour(green);
   blot(40);
+
+  calcServiceTime(shortestQueueIndex);
+  numWaiting:=numWaiting+1;
   writeln('added: '+str(shortestQueueIndex));
  end;
  
@@ -70,27 +85,18 @@ VAR numTellersPresent,index,savedTime,nextCustomerTime,timeDelta,numWaiting: int
   blot(40);
 
   queueSizes[tellerIndex]:=queueSizes[tellerIndex]-1;
+  numWaiting:=numWaiting-1;
   writeln('removed: '+str(tellerIndex));
  end;
  
- procedure calcNextArrivalTime;
- begin
-  nextCustomerTime:=990+random(500);
- end;
- 
- procedure calcNextServiceTime(index:integer);
- begin
-  nextServiceTimes[index]:=1000+random(1000);
- end; 
-
 BEGIN
  canvas(0,0,canvasWidth,canvasHeight);
  resolution(canvasWidth,canvasHeight);
  
  { Init }
- numTellersPresent:=1;
+ numTellersPresent:=2;
  numWaiting:=0;
- nextCustomerTime:=0;
+ calcNextArrivalTime;
  
  { Create tellers } 
  for index:= 0 to maxTellers-1 do
@@ -103,7 +109,6 @@ BEGIN
   begin
    addTeller(index,0);
   end;
-  nextServiceTimes[index]:=0;
  end;
 
  { draw line between tellers and customers }
@@ -113,32 +118,26 @@ BEGIN
  drawxy(canvasWidth-20,0);
  
  { Customer service loop }
- savedTime:=time;
-
  repeat
   noupdate;
 
-  { check time lapsed and decide which actions to perform based on that }
-  timeDelta:=time-savedTime;
-  
-  if (timeDelta>=nextCustomerTime) then
+  { check time to decide which actions to perform based on that }
+  curTime:=time;
+  if (curTime>=nextArrivalTime) then
   begin
    addCustomer;
-   numWaiting:=numWaiting+1;
    calcNextArrivalTime;
   end;
    
   for index:=0 to maxTellers-1 do
   begin
-   if tellersPresent[index] and (timeDelta>=nextServiceTimes[index]) and (queueSizes[index]>0) then
+   if tellersPresent[index] and (curTime>=serviceTimes[index]) and (queueSizes[index]>0) then
    begin
     removeCustomer(index);
-    numWaiting:=numWaiting-1;
-    calcNextServiceTime(index);
    end;
   end;
      
-  { writeln('waiting: '+str(numWaiting)); }
+  writeln('waiting: '+str(numWaiting));
   update;
   pause(200);
  { Until all queues are full }
