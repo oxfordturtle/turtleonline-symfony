@@ -1,7 +1,7 @@
 PROGRAM BankSimulation;
 CONST maxTellers=5;
       arrivalTimeMean=1000;
-      serviceTimeMean=5000;
+      serviceTimeMean=1000;
       canvasWidth=800;
       canvasHeight=800;
       maxQueueSize=5;
@@ -10,18 +10,14 @@ VAR numTellersPresent,index,curTime,nextArrivalTime,numWaiting,maxServiceTime: i
     queueSizes: array[0..maxTellers-1] of integer;
     serviceTimes: array[0..maxTellers-1,0..maxQueueSize] of integer;
 
- function calcNextArrivalTime: integer;
- var delta: integer;
+ function calcNextArrivalDeltaTime: integer;
  begin
-  delta:=arrivalTimeMean-500+random(1000); { range: mean +/- 500 ms }
-  result:=time+delta;
+  result:=arrivalTimeMean-500+random(1000); { range: mean +/- upto 500 ms }
  end;
  
- function calcServiceTime: integer;
- var delta: integer;
+ function calcServiceDeltaTime: integer;
  begin
-  delta:=serviceTimeMean-500+random(1000); { range: mean +/- 500 ms }
-  result:=time+delta;
+  result:=serviceTimeMean+random(900); { range: mean + upto 900 ms }
  end; 
 
  procedure addTeller(tellerIndex: integer; present: boolean);
@@ -62,7 +58,11 @@ VAR numTellersPresent,index,curTime,nextArrivalTime,numWaiting,maxServiceTime: i
    end;
   end;
   
-  serviceTime:=calcServiceTime;
+  if (queueSizes[shortestQueueIndex]>0) then
+   serviceTime:=serviceTimes[shortestQueueIndex,queueSizes[shortestQueueIndex]-1]+calcServiceDeltaTime
+  else
+   serviceTime:=time+calcServiceDeltaTime;
+  
   serviceTimes[shortestQueueIndex,queueSizes[shortestQueueIndex]]:=serviceTime;
   queueSizes[shortestQueueIndex]:=queueSizes[shortestQueueIndex]+1;
   numWaiting:=numWaiting+1;
@@ -73,7 +73,7 @@ VAR numTellersPresent,index,curTime,nextArrivalTime,numWaiting,maxServiceTime: i
   colour(green);
   blot(40);
 
-  writeln('added: '+str(shortestQueueIndex));
+  { writeln('added: '+str(shortestQueueIndex)); }
   result:=serviceTime;
  end;
  
@@ -88,13 +88,11 @@ VAR numTellersPresent,index,curTime,nextArrivalTime,numWaiting,maxServiceTime: i
 
   { shift array up by 1 }
   for index:=1 to queueSizes[tellerIndex] do
-  begin
    serviceTimes[tellerIndex,index-1]:=serviceTimes[tellerIndex,index];
-  end;
    
   queueSizes[tellerIndex]:=queueSizes[tellerIndex]-1;
   numWaiting:=numWaiting-1;
-  writeln('removed: '+str(tellerIndex));
+  { writeln('removed: '+str(tellerIndex)); }
  end;
  
 BEGIN
@@ -104,19 +102,15 @@ BEGIN
  { Init }
  numTellersPresent:=2;
  numWaiting:=0;
- nextArrivalTime:=calcNextArrivalTime;
+ nextArrivalTime:=calcNextArrivalDeltaTime;
  
  { Create tellers } 
  for index:= 0 to maxTellers-1 do
  begin
   if (index<numTellersPresent) then
-  begin
-   addTeller(index,true);
-  end
+   addTeller(index,true)
   else
-  begin
    addTeller(index,false);
-  end;
  end;
 
  { draw line between tellers and customers }
@@ -134,7 +128,7 @@ BEGIN
   if (curTime>=nextArrivalTime) then
   begin
    maxServiceTime:=addCustomer;
-   nextArrivalTime:=calcNextArrivalTime;
+   nextArrivalTime:=curTime+calcNextArrivalDeltaTime;
   end;
    
   for index:=0 to maxTellers-1 do
@@ -146,7 +140,7 @@ BEGIN
    end;
   end;
      
-  writeln('#waiting: '+str(numWaiting)+', wait time: '+str(maxServiceTime-curTime));
+  writeln('#waiting: '+str(numWaiting)+', wait time: '+str(max(maxServiceTime-curTime, 0)));
   update;
   pause(200);
  { Until all queues are full }
