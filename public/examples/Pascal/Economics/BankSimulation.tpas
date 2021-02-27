@@ -1,33 +1,33 @@
 PROGRAM BankSimulation;
 CONST maxTellers=5;
       arrivalTimeMean=1000;
-      serviceTimeMean=1100;
+      serviceTimeMean=5000;
       canvasWidth=800;
       canvasHeight=800;
       maxQueueSize=5;
-VAR numTellersPresent,index,curTime,nextArrivalTime,numWaiting: integer;
+VAR numTellersPresent,index,curTime,nextArrivalTime,numWaiting,maxServiceTime: integer;
     tellersPresent: array[0..maxTellers-1] of boolean;
     queueSizes: array[0..maxTellers-1] of integer;
-    serviceTimes: array[0..maxTellers-1] of integer;
+    serviceTimes: array[0..maxTellers-1,0..maxQueueSize] of integer;
 
- procedure calcNextArrivalTime;
+ function calcNextArrivalTime: integer;
  var delta: integer;
  begin
   delta:=arrivalTimeMean-500+random(1000); { range: mean +/- 500 ms }
-  nextArrivalTime:=time+delta;
+  result:=time+delta;
  end;
  
- procedure calcServiceTime(index:integer);
+ function calcServiceTime: integer;
  var delta: integer;
  begin
   delta:=serviceTimeMean-500+random(1000); { range: mean +/- 500 ms }
-  serviceTimes[index]:=time+delta;
+  result:=time+delta;
  end; 
 
- procedure addTeller(tellerIndex,present: integer);
+ procedure addTeller(tellerIndex: integer; present: boolean);
  var color,x,y: integer;
  begin
-  if present=1 then
+  if present then
   begin
    color:=blue;
    tellersPresent[tellerIndex]:=true;
@@ -38,19 +38,16 @@ VAR numTellersPresent,index,curTime,nextArrivalTime,numWaiting: integer;
    tellersPresent[tellerIndex]:=false;
   end;
 
-  serviceTimes[tellerIndex]:=0;
-
   { represent each teller with a blot }
   x:=(tellerIndex)*(canvasWidth/maxTellers)+60;
   y:=60;
-
   setxy(x,y);
   colour(color);
   blot(40);
  end;
 
- procedure addCustomer;
- var shortestQueueSize,shortestQueueIndex,color,x,y:integer;
+ function addCustomer: integer;
+ var shortestQueueSize,shortestQueueIndex,color,x,y,serviceTime:integer;
  begin
   shortestQueueSize:=maxQueueSize;
   shortestQueueIndex:=0;
@@ -65,18 +62,19 @@ VAR numTellersPresent,index,curTime,nextArrivalTime,numWaiting: integer;
    end;
   end;
   
+  serviceTime:=calcServiceTime;
+  serviceTimes[shortestQueueIndex,queueSizes[shortestQueueIndex]]:=serviceTime;
   queueSizes[shortestQueueIndex]:=queueSizes[shortestQueueIndex]+1;
+  numWaiting:=numWaiting+1;
   
   x:=(shortestQueueIndex)*(canvasWidth/maxTellers)+60;
   y:=queueSizes[shortestQueueIndex]*100+100;
-
   setxy(x,y);
   colour(green);
   blot(40);
 
-  calcServiceTime(shortestQueueIndex);
-  numWaiting:=numWaiting+1;
   writeln('added: '+str(shortestQueueIndex));
+  result:=serviceTime;
  end;
  
  procedure removeCustomer(tellerIndex: integer);
@@ -88,6 +86,12 @@ VAR numTellersPresent,index,curTime,nextArrivalTime,numWaiting: integer;
   colour(white);
   blot(40);
 
+  { shift array up by 1 }
+  for index:=1 to queueSizes[tellerIndex] do
+  begin
+   serviceTimes[tellerIndex,index-1]:=serviceTimes[tellerIndex,index];
+  end;
+   
   queueSizes[tellerIndex]:=queueSizes[tellerIndex]-1;
   numWaiting:=numWaiting-1;
   writeln('removed: '+str(tellerIndex));
@@ -98,20 +102,20 @@ BEGIN
  resolution(canvasWidth,canvasHeight);
  
  { Init }
- numTellersPresent:=1;
+ numTellersPresent:=2;
  numWaiting:=0;
- calcNextArrivalTime;
+ nextArrivalTime:=calcNextArrivalTime;
  
  { Create tellers } 
  for index:= 0 to maxTellers-1 do
  begin
   if (index<numTellersPresent) then
   begin
-   addTeller(index,1);
+   addTeller(index,true);
   end
   else
   begin
-   addTeller(index,0);
+   addTeller(index,false);
   end;
  end;
 
@@ -129,19 +133,20 @@ BEGIN
   curTime:=time;
   if (curTime>=nextArrivalTime) then
   begin
-   addCustomer;
-   calcNextArrivalTime;
+   maxServiceTime:=addCustomer;
+   nextArrivalTime:=calcNextArrivalTime;
   end;
    
   for index:=0 to maxTellers-1 do
   begin
-   if tellersPresent[index] and (curTime>=serviceTimes[index]) and (queueSizes[index]>0) then
+   if tellersPresent[index] and (queueSizes[index]>0) then
    begin
-    removeCustomer(index);
+    if (curTime>=serviceTimes[index,0]) then
+     removeCustomer(index);
    end;
   end;
      
-  writeln('waiting: '+str(numWaiting));
+  writeln('#waiting: '+str(numWaiting)+', wait time: '+str(maxServiceTime-curTime));
   update;
   pause(200);
  { Until all queues are full }
