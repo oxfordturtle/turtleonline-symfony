@@ -101,22 +101,30 @@ VAR numTellersPresent,index,curTime,nextArrivalTime,numWaiting,maxServiceTime: i
 BEGIN
  canvas(0,0,canvasWidth,canvasHeight);
  resolution(canvasWidth,canvasHeight);
- 
+
  { user input loop }
- repeat
-  reset(?key);
-  write('Type in the number of tellers available (> 0 and < 6): ');
+ while true do
+ begin
+  reset(\keybuffer);
+  writeln('Enter the number of tellers you want (> 0 and < 6).');
+  writeln('Or enter 0 to close the bank and quit the program.');
   s:=readln;
-  numTellersPresent:= min(max(0,valdef(s, -1)),maxTellers);
-  reset(?key);
+  numTellersPresent:=min(max(0,valdef(s, -1)),maxTellers);
 
   blank(white);
   writeln('');
-  writeln('Ok, running the bank simulation with '+str(numTellersPresent)+' tellers available.');
-  writeln('Press Esc any time to stop the current simulation.');
-  writeln('Press Esc twice to exit the program.');
-  writeln('');
-
+  if (numTellersPresent=0) then
+  begin
+   writeln('Bye!');
+   halt;
+  end
+  else
+  begin
+   writeln('Ok, running the bank with '+str(numTellersPresent)+' tellers available.');
+   writeln('Press Esc any time to stop the current simulation.');
+   writeln('');
+  end;
+  
   numWaiting:=0;
   nextArrivalTime:=calcNextArrivalDeltaTime;
  
@@ -156,7 +164,7 @@ BEGIN
     end;
    end;
      
-   writeln('#customers waiting: '+str(numWaiting)+', Wait time: '+str(max(maxServiceTime-curTime, 0)));
+   writeln('#Customers waiting: '+str(numWaiting)+', Wait time: '+str(max(maxServiceTime-curTime, 0)));
    update;
    pause(200);
   { Until all queues are full }
@@ -164,12 +172,9 @@ BEGIN
 
   writeln('');
   if (abs(?key)=\escape) then
-   writeln('Stopped the simulation due to user input.')
+   writeln('Simulation stopped.')
   else
-   writeln('Stopped the simulation because the bank has reached maximum capacity.');
+   writeln('Simulation stopped due to overcrowding!');
   writeln('');
-
-  reset(?key);
-
- until (abs(?key)=\escape);
+ end;
 END.
