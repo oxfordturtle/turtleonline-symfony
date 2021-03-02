@@ -6,18 +6,19 @@ CONST maxTellers=5;
       canvasHeight=800;
       maxQueueSize=5;
 VAR numTellersPresent,index,curTime,nextArrivalTime,numWaiting,maxServiceTime: integer;
+    s: string;
     tellersPresent: array[0..maxTellers-1] of boolean;
     queueSizes: array[0..maxTellers-1] of integer;
     serviceTimes: array[0..maxTellers-1,0..maxQueueSize] of integer;
 
  function calcNextArrivalDeltaTime: integer;
  begin
-  result:=arrivalTimeMean-500+random(1000); { range: mean +/- upto 500 ms }
+  result:=arrivalTimeMean-500+random(1000); { approximating poisson distribution with uniform distribution using mean +/- upto 500 ms }
  end;
  
  function calcServiceDeltaTime: integer;
  begin
-  result:=serviceTimeMean+random(900); { range: mean + upto 900 ms }
+  result:=serviceTimeMean+random(900); { approximating exponential distribution with uniform distribution using mean + upto 900 ms }
  end; 
 
  procedure addTeller(tellerIndex: integer; present: boolean);
@@ -40,6 +41,8 @@ VAR numTellersPresent,index,curTime,nextArrivalTime,numWaiting,maxServiceTime: i
   setxy(x,y);
   colour(color);
   blot(40);
+  
+  queueSizes[tellerIndex]:=0;
  end;
 
  function addCustomer: integer;
@@ -99,50 +102,74 @@ BEGIN
  canvas(0,0,canvasWidth,canvasHeight);
  resolution(canvasWidth,canvasHeight);
  
- { Init }
- numTellersPresent:=2;
- numWaiting:=0;
- nextArrivalTime:=calcNextArrivalDeltaTime;
- 
- { Create tellers } 
- for index:= 0 to maxTellers-1 do
- begin
-  if (index<numTellersPresent) then
-   addTeller(index,true)
-  else
-   addTeller(index,false);
- end;
-
- { draw line between tellers and customers }
- colour(silver);
- thickness(5);
- setxy(10,130);
- drawxy(canvasWidth-20,0);
- 
- { Customer service loop }
+ { user input loop }
  repeat
-  noupdate;
+  reset(?key);
+  write('Type in the number of tellers available (> 0 and < 6): ');
+  s:=readln;
+  numTellersPresent:= min(max(0,valdef(s, -1)),maxTellers);
+  reset(?key);
 
-  { check time to decide which actions to perform based on that }
-  curTime:=time;
-  if (curTime>=nextArrivalTime) then
+  blank(white);
+  writeln('');
+  writeln('Ok, running the bank simulation with '+str(numTellersPresent)+' tellers available.');
+  writeln('Press Esc any time to stop the current simulation.');
+  writeln('Press Esc twice to exit the program.');
+  writeln('');
+
+  numWaiting:=0;
+  nextArrivalTime:=calcNextArrivalDeltaTime;
+ 
+  { Create tellers } 
+  for index:= 0 to maxTellers-1 do
   begin
-   maxServiceTime:=addCustomer;
-   nextArrivalTime:=curTime+calcNextArrivalDeltaTime;
+   if (index<numTellersPresent) then
+    addTeller(index,true)
+   else
+    addTeller(index,false);
   end;
-   
-  for index:=0 to maxTellers-1 do
-  begin
-   if tellersPresent[index] and (queueSizes[index]>0) then
+
+  { draw line between tellers and customers }
+  colour(silver);
+  thickness(5);
+  setxy(10,130);
+  drawxy(canvasWidth-20,0);
+
+  { Customer service loop }
+  repeat
+   noupdate;
+
+   { check time to decide which actions to perform based on that }
+   curTime:=time;
+   if (curTime>=nextArrivalTime) then
    begin
-    if (curTime>=serviceTimes[index,0]) then
-     removeCustomer(index);
+    maxServiceTime:=addCustomer;
+    nextArrivalTime:=curTime+calcNextArrivalDeltaTime;
    end;
-  end;
+   
+   for index:=0 to maxTellers-1 do
+   begin
+    if tellersPresent[index] and (queueSizes[index]>0) then
+    begin
+     if (curTime>=serviceTimes[index,0]) then
+      removeCustomer(index);
+    end;
+   end;
      
-  writeln('#waiting: '+str(numWaiting)+', wait time: '+str(max(maxServiceTime-curTime, 0)));
-  update;
-  pause(200);
- { Until all queues are full }
- until (abs(?key)=\escape) or (numWaiting>=numTellersPresent*maxQueueSize);
+   writeln('#customers waiting: '+str(numWaiting)+', Wait time: '+str(max(maxServiceTime-curTime, 0)));
+   update;
+   pause(200);
+  { Until all queues are full }
+  until (abs(?key)=\escape) or (numWaiting>=numTellersPresent*maxQueueSize);
+
+  writeln('');
+  if (abs(?key)=\escape) then
+   writeln('Stopped the simulation due to user input.')
+  else
+   writeln('Stopped the simulation because the bank has reached maximum capacity.');
+  writeln('');
+
+  reset(?key);
+
+ until (abs(?key)=\escape);
 END.
