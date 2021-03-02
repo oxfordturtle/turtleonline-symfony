@@ -1,0 +1,87 @@
+PROGRAM CoinTossGame;
+CONST playerCols=8;
+      playerRows=8;
+      numPlayers=playerRows*playerCols;
+      canvasWidth=playerCols*100;
+      canvasHeight=playerRows*100;
+      maxIter=100;
+VAR x,y,index,index1,index2,cIter,numBroke: integer;
+    players: array[0..numPlayers-1] of integer;
+    wealths: array[0..numPlayers-1] of integer;
+
+ procedure displayWealth(index: integer);
+ var color,x,y,wealth: integer;
+ begin
+  wealth:=wealths[index];
+
+  if (wealth = 0) then
+   color:=red
+  else if (wealth = 1) then
+   color:=yellow
+  else
+   color:=green;
+
+  { keep a count of the number of people that have gone broke }
+  if (wealth=0) then
+   numBroke:=numBroke+1;
+
+  { represent each player with a blot and their wealth amount }
+  x:=(index div playerCols)*(canvasWidth/playerCols);
+  y:=(index mod playerCols)*(canvasHeight/playerRows);
+
+  setxy(x+50, y+50);
+  colour(color);
+  blot(48);
+
+  setxy(x+20, y+25);
+  colour(black);
+  print('$'+str(wealth), 4, 25);
+ end;
+ 
+ procedure tossCoin(p1,p2: integer);
+ begin
+  if(random(2) = 0) then { p1 wins }
+  begin
+   wealths[p1]:=wealths[p1]+1;
+   wealths[p2]:=wealths[p2]-1;
+  end
+  else { p2 wins }
+  begin
+   wealths[p2]:=wealths[p2]+1;
+   wealths[p1]:=wealths[p1]-1;
+  end;
+ 
+  displayWealth(p1);
+  displayWealth(p2);
+ end;
+
+BEGIN
+ canvas(0,0,canvasWidth,canvasHeight);
+ resolution(canvasWidth,canvasHeight);
+ numBroke:=0;
+
+ { Initialize player indices and wealth arrays }
+ for index:=0 to numPlayers-1 do
+ begin
+   players[index]:=index;
+   wealths[index]:=1;
+   displayWealth(index);
+ end;
+
+ repeat
+  noupdate;
+
+  { Select pairs of players at random, and for each pair, play the coin toss game }
+  cIter:=0;
+  repeat
+   index1:= random(numPlayers);
+   index2:= random(numPlayers);
+   cIter:=cIter+1;
+  until(((index1<>index2) and (wealths[index1]<>0) and (wealths[index2]<>0)) or (cIter>=maxIter));
+  if (cIter<maxIter) then
+   tossCoin(players[index1], players[index2]);
+
+  update;
+ { Until all but one player are broke or the game is stopped }
+ until (abs(?key)=\escape) or (numBroke>=numPlayers-1);
+END.
