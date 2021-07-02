@@ -341,8 +341,7 @@ function type (code: string, language: Language, line: number, character: number
 /** tests for a native keycode constant and returns the token if matched */
 function keycode (code: string, language: Language, line: number, character: number): Token|false {
   const names = inputs
-    .filter(x => x.value >= 0)
-    .map(x => x.names[language].replace(/\\/, '\\\\'))
+    .map(x => `\\\\${x.names[language]}`)
     .join('|')
   const regex = (language === 'Pascal') ? new RegExp(`^(${names})\\b`, 'i') : new RegExp(`^(${names})\\b`)
   const good = code.match(regex)
@@ -359,8 +358,7 @@ function keycode (code: string, language: Language, line: number, character: num
 /** tests for a native query code and returns the token if matched */
 function query (code: string, language: Language, line: number, character: number): Token|false {
   const names = inputs
-    .filter(x => x.value < 0)
-    .map(x => x.names[language].replace(/\?/, '\\?'))
+    .map(x => `\\?${x.names[language]}`)
     .join('|')
   const regex = (language === 'Pascal') ? new RegExp(`^(${names})\\b`, 'i') : new RegExp(`^(${names})\\b`)
   const good = code.match(regex)

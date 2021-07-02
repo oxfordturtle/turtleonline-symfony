@@ -1074,8 +1074,8 @@ export const commands: Command[] = [
       new Parameter('keycode', 'integer', false, 1),
       new Parameter('m', 'integer', false, 1)
     ],
-    'boolean', 9, 1,
-    'Waits a maximum of <code>m</code> milliseconds for the key with the specified <code>keycode</code> to be pressed; returns <code>true</code> if pressed (and stops waiting), <code>false</code> otherwise.'
+    'integer', 9, 1,
+    'Waits a maximum of <code>m</code> milliseconds for the key with the specified <code>keycode</code> to be pressed; returns its current input value if pressed (and stops waiting), and <code>0</code> otherwise.'
   ),
   new Command(
     { BASIC: 'GET$', C: 'get', Java: 'read', Pascal: 'read', Python: 'read', TypeScript: 'read' },

@@ -91,7 +91,7 @@ function literalStringValue (exp: StringValue, options: Options): number[] {
 
 /** generates the pcode for loading an input value onto the stack */
 function inputValue (exp: InputValue, options: Options): number[] {
-  return (exp.input.value < 0)
+  return (exp.lexeme.subtype === 'query')
     ? [PCode.ldin, exp.input.value, PCode.inpt]
     : [PCode.ldin, exp.input.value]
 }

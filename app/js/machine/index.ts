@@ -121,6 +121,7 @@ export function halt (): void {
     window.removeEventListener('keyup', releaseKey)
     window.removeEventListener('keypress', putInBuffer)
     window.removeEventListener('keyup', detect)
+    window.removeEventListener('mouseup', detect)
     window.removeEventListener('keyup',readline)
     canvas.removeEventListener('contextmenu', preventDefault)
     canvas.removeEventListener('mousemove', storeMouseXY)
@@ -179,6 +180,7 @@ function execute (): void {
   // in case of detect or readline, remove the event listeners the first time we carry on with the
   // program execution after they have been called
   window.removeEventListener('keyup', detect)
+  window.removeEventListener('mouseup', detect)
   window.removeEventListener('keyup', readline)
 
   // execute any delayed heap clear calls
@@ -1674,7 +1676,6 @@ function execute (): void {
           n1 = memory.stack[memory.stack.length - 2]
           if (n1 !== undefined && n2 !== undefined) {
             if ((n1 < 0) || (n1 > memory.main[n2])) {
-              console.log(`n1: ${n1}, n2: ${n2}, memory[n2]: ${memory.main[n2]}`)
               // TODO: make range check a runtime option
               throw new MachineError(`Array index out of range (${line}, ${code}).`)
             }
@@ -2138,9 +2139,11 @@ function execute (): void {
               line += 1
               code = 0
             }
-            detectKeycode = n2
-            detectTimeoutID = window.setTimeout(execute, n1)
+            detectKeycode = n1
+            n3 = n2 === 0 ? Math.pow(2, 31) - 1 : n2 // 0 means "as long as possible"
+            detectTimeoutID = window.setTimeout(execute, n3)
             window.addEventListener('keyup', detect)
+            window.addEventListener('mouseup', detect)
           } else {
             throw new MachineError('Stack operation called on empty stack.')
           }
@@ -2224,6 +2227,7 @@ function storeKey (event: KeyboardEvent): void {
   const keycode = event.keyCode // keycodeFromKey(event.key)
   memory.query[9] = keycode
   memory.query[10] = 128
+  memory.query[11] = keycode
   if (event.shiftKey) {
     memory.query[10] += 8
   }
@@ -2317,6 +2321,7 @@ function storeClickXY (event: MouseEvent|TouchEvent): void {
           memory.query[1] = memory.query[4]
           memory.query[2] = -1
           memory.query[3] = -1
+          memory.query[11] = 1 // 1 for lmouse
           break
 
         case 1:
@@ -2324,6 +2329,7 @@ function storeClickXY (event: MouseEvent|TouchEvent): void {
           memory.query[1] = -1
           memory.query[2] = -1
           memory.query[3] = memory.query[4]
+          memory.query[11] = 3 // 3 for rmouse
           break
 
         case 2:
@@ -2331,6 +2337,7 @@ function storeClickXY (event: MouseEvent|TouchEvent): void {
           memory.query[1] = -1
           memory.query[2] = memory.query[4]
           memory.query[3] = -1
+          memory.query[11] = 2 // 2 for rmouse
           break
       }
       break
@@ -2378,11 +2385,13 @@ function preventDefault (event: Event): void {
   event.preventDefault()
 }
 
-/** breaks out of DETECT loop and resumes program execution if the right key is pressed */
-function detect (event: KeyboardEvent): void {
-  if (event.keyCode === detectKeycode) { // keycodeFromKey(event.key) === detectKeycode) {
+/** breaks out of DETECT loop and resumes program execution if the right key/button is pressed */
+function detect (event: KeyboardEvent|MouseEvent): void {
+  const rightThingPressed = (detectKeycode === -11) || ((event as KeyboardEvent).keyCode === detectKeycode)
+  if (rightThingPressed) {
+    const returnValue = (detectKeycode < 0) ? memory.query[-detectKeycode] : memory.keys[detectKeycode]
     memory.stack.pop()
-    memory.stack.push(-1) // -1 for true
+    memory.stack.push(returnValue)
     window.clearTimeout(detectTimeoutID)
     execute()
   }
@@ -2453,12 +2462,12 @@ function vcoords (coords: [number, number]): [number, number] {
 function virtx (x: number): number {
   const { left, width } = canvas.getBoundingClientRect()
   const exact = (((x - left) * sizex) / width) + startx
-  return Math.round(exact)
+  return Math.floor(exact)
 }
 
 /** converts y to virtual canvas coordinate */
 function virty (y: number): number {
   const { height, top } = canvas.getBoundingClientRect()
   const exact = (((y - top) * sizey) / height) + starty
-  return Math.round(exact)
+  return Math.floor(exact)
 }

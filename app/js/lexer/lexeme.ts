@@ -308,7 +308,7 @@ export class KeycodeLexeme extends LexemeClass {
 
   constructor (token: Token, language: Language) {
     super(token.line, token.character, token.content)
-    this.value = (language === 'Pascal') ? token.content.toLowerCase() : token.content
+    this.value = (language === 'Pascal') ? token.content.slice(1).toLowerCase() : token.content.slice(1)
   }
 }
 
@@ -320,7 +320,7 @@ export class QueryLexeme extends LexemeClass {
 
   constructor (token: Token, language: Language) {
     super(token.line, token.character, token.content)
-    this.value = (language === 'Pascal') ? token.content.toLowerCase() : token.content
+    this.value = (language === 'Pascal') ? token.content.slice(1).toLowerCase() : token.content.slice(1)
   }
 }
 

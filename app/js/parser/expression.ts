@@ -145,7 +145,7 @@ function factor (lexemes: Lexemes, routine: Program|Subroutine): Expression {
 
     // input codes
     case 'input':
-      const input = find.input(routine, lexeme.content)
+      const input = find.input(routine, lexeme.value)
       if (input) {
         lexemes.next()
         return new InputValue(lexeme, input)
