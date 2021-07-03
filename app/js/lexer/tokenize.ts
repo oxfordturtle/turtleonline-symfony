@@ -29,8 +29,8 @@ export default function tokenize (code: string, language: Language): Token[] {
       decimal(code, language, line, character) ||
       keyword(code, language, line, character) ||
       type(code, language, line, character) ||
-      keycode(code, language, line, character) ||
-      query(code, language, line, character) ||
+      inputcode(code, language, line, character) ||
+      querycode(code, language, line, character) ||
       turtle(code, language, line, character) ||
       identifier(code, language, line, character) ||
       illegal(code, language, line, character)
@@ -338,8 +338,8 @@ function type (code: string, language: Language, line: number, character: number
   return test ? new Token('type', test[0], line, character) : false
 }
 
-/** tests for a native keycode constant and returns the token if matched */
-function keycode (code: string, language: Language, line: number, character: number): Token|false {
+/** tests for a native inputcode constant and returns the token if matched */
+function inputcode (code: string, language: Language, line: number, character: number): Token|false {
   const names = inputs
     .map(x => `\\\\${x.names[language]}`)
     .join('|')
@@ -347,16 +347,16 @@ function keycode (code: string, language: Language, line: number, character: num
   const good = code.match(regex)
   const bad = code.match(/^(\\[#a-zA-Z0-9]*)\b/)
   if (good) {
-    return new Token('keycode', good[0], line, character)
+    return new Token('inputcode', good[0], line, character)
   }
   if (bad) {
-    return new Token('bad-keycode', bad[0], line, character)
+    return new Token('bad-inputcode', bad[0], line, character)
   }
   return false
 }
 
-/** tests for a native query code and returns the token if matched */
-function query (code: string, language: Language, line: number, character: number): Token|false {
+/** tests for a native querycode and returns the token if matched */
+function querycode (code: string, language: Language, line: number, character: number): Token|false {
   const names = inputs
     .map(x => `\\?${x.names[language]}`)
     .join('|')
@@ -364,10 +364,10 @@ function query (code: string, language: Language, line: number, character: numbe
   const good = code.match(regex)
   const bad = code.match(/^(\?[#a-zA-Z0-9]*)\b/)
   if (good) {
-    return new Token('query', good[0], line, character)
+    return new Token('querycode', good[0], line, character)
   }
   if (bad) {
-    return new Token('bad-query', bad[0], line, character)
+    return new Token('bad-querycode', bad[0], line, character)
   }
   return false
 }

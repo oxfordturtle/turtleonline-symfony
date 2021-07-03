@@ -1071,11 +1071,11 @@ export const commands: Command[] = [
     { BASIC: 'DETECT', C: 'detect', Java: 'detect', Pascal: 'detect', Python: 'detect', TypeScript: 'detect' },
     [PCode.tdet],
     [
-      new Parameter('keycode', 'integer', false, 1),
+      new Parameter('inputcode', 'integer', false, 1),
       new Parameter('m', 'integer', false, 1)
     ],
     'integer', 9, 1,
-    'Waits a maximum of <code>m</code> milliseconds for the key with the specified <code>keycode</code> to be pressed; returns its current input value if pressed (and stops waiting), and <code>0</code> otherwise.'
+    'Waits a maximum of <code>m</code> milliseconds for the key with the specified <code>inputcode</code> to be pressed; returns its current input value if pressed (and stops waiting), and <code>0</code> otherwise.'
   ),
   new Command(
     { BASIC: 'GET$', C: 'get', Java: 'read', Pascal: 'read', Python: 'read', TypeScript: 'read' },
@@ -1100,16 +1100,16 @@ export const commands: Command[] = [
   new Command(
     { BASIC: 'RESET', C: 'reset', Java: 'reset', Pascal: 'reset', Python: 'reset', TypeScript: 'reset' },
     [PCode.iclr],
-    [new Parameter('?input', 'integer', false, 1)],
+    [new Parameter('\\inputcode', 'integer', false, 1)],
     null, 9, 2,
-    'Resets the specified <code>?input</code> (<code>?mousex</code>, <code>?mousey</code>, <code>?click</code>, etc.) to its initial value (i.e. -1).'
+    'Resets the specified <code>\\inputcode</code> (<code>\\mousex</code>, <code>\\mousey</code>, <code>\\backspace</code>, <code>\\enter</code>, etc.) to its initial value (i.e. -1).'
   ),
   new Command(
-    { BASIC: 'KEYSTATUS', C: 'keystatus', Java: 'keyStatus', Pascal: 'keystatus', Python: 'keystatus', TypeScript: 'keyStatus' },
-    [PCode.inpt],
-    [new Parameter('keycode', 'integer', false, 1)],
+    { BASIC: 'STATUS', C: 'status', Java: 'status', Pascal: 'status', Python: 'status', TypeScript: 'status' },
+    [PCode.stat],
+    [new Parameter('\\inputcode', 'integer', false, 1)],
     'integer', 9, 2,
-    'Returns the <code>?kshift</code> value for the most recent press of the key with the specified <code>keycode</code>.'
+    'Returns the <code>?kshift</code> value for the most recent press/click of the input with the specified <code>\\inputcode</code>.'
   ),
   new Command(
     { BASIC: 'KEYBUFFER', C: 'keybuffer', Java: 'keyBuffer', Pascal: 'keybuffer', Python: 'keybuffer', TypeScript: 'keyBuffer' },

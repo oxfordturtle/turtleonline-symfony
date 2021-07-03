@@ -3,7 +3,7 @@
  */
 import lexify from '../../../app/js/lexer/lexify'
 import { PCode } from '../../../app/js/constants/pcodes'
-import { BooleanLexeme, CommentLexeme, IdentifierLexeme, IntegerLexeme, KeycodeLexeme, Operator, OperatorLexeme, QueryLexeme, StringLexeme } from '../../../app/js/lexer/lexeme'
+import { BooleanLexeme, CommentLexeme, IdentifierLexeme, IntegerLexeme, InputcodeLexeme, Operator, OperatorLexeme, QuerycodeLexeme, StringLexeme } from '../../../app/js/lexer/lexeme'
 
 test('Lexer: BASIC: Errors', function () {
   // unterminated strings
@@ -19,7 +19,7 @@ test('Lexer: BASIC: Errors', function () {
   // keycodes
   expect(() => {
     lexify('\\bookspace', 'BASIC')
-  }).toThrow('Unrecognised input keycode. ("\\bookspace", line 1, index 1)')
+  }).toThrow('Unrecognised input code. ("\\bookspace", line 1, index 1)')
 
   // queries
   expect(() => {
@@ -260,7 +260,7 @@ test('Lexer: BASIC: Keycodes', function () {
     const lexemes = lexify(keycode, 'BASIC')
     expect(lexemes.length).toBe(1)
     expect(lexemes[0].type).toBe('input')
-    expect((lexemes[0] as KeycodeLexeme).subtype).toBe('keycode')
+    expect((lexemes[0] as InputcodeLexeme).subtype).toBe('keycode')
   }
 })
 
@@ -281,7 +281,7 @@ test('Lexer: BASIC: Queries', function () {
     const lexemes = lexify(query, 'BASIC')
     expect(lexemes.length).toBe(1)
     expect(lexemes[0].type).toBe('input')
-    expect((lexemes[0] as QueryLexeme).subtype).toBe('query')
+    expect((lexemes[0] as QuerycodeLexeme).subtype).toBe('querycode')
   }
 })
 

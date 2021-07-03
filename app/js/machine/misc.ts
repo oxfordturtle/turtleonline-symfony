@@ -3,8 +3,8 @@ export function mixBytes (byte1: number, byte2: number, proportion1: number, pro
   return Math.round(((byte1 * proportion1) + (byte2 * proportion2)) / (proportion1 + proportion2))
 }
 
-/** gets a keycode from a KeyboardEvent.key property */
-export function keycodeFromKey (key: string): number {
+/** gets an inputcode from a KeyboardEvent.key property */
+export function inputcodeFromKey (key: string): number {
   switch (key) {
     case 'Backspace':
       return 8

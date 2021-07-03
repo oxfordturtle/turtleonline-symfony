@@ -34,7 +34,7 @@ export const inputs: Input[] = [
   new Input('mmouse', -3),
   new Input('rmouse', -2),
   new Input('lmouse', -1),
-  new Input('keybuffer', 0),
+  new Input('all', 0),
   new Input('backspace', 8),
   new Input('tab', 9),
   new Input('enter', 13),

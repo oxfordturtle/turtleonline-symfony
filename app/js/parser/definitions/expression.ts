@@ -11,9 +11,9 @@ import type {
   CharacterLexeme,
   IdentifierLexeme,
   IntegerLexeme,
-  KeycodeLexeme,
+  InputcodeLexeme,
   OperatorLexeme,
-  QueryLexeme,
+  QuerycodeLexeme,
   StringLexeme
 } from '../../lexer/lexeme'
 import { type } from './operators'
@@ -63,11 +63,11 @@ export class StringValue {
 /** input value */
 export class InputValue {
   readonly expressionType = 'input'
-  readonly lexeme: KeycodeLexeme|QueryLexeme
+  readonly lexeme: InputcodeLexeme|QuerycodeLexeme
   readonly input: Input
   readonly type: Type = 'integer'
 
-  constructor (lexeme: KeycodeLexeme|QueryLexeme, input: Input) {
+  constructor (lexeme: InputcodeLexeme|QuerycodeLexeme, input: Input) {
     this.lexeme = lexeme
     this.input = input
   }

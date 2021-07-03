@@ -2,7 +2,7 @@
  * Tests for the Turtle Pascal lexical analysis function.
  */
 import lexify from '../../../app/js/lexer/lexify'
-import { BooleanLexeme, CommentLexeme, IdentifierLexeme, IntegerLexeme, KeycodeLexeme, Operator, OperatorLexeme, QueryLexeme, StringLexeme } from '../../../app/js/lexer/lexeme'
+import { BooleanLexeme, CommentLexeme, IdentifierLexeme, IntegerLexeme, InputcodeLexeme, Operator, OperatorLexeme, QuerycodeLexeme, StringLexeme } from '../../../app/js/lexer/lexeme'
 
 test('Lexer: Pascal: Errors', function () {
   // comments
@@ -306,7 +306,7 @@ test('Lexer: Pascal: Keycodes', function () {
     const lexemes = lexify(keycode, 'Pascal')
     expect(lexemes.length).toBe(1)
     expect(lexemes[0].type).toBe('input')
-    expect((lexemes[0] as KeycodeLexeme).subtype).toBe('keycode')
+    expect((lexemes[0] as InputcodeLexeme).subtype).toBe('keycode')
   }
 })
 
@@ -327,7 +327,7 @@ test('Lexer: Pascal: Queries', function () {
     const lexemes = lexify(query, 'Pascal')
     expect(lexemes.length).toBe(1)
     expect(lexemes[0].type).toBe('input')
-    expect((lexemes[0] as QueryLexeme).subtype).toBe('query')
+    expect((lexemes[0] as QuerycodeLexeme).subtype).toBe('querycode')
   }
 })
 

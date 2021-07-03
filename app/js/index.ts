@@ -19,7 +19,7 @@ import './components/reference/colours'
 import './components/reference/commands'
 import './components/reference/cursors'
 import './components/reference/fonts'
-import './components/reference/keycodes'
+import './components/reference/inputcodes'
 
 // load system components
 import './components/system/canvas'

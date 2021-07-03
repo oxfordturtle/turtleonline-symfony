@@ -2,7 +2,7 @@
  * Tests for the Turtle Python lexical analysis function.
  */
 import lexify from '../../../app/js/lexer/lexify'
-import { BooleanLexeme, CommentLexeme, IdentifierLexeme, IntegerLexeme, KeycodeLexeme, Operator, OperatorLexeme, QueryLexeme, StringLexeme } from '../../../app/js/lexer/lexeme'
+import { BooleanLexeme, CommentLexeme, IdentifierLexeme, IntegerLexeme, InputcodeLexeme, Operator, OperatorLexeme, QuerycodeLexeme, StringLexeme } from '../../../app/js/lexer/lexeme'
 
 test('Lexer: Python: Errors', function () {
   // single quoted strings
@@ -294,7 +294,7 @@ test('Lexer: Python: Keycodes', function () {
     const lexemes = lexify(keycode, 'Python')
     expect(lexemes.length).toBe(1)
     expect(lexemes[0].type).toBe('input')
-    expect((lexemes[0] as KeycodeLexeme).subtype).toBe('keycode')
+    expect((lexemes[0] as InputcodeLexeme).subtype).toBe('keycode')
   }
 })
 
@@ -315,7 +315,7 @@ test('Lexer: Python: Queries', function () {
     const lexemes = lexify(query, 'Python')
     expect(lexemes.length).toBe(1)
     expect(lexemes[0].type).toBe('input')
-    expect((lexemes[0] as QueryLexeme).subtype).toBe('query')
+    expect((lexemes[0] as QuerycodeLexeme).subtype).toBe('querycode')
   }
 })
 

@@ -18,8 +18,8 @@ import {
   IntegerLexeme,
   CharacterLexeme,
   StringLexeme,
-  KeycodeLexeme,
-  QueryLexeme,
+  InputcodeLexeme,
+  QuerycodeLexeme,
   IdentifierLexeme
 } from './lexeme'
 import { CompilerError } from '../tools/error'
@@ -130,12 +130,12 @@ export default function lexify (code: string|Token[], language: Language): Lexem
         lexemes.push(new IntegerLexeme(tokens[index], 10))
         break
 
-      case 'keycode':
-        lexemes.push(new KeycodeLexeme(tokens[index], language))
+      case 'inputcode':
+        lexemes.push(new InputcodeLexeme(tokens[index], language))
         break
 
-      case 'query':
-        lexemes.push(new QueryLexeme(tokens[index], language))
+      case 'querycode':
+        lexemes.push(new QuerycodeLexeme(tokens[index], language))
         break
 
       case 'command':
@@ -159,10 +159,10 @@ export default function lexify (code: string|Token[], language: Language): Lexem
       case 'real':
         throw new CompilerError('The Turtle System does not support real numbers.', tokens[index])
 
-      case 'bad-keycode':
-        throw new CompilerError('Unrecognised input keycode.', tokens[index])
+      case 'bad-inputcode':
+        throw new CompilerError('Unrecognised input code.', tokens[index])
 
-      case 'bad-query':
+      case 'bad-querycode':
         throw new CompilerError('Unrecognised input query.', tokens[index])
 
       case 'illegal':

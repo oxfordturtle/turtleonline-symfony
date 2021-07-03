@@ -1,7 +1,6 @@
 // type imports
 import type { Language } from '../constants/languages'
 import type { Token } from './token'
-import type { Colour } from '../constants/colours'
 
 // submodule imports
 import tokenize from './tokenize'
@@ -24,8 +23,8 @@ export default function highlight (code: string|Token[], language: Language): st
       case 'bad-octal':
       case 'bad-hexadecimal':
       case 'real':
-      case 'bad-keycode':
-      case 'bad-query':
+      case 'bad-inputcode':
+      case 'bad-querycode':
       case 'illegal':
         return `<span class="error">${token.content}</span>`
 

@@ -16,8 +16,8 @@ export type Lexeme =
   | IntegerLexeme
   | CharacterLexeme
   | StringLexeme
-  | KeycodeLexeme
-  | QueryLexeme
+  | InputcodeLexeme
+  | QuerycodeLexeme
   | IdentifierLexeme
 
 /** base lexeme class (extended by particular lexeme classes) */
@@ -300,10 +300,10 @@ export class StringLexeme extends LexemeClass {
   }
 }
 
-/** keycode lexeme */
-export class KeycodeLexeme extends LexemeClass {
+/** inputcode lexeme */
+export class InputcodeLexeme extends LexemeClass {
   readonly type = 'input'
-  readonly subtype = 'keycode'
+  readonly subtype = 'inputcode'
   readonly value: string
 
   constructor (token: Token, language: Language) {
@@ -313,9 +313,9 @@ export class KeycodeLexeme extends LexemeClass {
 }
 
 /** query lexeme */
-export class QueryLexeme extends LexemeClass {
+export class QuerycodeLexeme extends LexemeClass {
   readonly type = 'input'
-  readonly subtype = 'query'
+  readonly subtype = 'querycode'
   readonly value: string
 
   constructor (token: Token, language: Language) {

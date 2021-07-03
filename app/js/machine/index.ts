@@ -5,7 +5,7 @@ import type { Turtle } from './turtle'
 // module imports
 import * as memory from './memory'
 import { defaultOptions } from './options'
-import { keycodeFromKey, mixBytes } from './misc'
+import { inputcodeFromKey, mixBytes } from './misc'
 import { colours } from '../constants/colours'
 import { PCode } from '../constants/pcodes'
 import { MachineError } from '../tools/error'
@@ -31,7 +31,7 @@ let width: number = 1000
 let height: number = 1000
 let doubled: boolean = false
 
-let detectKeycode: number = 0
+let detectInputcode: number = 0
 let detectTimeoutID: number = 0
 let readlineTimeoutID: number = 0
 
@@ -1929,7 +1929,7 @@ function execute (): void {
           break
 
         // 0xA0s - text output, timing
-        case PCode.inpt:
+        case PCode.stat:
           n1 = memory.stack.pop()
           if (n1 !== undefined) {
             if (n1 < 0) {
@@ -2139,7 +2139,7 @@ function execute (): void {
               line += 1
               code = 0
             }
-            detectKeycode = n1
+            detectInputcode = n1
             n3 = n2 === 0 ? Math.pow(2, 31) - 1 : n2 // 0 means "as long as possible"
             detectTimeoutID = window.setTimeout(execute, n3)
             window.addEventListener('keyup', detect)
@@ -2224,7 +2224,7 @@ function storeKey (event: KeyboardEvent): void {
     event.preventDefault() // don't scroll the page
   }
   // normal case
-  const keycode = event.keyCode // keycodeFromKey(event.key)
+  const keycode = event.keyCode // inputcodeFromKey(event.key)
   memory.query[9] = keycode
   memory.query[10] = 128
   memory.query[11] = keycode
@@ -2242,7 +2242,7 @@ function storeKey (event: KeyboardEvent): void {
 
 /** stores that a key has been released */
 function releaseKey (event: KeyboardEvent): void {
-  const keycode = event.keyCode // keycodeFromKey(event.key)
+  const keycode = event.keyCode // inputcodeFromKey(event.key)
   // keyup should set positive value to negative; use Math.abs to ensure the result is negative,
   // in case two keydown events fire close together, before the first keyup event fires
   memory.query[9] = -Math.abs(memory.query[9])
@@ -2252,7 +2252,7 @@ function releaseKey (event: KeyboardEvent): void {
 
 /** puts a key in the keybuffer */
 function putInBuffer (event: KeyboardEvent): void {
-  const keycode = event.keyCode // keycodeFromKey(event.key)
+  const keycode = event.keyCode // inputcodeFromKey(event.key)
   const buffer = memory.main[1]
   if (buffer > 0) { // there is a keybuffer
     let next = 0
@@ -2387,9 +2387,9 @@ function preventDefault (event: Event): void {
 
 /** breaks out of DETECT loop and resumes program execution if the right key/button is pressed */
 function detect (event: KeyboardEvent|MouseEvent): void {
-  const rightThingPressed = (detectKeycode === -11) || ((event as KeyboardEvent).keyCode === detectKeycode)
+  const rightThingPressed = (detectInputcode === -11) || ((event as KeyboardEvent).keyCode === detectInputcode)
   if (rightThingPressed) {
-    const returnValue = (detectKeycode < 0) ? memory.query[-detectKeycode] : memory.keys[detectKeycode]
+    const returnValue = (detectInputcode < 0) ? memory.query[-detectInputcode] : memory.keys[detectInputcode]
     memory.stack.pop()
     memory.stack.push(returnValue)
     window.clearTimeout(detectTimeoutID)

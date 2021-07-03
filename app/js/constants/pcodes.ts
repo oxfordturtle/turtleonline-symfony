@@ -162,7 +162,7 @@ export enum PCode {
   peek = 0x9b,
   poke = 0x9c,
   // 0xa0s - text output, timing
-  inpt = 0xa0,
+  stat = 0xa0,
   iclr = 0xa1,
   bufr = 0xa2,
   read = 0xa3,
