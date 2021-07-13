@@ -1,3 +1,5 @@
+REM QuickClick
+
 BLANK(CREAM)
 REM print instructions
 SETXY(15, 200)
@@ -10,12 +12,11 @@ SETXY(20, 410)
 PRINT("as you can, and see how short a total time", 4, 36)
 SETXY(20, 480)
 PRINT("you can achieve for all 10.", 4, 36)
-SETXY(100, 620)
-PRINT("Now press the ""Esc"" key to start ...", 4, 36)
+SETXY(20, 620)
+PRINT("Now wait 5 seconds or press ""Esc"" key to start ...", 4, 30)
 KEYECHO(FALSE)
-REM wait for escape key before proceeding...
-REPEAT
-UNTIL (ABS(?key) = \escape)
+REM wait for escape key, 5 seconds maximum, before proceeding...
+det% = DETECT(\escape, 5000)
 REM reset timer
 TIMESET(0)
 FOR count% = 1 TO 10
@@ -30,8 +31,7 @@ FOR count% = 1 TO 10
   REM until the blot has been clicked...
   REPEAT
     REM wait for left mouse click
-    REPEAT
-    UNTIL ?lmouse > 0
+    det% = DETECT(\lmouse, 0)
     REM record the colour at the cursor's coordinates
     clickColour% = PIXCOL(?mousex, ?mousey)
   UNTIL clickColour% = turtc%

@@ -1,3 +1,5 @@
+REM SolarSystem
+
 CONST SUNRADIUS% = 50000
 CONST PLANETS% = 8
 DIM radius%(PLANETS%)

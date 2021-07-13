@@ -7,7 +7,7 @@ PROGRAM Flashlights;
     if doblot then
       begin
         {draw a randomly coloured blot}
-        {without erasing any circle   }
+        {without erasing any circle}
         randcol(10);
         blot(25)
       end
@@ -16,7 +16,7 @@ PROGRAM Flashlights;
         {erase any previous blot}
         colour(black);
         blot(25);
-        {draw randomly coloured circle}
+        {draw a randomly coloured circle}
         randcol(10);
         circle(30)
       end
@@ -35,7 +35,7 @@ BEGIN
     {fix y coordinate from 111 to 888}
     sety((random(8) + 1) * 111);
     {call drawit(true) if random(2) returns 1}
-    {or drawit(false) if random(2) returns 0 }
+    {or drawit(false) if random(2) returns 0}
     drawit(random(2) = 1)
   until false
 END.

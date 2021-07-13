@@ -1,3 +1,5 @@
+REM Diffusion
+
 CONST WIDTH% = 100
 CONST LEFTAXIS% = 21
 CONST RIGHTAXIS% = 15
@@ -11,7 +13,6 @@ CONST EDGECOL% = BLACK
 CONST MOLCOL% = RED
 CONST CONCCOL% = SEAGREEN
 DIM num1%(WIDTH%)
-
 PROCsetup
 PROCdrawaxes
 FOR x1% = 0 TO WIDTH% - 1
@@ -26,9 +27,9 @@ REPEAT
     x2% = x1%
     y2% = y1%
     IF RND(3) = 1 THEN
-      x2% = x2% + 1
+      INC(x2%)
     ELSE
-      y2% = y2% - 1
+      DEC(y2%)
     ENDIF
     temp% = PIXCOL(x1% + LEFTAXIS%, y1%)
     IF (PIXCOL(x2% + LEFTAXIS%, y2%) EOR temp%) = eorval% THEN
@@ -70,11 +71,11 @@ DEF PROCsetup
   DRAWXY(0, WIDTH% + 1)
   RECOLOUR(LEFTAXIS% + 2, bottom%, COLOUR1%)
   RECOLOUR(WIDTH% + LEFTAXIS% - 4, bottom%, COLOUR2%)
-  FOR x% = 0 TO boundary% - 1
-    num1%(x%) = x% + 1
+  FOR x1% = 0 TO boundary% - 1
+    num1%(x1%) = x1% + 1
   NEXT
-  FOR x% = boundary% TO WIDTH% - 1
-    num1%(x%) = 0
+  FOR x1% = boundary% TO WIDTH% - 1
+    num1%(x1%) = 0
   NEXT
   COLOUR(BLACK)
   SETXY(0, 0)
@@ -82,7 +83,7 @@ DEF PROCsetup
 ENDPROC
 
 DEF PROCdrawaxes
-LOCAL n%
+  LOCAL n%
   FOR n% = -1 TO CONCWIDTH%
     PIXSET(LEFTAXIS% - 1, CONCBOTTOM% - n%, BLACK)
   NEXT
@@ -128,15 +129,15 @@ DEF PROCgraphit(x%, show%)
 ENDPROC
 
 DEF PROCshowswap(x%, origcol%)
-  PROCgraphit(x%, FALSE)
-  PROCgraphit(x% + 1, FALSE)
+  PROCgraphit(x1%, FALSE)
+  PROCgraphit(x1% + 1, FALSE)
   IF origcol% = COLOUR1% THEN
-    num1%(x%) = num1%(x%) - 1
-    num1%(x% + 1) = num1%(x% + 1) + 1
+    DEC(num1%(x1%))
+    INC(num1%(x1% + 1))
   ELSE
-    num1%(x%) = num1%(x%) + 1
-    num1%(x% + 1) = num1%(x% + 1) - 1
+    INC(num1%(x1%))
+    DEC(num1%(x1% + 1))
   ENDIF
-  PROCgraphit(x%, TRUE)
-  PROCgraphit(x% + 1, TRUE)
+  PROCgraphit(x1%, TRUE)
+  PROCgraphit(x1% + 1, TRUE)
 ENDPROC

@@ -1,9 +1,20 @@
 PROGRAM Hanoi;
-CONST numdisks = 6;
-      delay = 500;
-VAR pile: array[1..3] of string;
+CONST delay = 500;
+VAR numdisks: integer;
+    pile: array[1..3] of string;
     x, y, top: array[1..3] of integer;
     count: integer;
+    start, finish: integer;
+
+  Function getnum(prompt: string): integer;
+  Var s: string;
+  Begin
+    write(prompt);
+    repeat
+      s := readln
+    until pos(s[1], '123') > 0;
+    result := ord(s[1]) - 48
+  End;
 
   Procedure setup(startdisk: integer);
   Var d, p: integer;
@@ -70,10 +81,20 @@ VAR pile: array[1..3] of string;
   End;
 
 BEGIN
-  setup(1);
+  repeat
+    console(true, cream);
+    writeln('TOWER OF HANOI');
+    writeln('');
+    write('How many disks would you like in the tower? ');
+    numdisks := val(readln)
+  until (numdisks > 1);
+  start := getnum('Start pillar (1, 2, or 3)? ');
+  finish := getnum('Finish pillar (1, 2 or 3)? ');
+  output(true, cream, false);
+  setup(start);
   thickness(10);
   draw;
   pause(1000);
   count := 0;
-  movepile(numdisks, 1, 3)
+  movepile(numdisks, start, finish)
 END.

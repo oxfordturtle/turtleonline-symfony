@@ -1,3 +1,5 @@
+REM UserStringFunctions
+
 REM show the output
 OUTPUT(TRUE, CREAM, TRUE)
 WRITELN("Some User-Defined String Functions")

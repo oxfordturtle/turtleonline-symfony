@@ -1,3 +1,5 @@
+REM Automata
+
 CONST WIDTH% = 100
 CONST HEIGHT% = 100
 DIM cellcol%(1)

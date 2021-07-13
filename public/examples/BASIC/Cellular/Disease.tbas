@@ -1,3 +1,5 @@
+REM Disease
+
 CONST WIDTH% = 100
 CONST HEIGHT% = 100
 CONST SUSCEPTIBLE% = LIGHTGREEN
@@ -31,7 +33,7 @@ REPEAT
   IF PIXCOL(x%, y%) = INFECTED% THEN
     IF RND(100) - 1 < RECOVERPROB% THEN
       PIXSET(x%, y%, RECOVERED%)
-      numinfected% = numinfected% - 1
+      DEC(numinfected%)
     ELSE
       n% = (RND(4) - 1) * 2 + 1
       x% = x% + n% DIV 3 - 1
@@ -44,5 +46,5 @@ END
 
 DEF PROCinfect(x%, y%)
   PIXSET(x%, y%, INFECTED%)
-  numinfected% = numinfected% + 1
+  INC(numinfected%)
 ENDPROC

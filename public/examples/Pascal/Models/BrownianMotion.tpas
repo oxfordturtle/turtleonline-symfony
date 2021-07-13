@@ -8,7 +8,7 @@ CONST polradius = 80;
       speedratio = 10;
       polcolour = blue;
       molcolour = red;
-      halocolour = $FFFFFE;
+      halocolour = #FFFFFE;
       delay = 50;
 VAR px, py: integer;
     pxvel, pyvel: integer;
@@ -41,31 +41,20 @@ VAR px, py: integer;
 
   Procedure draw(positive: boolean);
   Var n: integer;
-      radius: integer;
   Begin
     if positive then
-      begin
-        colour(molcolour);
-        radius := molradius
-      end
+      colour(molcolour)
     else
-      begin
-        colour(white);
-        radius := molradius + 1
-      end;
+      colour(white);
     for n := 1 to molecules do
       begin
         setxy(mx[n], my[n]);
-        blot(radius)
+        blot(molradius)
       end;
-    setxy(px, py);
     if positive then
-      begin
-        colour(polcolour);
-        blot(polradius)
-      end
-    else
-      blot(polradius + 1)
+      colour(polcolour);
+    setxy(px, py);
+    blot(polradius)
   End;
 
   Procedure move(m: integer);

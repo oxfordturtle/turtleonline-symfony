@@ -1,6 +1,6 @@
 PROGRAM Triangles;
 
-  {draws triangles recursively, starting with }
+  {draws triangles recursively, starting with}
   {one of the given size, but then also making}
   {half-sized triangles at each triangle point}
   Procedure triangle(size: integer);
@@ -20,7 +20,7 @@ PROGRAM Triangles;
   End;
 
 BEGIN
-  {move to start, without drawing}
+  {move to the start, without drawing}
   movexy(-100, 150);
   {draw a recursive triangle of size 256}
   triangle(256)

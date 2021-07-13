@@ -1,7 +1,7 @@
 PROGRAM Factorials;
 VAR n: integer;
 
-  {calculates n! recursively - both the   }
+  {calculates n! recursively - both the}
   {parameter n and the result are integers}
   Function factorial(n: integer): integer;
   Begin
@@ -12,9 +12,7 @@ VAR n: integer;
   End;
 
 BEGIN
-  {set up and show output}
   output(true, cream, true);
-  {calculate and display n! for n = 1 to 10}
   for n := 1 to 10 do
     writeln(str(n) + '! = ' + str(factorial(n)))
 END.

@@ -1,8 +1,8 @@
 PROGRAM Balls3D;
+VAR count: integer;
 
   {draw a 3d-style coloured ball}
   Procedure ball3d(colr, step: integer);
-  Var count: integer;
   Begin
     {start with specified colour code}
     colour(colr);

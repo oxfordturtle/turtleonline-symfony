@@ -1,3 +1,5 @@
+REM Roads
+
 CONST MAXNODES% = 500
 CONST SUFFNODES% = 400
 CONST MAXEDGES% = 1000
@@ -16,7 +18,7 @@ THICKNESS(6)
 numnodes% = 0
 numedges% = 0
 WHILE numnodes% < SUFFNODES%
-  numnodes% = numnodes% + 1
+  INC(numnodes%)
   REPEAT
     nodex%(numnodes%) = RND(1000)
     nodey%(numnodes%) = RND(1000)
@@ -57,7 +59,7 @@ DEF PROCmarknode(n%, col%, rad%)
 ENDPROC
 
 DEF PROCmakeedge(nodea%, nodeb%, col%)
-  numedges% = numedges% + 1
+  INC(numedges%)
   edge1%(numedges%) = nodea%
   edge2%(numedges%) = nodeb%
   edgelen%(numedges%) = HYPOT(nodex%(nodea%) - nodex%(nodeb%), nodey%(nodea%) - nodey%(nodeb%), 1)
@@ -71,7 +73,7 @@ DEF PROClinkup(nodea%, nodeb%)
   IF HYPOT(nodex%(nodea%) - nodex%(nodeb%), nodey%(nodea%) - nodey%(nodeb%), 1) < MINDISTANCE% * 2 THEN
     PROCmakeedge(nodea%, nodeb%, NORMALROAD%)
   ELSE
-    numnodes% = numnodes% + 1
+    INC(numnodes%)
     nodex%(numnodes%) = (nodex%(nodea%) + nodex%(nodeb%)) / 2
     nodey%(numnodes%) = (nodey%(nodea%) + nodey%(nodeb%)) / 2
     PROCmarknode(numnodes%, CYAN, ROADRADIUS%)
@@ -107,7 +109,7 @@ DEF PROCjoinup(thisnode%)
   i% = 0
   continue% = TRUE
   WHILE (i% < numnodes%) AND continue%
-    i% = i% + 1
+    INC(i%)
     dist% = HYPOT(nodex%(i%) - nodex%(thisnode%), nodey%(i%) - nodey%(thisnode%), 1)
     IF (i% <> thisnode%) AND (nodedist%(i%) > 1000) AND (dist% < MINDISTANCE% * 2) THEN
       PROCmakeedge(thisnode%, i%, LINKROAD%)

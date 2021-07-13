@@ -7,6 +7,7 @@ VAR xcentre, ycentre: integer;
     scale, pixels: integer;
 
   Procedure startprompt;
+  Var det: integer;
   Begin
     output(true, cream, true);
     keyecho(false);
@@ -14,9 +15,10 @@ VAR xcentre, ycentre: integer;
     writeln('');
     write('Select Whole set, or Zoom on mini "lake" at -0.1592,-1.0330 (W/Z)');
     repeat
-    until (abs(?key) = \w) or (abs(?key) = \z);
-    writeln(chr(abs(?key)));
-    if abs(?key) = \w then
+      det := detect(\key, 0)
+    until (det = \w) or (det = \z);
+    writeln(chr(det));
+    if det = \w then
       begin
         xcentre := -500000;
         ycentre := 0
@@ -32,14 +34,15 @@ VAR xcentre, ycentre: integer;
     else
       write('Select Fast/Medium/Slow, giving resolution 300/600/1200: (F/M/S) ');
     repeat
-    until (abs(?key) = \f) or (abs(?key) = \m) or (abs(?key) = \s);
-    writeln(chr(abs(?key)));
+      det := detect(\key, 0)
+    until (det = \f) or (det = \m) or (det = \s);
+    writeln(chr(det));
     if ycentre = 0 then
       begin
-        if abs(?key) = \f then
+        if det = \f then
           scale := 100
         else
-        if abs(?key) = \m then
+        if det = \m then
           scale := 250
         else
           scale := 500;
@@ -47,10 +50,10 @@ VAR xcentre, ycentre: integer;
       end
     else
       begin
-        if abs(?key) = \f then
+        if det = \f then
           scale := 10000
         else
-        if abs(?key) = \m then
+        if det = \m then
           scale := 20000
         else
           scale := 40000;

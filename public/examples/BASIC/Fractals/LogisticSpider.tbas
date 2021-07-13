@@ -1,3 +1,5 @@
+REM LogisticSpider
+
 CONST MAXPOP% = 100000
 CONST MAXGEN% = 100
 CONST LMARGIN% = 60
@@ -8,7 +10,7 @@ CONST OUTPUT% = TRUE
 CANVAS(-LMARGIN%, -TMARGIN%, 1000 + LMARGIN% + RMARGIN%, 1000 + TMARGIN% + BMARGIN%)
 RESOLUTION(1000 + LMARGIN% + RMARGIN%, 1000 + TMARGIN% + BMARGIN%)
 THICKNESS(3)
-r% = 30
+r% = 25
 REPEAT
   NOUPDATE
   BLANK(WHITE)
@@ -34,6 +36,7 @@ REPEAT
   BLOT(3)
   UPDATE
   REPEAT
+    det% = DETECT(\lmouse, 0)
   UNTIL (?lmouse > 0) AND (?clicky < (100 - TMARGIN%)) AND (?clickx >= 130) AND (?clickx < 1030)
   r% = ((?clickx - 130) DIV 90) + ((?clicky + TMARGIN% + 100) DIV 50) * 10 + 1
 UNTIL 0 = 1

@@ -1,3 +1,5 @@
+REM RecursionFactory
+
 CONST NUMSIDES% = 6
 CONST INITSIZE% = 240
 CONST SHRINK% = 40

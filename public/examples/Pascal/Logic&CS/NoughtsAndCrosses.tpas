@@ -5,6 +5,7 @@ VAR board: array[0..11] of integer;
     numgames: integer;
     randfirst: boolean;
     i, column, row: integer;
+    det: integer;
 
   Procedure doblot(x, y, col: integer);
   Begin
@@ -16,7 +17,7 @@ VAR board: array[0..11] of integer;
   Procedure copy(var fromarray, toarray: array of integer);
   Var i: integer;
   Begin
-    for i := 0 to length(fromarray) - 1 do
+    for i := 0 to fromarray.length - 1 do
       toarray[i] := fromarray[i]
   End;
 
@@ -31,14 +32,11 @@ VAR board: array[0..11] of integer;
     b1[9] := 0;
     b1[10] := -1;
     b1[11] := depth;
-    if (((b1[0] = jm) and (b1[1] = jm) and (b1[2] = jm))
-        or ((b1[3] = jm) and (b1[4] = jm) and (b1[5] = jm))
-        or ((b1[6] = jm) and (b1[7] = jm) and (b1[8] = jm))
-        or ((b1[0] = jm) and (b1[3] = jm) and (b1[6] = jm))
-        or ((b1[1] = jm) and (b1[4] = jm) and (b1[7] = jm))
-        or ((b1[2] = jm) and (b1[5] = jm) and (b1[8] = jm))
-        or ((b1[0] = jm) and (b1[4] = jm) and (b1[8] = jm))
-        or ((b1[2] = jm) and (b1[4] = jm) and (b1[6] = jm))) then
+    if (((b1[0] = jm) and (b1[1] = jm) and (b1[2] = jm)) or ((b1[3] = jm) and (b1[4] = jm) and (b1[5]
+     = jm)) or ((b1[6] = jm) and (b1[7] = jm) and (b1[8] = jm)) or ((b1[0] = jm) and (b1[3] = jm)
+     and (b1[6] = jm)) or ((b1[1] = jm) and (b1[4] = jm) and (b1[7] = jm)) or ((b1[2] = jm) and
+     (b1[5] = jm) and (b1[8] = jm)) or ((b1[0] = jm) and (b1[4] = jm) and (b1[8] = jm)) or ((b1[2]
+     = jm) and (b1[4] = jm) and (b1[6] = jm))) then
       b1[9] := 1
     else
       begin
@@ -59,7 +57,7 @@ VAR board: array[0..11] of integer;
           m := m + 1
         until (m > 8) or (replyscore > 0);
         if (replyscore <> -2) then
-         b1[9] := -replyscore
+          b1[9] := -replyscore
       end
   End;
 
@@ -93,9 +91,7 @@ BEGIN
           cursor(2);
           repeat
             repeat
-              repeat
-              until ?lmouse > 0;
-              pause(200)
+              det := detect(\lmouse, 0)
             until ((?clickx >= 125) and (?clickx <= 875) and (?clicky >= 50) and (?clicky <= 800));
             column := (?clickx - 125) div 250;
             row := (?clicky - 50) div 250

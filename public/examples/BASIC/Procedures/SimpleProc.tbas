@@ -1,3 +1,5 @@
+REM SimpleProc
+
 REM repeatedly draw prongs in random colours ...
 REPEAT
   RNDCOL(10)

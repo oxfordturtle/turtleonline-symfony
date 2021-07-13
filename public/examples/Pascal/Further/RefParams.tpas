@@ -1,16 +1,20 @@
 PROGRAM RefParams;
 
+  {Reference parameters are indicated with the keyword "var"; changing these}
+  {within a subroutine also changes the external variable that was passed in.}
+  {This program illustrates the principle by passing in Turtle properties.}
+
   Procedure lines(var turtleProperty: integer; isColour: boolean);
   Var n: integer;
   Begin
-    {draw 8 short lines, modifying passed-in Turtle property each time}
+    {draws 8 short lines, modifying the passed-in Turtle property each time}
     for n := 1 to 8 do
       begin
         if isColour then
-          {set property value to nth standard Turtle colour}
+          {set the property value to the nth standard Turtle colour}
           turtleProperty := rgb(n)
         else
-          {set property value to n}
+          {set the property value to n}
           turtleProperty := n;
         forward(50);
         pause(100)
@@ -20,10 +24,10 @@ PROGRAM RefParams;
   Procedure dots(var turtleProperty: integer);
   Var n: integer;
   Begin
-    {draw 8 blots, modifying passed-in Turtle property each time}
+    {draws 8 blots, modifying the passed-in Turtle property each time}
     for n := 1 to 8 do
       begin
-        {increment property value by 100}
+        {increment the property value by 100}
         turtleProperty := turtleProperty + 100;
         blot(40);
         pause(100)

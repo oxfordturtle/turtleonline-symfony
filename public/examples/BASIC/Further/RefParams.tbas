@@ -1,3 +1,5 @@
+REM RefParams
+
 REM set initial position
 SETXY(100, 900)
 REM draw lines of varying thickness - TURTT% property is modified

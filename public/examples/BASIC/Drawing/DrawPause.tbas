@@ -1,3 +1,5 @@
+REM DrawPause
+
 REM draw green blot radius 100, then pause
 COLOUR(GREEN)
 BLOT(100)

@@ -1,3 +1,5 @@
+REM SpongeThrow
+
 CONST FACERADIUS% = 100
 CONST SPONGERADIUS% = 40
 REM set initial face location and velocity

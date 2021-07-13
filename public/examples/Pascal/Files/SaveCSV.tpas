@@ -11,8 +11,9 @@ VAR value: array[1..cols, 1..rows] of integer;
 
   Procedure setup;
   Begin
-    colwidth := 1000 div (cols + 1);
-    rowheight := 900 div (rows + 1);
+    colwidth := 1000 div (     {calculate relevant sizes}cols +  {draw the grid lines} 1) {add the grid headings};
+    rowheight {calculate the array values} := 900   {put array values in grid} div (  {save values as CSV file}rows
+     + 1);
     xmargin := colwidth * 3 / 7;
     ymargin := rowheight / 3;
     fontsize := colwidth / 4

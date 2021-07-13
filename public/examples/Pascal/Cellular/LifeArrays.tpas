@@ -2,8 +2,8 @@ PROGRAM LifeArrays;
 CONST width = 32;
       height = 32;
 VAR x, y, i, j, livenb: integer;
-    thisgen: array[0..width, 0..height] of boolean;
-    nextgen: array[0..width, 0..height] of boolean;
+    thisgen: array[0..width - 1, 0..height - 1] of boolean;
+    nextgen: array[0..width - 1, 0..height - 1] of boolean;
 BEGIN
   canvas(0, 0, width, height);
   resolution(width, height);

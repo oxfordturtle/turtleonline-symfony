@@ -1,3 +1,5 @@
+REM NoughtsAndCrosses
+
 CONST CROSS% = 33
 CONST NOUGHT% = 2
 DIM board%(11)
@@ -29,9 +31,7 @@ REPEAT
       CURSOR(2)
       REPEAT
         REPEAT
-          REPEAT
-          UNTIL ?lmouse > 0
-          PAUSE(200)
+          det% = DETECT(\lmouse, 0)
         UNTIL ((?clickx >= 125) AND (?clickx <= 875) AND (?clicky >= 50) AND (?clicky <= 800))
         column% = (?clickx - 125) DIV 250
         row% = (?clicky - 50) DIV 250
@@ -88,14 +88,14 @@ DEF PROCevaluate(RETURN b1%(), jm%, depth%)
     m% = 0
     REPEAT
       IF (b1%(m%) = 0) THEN
-       PROCcopy(b1%, b2%(depth%))
-       b2%(depth%, m%) = mover%
-       PROCevaluate(b2%(depth%), mover%, depth% + 1)
-       IF (b2%(depth%, 9) > replyscore%) THEN
-         replyscore% = b2%(depth%, 9)
-         b1%(10) = m%
-         b1%(11) = b2%(depth%, 11)
-       ENDIF
+        PROCcopy(b1%, b2%(depth%))
+        b2%(depth%, m%) = mover%
+        PROCevaluate(b2%(depth%), mover%, depth% + 1)
+        IF (b2%(depth%, 9) > replyscore%) THEN
+          replyscore% = b2%(depth%, 9)
+          b1%(10) = m%
+          b1%(11) = b2%(depth%, 11)
+        ENDIF
       ENDIF
       m% = m% + 1
     UNTIL (m% > 8) OR (replyscore% > 0)

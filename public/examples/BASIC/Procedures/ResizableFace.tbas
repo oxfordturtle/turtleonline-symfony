@@ -1,3 +1,5 @@
+REM ResizableFace
+
 REM draw a face of radius 400
 PROCface(400)
 END

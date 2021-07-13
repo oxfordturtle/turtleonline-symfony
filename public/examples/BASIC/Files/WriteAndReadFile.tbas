@@ -1,3 +1,6 @@
+REM WriteAndReadFile
+
+STRINGSIZE 255
 OUTPUT(TRUE, CREAM, TRUE)
 myfilename$ = "TestFile.txt"
 PROCwritefile
@@ -29,13 +32,13 @@ DEF PROCwritefile
 ENDPROC
 
 DEF PROCreadfile
-  LOCAL s$255
+  LOCAL s%
   handle% = OPENIN(myfilename$)
   IF handle% > 0 THEN
     WRITELN("Contents read from " + myfilename$ + ":")
     WHILE NOT(EOF#(handle%))
-      s$255 = FREADLN#(handle%)
-      WRITELN("  " + s$255)
+      s$ = FREADLN#(handle%)
+      WRITELN("  " + s$)
     ENDWHILE
     CLOSE#(handle%)
   ELSE

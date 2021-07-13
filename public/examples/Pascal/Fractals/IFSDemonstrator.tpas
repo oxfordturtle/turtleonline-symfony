@@ -1,4 +1,4 @@
-PROGRAM IFSDemonstrator;
+PROGRAM IFSdemonstrator;
 CONST maxmappings = 4;
       pauseval = 2000;
 VAR xleft, xright, ytop, ybottom: integer;
@@ -119,23 +119,24 @@ VAR xleft, xright, ytop, ybottom: integer;
   End;
 
   Procedure startprompt;
+  Var det: integer;
   Begin
     output(true, cream, true);
     keyecho(false);
     writeln('ITERATED FUNCTION SYSTEMS DEMONSTRATOR PROGRAM');
     writeln('');
     write('Select Barnsley fern, Sierpinski, or Dragon curve? (B/S/D) ');
-    keyecho(false);
     repeat
-    until (abs(?key) = \b) or (abs(?key) = \s) or (abs(?key) = \d);
-    writeln(chr(abs(?key)));
-    if abs(?key) = \b then
+      det := detect(\key, 0)
+    until (det = \b) or (det = \s) or (det = \d);
+    writeln(chr(det));
+    if det = \b then
       begin
         writeln('Barnsley fern mappings will be used');
         setbarnsley
       end
     else
-    if abs(?key) = \s then
+    if det = \s then
       begin
         writeln('Sierpinski mappings will be used');
         setsierpinski
@@ -147,18 +148,18 @@ VAR xleft, xright, ytop, ybottom: integer;
       end;
     writeln('');
     write('Start with single Pixel or entire Canvas? (P/C) ');
-    keyecho(false);
     repeat
-    until (abs(?key) = \p) or (abs(?key) = \c);
-    writeln(chr(abs(?key)));
-    seedpixel := (abs(?key) = \p);
+      det := detect(\key, 0)
+    until (det = \p) or (det = \c);
+    writeln(chr(det));
+    seedpixel := (det = \p);
     writeln('');
     write('Use Uniform or Different colours for mappings? (U/D) ');
-    keyecho(false);
     repeat
-    until (abs(?key) = \u) or (abs(?key) = \d);
-    writeln(chr(abs(?key)));
-    uniform := (abs(?key) = \u);
+      det := detect(\key, 0)
+    until (det = \u) or (det = \d);
+    writeln(chr(det));
+    uniform := (det = \u);
     output(false, white, false)
   End;
 
@@ -240,10 +241,12 @@ BEGIN
     numkilled := 0;
     cleanup;
     writeln('  ' + str(numborn) + ' pixels born; ' + str(numkilled) + ' pixels killed');
-    writeln('  (took ' + str((time - starttime) / 1000) + ' seconds - total ' + str(time / 1000) + ' seconds so far)');
+    writeln('  (took ' + str((time - starttime) / 1000) + ' seconds - total ' + str(time / 1000)
+     + ' seconds so far)');
     if (numborn + numkilled > 0) and (pauseval >= 1000) then
       begin
-        write('  (now pausing ' + qstr(pauseval, 1000, 1) + ' seconds to allow halting if desired ...)');
+        write('  (now pausing ' + qstr(pauseval, 1000, 1) +
+     ' seconds to allow halting if desired ...)');
         pause(pauseval);
         writeln('')
       end

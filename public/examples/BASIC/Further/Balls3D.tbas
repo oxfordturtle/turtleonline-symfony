@@ -1,5 +1,7 @@
+REM Balls3D
+
 REM turn so brightest point is up and right
-RIGHT(60) 
+RIGHT(60)
 REM draw a cyan ball at top left
 SETXY(250, 250)
 PROCball3d(&00FFFF, &50000)

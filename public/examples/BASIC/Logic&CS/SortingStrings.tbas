@@ -1,3 +1,5 @@
+REM SortingStrings
+
 CONST METHODS% = 4
 CONST N% = 100
 CONST COLS% = 10
@@ -7,6 +9,7 @@ DIM a$(N%)
 DIM caption$(METHODS%)
 DIM comptotal%(METHODS%)
 DIM swaptotal%(METHODS%)
+OUTPUT(TRUE, WHITE, TRUE)
 OUTPUT(TRUE, WHITE, TRUE)
 PROCsetup
 PROCinit
@@ -67,7 +70,7 @@ DEF PROCinit
 ENDPROC
 
 DEF FNlessthan(x$, y$)
-  comps% = comps% + 1
+  INC(comps%)
 = (x$ < y$)
 
 DEF PROCswap(x%, y%)
@@ -75,7 +78,7 @@ DEF PROCswap(x%, y%)
   t$ = a$(x%)
   a$(x%) = a$(y%)
   a$(y%) = t$
-  swaps% = swaps% + 1
+  INC(swaps%)
 ENDPROC
 
 DEF FNordered
@@ -133,7 +136,7 @@ DEF PROCinsertionsort
     j% = i%
     WHILE (j% > 1) AND FNlessthan(a$(j%), a$(j% - 1))
       PROCswap(j% - 1, j%)
-      j% = j% - 1
+      DEC(j%)
     ENDWHILE
   NEXT
 ENDPROC
@@ -144,7 +147,7 @@ DEF PROCqsort(left%, right%)
     m% = left%
     FOR i% = left% + 1 TO right%
       IF FNlessthan(a$(i%), a$(left%)) THEN
-        m% = m% + 1
+        INC(m%)
         PROCswap(m%, i%)
       ENDIF
     NEXT

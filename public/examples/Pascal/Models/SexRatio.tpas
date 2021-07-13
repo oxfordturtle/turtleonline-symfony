@@ -51,19 +51,19 @@ VAR female: array[1..population] of boolean;
   End;
 
   Procedure domating;
-  Var A, B, replace: integer;
-      inheritA: boolean;
+  Var a, b, replace: integer;
+      inherita: boolean;
   Begin
     repeat
-      A := random(population) + 1;
-      B := random(population) + 1
-    until female[A] <> female[B];
-    inheritA := (random(2) = 0);
+      a := random(population) + 1;
+      b := random(population) + 1
+    until female[a] <> female[b];
+    inherita := (random(2) = 0);
     replace := random(population) + 1;
-    if inheritA then
-      fop[replace] := fop[A]
+    if inherita then
+      fop[replace] := fop[a]
     else
-      fop[replace] := fop[B];
+      fop[replace] := fop[b];
     female[replace] := fop[replace] > random(1000);
     fop[replace] := fop[replace] + random(randomvar * 20 + 1) - randomvar * 10;
     fop[replace] := max(0, min(1000, fop[replace]))

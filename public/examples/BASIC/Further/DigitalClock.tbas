@@ -1,11 +1,13 @@
+REM DigitalClock
+
 REM set up canvas with box for displaying time
 BLANK(LIGHTGREEN)
-SETXY(250, 400)
+SETXY(250, 390)
 REM Turtle maroon pen thickness 10 will be used for box border
 COLOUR(MAROON)
 THICKNESS(10)
 REM box will be size 500x2010, filled in lightbrown with a border
-BOX(500, 200, LIGHTBROWN, TRUE)
+BOX(500, 210, LIGHTBROWN, TRUE)
 COLOUR(BLACK)
 REM initialise hours and minutes to zero
 hours% = 0
@@ -32,8 +34,8 @@ REM prints the specified time inside a white box in the canvas
 DEF PROCshowTime(hours%, minutes%)
   LOCAL timeString$
   REM draw white box, erasing previous time
-  SETXY(300, 450)
-  BOX(400, 100, WHITE, FALSE)
+  SETXY(300, 430)
+  BOX(400, 130, WHITE, FALSE)
   REM print specified time
   timeString$ = PAD$(STR$(hours%), "0", 2) + ":" + PAD$(STR$(minutes%), "0", 2)
   PRINT(timeString$, 21, 100)

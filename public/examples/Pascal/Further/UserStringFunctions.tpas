@@ -92,6 +92,6 @@ BEGIN
   output(true, cream, true);
   writeln('Some User-Defined String Functions');
   {process some example strings}
-  process('CREATING is better than LEARNING');
+  process('CREATING is better than LEARNING;');
   process('indeed it''s the Essence of Life!')
 END.

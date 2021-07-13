@@ -1,3 +1,5 @@
+REM Schelling
+
 CONST WIDTH% = 50
 CONST HEIGHT% = 50
 CONST EMPTY% = GREEN
@@ -42,7 +44,7 @@ DEF FNhappy(x%, y%, c%)
       IF (i% <> 0) OR (j% <> 0) THEN
         neighbour% = PIXCOL(x% + i%, y% + j%)
         IF neighbour% <> EMPTY% THEN
-          IF neighbour% = c% THEN like% = like% + 1 ELSE unlike% = unlike% + 1
+          IF neighbour% = c% THEN INC(like%) ELSE INC(unlike%)
         ENDIF
       ENDIF
     NEXT

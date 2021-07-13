@@ -1,3 +1,5 @@
+REM AimCannon
+
 CONST GUNLENGTH% = 1000
 CONST DISTANCECOL% = GREEN
 CONST TIMECOL% = RED
@@ -69,8 +71,7 @@ DEF PROCaim
     COLOUR(RED)
     BLOT(100)
     UPDATE
-    REPEAT
-    UNTIL (?lmouse > 0)
+    det% = DETECT(\lmouse, 0)
     IF PIXCOL(?mousex, ?mousey) = CREAM THEN
       TURNXY(?mousex - 250, ?mousey - 9750)
     ENDIF
@@ -81,10 +82,10 @@ DEF PROCfire(xvel%, yvel%, gravity%, floor%)
   SETXY(250, 9750)
   steps% = 0
   REPEAT
-    steps% = steps% + 1
+    INC(steps%)
     IF PIXCOL(turtx%, turty%) = BLACK THEN
       COLOUR(WHITE)
-      BLOT(90)
+      BLOT(80)
     ENDIF
     MOVEXY(xvel%, yvel%)
     yvel% = yvel% + gravity%

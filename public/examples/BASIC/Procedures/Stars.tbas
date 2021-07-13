@@ -1,3 +1,5 @@
+REM Stars
+
 REM do not draw as Turtle moves
 PENUP
 REM draw stars with increasing points

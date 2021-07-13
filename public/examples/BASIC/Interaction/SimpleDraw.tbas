@@ -1,3 +1,5 @@
+REM SimpleDraw
+
 REM draw palette
 PROCpalette
 REM return turtle to centre of canvas

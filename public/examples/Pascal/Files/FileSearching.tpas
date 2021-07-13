@@ -1,44 +1,39 @@
-{illustrates native file searching}
 PROGRAM FileSearching;
-VAR dirHandle: integer;
-    dirName: string;
+VAR dhandle: integer;
+    thisdir: string;
 
-  {lists all files in a directory}
-  Procedure showFiles(dirName: string);
-  Var fileHandle: integer;
-      fileName: string;
+  Procedure showdir(d: string);
+  Var fhandle: integer;
+      thisfile: string;
   Begin
-    if dirName = '' then
+    if d = '' then
       writeln('Base directory:')
     else
-      writeln('Directory "' + dirName + '":');
-    chdir(dirName);
-    fileHandle := 0;
-    fileName := findfirst('*.*', fileHandle);
-    if fileName = '' then
+      writeln('Directory "' + d + '":');
+    chdir(d);
+    fhandle := 0;
+    thisfile := findfirst('*.*', fhandle);
+    if thisfile = '' then
       writeln('  <no files>')
     else
-      while fileName <> '' do
+      while thisfile <> '' do
         begin
-          writeln('  ' + fileName);
-          fileName := findnext(fileHandle)
+          writeln('  ' + thisfile);
+          thisfile := findnext(fhandle)
         end;
     writeln('')
   End;
 
 BEGIN
-  {set up the output}
   output(true, cream, true);
   writeln('Turtle directories (up to first level) and their files ...');
   writeln('');
-  {show files in the base directory}
-  showFiles('');
-  {look for subdirectories, and show their files}
-  dirHandle := 0;
-  dirName := finddir('*.*', dirHandle);
-  while dirName <> '' do
+  showdir('');
+  dhandle := 0;
+  thisdir := finddir('*.*', dhandle);
+  while thisdir <> '' do
     begin
-      showFiles(dirName);
-      dirName := findnext(dirHandle)
+      showdir(thisdir);
+      thisdir := findnext(dhandle)
     end
 END.

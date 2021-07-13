@@ -1,3 +1,5 @@
+REM RandomSentences
+
 CONST art% = 1
 CONST adj% = 2
 CONST col% = 3
@@ -5,15 +7,12 @@ CONST noun% = 4
 CONST verb% = 5
 CONST maxwords% = 10
 CONST subdir$ = "sentences"
-
 STRINGSIZE 64
-
 DIM handle%(5)
 DIM fileName$(5)
 DIM wordString$(5)
 DIM numwords%(5)
 DIM word$(5, maxwords%)
- 
 OUTPUT(TRUE, CREAM, TRUE)
 IF MKDIR(subdir$) THEN
   PROCsetup
@@ -25,7 +24,6 @@ ELSE
 ENDIF
 END
 
-REM sets up file names and vocabulary
 DEF PROCsetup
   fileName$(art%) = "articles"
   fileName$(adj%) = "adjectives"
@@ -39,7 +37,6 @@ DEF PROCsetup
   wordString$(verb%) = "chases,jumps over,runs away from,watches"
 ENDPROC
 
-REM writes words in wordString arrays to files
 DEF PROCwritewordfiles
   LOCAL i%, count%, posn%, s$
   FOR i% = 1 TO 5
@@ -60,9 +57,8 @@ DEF PROCwritewordfiles
   CLOSE#(0)
 ENDPROC
 
-REM reads words from files into word array
 DEF PROCreadwordfiles
-LOCAL i%
+  LOCAL i%
   FOR i% = 1 TO 5
     handle%(i%) = OPENIN(subdir$ + "/" + fileName$(i%) + ".txt")
     IF handle%(i%) > 0 THEN
@@ -78,14 +74,12 @@ LOCAL i%
   CLOSE#(0)
 ENDPROC
 
-REM selects a random word
 DEF FNrand$(n%)
-=word$(n%, RND(numwords%(n%)))
+= word$(n%, RND(numwords%(n%)))
 
-REM generates n random sentences using word array, stopping if target sentence is produced 
 DEF PROCgenerate(n%)
   LOCAL s$, fhandle%, i%
-  WRITELN("Now up to "+STR$(n%)+" random sentences will be generated using")
+  WRITELN("Now up to " + STR$(n%) + " random sentences will be generated using")
   WRITELN("these words. The generation will stop if a well-known target")
   WRITELN("sentence is achieved before the maximum has been reached.")
   WRITELN("")
@@ -93,15 +87,15 @@ DEF PROCgenerate(n%)
   i% = 0
   CURSOR(11)
   REPEAT
-   s$ = FNrand$(art%) + " " + FNrand$(adj%) + " " + FNrand$(col%) + " " + FNrand$(noun%) + " " + FNrand$(verb%) + " " + FNrand$(art%) + " " + FNrand$(adj%) + " " + FNrand$(noun%) + "."
-   s$ = CHR$(ASC(s$) - 32) + MID$(s$, 2, MAXINT)
-   PRINTLN#(fhandle%, s$)
-   INC(i%)
+    s$ = FNrand$(art%) + " " + FNrand$(adj%) + " " + FNrand$(col%) + " " + FNrand$(noun%) + " " + FNrand$(verb%) + " " + FNrand$(art%) + " " + FNrand$(adj%) + " " + FNrand$(noun%) + "."
+    s$ = CHR$(ASC(s$) - 32) + MID$(s$, 2, MAXINT)
+    PRINTLN#(fhandle%, s$)
+    INC(i%)
   UNTIL (i% = n%) OR (s$ = "The quick brown fox jumps over the lazy dog.")
   CURSOR(1)
   CLOSE#(fhandle%)
   IF i% = n% THEN
-   WRITELN(STR$(i%) + " sentences written to """ + subdir$ + "/" + STR$(n%) + "_sentences.txt"".")
+    WRITELN(STR$(i%) + " sentences written to """ + subdir$ + "/" + STR$(n%) + "_sentences.txt"".")
   ELSE
     IF RENAMEFILE(subdir$ + "/" + STR$(n%) + "_sentences.txt", subdir$ + "/" + STR$(i%) + "_sentences.txt") THEN
       WRITELN(STR$(i%) + " sentences written to """ + subdir$ + "/" + STR$(i%) + "_sentences.txt""")

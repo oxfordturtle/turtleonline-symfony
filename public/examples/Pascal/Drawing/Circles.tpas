@@ -1,7 +1,7 @@
 PROGRAM Circles;
 VAR count: integer;
 BEGIN
-  {set up Turtle}
+  {set up the turtle}
   thickness(6);
   penup;
   blank(black);

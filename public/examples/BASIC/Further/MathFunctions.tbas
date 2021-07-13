@@ -1,3 +1,5 @@
+REM MathFunctions
+
 CONST DECIMALS% = 4 REM decimal places for display of values
 CONST DENOMINATOR% = 1000000 REM denominator gives level of precision
 REM show output and display information about the program

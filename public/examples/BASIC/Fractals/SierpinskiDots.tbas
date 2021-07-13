@@ -1,3 +1,5 @@
+REM SierpinskiDots
+
 DIM x%(2)
 DIM y%(2)
 x%(0) = 400

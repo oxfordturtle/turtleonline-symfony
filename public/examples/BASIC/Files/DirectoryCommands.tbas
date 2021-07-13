@@ -1,65 +1,67 @@
-CONST SUBDIR$ = "testsubdir"
-CONST ENQUIRE% = 0
-CONST DELETE% = 1
-CONST CREATE% = 2
-CONST RECREATE% = 3
-CONST TNOTIFY% = 4
-CONST FNOTIFY% = 16
-CONST TONENTRY% = 64
-CONST TONEXIT% = 128
-CONST TODO% = CREATE%
+REM DirectoryCommands
+
+CONST subdir$ = "testsubdir"
+CONST enquire% = 0
+CONST delete% = 1
+CONST create% = 2
+CONST recreate% = 3
+CONST tnotify% = 4
+CONST fnotify% = 16
+CONST tonentry% = 64
+CONST tonexit% = 128
+CONST todo% = create%
 OUTPUT(TRUE, CREAM, TRUE)
-code% = TODO% + TNOTIFY% + FNOTIFY%
+code% = todo% + tnotify% + fnotify%
 WRITELN("code% on entry = $" + HEX$(code%, 2))
-code% = CHECKDIR(SUBDIR$, code%)
+code% = CHECKDIR(subdir$, code%)
 WRITELN("code% on exit = $" + HEX$(code%, 2))
-IF (code% AND TONENTRY%) > 0 THEN
+IF (code% AND tonentry%) > 0 THEN
   WRITELN("Subdirectory existed on entry")
 ELSE
   WRITELN("No subdirectory on entry")
 ENDIF
-IF (code% AND TONEXIT%) > 0 THEN
+IF (code% AND tonexit%) > 0 THEN
   WRITELN("Subdirectory existed on exit")
 ELSE
   WRITELN("No subdirectory on exit")
 ENDIF
 WRITELN("")
-PROCshowresult(MKDIR(SUBDIR$), "mkdir(" + SUBDIR$ + ")")
-PROCshowresult(DIREXISTS(SUBDIR$), "direxists(" + SUBDIR$ + ")")
+PROCshowresult(MKDIR(subdir$), "mkdir(" + subdir$ + ")")
+PROCshowresult(DIREXISTS(subdir$), "direxists(" + subdir$ + ")")
 WRITELN("")
-PROCshowresult(MKDIR(SUBDIR$), "mkdir(" + SUBDIR$ + ")")
-PROCshowresult(DIREXISTS(SUBDIR$), "direxists(" + SUBDIR$ + ")")
+PROCshowresult(MKDIR(subdir$), "mkdir(" + subdir$ + ")")
+PROCshowresult(DIREXISTS(subdir$), "direxists(" + subdir$ + ")")
 WRITELN("")
-PROCshowresult(RMDIR(SUBDIR$), "rmdir(" + SUBDIR$ + ")")
-PROCshowresult(DIREXISTS(SUBDIR$), "direxists(" + SUBDIR$ + ")")
+PROCshowresult(RMDIR(subdir$), "rmdir(" + subdir$ + ")")
+PROCshowresult(DIREXISTS(subdir$), "direxists(" + subdir$ + ")")
 WRITELN("")
-PROCshowresult(RMDIR(SUBDIR$), "rmdir(" + SUBDIR$ + ")")
-PROCshowresult(DIREXISTS(SUBDIR$), "direxists(" + SUBDIR$ + ")")
+PROCshowresult(RMDIR(subdir$), "rmdir(" + subdir$ + ")")
+PROCshowresult(DIREXISTS(subdir$), "direxists(" + subdir$ + ")")
 WRITELN("")
-PROCshowresult(MKDIR(SUBDIR$), "mkdir(" + SUBDIR$ + ")")
-PROCshowresult(DIREXISTS(SUBDIR$), "direxists(" + SUBDIR$ + ")")
+PROCshowresult(MKDIR(subdir$), "mkdir(" + subdir$ + ")")
+PROCshowresult(DIREXISTS(subdir$), "direxists(" + subdir$ + ")")
 WRITELN("")
-PROCshowresult(MKDIR(SUBDIR$), "mkdir(" + SUBDIR$ + ")")
-PROCshowresult(DIREXISTS(SUBDIR$), "direxists(" + SUBDIR$ + ")")
+PROCshowresult(MKDIR(subdir$), "mkdir(" + subdir$ + ")")
+PROCshowresult(DIREXISTS(subdir$), "direxists(" + subdir$ + ")")
 WRITELN("")
-IF CHECKFILE(SUBDIR$ + "\A_File.txt", 2) > 127 THEN
+IF CHECKFILE(subdir$ + "\A_File.txt", 2) > 127 THEN
   WRITELN("File has been created")
 ELSE
   WRITELN("File could not be created")
 ENDIF
-PROCshowresult(RMDIR(SUBDIR$), "rmdir(" + SUBDIR$ + ")")
-PROCshowresult(DIREXISTS(SUBDIR$), "direxists(" + SUBDIR$ + ")")
+PROCshowresult(RMDIR(subdir$), "rmdir(" + subdir$ + ")")
+PROCshowresult(DIREXISTS(subdir$), "direxists(" + subdir$ + ")")
 WRITELN("")
-IF CHECKFILE(SUBDIR$ + "\A_File.txt", 1) < 128 THEN
+IF CHECKFILE(subdir$ + "\A_File.txt", 1) < 128 THEN
   WRITELN("File has been deleted")
 ELSE
   WRITELN("File could not be deleted")
 ENDIF
-PROCshowresult(RMDIR(SUBDIR$), "rmdir(" + SUBDIR$ + ")")
-PROCshowresult(DIREXISTS(SUBDIR$), "direxists(" + SUBDIR$ + ")")
+PROCshowresult(RMDIR(subdir$), "rmdir(" + subdir$ + ")")
+PROCshowresult(DIREXISTS(subdir$), "direxists(" + subdir$ + ")")
 END
 
-DEF  PROCshowresult(b%, n$)
+DEF PROCshowresult(b%, n$)
   IF b% THEN
     WRITELN(UCASE$(n$) + " returns TRUE")
   ELSE

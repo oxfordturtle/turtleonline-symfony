@@ -1,4 +1,5 @@
-REM illustrates file handling commands
+REM FileCommands
+
 CONST testFile1$ = "testFile1$.txt"
 CONST testFile2$ = "testFile2$.txt"
 CONST enquire% = 0
@@ -9,13 +10,11 @@ CONST tNotify% = 4
 CONST fNotify% = 16
 CONST tOnEntry% = 64
 CONST tOnExit% = 128
-
 OUTPUT(TRUE, CREAM, TRUE)
 PROCcheckFileAndDisplay(testFile1$)
 PROCshowResult(FILEEXISTS(testFile1$), "FILEEXISTS(" + testFile1$ + ")")
 WRITELN("")
 PROCdeleteFileAndDisplay(testFile1$)
-
 IF CHECKFILE(testFile1$, create%) > 127 THEN
   WRITELN("File "" + testFile1$ + "" has been created")
 ELSE
@@ -24,7 +23,6 @@ ENDIF
 PROCshowResult(FILEEXISTS(testFile1$), "FILEEXISTS(" + testFile1$ + ")")
 PROCshowResult(FILEEXISTS(testFile2$), "FILEEXISTS(" + testFile2$ + ")")
 WRITELN("")
-
 IF COPYFILE(testFile1$, testFile2$) THEN
   WRITELN("File "" + testFile1$ + "" has been copied to "" + testFile2$ + """)
 ELSE
@@ -33,7 +31,6 @@ ENDIF
 PROCshowResult(FILEEXISTS(testFile1$), "FILEEXISTS(" + testFile1$ + ")")
 PROCshowResult(FILEEXISTS(testFile2$), "FILEEXISTS(" + testFile2$ + ")")
 WRITELN("")
-
 IF CHECKFILE(testFile1$, delete%) < 128 THEN
   WRITELN("File "" + testFile1$ + "" has been deleted")
 ELSE
@@ -41,9 +38,7 @@ ELSE
 ENDIF
 PROCshowResult(FILEEXISTS(testFile1$), "FILEEXISTS(" + testFile1$ + ")")
 WRITELN("")
-
 PROCdeleteFileAndDisplay(testFile1$)
-
 PROCshowResult(FILEEXISTS(testFile2$), "FILEEXISTS(" + testFile2$ + ")")
 IF RENAMEFILE(testFile2$, testFile1$) THEN
   WRITELN("File "" + testFile2$ + "" has been renamed "" + testFile1$ + """)
@@ -53,11 +48,9 @@ ENDIF
 PROCshowResult(FILEEXISTS(testFile1$), "FILEEXISTS(" + testFile1$ + ")")
 PROCshowResult(FILEEXISTS(testFile2$), "FILEEXISTS(" + testFile2$ + ")")
 WRITELN("")
-
 PROCdeleteFileAndDisplay(testFile1$)
 END
 
-REM shows the result of the given command
 DEF PROCshowResult(value%, commandText$)
   IF value% THEN
     WRITELN(UCASE$(commandText$) + " returns TRUE")
@@ -66,7 +59,6 @@ DEF PROCshowResult(value%, commandText$)
   ENDIF
 ENDPROC
 
-REM checks for the given file and shows results
 DEF PROCcheckFileAndDisplay(filename$)
   LOCAL code%
   code% = create% + tNotify% + fNotify%
@@ -87,7 +79,6 @@ DEF PROCcheckFileAndDisplay(filename$)
   WRITELN("")
 ENDPROC
 
-REM tries to delete a file and shows results
 DEF PROCdeleteFileAndDisplay(filename$)
   PROCshowResult(DELETEFILE(testFile1$), "DELETEFILE(" + testFile1$ + ")")
   PROCshowResult(FILEEXISTS(testFile1$), "FILEEXISTS(" + testFile1$ + ")")

@@ -9,12 +9,12 @@ PROGRAM SimpleProc;
   End;
 
 BEGIN
-  {repeatedly draw prongs in random colours ...}
+  {repeatedly draws prongs in random colours}
   repeat
     randcol(10);
     prong;
     {right turn gives impression of motion}
     right(61)
-  {... until Turtle is pointing north again}
+  {until Turtle is pointing north again}
   until turtd = 0
 END.

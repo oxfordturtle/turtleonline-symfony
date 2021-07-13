@@ -1,7 +1,9 @@
+REM LifeArrays
+
 CONST WIDTH% = 32
 CONST HEIGHT% = 32
-DIM thisgen%(WIDTH%, HEIGHT%)
-DIM nextgen%(WIDTH%, HEIGHT%)
+DIM thisgen%(WIDTH% - 1, HEIGHT% - 1)
+DIM nextgen%(WIDTH% - 1, HEIGHT% - 1)
 CANVAS(0, 0, WIDTH%, HEIGHT%)
 RESOLUTION(WIDTH%, HEIGHT%)
 FOR x% = 0 TO WIDTH% - 1
@@ -28,7 +30,7 @@ WHILE ?key <> \escape
       FOR i% = -1 TO 1
         FOR j% = -1 TO 1
           IF thisgen%((x% + i% + WIDTH%) MOD WIDTH%, (y% + j% + HEIGHT%) MOD HEIGHT%) THEN
-            livenb% = livenb% + 1
+            INC(livenb%)
           ENDIF
         NEXT
       NEXT

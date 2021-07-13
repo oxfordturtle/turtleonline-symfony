@@ -1,3 +1,5 @@
+REM CycleColours
+
 REM black out canvas
 BLANK(BLACK)
 REM initialise variables

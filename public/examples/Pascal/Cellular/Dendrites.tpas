@@ -14,10 +14,8 @@ VAR whole, randomradius, maxsofar: integer;
   Function attached(x, y: integer): boolean;
   Begin
     result := false;
-    if (pixcol(x - 1, y) = crystal)
-      or (pixcol(x + 1, y) = crystal)
-      or (pixcol(x, y - 1) = crystal)
-      or (pixcol(x, y + 1) = crystal) then
+    if (pixcol(x - 1, y) = crystal) or (pixcol(x + 1, y) = crystal) or (pixcol(x, y - 1) =
+     crystal) or (pixcol(x, y + 1) = crystal) then
       begin
         result := true;
         pixset(x, y, crystal);

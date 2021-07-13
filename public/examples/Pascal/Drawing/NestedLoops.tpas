@@ -21,7 +21,7 @@ BEGIN
       {draw 19 circles, radius 56 up to 200}
       for circleCount := 7 to 25 do
         circle(circleCount * 8);
-      {reposition Turtle to canvas middle}
+      {reposition the turtle to canvas middle}
       back(260);
       {pause for 1/5 second before continuing}
       pause(200)

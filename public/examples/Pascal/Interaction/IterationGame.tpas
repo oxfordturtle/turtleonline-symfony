@@ -1,6 +1,7 @@
 PROGRAM IterationGame;
 VAR s: string;
     first, count, latest: integer;
+    det: integer;
 BEGIN
   {disable key output in the console}
   keyecho(false);
@@ -21,14 +22,13 @@ BEGIN
       repeat
         box(200, 60, white, false);
         print(read(0), 4, 36);
-        pause(100)
-      until abs(?key) = \return;
+        {detect next keypress, and loop if not RETURN key}
+        det := detect(\key, 0)
+      until det = \return;
       {read value of keybuffer into string}
       s := readln;
       {try to convert s to integer}
-      first := valdef(s, -1);
-      {reset key input value}
-      reset(\key)
+      first := valdef(s, -1)
     until first > 1;
     {set latest number to user's input}
     latest := first;
@@ -59,12 +59,9 @@ BEGIN
     setxy(100, 100);
     print('That took ' + str(count) + ' iterations to reach 1', 4, 36);
     colour(black);
-    setxy(250, 200);
+    setxy(30, 200);
     {wait for key press to start again}
-    print('[Press a key to continue]', 4, 30);
-    repeat
-    until ?key > 0;
-    {reset key input value}
-    reset(\key)
-  until false
+    print('[Press "Esc" to quit, or any other key to continue]', 4, 30);
+    det := detect(\key, 0)
+  until det = \escape
 END.

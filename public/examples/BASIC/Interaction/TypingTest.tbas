@@ -1,3 +1,5 @@
+REM TypingTest
+
 REM show instructions
 DIM letters%(26)
 BLANK(CREAM)
@@ -11,13 +13,11 @@ SETXY(20, 410)
 PRINT("Type them as fast as you can, and see how", 4, 36)
 SETXY(20, 480)
 PRINT("quickly you can finish the entire alphabet.", 4, 36)
-SETXY(100, 620)
-PRINT("Now press the ""Esc"" key to start ...", 4, 36)
-REM disable key echo in console
+SETXY(20, 620)
+PRINT("Now wait 5 seconds or press ""Esc"" key to start ...", 4, 30)
 KEYECHO(FALSE)
-REM wait for escape key to be pressed
-REPEAT
-UNTIL (ABS(?key) = \escape)
+REM wait for escape key, 5 seconds maximum, before proceeding...
+det% = DETECT(\escape, 5000)
 REM fill letters% array with character codes for all letters of the alphabet
 FOR count% = 1 TO 26
   REM randomly select upper or lower case
@@ -49,6 +49,7 @@ FOR count% = 1 TO 26
   PRINT(CHR$(letters%(count%)), 3, 450)
   REM wait for user to type that letter
   REPEAT
+    det% = DETECT(\keybuffer, 0)
   UNTIL GET$(1) = CHR$(letters%(count%))
 NEXT
 REM show time taken

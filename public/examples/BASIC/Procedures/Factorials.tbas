@@ -1,3 +1,5 @@
+REM Factorials
+
 REM set up and show output
 OUTPUT(TRUE, CREAM, TRUE)
 REM calculate and display n! for n = 1 to 10

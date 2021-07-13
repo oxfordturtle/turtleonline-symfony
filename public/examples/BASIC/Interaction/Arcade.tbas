@@ -1,3 +1,5 @@
+REM Arcade
+
 CONST TARGETS% = 10
 FaceX% = -100
 FaceY% = 625
@@ -30,7 +32,7 @@ WHILE hits% < TARGETS%
     facexspeed% = RND(5) + 1
     faceyspeed% = RND(9) - 5
     FaceY% = RND(550) + 49
-    hits% = hits% + 1
+    INC(hits%)
   ENDIF
 ENDWHILE
 BLANK(BLACK)

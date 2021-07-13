@@ -1,3 +1,5 @@
+REM AskInput
+
 REM write question to console
 WRITE("What is your name?  ")
 REM read characters from keybuffer until ENTER key is pressed

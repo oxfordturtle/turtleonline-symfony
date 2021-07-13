@@ -16,7 +16,7 @@ PROGRAM Triangle3;
   End;
 
 BEGIN
-  {move to start, without drawing}
+  {move to the start, without drawing}
   movexy(-100, 150);
   {draw a triangle of size 256}
   triangle(256)

@@ -3,19 +3,19 @@ CONST xOrigin = 500;
       yOrigin = 500;
       halfWidth = 400;
       yScale = 200;
-      radians = false; {make true for x-axis in radians}
+      radians = false; {make TRUE for x-axis in radians}
 
-  {draws graph axes}
+  {draws the graph axes}
   Procedure drawAxes;
   Begin
     thickness(3);
-    {draw y axis}
+    {draw the y axis}
     setxy(xOrigin - halfWidth, yOrigin);
     drawxy(halfWidth * 2, 0);
-    {draw x axis}
+    {draw the x axis}
     setxy(xOrigin, 0);
     drawxy(0, 1000);
-    {draw circle at origin}
+    {draw a circle at the origin}
     setxy(xOrigin, yOrigin);
     circle(15);
     {draw lines at y=1 and y=-1}
@@ -103,17 +103,17 @@ BEGIN
   drawAxes;
   noupdate;
   thickness(4);
-  {plot sine curve in green}
+  {plot a sine curve in green}
   colour(green);
   setxy(250, 700);
   print('sine', 16, 40);
   plotSineCurve;
-  {plot cosine curve in red}
+  {plot a cosine curve in red}
   colour(red);
   setxy(30, 700);
   print('cosine', 16, 40);
   plotCosineCurve;
-  {plot tan curve in blue}
+  {plot a tan curve in blue}
   colour(blue);
   setxy(140, 920);
   print('tangent', 16, 40);

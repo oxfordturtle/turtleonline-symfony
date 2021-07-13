@@ -1,31 +1,31 @@
 PROGRAM RenameAndDeleteFile;
-VAR origfname: string;
-    newfname: string;
-    handle: integer;
-    i: integer;
+VAR origfname: string; {original filename}
+    newfname: string;  {new filename}
+    handle: integer;   {"file handle" assigned for accessing file}
+    i: integer;        {count iterations}
 
   Procedure readfile(fname: string);
   Var s: string[255];
   Begin
-    handle := openfile(fname, 1);
-    if handle > 0 then
-      begin
+    handle := openfile(fname, 1); {1 = OPEN FOR READING}
+    if handle > 0 then {handle>0 means file opening has succeeded}
+      begin           {and hence file already exists}
         writeln('Contents read from ' + fname + ':');
-        while not(eof(handle)) do
+        while not(eof(handle)) do {while not end of file}
           begin
-            s := freadln(handle);
-            writeln('  ' + s)
+            s := freadln(handle);     {read the next line}
+            writeln('  ' + s)         {write it to the output display}
           end;
-        closefile(handle)
+        closefile(handle)         {close the file}
       end
     else
       writeln('  ' + fname + ' could not be opened for reading')
   End;
 
 BEGIN
-  origfname := 'TestFile.txt';
-  newfname := 'TestRename.txt';
-  output(true, cream, true);
+  origfname := 'TestFile.txt';  {file created by previous example program}
+  newfname := 'TestRename.txt'; {new filename to be given}
+  output(true, cream, true);   {initialise the output display}
   for i := 1 to 3 do
     begin
       writeln('LOOP ' + str(i) + ' ...');

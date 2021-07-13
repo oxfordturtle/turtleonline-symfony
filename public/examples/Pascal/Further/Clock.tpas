@@ -8,7 +8,7 @@ VAR hours: integer;
     {rub out previous hands}
     colour(white);
     blot(360);
-    {draw hour hand and return to centre}
+    {draw the hour hand and return to centre}
     colour(red);
     direction(hours * 30);
     thickness(10);
@@ -22,7 +22,7 @@ VAR hours: integer;
   End;
 
 BEGIN
-  {draw black circle for clock face}
+  {draw a black circle for the clock face}
   thickness(10);
   circle(400);
   {initialise hours and minutes to zero}
@@ -36,7 +36,7 @@ BEGIN
       showHands(hours, minutes);
       {pause 1/10 second [so clock goes 600 times too fast]}
       pause(100);
-      {count through minutes until it reaches 60}
+      {count through the minutes until it reaches 60}
       inc(minutes)
     until minutes = 60;
     {reinitialise minutes, and count through hours until 12}

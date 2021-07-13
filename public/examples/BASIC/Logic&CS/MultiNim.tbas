@@ -1,3 +1,5 @@
+REM MultiNim
+
 CONST PILES% = 5
 CONST MAXHEIGHT% = 8
 CONST MARGIN% = 20
@@ -11,9 +13,7 @@ REPEAT
     REPEAT
       CURSOR(2)
       REPEAT
-        REPEAT
-        UNTIL ?lmouse > 0
-        PAUSE(200)
+        det% = DETECT(\lmouse, 0)
         thiscolour% = PIXCOL(?clickx, ?clicky)
       UNTIL (thiscolour% <> RGB(WHITE)) AND (thiscolour% <> RGB(BLACK))
       CURSOR(11)
@@ -22,6 +22,7 @@ REPEAT
         showmaths% = NOT(showmaths%)
         PROCdomaths
         PROCdrawpiles
+        PAUSE(100)
       ELSE
         thispile% = (?clickx - MARGIN% + radius%) DIV xgap% + 1
         thiscoin% = (bottom% - radius% - ?clicky) DIV ygap% + 1
@@ -93,7 +94,7 @@ DEF PROCdrawpiles
   FOR p% = 1 TO PILES%
     c% = pile%(p%)
     WHILE c% > 0
-      autocount% = autocount% - 1
+      DEC(autocount%)
       IF autocount% = 0 THEN
         autopile% = p%
         autocoin% = c%
@@ -111,7 +112,7 @@ DEF PROCdrawpiles
         COLOUR(BLACK)
         PRINT(STR$(xorscore% EOR pile%(p%) EOR (c% - 1)), 4, 20)
       ENDIF
-      c% = c% - 1
+      DEC(c%)
     ENDWHILE
   NEXT
   COLOUR(BLACK)

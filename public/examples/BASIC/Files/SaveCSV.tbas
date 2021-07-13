@@ -1,3 +1,5 @@
+REM SaveCSV
+
 CONST cols% = 10
 CONST rows% = 10
 CONST a% = 3
@@ -88,9 +90,9 @@ DEF PROCsavedata
   handle% = OPENOUT(fname$)
   FOR j% = 1 TO rows%
     FOR i% = 1 TO cols% - 1
-      FWRITELN#(handle%, STR$(value%(i%, j%)) + ",")
+      PRINT#(handle%, STR$(value%(i%, j%)) + ",")
     NEXT
-    FWRITELN#(handle%, STR$(value%(cols%, j%)))
+    PRINTLN#(handle%, STR$(value%(cols%, j%)))
   NEXT
   CLOSE#(handle%)
 ENDPROC

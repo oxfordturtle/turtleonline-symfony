@@ -1,3 +1,5 @@
+REM PaintApp
+
 REM set up the canvas
 PROCsetup
 REM repeatedly...

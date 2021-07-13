@@ -2,7 +2,7 @@ PROGRAM CycleColours;
 VAR lineLength: integer;
     colourInc, colourCode: integer;
 BEGIN
-  {black out canvas}
+  {black out the canvas}
   blank(black);
   {initialise variables}
   colourInc := random(5);
@@ -19,6 +19,6 @@ BEGIN
     forward(lineLength);
     {turning right by 30 degrees}
     right(30)
-  {... until the move forward distance > 250}
+  {until the move forward distance > 250}
   until lineLength > 250
 END.

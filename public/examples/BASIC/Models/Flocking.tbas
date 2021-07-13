@@ -1,3 +1,5 @@
+REM Flocking
+
 CONST NUMBOIDS% = 30
 CONST BOIDRADIUS% = 20
 CONST MAXSPEED% = 50
@@ -89,7 +91,7 @@ DEF PROCsettarget
   ENDIF
   tgtx% = DIVMULT(SIN(cycle% * tgtangvel%, 1, 1000), 1000, TGTRADIUS%)
   tgty% = -DIVMULT(COS(cycle% * tgtangvel%, 1, 1000), 1000, TGTRADIUS%)
-  cycle% = cycle% + 1
+  INC(cycle%)
 ENDPROC
 
 DEF PROCmove(b%)

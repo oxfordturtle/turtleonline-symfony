@@ -6,9 +6,9 @@ CONST maxpop = 100000;
       tmargin = 150;
       bmargin = 200;
       output = true;
-
 VAR gen, pop: integer;
     r: integer;
+    det: integer;
 
   Procedure axes;
   Var i: integer;
@@ -29,9 +29,11 @@ VAR gen, pop: integer;
     drawxy(1000, 0);
     colour(red);
     setxy(0, 1060);
-    print('Population over ' + str(maxgen) + ' generations, where P (population/' + str(maxpop) + ')', 4, 25);
+    print('Population over ' + str(maxgen) + ' generations, where P (population/' + str(maxpop)
+     + ')', 4, 25);
     setxy(0, 1110);
-    print('is determined by the logistic equation P'' = rP(1 - P), with r = ' + qstr(r, 10, 1), 4, 25)
+    print('is determined by the logistic equation P'' = rP(1 - P), with r = ' + qstr(r, 10, 1),
+     4, 25)
   End;
 
   Procedure menu;
@@ -74,7 +76,7 @@ BEGIN
   canvas(-lmargin, -tmargin, 1000 + lmargin + rmargin, 1000 + tmargin + bmargin);
   resolution(1000 + lmargin + rmargin, 1000 + tmargin + bmargin);
   thickness(3);
-  r := 30;
+  r := 25;
   repeat
     noupdate;
     blank(white);
@@ -104,7 +106,8 @@ BEGIN
     blot(3);
     update;
     repeat
-    until (?lmouse > 0) and (?clicky < (100 - tmargin)) and (?clickx >= 130) and (?clickx < 1030);
+      det := detect(\lmouse, 0)
+    until (?clicky < (100 - tmargin)) and (?clickx >= 130) and (?clickx < 1030);
     r := ((?clickx - 130) div 90) + ((?clicky + tmargin + 100) div 50) * 10 + 1
   until 0 = 1
 END.

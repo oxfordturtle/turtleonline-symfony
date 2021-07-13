@@ -1,3 +1,5 @@
+REM IterationGame
+
 REM disable key output in the console
 KEYECHO(FALSE)
 REM repeatedly...
@@ -17,12 +19,11 @@ REPEAT
     REPEAT
       BOX(200, 60, WHITE, FALSE)
       PRINT(GET$(0), 4, 36)
-      PAUSE(100)
-    UNTIL ABS(?key) = \RETURN
+      REM detect next keypress, and loop if not RETURN key
+      det% = DETECT(\key, 0)
+    UNTIL det% = \return
     REM read value of keybuffer into string
     s$ = GETLINE$
-    REM reset key status array
-    RESET(\key)
     REM try to convert s to integer
     first% = VALDEF(s$, -1)
   UNTIL first% > 1
@@ -56,11 +57,9 @@ REPEAT
   SETXY(100, 100)
   PRINT("That took " + STR$(count%) + " iterations to reach 1", 4, 36)
   COLOUR(BLACK)
-  SETXY(250, 200)
+  SETXY(30, 200)
   REM wait for key press to start again
-  PRINT("[Press a key to continue]", 4, 30)
-  REPEAT
-  UNTIL ?key > 0
-  RESET(\key)
-UNTIL FALSE
+  PRINT("[Press ""Esc"" to quit, or any other key to continue]", 4, 30)
+  det% = DETECT(\key, 0)
+UNTIL det% = \escape
 END

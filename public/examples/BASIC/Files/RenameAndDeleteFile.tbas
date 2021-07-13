@@ -1,3 +1,6 @@
+REM RenameAndDeleteFile
+
+STRINGSIZE 255
 origfname$ = "TestFile.txt"
 newfname$ = "TestRename.txt"
 OUTPUT(TRUE, CREAM, TRUE)
@@ -33,13 +36,13 @@ NEXT
 END
 
 DEF PROCreadfile(fname$)
-  LOCAL s$255
+  LOCAL s$
   handle% = OPENIN(fname$)
   IF handle% > 0 THEN
     WRITELN("Contents read from " + fname$ + ":")
     WHILE NOT(EOF#(handle%))
-      s$255 = FREADLN#(handle%)
-      WRITELN("  " + s$255)
+      s$ = FREADLN#(handle%)
+      WRITELN("  " + s$)
     ENDWHILE
     CLOSE#(handle%)
   ELSE

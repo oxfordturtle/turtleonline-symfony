@@ -1,6 +1,6 @@
 PROGRAM MathFunctions;
-CONST decimals = 4;       {decimal places for display of values}
-      denominator = 1000000; {denominator gives level of precision}
+CONST dpl = 4;       {decimal places for display of values}
+      den = 1000000; {denominator gives level of precision}
 VAR a, b: integer;
 
   {Writes to the output the value of a mathematical function of a/b,}
@@ -9,71 +9,72 @@ VAR a, b: integer;
   Procedure show(fn: string; op: char; value: integer; degrees: integer);
   Begin
     if degrees = 1 then
-      writeln(fn + '(' + str(a) + op + str(b) + chr(176) + ') = ' + qstr(value, denominator, decimals))
+      writeln(fn + '(' + str(a) + op + str(b) + chr(176) + ') = ' + qstr(value, den, dpl))
     else
     if degrees = 2 then
-      writeln(fn + '(' + str(a) + op + str(b) + ') = ' + qstr(value, denominator, decimals) + chr(176))
+      writeln(fn + '(' + str(a) + op + str(b) + ') = ' + qstr(value, den, dpl) + chr(176))
     else
-      writeln(fn + '(' + str(a) + op + str(b) + ') = ' + qstr(value, denominator, decimals))
+      writeln(fn + '(' + str(a) + op + str(b) + ') = ' + qstr(value, den, dpl))
   End;
 
 BEGIN
-  {show output and display information about the program}
+  {show the output and display information about the program}
   output(true, white, true);
-  writeln('This program selects two random numbers a and b, in the range');
-  writeln('100-999, and then outputs various mathematical functions of the');
-  writeln('fraction a/b. The results are expressed to ' + str(decimals) + ' decimal places, and a');
-  writeln('denominator of ' + str(denominator) + ' is used in the calculations to provide');
-  writeln('precision, even though the Turtle functions strictly operate only');
-  writeln('on integers and produce integer results.');
+  writeln('This program selects two random numbers a and b, in the');
+  writeln('range 100-999, and then outputs various mathematical');
+  writeln('functions of the fraction a/b. The results are expressed');
+  writeln('to ' + str(dpl) + ' decimal places, and a denominator of ' + str(den) + ' is');
+  writeln('used in the calculations to provide precision, even');
+  writeln('though the Turtle functions strictly operate only on');
+  writeln('integers and produce integer results.');
   writeln('');
   {set a and b to random values, and display their values and quotient}
   a := random(900) + 100;
   b := random(900) + 100;
   writeln('a = ' + str(a) + '; b = ' + str(b));
-  writeln('a/b = ' + str(a) + '/' + str(b) + ' = ' + qstr(a, b, decimals));
+  writeln('a/b = ' + str(a) + '/' + str(b) + ' = ' + qstr(a, b, dpl));
   writeln('');
-  {display square, square root, cube, and cube root of a/b}
-  show('square', '/', power(a, b, 2, denominator), 0);
-  show('square root', '/', root(a, b, 2, denominator), 0);
-  show('cube', '/', power(a, b, 3, denominator), 0);
-  show('cube root', '/', root(a, b, 3, denominator), 0);
+  {display the square, square root, cube, and cube root of a/b}
+  show('square', '/', power(a, b, 2, den), 0);
+  show('square root', '/', root(a, b, 2, den), 0);
+  show('cube', '/', power(a, b, 3, den), 0);
+  show('cube root', '/', root(a, b, 3, den), 0);
   writeln('');
   {display hypotenuse of right-angled triangle with shorter sides a and b}
-  show('hypot', ',', hypot(a, b, denominator), 0);
-  show('calculated hypot', ',', sqrt(a * a + b * b, denominator), 0);
+  show('hypot', ',', hypot(a, b, den), 0);
+  show('calculated hypot', ',', sqrt(a * a + b * b, den), 0);
   writeln('');
   {display sin, cos, and tan of a/b, interpreted in degrees}
-  show('sin', '/', sin(a, b, denominator), 1);
-  show('cos', '/', cos(a, b, denominator), 1);
-  show('tan', '/', tan(a, b, denominator), 1);
+  show('sin', '/', sin(a, b, den), 1);
+  show('cos', '/', cos(a, b, den), 1);
+  show('tan', '/', tan(a, b, den), 1);
   writeln('');
   {display ln, exp, log10, and antilog of a/b}
-  show('ln', '/', ln(a, b, denominator), 0);
-  if divmult(a, b, 1000) + ln(denominator, 1, 1000) > ln(maxint, 1, 1000) then
+  show('ln', '/', ln(a, b, den), 0);
+  if divmult(a, b, 1000) + ln(den, 1, 1000) > ln(maxint, 1, 1000) then
     begin
       writeln('EXP(' + str(a) + '/' + str(b) + ') would give numerical overflow, because');
-      writeln('the result*' + str(denominator) + ' would be greater than ' + str(maxint))
+      writeln('the result*' + str(den) + ' would be greater than ' + str(maxint))
     end
   else
-    show('exp', '/', exp(a, b, denominator), 0);
-  show('log10', '/', log10(a, b, denominator), 0);
-  if divmult(a, b, 1000) + log10(denominator, 1, 1000) > log10(maxint, 1, 1000) then
+    show('exp', '/', exp(a, b, den), 0);
+  show('log10', '/', log10(a, b, den), 0);
+  if divmult(a, b, 1000) + log10(den, 1, 1000) > log10(maxint, 1, 1000) then
     begin
       writeln('ANTILOG(' + str(a) + '/' + str(b) + ') would give numerical overflow, because');
-      writeln('the result*' + str(denominator) + ' would be greater than ' + str(maxint))
+      writeln('the result*' + str(den) + ' would be greater than ' + str(maxint))
     end
   else
-    show('antilog', '/', antilog(a, b, denominator), 0);
+    show('antilog', '/', antilog(a, b, den), 0);
   writeln('');
   {display arccos, arcsin, and arctan of a/b, in degrees}
   if a > b then
     writeln('ARCCOS and ARCSIN are not defined for ' + str(a) + '/' + str(b) + ' = ' + qstr(a, b,
-     decimals))
+     dpl))
   else
     begin
-      show('arccos', '/', arccos(a, b, denominator), 2);
-      show('arcsin', '/', arcsin(a, b, denominator), 2)
+      show('arccos', '/', arccos(a, b, den), 2);
+      show('arcsin', '/', arcsin(a, b, den), 2)
     end;
-  show('arctan', '/', arctan(a, b, denominator), 2)
+  show('arctan', '/', arctan(a, b, den), 2)
 END.

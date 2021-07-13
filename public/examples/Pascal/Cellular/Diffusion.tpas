@@ -87,7 +87,7 @@ VAR xorval: integer;
     setxy(0, topmargin + width * 13 / 10 + 5);
     print('(at horizontal position', 2, width / 15);
     setxy(0, topmargin + width * 14 / 10 + 5);
-    print('in tapering tube)', 2, width / 15);
+    print('in tapering tube)', 2, width / 15)
   End;
 
   Procedure graphit(x: integer; show: boolean);
@@ -106,20 +106,20 @@ VAR xorval: integer;
 
   Procedure showswap(x, origcol: integer);
   Begin
-    graphit(x, false);
-    graphit(x + 1, false);
+    graphit(x1, false);
+    graphit(x1 + 1, false);
     if origcol = colour1 then
       begin
-        dec(num1[x]);
-        inc(num1[x + 1])
+        dec(num1[x1]);
+        inc(num1[x1 + 1])
       end
     else
       begin
-        inc(num1[x]);
-        dec(num1[x + 1])
+        inc(num1[x1]);
+        dec(num1[x1 + 1])
       end;
-    graphit(x, true);
-    graphit(x + 1, true)
+    graphit(x1, true);
+    graphit(x1 + 1, true)
   End;
 
 BEGIN

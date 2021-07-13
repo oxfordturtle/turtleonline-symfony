@@ -246,11 +246,11 @@ VAR gen, cnum, gnum: integer;
             inc(gage[n]);
             if gage[n] > slowage then
               begin
-               dec(gspeednum[gspeed[n]]);
-               gspeed[n] := gspeed[n] * agefactor / 100;
-               inc(gspeednum[gspeed[n]]);
-               if gspeed[n] = 0 then
-                 deadgazelle(n)
+                dec(gspeednum[gspeed[n]]);
+                gspeed[n] := gspeed[n] * agefactor / 100;
+                inc(gspeednum[gspeed[n]]);
+                if gspeed[n] = 0 then
+                  deadgazelle(n)
               end
           end
       end

@@ -1,4 +1,6 @@
-CONST DELAY% = 500 
+REM StringFunctions
+
+CONST DELAY% = 500
 OUTPUT(TRUE, CREAM, TRUE)
 REM set initial string
 s1$ = "Turtle BASIC"
@@ -9,8 +11,8 @@ PAUSE(DELAY%)
 s3$ = MID$(s1$, 8, 5)
 WRITELN(s3$ + " was invented in the 1960s.")
 PAUSE(DELAY%)
-REM illustrate use of INSERT$ function ...
-s4$ = INSERT$(s3$, "BC B", 2)
+REM illustrate use of INS$ function ...
+s4$ = INSERT$(s3$, 2, "BC B")
 WRITELN("""" + s4$ + """ is the name of a 1980s variant.")
 PAUSE(DELAY%)
 REM illustrate use of LEN function ...

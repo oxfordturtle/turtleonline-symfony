@@ -8,27 +8,42 @@ CONST width = 100;
       infectprob = 1;
       immuneprob = 2;
       recoverprob = 15;
+      movement = false;
+      report = false;
 VAR x, y, n: integer;
-    numinfected: integer;
+    x2, y2, swapcol: integer;
+    numimmune, numinfected, numinfectious: integer;
 
   Procedure infect(x, y: integer);
   Begin
     pixset(x, y, infected);
-    inc(numinfected)
+    inc(numinfected);
+    inc(numinfectious);
+    if report then
+      writeln('Infected: ' + pad(str(numinfected), ' ', 4) + '      Infectious: ' + pad(str(numinfectious),
+     ' ', 4))
   End;
 
 BEGIN
   canvas(0, 0, width, height);
   resolution(width, height);
+  n := randseed(25);
+  timeset(0);
+  numimmune := 0;
   numinfected := 0;
+  numinfectious := 0;
   noupdate;
   for x := 0 to width - 1 do
     for y := 0 to height - 1 do
-      if (random(100) < infectprob) and (hypot(x - width / 2, y - height / 2, 1) <= startradius) then
+      if (random(100) < infectprob) and (hypot(x - width / 2, y - height / 2, 1) <= startradius)
+     then
         infect(x, y)
       else
       if random(100) < immuneprob then
-        pixset(x, y, recovered)
+        begin
+          pixset(x, y, recovered);
+          inc(numimmune)
+        end
       else
         pixset(x, y, susceptible);
   update;
@@ -40,7 +55,9 @@ BEGIN
         if random(100) < recoverprob then
           begin
             pixset(x, y, recovered);
-            dec(numinfected)
+            dec(numinfectious);
+            if report then
+              writeln('                    Infectious: ' + pad(str(numinfectious), ' ', 4))
           end
         else
           begin
@@ -50,6 +67,22 @@ BEGIN
             if pixcol(x, y) = susceptible then
               infect(x, y)
           end
+      end;
+    if movement then
+      begin
+        x := random(width);
+        y := random(height);
+        if pixcol(x, y) <> susceptible then
+          begin
+            x2 := random(width);
+            y2 := random(height);
+            swapcol := pixcol(x, y);
+            pixset(x, y, pixcol(x2, y2));
+            pixset(x2, y2, swapcol)
+          end
       end
-  until numinfected = 0
+  until numinfectious = 0;
+  writeln('Total infected overall: ' + str(numinfected) + ' (' + qstr(time, 1000, 2) + ' sec)');
+  writeln('Proportion infected:    ' + qstr(numinfected * 100, width * height - numimmune, 2) +
+     '%')
 END.

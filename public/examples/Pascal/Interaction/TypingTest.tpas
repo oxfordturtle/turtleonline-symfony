@@ -4,6 +4,7 @@ VAR count: integer;
     c, m, n: integer;
     temp: char;
     x, y: integer;
+    det: integer;
 BEGIN
   {show instructions}
   blank(cream);
@@ -17,13 +18,11 @@ BEGIN
   print('Type them as fast as you can, and see how', 4, 36);
   setxy(20, 480);
   print('quickly you can finish the entire alphabet.', 4, 36);
-  setxy(100, 620);
-  print('Now press the "Esc" key to start ...', 4, 36);
-  {disable key echo in console}
+  setxy(20, 620);
+  print('Now wait 5 seconds or press "Esc" key to start ...', 4, 30);
   keyecho(false);
-  {wait for escape key to be pressed}
-  repeat
-  until (abs(?key) = \escape);
+  {wait for escape key, 5 seconds maximum, before proceeding...}
+  det := detect(\escape, 5000);
   {create a string containing all letters of the alphabet}
   letters := '';
   for c := 65 to 90 do
@@ -57,6 +56,7 @@ BEGIN
       print(letters[count], 3, 450);
       {wait for user to type that letter}
       repeat
+        det := detect(\keybuffer, 0)
       until read(1) = letters[count]
     end;
   {show time taken}

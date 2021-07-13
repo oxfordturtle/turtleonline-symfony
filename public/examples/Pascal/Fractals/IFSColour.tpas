@@ -1,4 +1,4 @@
-PROGRAM IFSColour;
+PROGRAM IFScolour;
 CONST maxmappings = 4;
 VAR xleft, xright, ytop, ybottom: integer;
     scaledown, mappings: integer;
@@ -109,6 +109,7 @@ VAR xleft, xright, ytop, ybottom: integer;
   End;
 
   Procedure startprompt;
+  Var det: integer;
   Begin
     output(true, cream, true);
     keyecho(false);
@@ -117,15 +118,16 @@ VAR xleft, xright, ytop, ybottom: integer;
     write('Select Sierpinski, Barnsley fern, or Dragon curve? (S/B/D) ');
     keyecho(false);
     repeat
-    until (abs(?key) = \s) or (abs(?key) = \b) or (abs(?key) = \d);
-    writeln(chr(abs(?key)));
-    if abs(?key) = \s then
+      det := detect(\key, 0)
+    until (det = \s) or (det = \b) or (det = \d);
+    writeln(chr(det));
+    if det = \s then
       begin
         writeln('Sierpinski mappings will be used');
         setsierpinski
       end
     else
-    if abs(?key) = \b then
+    if det = \b then
       begin
         writeln('Barnsley fern mappings will be used');
         setbarnsley
@@ -198,11 +200,11 @@ VAR xleft, xright, ytop, ybottom: integer;
   Begin
     noupdate;
     for y := yt to yb do
-       for x := xl to xr do
-         begin
-           map(mapnum, x, y, newx, newy);
-           pixset(newx, newy, pixcol(x, y))
-         end;
+      for x := xl to xr do
+        begin
+          map(mapnum, x, y, newx, newy);
+          pixset(newx, newy, pixcol(x, y))
+        end;
     update
   End;
 

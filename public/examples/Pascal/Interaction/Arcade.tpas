@@ -58,15 +58,15 @@ VAR faceX, faceY: integer;
     colour(brown);
     thickness(272);
     setxy(0, 863);
-    drawxy(1000, 0);
+    drawxy(1000, 0)
   End;
 
   {draws a face with a hat}
   Procedure face;
 
     {draws a hat}
-    Procedure hat;
-    Begin
+    procedure hat;
+    begin
       setxy(faceX, faceY - 80);
       colour(darkgrey);
       ellblot(90, 30);
@@ -81,7 +81,7 @@ VAR faceX, faceY: integer;
       colour(darkgrey);
       thickness(1);
       polygon(4)
-    End;
+    end;
 
   Begin
     thickness(1);
@@ -125,7 +125,7 @@ VAR faceX, faceY: integer;
     drawxy(100, 0);
     setxy(?mousex, ?mousey - 50);
     drawxy(0, 100);
-    thickness(2);
+    thickness(2)
   End;
 
 BEGIN
@@ -166,7 +166,8 @@ BEGIN
       if (faceY < 100) or (faceY > 625) then
         faceYspeed := faceYspeed * -1;
       {if a mouse click is detected on the face...}
-      if ((?lmouse > 0) and (((?mousex - faceX) * (?mousex - faceX)) + ((?mousey - faceY) * (?mousey - faceY)) < 10000)) then
+      if ((?lmouse > 0) and (((?mousex - faceX) * (?mousex - faceX)) + ((?mousey - faceY) * (?mousey
+     - faceY)) < 10000)) then
         begin
           {create a new target}
           faceX := -100;

@@ -3,7 +3,7 @@ CONST numboids = 30;
       boidradius = 20;
       maxspeed = 50;
       boidcolour = lightbrown;
-      halocolour = $FFFFFE;
+      halocolour = #FFFFFE;
       delay = 50;
       posfactor = 50;
       velfactor = 50;
@@ -35,22 +35,16 @@ VAR boidx, boidy, boidvx, boidvy: array[1..numboids] of integer;
   End;
 
   Procedure draw(positive: boolean);
-  Var n, radius: integer;
+  Var n: integer;
   Begin
     if positive then
-      begin
-        colour(boidcolour);
-        radius := boidradius
-      end
+      colour(boidcolour)
     else
-      begin
-        colour(white);
-        radius := boidradius + 10
-      end;
+      colour(white);
     for n := 1 to numboids do
       begin
         setxy(boidx[n], boidy[n]);
-        blot(radius)
+        blot(boidradius)
       end
   End;
 

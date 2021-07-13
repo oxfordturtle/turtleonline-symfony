@@ -9,21 +9,21 @@ VAR lineLength: integer;
   End;
 
 BEGIN
-  {make canvas black}
+  {make the canvas black}
   blank(black);
-  {position Turtle so pattern fits neatly}
+  {position the turtle so pattern fits neatly}
   forward(15);
   {set line thickness and initial length}
   thickness(27);
   lineLength := 20;
   {repeatedly ...}
   repeat
-    {choose one of the first 40 Turtle colours}
+    {choose one of the first 40 turtle colours}
     randcol(40);
-    {call lineTurn procedure, then pause}
+    {call the lineTurn procedure, then pause}
     lineTurn;
     pause(50);
-    {increment lineLength value}
+    {increment the lineLength value}
     lineLength := lineLength + 10
   {stop looping when lineLength gets to 510}
   until lineLength > 500

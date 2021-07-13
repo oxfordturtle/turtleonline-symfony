@@ -9,36 +9,36 @@ VAR n: integer;
     {are twice as many in a complete circle}
     {as there are points in the polygon    }
     angles(points * 2);
-    {trace outline with Turtle}
+    {trace outline with the turtle}
     for count := 1 to points do
       begin
         {move out to point}
         forward(450);
         {move back to centre}
         back(450);
-        {forget visit back to centre}
+        {forget visit back to the centre}
         forget(1);
-        {turn right by 1 "degree", i.e. }
-        {halfway round to the next point}
+        {turn right by 1 "degree", i.e.}
+        {halfway round to next point   }
         right(1);
         {move out to inner corner}
         forward(200);
         {move back to centre}
         back(200);
-        {forget visit back to centre}
+        {forget visit back to the centre}
         forget(1);
         {turn right by 1 "degree", i.e. the}
         {rest of the way to the next point }
         right(1)
       end;
-    {set specified colour}
+    {set the specified colour}
     colour(colr);
     {draw polygon joining remembered points}
     polygon(points * 2)
   End;
 
 BEGIN
-  {do not draw as Turtle moves}
+  {don't draw as the Turtle moves}
   penup;
   {draw stars with increasing points}
   for n := 3 to 12 do

@@ -1,3 +1,5 @@
+REM YouAreHere
+
 REM draw red blot
 COLOUR(RED)
 BLOT(20)

@@ -1,3 +1,5 @@
+REM SexRatio
+
 CONST POPULATION% = 1000
 CONST MATEPERGEN% = 400
 CONST RANDOMVAR% = 1
@@ -13,7 +15,7 @@ NEXT
 generation% = 0
 REPEAT
   PROCgraph
-  generation% = generation% + 1
+  INC(generation%)
   FOR n% = 0 TO MATEPERGEN%
     PROCdomating
   NEXT
@@ -49,7 +51,7 @@ DEF PROCgraph
   LOCAL females%, n%
   females% = 0
   FOR n% = 0 TO POPULATION%
-    IF female%(n%) THEN females% = females% + 1
+    IF female%(n%) THEN INC(females%)
   NEXT
   COLOUR(RED)
   SETXY(LEFTMARGIN% + generation%, TOPMARGIN% + 1000 - females%)

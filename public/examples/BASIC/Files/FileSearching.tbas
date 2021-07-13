@@ -1,19 +1,17 @@
-REM set up the output
+REM FileSearching
+
 OUTPUT(TRUE, CREAM, TRUE)
 WRITELN("Turtle directories (up to first level) and their files ...")
 WRITELN("")
-REM show files in the base directory
 PROCshowFiles("")
-REM look for subdirectories, and show their files
 dirHandle% = 0
-dirName$ = FINDDIR("*.*", dirHandle%)
+dirName$ = FINDDIR$("*.*", dirHandle%)
 WHILE dirName$ <> ""
   PROCshowFiles(dirName$)
-  dirName$ = FINDNEXT(dirHandle%)
+  dirName$ = FINDNEXT$(dirHandle%)
 ENDWHILE
 END
 
-REM lists all files in a directory
 DEF PROCshowFiles(dirName$)
   LOCAL fileHandle%, fileName$
   IF dirName$ = "" THEN
@@ -23,13 +21,13 @@ DEF PROCshowFiles(dirName$)
   ENDIF
   CHDIR(dirName$)
   fileHandle% = 0
-  fileName$ = FINDFIRST("*.*", fileHandle%)
+  fileName$ = FINDFIRST$("*.*", fileHandle%)
   IF fileName$ = "" THEN
     WRITELN("  <no files>")
   ELSE
     WHILE fileName$ <> ""
       WRITELN("  " + fileName$)
-      fileName$ = FINDNEXT(fileHandle%)
+      fileName$ = FINDNEXT$(fileHandle%)
     ENDWHILE
   ENDIF
   WRITELN("")

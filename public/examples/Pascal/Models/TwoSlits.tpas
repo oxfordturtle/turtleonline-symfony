@@ -90,19 +90,19 @@ BEGIN
   background;
   noupdate;
   for y := 0 to sourcey do
-   begin
-    disty := sourcey - y;
-    for x := 0 to 999 do
-      begin
-        dist1 := hypot(x - source1x, disty, 1);
-        dist2 := hypot(x - source2x, disty, 1);
-        wave1 := dist1 mod wavelength;
-        wave2 := dist2 mod wavelength;
-        waveaddi := sin(wave1 * 360, wavelength, 500) + sin(wave2 * 360, wavelength, 500);
-        waveaddj := cos(wave1 * 360, wavelength, 500) + cos(wave2 * 360, wavelength, 500);
-        waveadd := hypot(waveaddi, waveaddj, 1);
-        angleadd := (arctan(waveaddi, waveaddj, 1) + 360) mod 360;
-        pixset(x, y, mixcols(wavecolour(angleadd), black, waveadd, 1000 - waveadd))
-      end
+    begin
+      disty := sourcey - y;
+      for x := 0 to 999 do
+        begin
+          dist1 := hypot(x - source1x, disty, 1);
+          dist2 := hypot(x - source2x, disty, 1);
+          wave1 := dist1 mod wavelength;
+          wave2 := dist2 mod wavelength;
+          waveaddi := sin(wave1 * 360, wavelength, 500) + sin(wave2 * 360, wavelength, 500);
+          waveaddj := cos(wave1 * 360, wavelength, 500) + cos(wave2 * 360, wavelength, 500);
+          waveadd := hypot(waveaddi, waveaddj, 1);
+          angleadd := (arctan(waveaddi, waveaddj, 1) + 360) mod 360;
+          pixset(x, y, mixcols(wavecolour(angleadd), black, waveadd, 1000 - waveadd))
+        end
     end
 END.

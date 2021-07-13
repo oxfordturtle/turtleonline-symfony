@@ -1,3 +1,5 @@
+REM Triangle3
+
 REM move to start, without drawing
 MOVEXY(-100, 150)
 REM draw a triangle of size 256

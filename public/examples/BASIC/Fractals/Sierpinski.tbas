@@ -1,3 +1,5 @@
+REM Sierpinski
+
 BLANK(CREAM)
 THICKNESS(1)
 PROCtriangle(400, 138, 843, 650, 179, 778)

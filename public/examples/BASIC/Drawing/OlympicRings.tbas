@@ -1,3 +1,5 @@
+REM OlympicRings
+
 REM set ring radius and pen thickness
 ringRadius% = 130
 THICKNESS(20)

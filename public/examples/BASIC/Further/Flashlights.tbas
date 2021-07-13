@@ -1,3 +1,5 @@
+REM Flashlights
+
 REM blacken the entire canvas
 BLOT(1000)
 REM set thickness for drawing circles
@@ -26,7 +28,7 @@ DEF PROCdrawit(doblot%)
   ELSE
     REM erase any previous blot
     COLOUR(BLACK)
-    BLOT(25)
+    BLOT(30)
     REM draw randomly coloured circle
     RNDCOL(10)
     CIRCLE(25)

@@ -159,20 +159,22 @@ VAR x, y: integer;
   End;
 
   Procedure changeprompt;
+  Var det: integer;
   Begin
     console(true, white);
+    keyecho(false);
     writeln('Press "1" or "2" for the dimensionality required,');
     write('or press "R" to pick random new wavelengths: ');
     repeat
-    until (abs(?key) = \1) or (abs(?key) = \2) or (abs(?key) = \r);
-    if abs(?key) = \1 then
+      det := detect(\key, 0)
+    until (det = \1) or (det = \2) or (det = \r);
+    if det = \1 then
       dimensions := 1
     else
-    if abs(?key) = \2 then
+    if det = \2 then
       dimensions := 2
     else
       randomwaves;
-    reset(\key);
     reset(\keybuffer)
   End;
 
@@ -187,7 +189,8 @@ BEGIN
     noupdate;
     setxy(leftx, 25);
     colour(black);
-    print('Component waves (wavelengths ' + str(wavelength1) + ', ' + str(wavelength2) + ')', 4, 30);
+    print('Component waves (wavelengths ' + str(wavelength1) + ', ' + str(wavelength2) + ')', 4,
+     30);
     drawwave('Wave 1', 100, wavelength1, wavecol1);
     drawwave('Wave 2', 300, wavelength2, wavecol2);
     setxy(leftx, 505);

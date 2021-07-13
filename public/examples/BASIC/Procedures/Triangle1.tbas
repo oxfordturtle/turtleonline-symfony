@@ -1,3 +1,5 @@
+REM Triangle1
+
 REM move to start, without drawing
 MOVEXY(-100, 150)
 REM draw first side, and turn

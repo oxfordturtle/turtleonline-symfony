@@ -1,3 +1,5 @@
+REM IFSdemonstrator
+
 CONST MAXMAPPINGS% = 4
 CONST PAUSEVAL% = 2000
 DIM mapxx%(MAXMAPPINGS%)
@@ -19,7 +21,7 @@ iteration% = 0
 TIMESET(0)
 REPEAT
   starttime% = TIME
-  iteration% = iteration% + 1
+  INC(iteration%)
   WRITELN("")
   WRITELN("Iteration " + STR$(iteration%) + ":")
   numborn% = 0
@@ -150,15 +152,15 @@ DEF PROCstartprompt
   WRITELN("ITERATED FUNCTION SYSTEMS DEMONSTRATOR PROGRAM")
   WRITELN("")
   WRITE("Select Barnsley fern, Sierpinski, or Dragon curve? (B/S/D) ")
-  KEYECHO(FALSE)
   REPEAT
-  UNTIL (ABS(?key) = \b) OR (ABS(?key) = \s) OR (ABS(?key) = \d)
-  WRITELN(CHR$(ABS(?key)))
-  IF ABS(?key) = \b THEN
+    det% = DETECT(\key, 0)
+  UNTIL (det% = \b) OR (det% = \s) OR (det% = \d)
+  WRITELN(CHR$(det%))
+  IF det% = \b THEN
     WRITELN("Barnsley fern mappings will be used")
     PROCsetbarnsley
   ELSE
-    IF ABS(?key) = \s THEN
+    IF det% = \s THEN
       WRITELN("Sierpinski mappings will be used")
       PROCsetsierpinski
     ELSE
@@ -168,23 +170,23 @@ DEF PROCstartprompt
   ENDIF
   WRITELN("")
   WRITE("Start with single Pixel or entire Canvas? (P/C) ")
-  KEYECHO(FALSE)
   REPEAT
-  UNTIL (ABS(?key) = \p) OR (ABS(?key) = \c)
-  WRITELN(CHR$(ABS(?key)))
-  seedpixel% = (ABS(?key) = \p)
+    det% = DETECT(\key, 0)
+  UNTIL (det% = \p) OR (det% = \c)
+  WRITELN(CHR$(det%))
+  seedpixel% = (det% = \p)
   WRITELN("")
   WRITE("Use Uniform or Different colours for mappings? (U/D) ")
-  KEYECHO(FALSE)
   REPEAT
-  UNTIL (ABS(?key) = \u) OR (ABS(?key) = \d)
-  WRITELN(CHR$(ABS(?key)))
-  uniform% = (ABS(?key) = \u)
+    det% = DETECT(\key, 0)
+  UNTIL (det% = \u) OR (det% = \d)
+  WRITELN(CHR$(det%))
+  uniform% = (det% = \u)
   OUTPUT(FALSE, WHITE, FALSE)
 ENDPROC
 
 DEF PROCsetscale
-LOCAL i%
+  LOCAL i%
   xl% = xleft% / scaledown%
   xr% = xright% / scaledown%
   yt% = ytop% / scaledown%
@@ -201,13 +203,13 @@ DEF PROCmap(a%, x%, y%, RETURN newx%, RETURN newy%)
 ENDPROC
 
 DEF PROCdomap(mapnum%)
-LOCAL x%, y%, newx%, newy%
+  LOCAL x%, y%, newx%, newy%
   NOUPDATE
   FOR y% = yt% TO yb%
     FOR x% = xl% TO xr%
       IF PIXCOL(x%, y%) <> WHITE THEN
         PROCmap(mapnum%, x%, y%, newx%, newy%)
-        IF PIXCOL(newx%, newy%) = WHITE THEN numborn% = numborn% + 1
+        IF PIXCOL(newx%, newy%) = WHITE THEN INC(numborn%)
         IF uniform% THEN
           PIXSET(newx%, newy%, copied%)
         ELSE
@@ -220,13 +222,13 @@ LOCAL x%, y%, newx%, newy%
 ENDPROC
 
 DEF PROCcleanup
-LOCAL x%, y%
+  LOCAL x%, y%
   NOUPDATE
   FOR y% = yt% TO yb%
     FOR x% = xl% TO xr%
       IF PIXCOL(x%, y%) = live% THEN
         PIXSET(x%, y%, WHITE)
-        numkilled% = numkilled% + 1
+        INC(numkilled%)
       ELSE
         IF PIXCOL(x%, y%) <> WHITE THEN
           PIXSET(x%, y%, live%)

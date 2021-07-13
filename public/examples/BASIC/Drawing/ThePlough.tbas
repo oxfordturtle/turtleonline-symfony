@@ -1,3 +1,5 @@
+REM ThePlough
+
 REM set canvas to black, and pen to lightblue
 BLANK(BLACK)
 COLOUR(LIGHTBLUE)

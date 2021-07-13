@@ -1,3 +1,5 @@
+REM ColourSpiral
+
 REM make canvas black
 BLANK(BLACK)
 REM position Turtle so pattern fits neatly

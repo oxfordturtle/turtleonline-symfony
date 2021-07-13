@@ -47,6 +47,7 @@ VAR n: integer;
   End;
 
   Procedure aim;
+  Var det: integer;
   Begin
     repeat
       noupdate;
@@ -63,8 +64,7 @@ VAR n: integer;
       colour(red);
       blot(100);
       update;
-      repeat
-      until (?lmouse > 0);
+      det := detect(\lmouse, 0);
       if pixcol(?mousex, ?mousey) = cream then
         turnxy(?mousex - 250, ?mousey - 9750)
     until pixcol(?mousex, ?mousey) = red
@@ -79,7 +79,7 @@ VAR n: integer;
       if pixcol(turtx, turty) = black then
         begin
           colour(white);
-          blot(90)
+          blot(75)
         end;
       movexy(xvel, yvel);
       yvel := yvel + gravity;
