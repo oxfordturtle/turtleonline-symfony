@@ -402,14 +402,14 @@ export const commands: Command[] = [
   ),
   // 5. General arithmetic functions
   new Command(
-    { BASIC: null, C: null, Java: null, Pascal: 'inc', Python: null, TypeScript: null },
+    { BASIC: 'INC', C: null, Java: null, Pascal: 'inc', Python: null, TypeScript: null },
     [PCode.dupl, PCode.lptr, PCode.incr, PCode.swap, PCode.sptr],
     [new Parameter('variable', 'integer', true, 1)],
     null, 5, 0,
     'Increments the specified <code>variable</code> by 1.'
   ),
   new Command(
-    { BASIC: null, C: null, Java: null, Pascal: 'dec', Python: null, TypeScript: null },
+    { BASIC: 'DEC', C: null, Java: null, Pascal: 'dec', Python: null, TypeScript: null },
     [PCode.dupl, PCode.lptr, PCode.decr, PCode.swap, PCode.sptr],
     [new Parameter('variable', 'integer', true, 1)],
     null, 5, 0,
