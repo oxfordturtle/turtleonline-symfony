@@ -31,7 +31,7 @@ export function colour (routine: Program|Subroutine, name: string): Colour|undef
 /** looks for an input query code */
 export function input (routine: Program|Subroutine, name: string): Input|undefined {
   const searchName = (routine.language === 'Pascal') ? name.toLowerCase() : name
-  return inputs.find(x => x.names[routine.language] === searchName)
+  return inputs.find(x => x.name === searchName)
 }
 
 /** looks for a variable visible to this routine */

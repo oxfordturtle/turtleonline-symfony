@@ -1932,10 +1932,15 @@ function execute (): void {
         case PCode.stat:
           n1 = memory.stack.pop()
           if (n1 !== undefined) {
-            if (n1 < 0) {
+            if (-11 <= n1 && n1 < 0) {
+              // lookup query value
               memory.stack.push(memory.query[-n1])
-            } else {
+            } else if (0 < n1 && n1 < 256) {
+              // lookup key value
               memory.stack.push(memory.keys[n1])
+            } else {
+              // return 0 for anything outside the range
+              memory.stack.push(0)
             }
           } else {
             throw new MachineError('Stack operation called on empty stack.')
@@ -1945,16 +1950,22 @@ function execute (): void {
         case PCode.iclr:
           n1 = memory.stack.pop()
           if (n1 !== undefined) {
-            if (n1 < 0) {
+            if (-11 <= n1 && n1 < 0) {
               // reset query value
               memory.query[-n1] = -1
             } else if (n1 === 0) {
               // reset keybuffer
               memory.main[memory.main[1] + 1] = memory.main[1] + 3
               memory.main[memory.main[1] + 2] = memory.main[1] + 3
-            } else {
+            } else if (0 < n1 && n1 < 256) {
               // reset key value
               memory.keys[n1] = -1
+            } else if (n1 === 256) {
+              // reset everything
+              memory.keys.fill(-1)
+              memory.query.fill(-1)
+            } else {
+              // for any value outside the range (-11, 256) we don't do anything
             }
           } else {
             throw new MachineError('Stack operation called on empty stack.')
@@ -2133,17 +2144,19 @@ function execute (): void {
           n2 = memory.stack.pop()
           n1 = memory.stack.pop()
           if (n1 !== undefined && n2 !== undefined) {
-            memory.stack.push(0)
-            code += 1
-            if (code === pcode[line].length) {
-              line += 1
-              code = 0
+            if (-11 <= n1 && n1 < 256) {
+              memory.stack.push(0)
+              code += 1
+              if (code === pcode[line].length) {
+                line += 1
+                code = 0
+              }
+              detectInputcode = n1
+              n3 = n2 === 0 ? Math.pow(2, 31) - 1 : n2 // 0 means "as long as possible"
+              detectTimeoutID = window.setTimeout(execute, n3)
+              window.addEventListener('keyup', detect)
+              window.addEventListener('mouseup', detect)
             }
-            detectInputcode = n1
-            n3 = n2 === 0 ? Math.pow(2, 31) - 1 : n2 // 0 means "as long as possible"
-            detectTimeoutID = window.setTimeout(execute, n3)
-            window.addEventListener('keyup', detect)
-            window.addEventListener('mouseup', detect)
           } else {
             throw new MachineError('Stack operation called on empty stack.')
           }
@@ -2365,7 +2378,7 @@ function releaseClickXY (event: MouseEvent|TouchEvent): void {
           break
 
         case 1:
-          memory.query[2] = -memory.query[3]
+          memory.query[3] = -memory.query[3]
           break
 
         case 2:
@@ -2387,11 +2400,28 @@ function preventDefault (event: Event): void {
 
 /** breaks out of DETECT loop and resumes program execution if the right key/button is pressed */
 function detect (event: KeyboardEvent|MouseEvent): void {
-  const rightThingPressed = (detectInputcode === -11) || ((event as KeyboardEvent).keyCode === detectInputcode)
+  let rightThingPressed = false
+  // -11 is \mousekey - returns whatever was clicked/pressed
+  if (detectInputcode === -11) rightThingPressed = true
+  // -10 and -9 return for any key (not for mouse)
+  if ((detectInputcode === -9 || detectInputcode === -10) && (event as KeyboardEvent).keyCode !== undefined) rightThingPressed = true
+  // -8 to -4 - returns for any mouse click
+  if ((-8 <= detectInputcode && detectInputcode <= -4) && (event as KeyboardEvent).keyCode === undefined) rightThingPressed = true
+  // specific mouse button cases
+  if (detectInputcode === -3 && (event as MouseEvent).button == 1) rightThingPressed = true
+  if (detectInputcode === -2 && (event as MouseEvent).button == 2) rightThingPressed = true
+  if (detectInputcode === -1 && (event as MouseEvent).button == 0) rightThingPressed = true
+  // keybuffer
+  if (detectInputcode === 0 && (event as KeyboardEvent).keyCode !== undefined) rightThingPressed = true
+  // otherwise return if the key pressed matches the detectInputcode
+  if ((event as KeyboardEvent).keyCode === detectInputcode) rightThingPressed = true
   if (rightThingPressed) {
     const returnValue = (detectInputcode < 0) ? memory.query[-detectInputcode] : memory.keys[detectInputcode]
     memory.stack.pop()
-    memory.stack.push(returnValue)
+    // the event listener that negates the input (onkeyup or onmouseup) is called first, so by the
+    // time this listener is called it will be negative - but for consistency with the downloadable
+    // system we want it to be positive
+    memory.stack.push(Math.abs(returnValue))
     window.clearTimeout(detectTimeoutID)
     execute()
   }

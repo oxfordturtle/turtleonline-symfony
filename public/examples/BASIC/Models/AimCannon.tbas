@@ -70,11 +70,11 @@ DEF PROCaim
     BLOT(100)
     UPDATE
     REPEAT
-    UNTIL (?LMOUSE > 0)
-    IF PIXCOL(?MOUSEX, ?MOUSEY) = CREAM THEN
-      TURNXY(?MOUSEX - 250, ?MOUSEY - 9750)
+    UNTIL (?lmouse > 0)
+    IF PIXCOL(?mousex, ?mousey) = CREAM THEN
+      TURNXY(?mousex - 250, ?mousey - 9750)
     ENDIF
-  UNTIL PIXCOL(?MOUSEX, ?MOUSEY) = RED
+  UNTIL PIXCOL(?mousex, ?mousey) = RED
 ENDPROC
 
 DEF PROCfire(xvel%, yvel%, gravity%, floor%)

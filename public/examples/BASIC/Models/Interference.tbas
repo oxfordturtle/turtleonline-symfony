@@ -156,16 +156,16 @@ DEF PROCchangeprompt
   WRITELN("Press '1' or '2' FOR the dimensionality required,")
   WRITE("or press 'R' to pick random new wavelengths: ")
   REPEAT
-  UNTIL (ABS(?KEY) = \1) OR (ABS(?KEY) = \2) OR (ABS(?KEY) = \r)
-  IF ABS(?KEY) = \1 THEN
+  UNTIL (ABS(?key) = \1) OR (ABS(?key) = \2) OR (ABS(?key) = \r)
+  IF ABS(?key) = \1 THEN
     dimensions% = 1
   ELSE
-    IF ABS(?KEY) = \2 THEN
+    IF ABS(?key) = \2 THEN
       dimensions% = 2
     ELSE
       PROCrandomwaves
     ENDIF
   ENDIF
-  RESET(?KEY)
-  RESET(\KEYBUFFER)
+  RESET(\key)
+  RESET(\keybuffer)
 ENDPROC

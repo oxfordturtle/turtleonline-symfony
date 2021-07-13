@@ -153,7 +153,7 @@ void changeprompt () {
       randomwaves();
     }
   }
-  reset(?key);
+  reset(\key);
   reset(\keybuffer);
 }
 

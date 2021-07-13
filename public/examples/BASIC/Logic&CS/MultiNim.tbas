@@ -12,21 +12,21 @@ REPEAT
       CURSOR(2)
       REPEAT
         REPEAT
-        UNTIL ?LMOUSE > 0
+        UNTIL ?lmouse > 0
         PAUSE(200)
-        thiscolour% = PIXCOL(?CLICKX, ?CLICKY)
+        thiscolour% = PIXCOL(?clickx, ?clicky)
       UNTIL (thiscolour% <> RGB(WHITE)) AND (thiscolour% <> RGB(BLACK))
       CURSOR(11)
-      IF ?CLICKY >= 800 THEN
+      IF ?clicky >= 800 THEN
         thiscoin% = MAXHEIGHT% + 1
         showmaths% = NOT(showmaths%)
         PROCdomaths
         PROCdrawpiles
       ELSE
-        thispile% = (?CLICKX - MARGIN% + radius%) DIV xgap% + 1
-        thiscoin% = (bottom% - radius% - ?CLICKY) DIV ygap% + 1
+        thispile% = (?clickx - MARGIN% + radius%) DIV xgap% + 1
+        thiscoin% = (bottom% - radius% - ?clicky) DIV ygap% + 1
       ENDIF
-    UNTIL (?CLICKY < 800)
+    UNTIL (?clicky < 800)
     pile%(thispile%) = thiscoin% - 1
     PROCdomaths
     IF totalcoins% = 0 THEN

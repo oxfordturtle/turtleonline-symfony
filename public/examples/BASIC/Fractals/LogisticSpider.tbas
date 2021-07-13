@@ -34,8 +34,8 @@ REPEAT
   BLOT(3)
   UPDATE
   REPEAT
-  UNTIL (?LMOUSE > 0) AND (?CLICKY < (100 - TMARGIN%)) AND (?CLICKX >= 130) AND (?CLICKX < 1030)
-  r% = ((?CLICKX - 130) DIV 90) + ((?CLICKY + TMARGIN% + 100) DIV 50) * 10 + 1
+  UNTIL (?lmouse > 0) AND (?clicky < (100 - TMARGIN%)) AND (?clickx >= 130) AND (?clickx < 1030)
+  r% = ((?clickx - 130) DIV 90) + ((?clicky + TMARGIN% + 100) DIV 50) * 10 + 1
 UNTIL 0 = 1
 END
 

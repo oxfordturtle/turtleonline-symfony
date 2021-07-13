@@ -24,7 +24,7 @@ while (True):
     # try to convert s to integer
     first = intdef(s, -1)
     # reset key input value
-    reset(?key)
+    reset(\key)
   # set latest number to user's input
   latest: int = first
   # initialise count variable
@@ -59,4 +59,4 @@ while (True):
   while (?key <= 0):
     pass
   # reset key input value
-  reset(?key)
+  reset(\key)

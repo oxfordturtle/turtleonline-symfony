@@ -12,17 +12,17 @@ REPEAT
   REM while waiting for input of integer greater than 1...
   REPEAT
     REM empty the keybuffer
-    RESET(\KEYBUFFER)
+    RESET(\keybuffer)
     REM print contents of keybuffer on canvas
     REPEAT
       BOX(200, 60, WHITE, FALSE)
       PRINT(GET$(0), 4, 36)
       PAUSE(100)
-    UNTIL ABS(?KEY) = \RETURN
+    UNTIL ABS(?key) = \RETURN
     REM read value of keybuffer into string
     s$ = GETLINE$
     REM reset key status array
-    RESET(?KEY)
+    RESET(\key)
     REM try to convert s to integer
     first% = VALDEF(s$, -1)
   UNTIL first% > 1
@@ -60,7 +60,7 @@ REPEAT
   REM wait for key press to start again
   PRINT("[Press a key to continue]", 4, 30)
   REPEAT
-  UNTIL ?KEY > 0
-  RESET(?KEY)
+  UNTIL ?key > 0
+  RESET(\key)
 UNTIL FALSE
 END

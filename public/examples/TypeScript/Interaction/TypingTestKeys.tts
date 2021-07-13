@@ -55,7 +55,7 @@ for (count = 0; count < 26; count = count + 1) {
     var shiftOk: boolean = (((abs(?kshift) & 8) > 0) ^ lowerCase);
   } while ((abs(?key) != c) || !shiftOk);
   // reset kshift value
-  reset(?kshift);
+  reset(\kshift);
 }
 // show time taken
 blank(lightblue);

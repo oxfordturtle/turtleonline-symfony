@@ -8,20 +8,20 @@ REM repeatedly...
 REPEAT
   REM wait for left or right mouse click...
   REPEAT
-  UNTIL (?LMOUSE > 0) OR (?RMOUSE > 0)
+  UNTIL (?lmouse > 0) OR (?rmouse > 0)
   REM if cursor is within the palette area...
-  IF ?MOUSEY > 900 THEN
+  IF ?mousey > 900 THEN
     REM set the colour
-    COLOUR(RGB(?MOUSEX DIV 100 + 1))
+    COLOUR(RGB(?mousex DIV 100 + 1))
   ELSE
     REM if left button pressed...
-    IF ?LMOUSE > 0 THEN
+    IF ?lmouse > 0 THEN
       REM move the turtle (drawing) to the cursor's location
-      DRAWXY(?MOUSEX - turtx%, ?MOUSEY - turty%)
+      DRAWXY(?mousex - turtx%, ?mousey - turty%)
     REM otherwise (i.e. right button pressed)...
     ELSE
       REM move the turtle (not drawing) the the cursor's location
-      SETXY(?MOUSEX, ?MOUSEY)
+      SETXY(?mousex, ?mousey)
     ENDIF
   ENDIF
 UNTIL FALSE

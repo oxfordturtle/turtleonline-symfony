@@ -52,7 +52,7 @@ for count in range(0, 26, 1):
   while ((abs(?key) != c) or not shiftOk):
     shiftOk = (((abs(?kshift) & 8) > 0) ^ lowerCase)
   # reset kshift value
-  reset(?kshift)
+  reset(\kshift)
 # show time taken
 blank(lightblue)
 setxy(60, 460)

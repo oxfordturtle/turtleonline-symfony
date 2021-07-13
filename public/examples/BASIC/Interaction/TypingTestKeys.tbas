@@ -17,7 +17,7 @@ REM disable key echo in console
 KEYECHO(FALSE)
 REM wait for escape key to be pressed
 REPEAT
-UNTIL (ABS(?KEY) = \ESCAPE)
+UNTIL (ABS(?key) = \escape)
 REM fill letters% array with character codes for all letters of the alphabet
 FOR count% = 1 TO 26
   letters%(count%) = count% + 64
@@ -53,10 +53,10 @@ FOR count% = 1 TO 26
   ENDIF
   REM wait for user to type that letter, with shift down for uppercase
   REPEAT
-    shiftOk% = ((ABS(?KSHIFT) AND 8) > 0) EOR lowerCase%
-  UNTIL (ABS(?KEY) = c%) AND shiftOk%
+    shiftOk% = ((ABS(?kshift) AND 8) > 0) EOR lowerCase%
+  UNTIL (ABS(?key) = c%) AND shiftOk%
   REM reset kshift value
-  RESET(?KSHIFT)
+  RESET(\kshift)
 NEXT
 REM show time taken
 BLANK(LIGHTBLUE)

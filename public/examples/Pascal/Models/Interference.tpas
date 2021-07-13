@@ -172,7 +172,7 @@ VAR x, y: integer;
       dimensions := 2
     else
       randomwaves;
-    reset(?key);
+    reset(\key);
     reset(\keybuffer)
   End;
 

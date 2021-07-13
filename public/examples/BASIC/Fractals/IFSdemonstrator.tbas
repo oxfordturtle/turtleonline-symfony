@@ -152,13 +152,13 @@ DEF PROCstartprompt
   WRITE("Select Barnsley fern, Sierpinski, or Dragon curve? (B/S/D) ")
   KEYECHO(FALSE)
   REPEAT
-  UNTIL (ABS(?KEY) = \b) OR (ABS(?KEY) = \s) OR (ABS(?KEY) = \d)
-  WRITELN(CHR$(ABS(?KEY)))
-  IF ABS(?KEY) = \b THEN
+  UNTIL (ABS(?key) = \b) OR (ABS(?key) = \s) OR (ABS(?key) = \d)
+  WRITELN(CHR$(ABS(?key)))
+  IF ABS(?key) = \b THEN
     WRITELN("Barnsley fern mappings will be used")
     PROCsetbarnsley
   ELSE
-    IF ABS(?KEY) = \s THEN
+    IF ABS(?key) = \s THEN
       WRITELN("Sierpinski mappings will be used")
       PROCsetsierpinski
     ELSE
@@ -170,16 +170,16 @@ DEF PROCstartprompt
   WRITE("Start with single Pixel or entire Canvas? (P/C) ")
   KEYECHO(FALSE)
   REPEAT
-  UNTIL (ABS(?KEY) = \p) OR (ABS(?KEY) = \c)
-  WRITELN(CHR$(ABS(?KEY)))
-  seedpixel% = (ABS(?KEY) = \p)
+  UNTIL (ABS(?key) = \p) OR (ABS(?key) = \c)
+  WRITELN(CHR$(ABS(?key)))
+  seedpixel% = (ABS(?key) = \p)
   WRITELN("")
   WRITE("Use Uniform or Different colours for mappings? (U/D) ")
   KEYECHO(FALSE)
   REPEAT
-  UNTIL (ABS(?KEY) = \u) OR (ABS(?KEY) = \d)
-  WRITELN(CHR$(ABS(?KEY)))
-  uniform% = (ABS(?KEY) = \u)
+  UNTIL (ABS(?key) = \u) OR (ABS(?key) = \d)
+  WRITELN(CHR$(ABS(?key)))
+  uniform% = (ABS(?key) = \u)
   OUTPUT(FALSE, WHITE, FALSE)
 ENDPROC
 

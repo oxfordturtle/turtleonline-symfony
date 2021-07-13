@@ -20,9 +20,9 @@ WHILE 0 < 1
   UPDATE
   PAUSE(10)
   REM if left click detected within the face...
-  IF (?LMOUSE > 0) AND (HYPOT(?MOUSEX - x%, ?MOUSEY - y%, 1) < FACERADIUS%) THEN
+  IF (?lmouse > 0) AND (HYPOT(?mousex - x%, ?mousey - y%, 1) < FACERADIUS%) THEN
     REM draw a randomly coloured sponge and pause
-    SETXY(?MOUSEX, ?MOUSEY)
+    SETXY(?mousex, ?mousey)
     RNDCOL(4)
     BLOT(SPONGERADIUS%)
     PAUSE(100)

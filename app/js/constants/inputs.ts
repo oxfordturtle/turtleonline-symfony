@@ -5,18 +5,11 @@ import type { Language } from './languages'
 
 /** input class definition */
 export class Input {
-  readonly names: Record<Language, string>
+  readonly name: string
   readonly value: number
 
   constructor (name: string, value: number) {
-    this.names = {
-      BASIC: (name.length > 2) ? name.toUpperCase() : name,
-      C: name,
-      Java: name,
-      Pascal: name,
-      Python: name,
-      TypeScript: name
-    }
+    this.name = name
     this.value = value
   }
 }
@@ -134,5 +127,6 @@ export const inputs: Input[] = [
   new Input('backslash', 220),
   new Input('closebracket', 221),
   new Input('hash', 222),
-  new Input('backtick', 223)
+  new Input('backtick', 223),
+  new Input('all', 256)
 ]

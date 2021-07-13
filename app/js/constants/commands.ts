@@ -813,12 +813,12 @@ export const commands: Command[] = [
     'Returns a copy of the characters in the input <code>string</code>, starting on the right and of the specified <code>length</code>.'
   ),
   new Command(
-    { BASIC: 'INS$', C: null, Java: null, Pascal: null, Python: null, TypeScript: null },
-    [PCode.rota, PCode.rota, PCode.swap, PCode.rota, PCode.inss],
+    { BASIC: 'INSERT$', C: null, Java: null, Pascal: null, Python: null, TypeScript: null },
+    [PCode.rota, PCode.rota, PCode.inss],
     [
       new Parameter('string', 'string', false, 1),
-      new Parameter('substr', 'string', false, 1),
-      new Parameter('index', 'integer', false, 1)
+      new Parameter('index', 'integer', false, 1),
+      new Parameter('substr', 'string', false, 1)
     ],
     'string', 7, 2,
     'Returns the input <code>string</code> with the specified <code>substring</code> inserted at the given <code>index</code>.'

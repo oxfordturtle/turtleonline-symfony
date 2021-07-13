@@ -987,6 +987,22 @@ class State {
     }
   }
 
+  async outputAllExamples (): Promise<void> {
+    let allExamplesText = ''
+    for (const example of examples) {
+      const filename = `${example.id}.${extensions[this.language]}`
+      const response = await window.fetch(`/examples/${this.language}/${example.groupId}/${filename}`)
+      const content = await response.text()
+      allExamplesText += `Example ${example.id}:\n----------\n`
+      allExamplesText += `${content}\n\n\n`
+    }
+    const a = document.createElement('a')
+    const blob = new window.Blob([allExamplesText], { type: 'text/plain;charset=utf-8' })
+    a.setAttribute('href', URL.createObjectURL(blob))
+    a.setAttribute('download', `${this.language}_examples.txt`)
+    a.click()
+  }
+
   backupCode (): void {
     this.file.backup = this.file.code
   }

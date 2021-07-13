@@ -22,10 +22,10 @@ REM until the snake crashes...
 REPEAT
   NOUPDATE
   REM turn snake in response to arrow key press
-  IF (ABS(?KEY) = \UP) AND (turtd% <> 2) THEN DIRECTION(0)
-  IF (ABS(?KEY) = \RIGHT) AND (turtd% <> 3) THEN DIRECTION(1)
-  IF (ABS(?KEY) = \DOWN) AND (turtd% <> 0) THEN DIRECTION(2)
-  IF (ABS(?KEY) = \LEFT) AND (turtd% <> 1) THEN DIRECTION(3)
+  IF (ABS(?key) = \up) AND (turtd% <> 2) THEN DIRECTION(0)
+  IF (ABS(?key) = \right) AND (turtd% <> 3) THEN DIRECTION(1)
+  IF (ABS(?key) = \down) AND (turtd% <> 0) THEN DIRECTION(2)
+  IF (ABS(?key) = \left) AND (turtd% <> 1) THEN DIRECTION(3)
   REM move snake forward
   FORWARD(1)
   REM crash if snake reaches edge of canvas

@@ -4,7 +4,6 @@
 import type { Input } from '../../constants/inputs'
 import { inputs } from '../../constants/inputs'
 import { fill, tr, td, code } from '../../tools/elements'
-import state from '../../state/index'
 import { on } from '../../tools/hub'
 
 // get relevant elements
@@ -22,7 +21,7 @@ function updateTable (): void {
 
 function keycodeTableRow (keycode: Input): HTMLTableRowElement {
   return tr({ content: [
-    td({ content: [code({ content: keycode.names[state.language] })] }),
+    td({ content: [code({ content: keycode.name })] }),
     td({ content: keycode.value.toString(10) })
   ] })
 }

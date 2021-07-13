@@ -3,29 +3,29 @@ PROCsetup
 REM repeatedly...
 REPEAT
   REM if left mouse button is pressed...
-  IF ?LMOUSE > 0 THEN
+  IF ?lmouse > 0 THEN
     REM if cursor is at bottom of canvas...
-    IF ?MOUSEY > 900 THEN
+    IF ?mousey > 900 THEN
       REM set brush colour
-      PROCsetBrushColour(PIXCOL(?MOUSEX, ?MOUSEY))
+      PROCsetBrushColour(PIXCOL(?mousex, ?mousey))
     ELSE
       REM if cursor is in brush width selection area...
-      IF (?MOUSEY > 850) AND ((?MOUSEX > 600) AND (?MOUSEX < 850)) THEN
+      IF (?mousey > 850) AND ((?mousex > 600) AND (?mousex < 850)) THEN
         REM set brush width
-        PROCsetBrushWidth(((?MOUSEX DIV 50) * 2) - 16)
+        PROCsetBrushWidth(((?mousex DIV 50) * 2) - 16)
       ELSE
         REM if cursor is in drawing area...
-        IF ?MOUSEY < 850 - brushWidth% THEN
+        IF ?mousey < 850 - brushWidth% THEN
           REM draw with the brush
-          PROCpaintbrush(?MOUSEX, ?MOUSEY)
+          PROCpaintbrush(?mousex, ?mousey)
         ENDIF
       ENDIF
     ENDIF
   ENDIF
   REM if right mouse button is pressed and cursor is in drawing area...
-  IF (?RMOUSE > 0) AND (?MOUSEY < 850) THEN
+  IF (?rmouse > 0) AND (?mousey < 850) THEN
     REM fill with the paintcan
-    PROCpaintcan(?MOUSEX, ?MOUSEY)
+    PROCpaintcan(?mousex, ?mousey)
   ENDIF
   UPDATE
 UNTIL FALSE

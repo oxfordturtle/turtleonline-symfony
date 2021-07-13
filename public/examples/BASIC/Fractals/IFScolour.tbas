@@ -119,13 +119,13 @@ DEF PROCstartprompt
   WRITE("Select Sierpinski, Barnsley fern, or Dragon curve? (S/B/D) ")
   KEYECHO(FALSE)
   REPEAT
-  UNTIL (ABS(?KEY) = \s) OR (ABS(?KEY) = \b) OR (ABS(?KEY) = \d)
-  WRITELN(CHR$(ABS(?KEY)))
-  IF ABS(?KEY) = \s THEN
+  UNTIL (ABS(?key) = \s) OR (ABS(?key) = \b) OR (ABS(?key) = \d)
+  WRITELN(CHR$(ABS(?key)))
+  IF ABS(?key) = \s THEN
     WRITELN("Sierpinski mappings will be used")
     PROCsetsierpinski
   ELSE
-    IF ABS(?KEY) = \b THEN
+    IF ABS(?key) = \b THEN
       WRITELN("Barnsley fern mappings will be used")
       PROCsetbarnsley
     ELSE

@@ -25,7 +25,7 @@ WHILE hits% < TARGETS%
   IF FaceX% > 1100 THEN FaceX% = -100
   IF FaceX% < -100 THEN FaceX% = 1100
   IF (FaceY% < 100) OR (FaceY% > 625) THEN faceyspeed% = faceyspeed% * -1
-  IF ((?LMOUSE > 0) AND (((?MOUSEX - FaceX%) * (?MOUSEX - FaceX%)) + ((?MOUSEY - FaceY%) * (?MOUSEY - FaceY%)) < 10000)) THEN
+  IF ((?lmouse > 0) AND (((?mousex - FaceX%) * (?mousex - FaceX%)) + ((?mousey - FaceY%) * (?mousey - FaceY%)) < 10000)) THEN
     FaceX% = -100
     facexspeed% = RND(5) + 1
     faceyspeed% = RND(9) - 5
@@ -136,8 +136,8 @@ ENDPROC
 DEF PROCgunsight
   COLOUR(BLACK)
   THICKNESS(6)
-  SETXY(?MOUSEX - 50, ?MOUSEY)
+  SETXY(?mousex - 50, ?mousey)
   DRAWXY(100, 0)
-  SETXY(?MOUSEX, ?MOUSEY - 50)
+  SETXY(?mousex, ?mousey - 50)
   DRAWXY(0, 100)
 ENDPROC

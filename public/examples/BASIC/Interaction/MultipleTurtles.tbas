@@ -35,8 +35,8 @@ REPEAT
   NEXT
   PAUSE(50)
   REM check for mouse click
-  IF ?CLICK > 128 THEN PROChandleClick
-UNTIL ?KEY = \ESCAPE
+  IF ?click > 128 THEN PROChandleClick
+UNTIL ?key = \escape
 END
 
 REM set initial values for each turtle
@@ -68,7 +68,7 @@ DEF PROChandleClick
   REM select turtle based on canvas colour at mouse location
   thisTurtle% = 0
   FOR i% = 1 TO NUMTURTLES%
-    IF PIXCOL(?MOUSEX, ?MOUSEY) = RGB(i%) THEN thisTurtle% = i%
+    IF PIXCOL(?mousex, ?mousey) = RGB(i%) THEN thisTurtle% = i%
   NEXT
   IF thisTurtle% > 0 THEN
     REM select this turtle

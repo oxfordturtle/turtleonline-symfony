@@ -17,7 +17,7 @@ REM disable key echo in console
 KEYECHO(FALSE)
 REM wait for escape key to be pressed
 REPEAT
-UNTIL (ABS(?KEY) = \ESCAPE)
+UNTIL (ABS(?key) = \escape)
 REM fill letters% array with character codes for all letters of the alphabet
 FOR count% = 1 TO 26
   REM randomly select upper or lower case

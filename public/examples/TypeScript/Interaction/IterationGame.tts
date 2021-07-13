@@ -24,7 +24,7 @@ do {
     // try to convert s to integer
     var first: number = parseIntDef(s, -1);
     // reset key input value
-    reset(?key);
+    reset(\key);
   } while (first <= 1);
   // set latest number to user's input
   var latest: number = first;
@@ -61,5 +61,5 @@ do {
   print('[Press a key to continue]', 4, 30);
   do {} while (?key <= 0);
   // reset key input value
-  reset(?key);
+  reset(\key);
 } while (true);

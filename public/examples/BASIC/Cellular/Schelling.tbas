@@ -16,7 +16,7 @@ FOR i% = 0 TO WIDTH% - 1
   NEXT
 NEXT
 PAUSE(2000)
-WHILE ?KEY <> \ESCAPE
+WHILE ?key <> \escape
   NOUPDATE
   REPEAT
     tryi% = RND(WIDTH%) - 1

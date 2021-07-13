@@ -341,7 +341,7 @@ function type (code: string, language: Language, line: number, character: number
 /** tests for a native inputcode constant and returns the token if matched */
 function inputcode (code: string, language: Language, line: number, character: number): Token|false {
   const names = inputs
-    .map(x => `\\\\${x.names[language]}`)
+    .map(x => `\\\\${x.name}`)
     .join('|')
   const regex = (language === 'Pascal') ? new RegExp(`^(${names})\\b`, 'i') : new RegExp(`^(${names})\\b`)
   const good = code.match(regex)
@@ -358,7 +358,7 @@ function inputcode (code: string, language: Language, line: number, character: n
 /** tests for a native querycode and returns the token if matched */
 function querycode (code: string, language: Language, line: number, character: number): Token|false {
   const names = inputs
-    .map(x => `\\?${x.names[language]}`)
+    .map(x => `\\?${x.name}`)
     .join('|')
   const regex = (language === 'Pascal') ? new RegExp(`^(${names})\\b`, 'i') : new RegExp(`^(${names})\\b`)
   const good = code.match(regex)

@@ -21,7 +21,7 @@ FOR i% = 0 TO WIDTH% - 1
 NEXT
 UPDATE
 PAUSE(1000)
-WHILE ?KEY <> \ESCAPE
+WHILE ?key <> \escape
   NOUPDATE
   FOR i% = 0 TO WIDTH% - 1
     FOR j% = 0 TO HEIGHT% - 1

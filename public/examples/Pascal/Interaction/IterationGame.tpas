@@ -28,7 +28,7 @@ BEGIN
       {try to convert s to integer}
       first := valdef(s, -1);
       {reset key input value}
-      reset(?key)
+      reset(\key)
     until first > 1;
     {set latest number to user's input}
     latest := first;
@@ -65,6 +65,6 @@ BEGIN
     repeat
     until ?key > 0;
     {reset key input value}
-    reset(?key)
+    reset(\key)
   until false
 END.

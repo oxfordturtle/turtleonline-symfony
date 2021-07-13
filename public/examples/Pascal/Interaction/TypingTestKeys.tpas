@@ -65,7 +65,7 @@ BEGIN
         shiftOk := ((abs(?kshift) and 8) > 0) xor lowerCase
       until (abs(?key) = c) and shiftOk;
       {reset kshift value}
-      reset(?kshift)
+      reset(\kshift)
     end;
   {show time taken}
   blank(lightblue);
