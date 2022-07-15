@@ -1,5 +1,5 @@
-sunRadius: Final[int] = 50000
-planets: Final[int] = 8
+sunRadius: Final = 50000
+planets: Final = 8
 radius: List[int, planets]
 distanceFromSun: List[int, planets]
 colr: List[int, planets]
@@ -63,7 +63,7 @@ while True:
   colour(yellow)
   blot(sunRadius)
   # draw each planet
-  for i in range(0, planets, 1):
+  for i in range(planets):
     home()
     # draw a white circle for the orbit
     colour(white)

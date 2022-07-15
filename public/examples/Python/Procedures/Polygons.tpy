@@ -1,9 +1,9 @@
 # draws a polygon with given sides & colour
-def poly(sides: int, colr: int):
+def poly(sides, colr):
   # point Turtle horizontally to right
   direction(90)
   # trace shape with the Turtle
-  for count in range(0, sides, 1):
+  for count in range(sides):
     # edge is shorter as sides increases
     forward(600 / sides)
     # turn left by correct external angle

@@ -1,19 +1,19 @@
-size: Final[int] = 100
-x: int = 300
-y: int = 700
-d: int = 0
-xEdge: bool
-yEdge: bool
+size: Final = 100
+x = 300
+y = 700
+d = 0
+xEdge
+yEdge
 
 # draws a triangle, and checks whether it meets the edge of the canvas
-def triangle(col: int):
+def triangle(col):
   global xEdge, yEdge
   xEdge = False
   yEdge = False
   setxy(x, y)
   direction(d)
   colour(col)
-  for count in range(0, 3, 1):
+  for count in range(3):
     forward(size)
     if abs(turtx - 500) > 495:
       xEdge = True
@@ -25,9 +25,9 @@ def triangle(col: int):
   polygon(3)
 
 # set starting velocity
-xVelocity: int = 8
-yVelocity: int = -4
-dVelocity: int = 5
+xVelocity = 8
+yVelocity = -4
+dVelocity = 5
 while 0 < 1:
   noupdate()
   # rub out existing triangle

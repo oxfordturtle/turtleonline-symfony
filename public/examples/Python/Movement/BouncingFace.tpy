@@ -1,8 +1,8 @@
-faceRadius: Final[int] = 100
+faceRadius: Final = 100
 
 # draws a face of the given radius
 # N.B. copied from the Resizable face example
-def face(radius: int):
+def face(radius):
   # draws an eye sized relative to the face
   def eye():
     colour(white);
@@ -39,10 +39,10 @@ def face(radius: int):
   eye()
 
 # set starting point and velocity
-x: int = 300
-y: int = 700
-xVelocity: int = 8
-yVelocity: int = -4
+x = 300
+y = 700
+xVelocity = 8
+yVelocity = -4
 while 0 < 1:
   noupdate()
   # rub out existing face

@@ -1,5 +1,5 @@
 # draws a face of the given radius
-def face(radius: int):
+def face(radius):
   # draws an eye of appropriate size
   def eye():
     colour(white);

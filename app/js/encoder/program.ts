@@ -10,7 +10,6 @@ import statement from './statement'
 import Variable from '../parser/definitions/variable'
 import { Subroutine } from '../parser/definitions/subroutine'
 import { PCode, pcodeArgs } from '../constants/pcodes'
-import { merge } from './expression'
 
 /** generates the pcode for a turtle program */
 export default function program (program: Program, options: Options = defaultOptions): number[][] {

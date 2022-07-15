@@ -1,5 +1,5 @@
 # set ring radius and thickness
-ringRadius: int = 130
+ringRadius = 130
 thickness(20)
 # raise pen to avoid drawing lines
 penup()

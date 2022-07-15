@@ -9,7 +9,8 @@ export default function identifiers (lexemes: Lexemes, routine: Program|Subrouti
   const names: string[] = []
 
   // expecting identifier
-  names.push(identifier(lexemes, routine, false))
+  const name = identifier(lexemes, routine, false)
+  names.push(name)
 
   // expecting semicolon or new line, or a comma
   if (lexemes.get()?.content === ',') {

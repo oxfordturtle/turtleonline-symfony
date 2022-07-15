@@ -65,7 +65,7 @@ export const defaults: Record<Property, any> = {
   // whether user's saved settings have been loaded in this session
   'savedSettingsHaveBeenLoaded': false,
   // system settings
-  'language': 'Pascal',
+  'language': 'Python',
   'mode': 'normal',
   'editorFontFamily': 'Courier',
   'editorFontSize': 13,

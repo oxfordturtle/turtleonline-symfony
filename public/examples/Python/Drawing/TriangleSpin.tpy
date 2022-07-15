@@ -1,7 +1,7 @@
 # adjust starting position so pattern is central
 movexy(30, 20)
 # counting from 1 to 300 ...
-for i in range(1, 301, 1):
+for i in range(300):
   # move forward by 3 times the count number
   forward(i * 3)
   # turn right by 121 degrees

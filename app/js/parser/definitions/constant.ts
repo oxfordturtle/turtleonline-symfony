@@ -1,32 +1,21 @@
 import type { Language } from '../../constants/languages'
+import type { Type } from '../../lexer/lexeme'
 
 /** constant */
-export type Constant = IntegerConstant|StringConstant
-
-/** integer constant */
-export class IntegerConstant {
-  readonly type = 'boolint'
+export class Constant {
   readonly name: string
   readonly language: Language
-  value: number
+  value: number | string
 
-  constructor (language: Language, name: string, value: number) {
+  constructor (language: Language, name: string, value: number | string) {
     this.name = (language === 'Pascal') ? name.toLowerCase() : name
     this.language = language
     this.value = value
   }
-}
 
-/** string constant */
-export class StringConstant {
-  readonly type = 'string'
-  readonly name: string
-  readonly language: Language
-  value: string
-
-  constructor (language: Language, name: string, value: string) {
-    this.name = (language === 'Pascal') ? name.toLowerCase() : name
-    this.language = language
-    this.value = value
+  get type (): Type {
+    return typeof this.value === 'number'
+      ? 'boolint'
+      : 'string'
   }
 }

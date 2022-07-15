@@ -1,24 +1,24 @@
-xleft: Final[int] = -236
-xright: Final[int] = 263
-ytop: Final[int] = 1
-ybottom: Final[int] = 1000
-scaledown: Final[int] = 3
-mappings: Final[int] = 4
-label: Final[str] = 'Barnsley fern'
-live: Final[int] = green
-copied: Final[int] = emerald
-pauseval: Final[int] = 2000
-coeffdiv: int
+xleft: Final = -236
+xright: Final = 263
+ytop: Final = 1
+ybottom: Final = 1000
+scaledown: Final = 3
+mappings: Final = 4
+label: Final = 'Barnsley fern'
+live: Final = green
+copied: Final = emerald
+pauseval: Final = 2000
+coeffdiv
 mapxx: List[int, mappings]
 mapxy: List[int, mappings]
 mapxc: List[int, mappings]
 mapyx: List[int, mappings]
 mapyy: List[int, mappings]
 mapyc: List[int, mappings]
-xl: int
-xr: int
-yt: int
-yb: int
+xl
+xr
+yt
+yb
 
 def setmaps ():
   coeffdiv = 100
@@ -57,16 +57,16 @@ def setscale ():
     mapxc[i] = mapxc[i] / scaledown
     mapyc[i] = mapyc[i] / scaledown
 
-def map (a: int, x: int, y: int, newxadd: int, newyadd: int):
+def map (a, x, y, newxadd, newyadd):
   poke(newxadd, divmult(x, coeffdiv, mapxx[a]) + divmult(y, coeffdiv, mapxy[a]) + mapxc[a])
   poke(newyadd, divmult(x, coeffdiv, mapyx[a]) + divmult(y, coeffdiv, mapyy[a]) + mapyc[a])
 
-def domap (mapnum: int):
-  newx: int
-  newy: int
+def domap (mapnum):
+  newx
+  newy
   noupdate()
-  for y in range(yt, yb + 1, 1):
-    for x in range(xl, xr + 1, 1):
+  for y in range(yt, yb + 1):
+    for x in range(xl, xr + 1):
       if pixcol(x, y) != white:
         map(mapnum, x, y, address(newx), address(newy))
         if pixcol(newx, newy) = white:
@@ -76,8 +76,8 @@ def domap (mapnum: int):
 
 def cleanup ():
   noupdate()
-  for y in range(yt, yb + 1, 1):
-    for x in range(xl, xr + 1, 1):
+  for y in range(yt, yb + 1):
+    for x in range(xl, xr + 1):
       if pixcol(x, y) = live:
         pixset(x, y, white)
         numkilled = numkilled + 1
@@ -91,23 +91,23 @@ setscale()
 canvas(xl, yt, xr - xl + 1, yb - yt + 1)
 resolution(xr - xl + 1, yb - yt + 1)
 pixset(1, 1, live)
-iteration: int = 0
-writeline(label + ' by iterative mapping')
+iteration = 0
+print(label + ' by iterative mapping')
 timeset(0)
 while numborn > numkilled:
   starttimeL int = time()
   iteration = iteration + 1
-  writeline('')
-  writeline('Iteration ' + str(iteration) + ':')
-  numborn: int = 0
-  for count in range(0, mappings, 1):
+  print('')
+  print('Iteration ' + str(iteration) + ':')
+  numborn = 0
+  for count in range(mappings):
     domap(count)
   numkilled = 0
   cleanup()
-  writeline('  ' + str(numborn) + ' pixels born ' + str(numkilled) + ' pixels killed')
-  writeline('  (took ' + str((time() - starttime) / 1000) + ' seconds - total ' + str(time() / 1000) + ' seconds so far)')
+  print('  ' + str(numborn) + ' pixels born ' + str(numkilled) + ' pixels killed')
+  print('  (took ' + str((time() - starttime) / 1000) + ' seconds - total ' + str(time() / 1000) + ' seconds so far)')
   if (numborn + numkilled > 0) and (pauseval >= 1000):
-    write('  (now pausing ' + qstr(pauseval, 1000, 1) + ' seconds to allow halting if desired ...)')
+    print('  (now pausing ' + qstr(pauseval, 1000, 1) + ' seconds to allow halting if desired ...)')
     pause(pauseval)
-    writeline('')
-writeline('FINISH - fixed point of iterative mapping has been reached')
+    print('')
+print('FINISH - fixed point of iterative mapping has been reached')

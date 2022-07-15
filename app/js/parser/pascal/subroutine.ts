@@ -4,19 +4,21 @@ import { semicolon, statement } from './statement'
 import { variables } from './variable'
 import type Lexemes from '../definitions/lexemes'
 import Program from '../definitions/program'
-import { Subroutine, SubroutineType } from '../definitions/subroutine'
+import { Subroutine } from '../definitions/subroutine'
 import Variable from '../definitions/variable'
 import { CompilerError } from '../../tools/error'
 import type { KeywordLexeme, Lexeme } from '../../lexer/lexeme'
 
 /** parses lexemes as a subroutine definition */
 export default function subroutine (lexeme: KeywordLexeme, lexemes: Lexemes, parent: Program|Subroutine): Subroutine {
+  // save whether it should be a function or a procedure
+  const isFunction = lexeme.subtype === 'function'
+
   // expecting identifier
   const name = identifier(lexemes, parent)
 
   // create the subroutine
   const sub = new Subroutine(lexeme, parent, name)
-  sub.type = lexeme.subtype as SubroutineType
   sub.index = subroutineIndex(sub)
 
   // optionally expecting parameters
@@ -26,12 +28,11 @@ export default function subroutine (lexeme: KeywordLexeme, lexemes: Lexemes, par
   }
 
   // for functions, expecting return type
-  if (sub.type === 'function') {
+  if (isFunction) {
     const [returnType, stringLength, arrayDimensions] = type(lexemes, sub, false)
     if (arrayDimensions.length > 0) {
       throw new CompilerError('Functions cannot return arrays.', lexemes.get(-1))
     }
-    sub.returns = returnType
     const foo = new Variable('result', sub)
     foo.type = returnType
     foo.stringLength = stringLength

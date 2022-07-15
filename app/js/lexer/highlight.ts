@@ -34,11 +34,12 @@ export default function highlight (code: string|Token[], language: Language): st
       case 'decimal':
         return `<span class="integer">${token.content}</span>`
 
-      case 'colour':
+      case 'colour': {
         const colour = colours.find(x => x.names[language] === token.content)
         return colour
           ? `<span class="colour" style="border-color:#${colour.hex};">${token.content}</span>`
           : `<span class="colour">${token.content}</span>`
+      }
 
       default:
         return `<span class="${token.type}">${token.content}</span>`

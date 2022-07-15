@@ -1,8 +1,8 @@
 # draws an annulus (ring) with given inner
 # radius, width, and coloured segment angle
-def annulus(inner: int, width: int, angle: int):
+def annulus(inner, width, angle):
   # count enough segments to go full circle
-  for count in range(0, 360 / angle + 1, 1):
+  for count in range(360 / angle + 1):
     # move from centre to outside edge
     forward(inner + width)
     # move back to inside edge

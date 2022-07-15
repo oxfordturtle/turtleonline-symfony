@@ -61,17 +61,19 @@ function newline (code: string, language: Language, line: number, character: num
 /** tests for a comment and returns the token if matched */
 function comment (code: string, language: Language, line: number, character: number): Token|false {
   switch (language) {
-    case 'BASIC':
+    case 'BASIC': {
       const startBASIC = code.match(/^REM/)
       return startBASIC ? new Token('comment', code.split('\n')[0], line, character) : false
+    }
 
     case 'C': // fallthrough
     case 'Java': // fallthrough
-    case 'TypeScript':
+    case 'TypeScript': {
       const startCorTS = code.match(/^\/\//)
       return startCorTS ? new Token('comment', code.split('\n')[0], line, character) : false
+    }
 
-    case 'Pascal':
+    case 'Pascal': {
       const start = code[0] === '{'
       const end = code.match(/}/)
       if (start && end) {
@@ -81,10 +83,12 @@ function comment (code: string, language: Language, line: number, character: num
         return new Token('unterminated-comment', code.split('\n')[0], line, character)
       }
       return false
+    }
     
-    case 'Python':
+    case 'Python': {
       const startPython = code.match(/^#/)
       return startPython ? new Token('comment', code.split('\n')[0], line, character) : false
+    }
   }
 }
 
@@ -172,7 +176,7 @@ function string (code: string, language: Language, line: number, character: numb
     case 'C': // fallthrough
     case 'Java': // fallthrough
     case 'Python': // fallthrough
-    case 'TypeScript':
+    case 'TypeScript': {
       const start1 = code[0] === '\''
       const start2 = code[0] === '"'
       const end1 = code.match(/[^\\](')/)
@@ -191,6 +195,7 @@ function string (code: string, language: Language, line: number, character: numb
       }
       return false
     }
+  }
 }
 
 /** tests for a boolean literal and returns the token if matched */
@@ -212,7 +217,7 @@ function binary (code: string, language: Language, line: number, character: numb
   // TODO: errors for binary numbers with digits > 1
   switch (language) {
     case 'BASIC': // fallthrough
-    case 'Pascal':
+    case 'Pascal': {
       const good = code.match(/^(%[01]+)\b/)
       const bad = code.match(/^(0b[01]+)\b/)
       if (good) {
@@ -222,17 +227,19 @@ function binary (code: string, language: Language, line: number, character: numb
         return new Token('bad-binary', bad[0], line, character)
       }
       return false
+    }
 
     case 'C': // fallthrough
     case 'Java': // fallthrough
     case 'Python': // fallthrough
-    case 'TypeScript':
+    case 'TypeScript': {
       // N.B. there's no bad binary in these languages, since '%' will match the MOD operator
       const test = code.match(/^(0b[01]+)\b/)
       if (test) {
         return new Token('binary', test[0], line, character)
       }
       return false
+    }
   }
 }
 
@@ -244,7 +251,7 @@ function octal (code: string, language: Language, line: number, character: numbe
       // BASIC doesn't support octal numbers
       return false
 
-    case 'Pascal':
+    case 'Pascal': {
       const goodPascal = code.match(/^(&[0-7]+)\b/)
       const badPascal = code.match(/^(0o[0-7]+)\b/)
       if (goodPascal) {
@@ -254,17 +261,19 @@ function octal (code: string, language: Language, line: number, character: numbe
         return new Token('bad-octal', badPascal[0], line, character)
       }
       return false
+    }
 
     case 'C': // fallthrough
     case 'Java': // fallthrough
     case 'Python': // fallthrough
-    case 'TypeScript':
+    case 'TypeScript': {
       // N.B. there's no bad octal in these languages, since '&' will match the boolean AND operator
       const testPython = code.match(/^(0o[0-7]+)\b/)
       if (testPython) {
         return new Token('octal', testPython[0], line, character)
       }
       return false
+    }
   }
 }
 

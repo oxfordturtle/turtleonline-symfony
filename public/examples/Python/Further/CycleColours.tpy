@@ -1,9 +1,9 @@
 # black out canvas
 blank(black)
 # initialise variables
-colourInc: int = randint(0, 4)
-colourCode: int = randint(1, 20)
-lineLength: int = 0
+colourInc = randint(0, 4)
+colourCode = randint(1, 20)
+lineLength = 0
 thickness(16)
 # draw a multi-coloured spiral by repeating the
 # following until the move forward distance > 250

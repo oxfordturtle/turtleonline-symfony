@@ -1,7 +1,7 @@
 import identifier from './identifier'
 import { semicolon } from './statement'
 import type Lexemes from '../definitions/lexemes'
-import { Constant, IntegerConstant, StringConstant } from '../definitions/constant'
+import { Constant } from '../definitions/constant'
 import type Program from '../definitions/program'
 import { expression } from '../expression'
 import evaluate from '../evaluate'
@@ -23,12 +23,10 @@ export default function constant (lexemes: Lexemes, routine: Program): Constant 
   const value = evaluate(exp, 'Pascal', 'constant')
 
   // create the constant
-  const foo = (typeof value === 'string')
-    ? new StringConstant('Pascal', name, value)
-    : new IntegerConstant('Pascal', name, value)
+  const foo = new Constant('Pascal', name, value)
 
   // expecting a semicolon
-  semicolon(lexemes, true, 'constant defintiion')
+  semicolon(lexemes, true, 'constant definition')
 
   // return the constant
   return foo

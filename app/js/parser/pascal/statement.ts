@@ -20,7 +20,7 @@ import { CompilerError } from '../../tools/error'
 import { Token } from '../../lexer/token'
 
 /** parses semicolons */
-export function semicolon (lexemes: Lexemes, compulsory: boolean = false, context: string = 'statement'): void {
+export function semicolon (lexemes: Lexemes, compulsory = false, context = 'statement'): void {
   // check for semicolon
   if (compulsory && (!lexemes.get() || lexemes.get()?.content !== ';')) {
     throw new CompilerError(`Semicolon needed after ${context}.`, lexemes.get(-1))
@@ -197,7 +197,7 @@ function variableAssignment (variableLexeme: IdentifierLexeme, lexemes: Lexemes,
 
   // expecting an expression as the value to assign to the variable
   if (!lexemes.get()) {
-    throw new CompilerError(`Variable "${name}" must be assigned a value.`, assignmentLexeme)
+    throw new CompilerError(`Variable "${variable.name}" must be assigned a value.`, assignmentLexeme)
   }
   const typeToCheck = (variable.type === 'string' && indexes.length > 0) ? 'character' : variable.type
   let value = expression(lexemes, routine)

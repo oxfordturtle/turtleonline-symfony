@@ -1,7 +1,7 @@
 import type from './type'
 import identifier from './identifier'
 import Lexemes from '../definitions/lexemes'
-import { Constant, IntegerConstant, StringConstant } from '../definitions/constant'
+import { Constant } from '../definitions/constant'
 import Program from '../definitions/program'
 import { Subroutine } from '../definitions/subroutine'
 import { expression, typeCheck } from '../expression'
@@ -11,7 +11,7 @@ import { CompilerError } from '../../tools/error'
 /** parses lexemes as a constant definition, and returns the constant */
 export default function constant (lexemes: Lexemes, routine: Program|Subroutine): Constant {
   // expecting type specification
-  const [constantType, stringSize] = type(lexemes)
+  const [constantType] = type(lexemes)
   if (constantType === null) {
     throw new CompilerError('Constant type cannot be void (expected "bool", "char", "int", or "string").', lexemes.get())
   }
@@ -37,7 +37,5 @@ export default function constant (lexemes: Lexemes, routine: Program|Subroutine)
   const value = evaluate(exp, 'C', 'constant')
 
   // create and return the constant
-  return (typeof value === 'string')
-    ? new StringConstant('C', name, value)
-    : new IntegerConstant('C', name, value)
+  return new Constant('C', name, value)
 }

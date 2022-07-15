@@ -34,7 +34,7 @@ export default function pascal (lexemes: Lexemes): Program {
       case 'keyword':
         switch (lexeme.subtype) {
           // constant definitions
-          case 'const':
+          case 'const': {
             if (program.variables.length > 0) {
               throw new CompilerError('Constant definitions must be placed above any variable declarations.', lexemes.get())
             }
@@ -50,6 +50,7 @@ export default function pascal (lexemes: Lexemes): Program {
               throw new CompilerError('"CONST" must be followed by an identifier.', lexemes.get(-1))
             }
             break
+          }
 
           // variable declarations
           case 'var':

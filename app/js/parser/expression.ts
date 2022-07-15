@@ -1,59 +1,105 @@
 import type Program from './definitions/program'
-import type { Subroutine } from './definitions/subroutine'
+import { Subroutine } from './definitions/subroutine'
 import type Lexemes from './definitions/lexemes'
+import Variable from './definitions/variable'
+import type { Parameter } from '../constants/commands'
 import type { Lexeme, Type, Operator, OperatorLexeme, TypeLexeme } from '../lexer/lexeme'
 
 import { functionCall } from './call'
 import * as find from './find'
-import { Expression, CompoundExpression, IntegerValue, StringValue, InputValue, ColourValue, ConstantValue, VariableAddress, VariableValue, CastExpression } from './definitions/expression'
+import { Expression, CompoundExpression, IntegerValue, StringValue, InputValue, ColourValue, ConstantValue, FunctionCall, VariableAddress, VariableValue, CastExpression } from './definitions/expression'
 import { operator, stringOperator } from './definitions/operators'
 import { CompilerError } from '../tools/error'
 
 /** checks types match (throws an error if not) */
-export function typeCheck (foundExpression: Expression, expectedType: Type): Expression {
+export function typeCheck (found: Expression, expected: Type | Variable | Parameter): Expression {
+  const expectedType = typeof expected === 'string' ? expected : expected.type
+
+  // if expected type isn't yet certain, infer it
+  if (expected instanceof Variable && !expected.typeIsCertain) {
+    expected.type = found.type
+    expected.typeIsCertain = true
+    return found
+  }
+  if (expected instanceof FunctionCall && expected.command instanceof Subroutine && (!expected.command.typeIsCertain || (expected.command.result && !expected.command.result.typeIsCertain))) {
+    const result = expected.command.result
+    if (result) {
+      result.type = found.type
+      result.typeIsCertain = true
+    } else {
+      const result = new Variable('!result', expected.command)
+      result.type = found.type
+      result.typeIsCertain = true
+      expected.command.variables.unshift(result)
+    }
+    expected.command.typeIsCertain = true
+    return found
+  }
+
+  // if found type isn't yet certain, infer it
+  if (found instanceof VariableValue && !found.variable.typeIsCertain) {
+    found.variable.type = expectedType
+    found.variable.typeIsCertain = true
+    return found
+  }
+  if (found instanceof FunctionCall && found.command instanceof Subroutine && (!found.command.typeIsCertain || (found.command.result && !found.command.result.typeIsCertain))) {
+    const result = found.command.result
+    if (result) {
+      result.type = found.type
+      result.typeIsCertain = true
+    } else {
+      const result = new Variable('!result', found.command)
+      result.type = found.type
+      result.typeIsCertain = true
+      found.command.variables.unshift(result)
+    }
+    found.command.typeIsCertain = true
+    return found
+  }
+
   // found and expected the same is obviously ok
-  if (foundExpression.type === expectedType) {
-    return foundExpression
+  if (found.type === expectedType) {
+    return found
   }
 
   // if STRING is expected, CHARACTER is ok
-  if ((expectedType === 'string') && (foundExpression.type === 'character')) {
+  if ((expectedType === 'string') && (found.type === 'character')) {
     // but we'll need to cast it as a string
-    return new CastExpression(foundExpression.lexeme, 'string', foundExpression)
+    return new CastExpression(found.lexeme, 'string', found)
   }
 
   // if CHARACTER is expected, STRING is ok
   // (the whole expression will end up being a string anyway)
-  if ((expectedType === 'character') && (foundExpression.type === 'string')) {
-    return foundExpression
+  if ((expectedType === 'character') && (found.type === 'string')) {
+    return found
   }
 
   // if CHARACTER is expected, INTEGER is ok
-  if ((expectedType === 'character') && (foundExpression.type === 'integer')) {
-    return foundExpression
+  if ((expectedType === 'character') && (found.type === 'integer')) {
+    return found
   }
 
   // if INTEGER is expected, CHARACTER is ok
-  if ((expectedType === 'integer') && (foundExpression.type === 'character')) {
-    return foundExpression
+  if ((expectedType === 'integer') && (found.type === 'character')) {
+    return found
   }
 
   // if BOOLINT is expected, either BOOLEAN or INTEGER is ok
-  if (expectedType === 'boolint' && (foundExpression.type === 'boolean' || foundExpression.type === 'integer')) {
-    return foundExpression
+  if (expectedType === 'boolint' && (found.type === 'boolean' || found.type === 'integer')) {
+    return found
   }
 
   // if BOOLINT is found, either BOOLEAN or INTEGER expected is ok
-  if (foundExpression.type === 'boolint' && (expectedType === 'boolean' || expectedType === 'integer')) {
-    return foundExpression
+  if (found.type === 'boolint' && (expectedType === 'boolean' || expectedType === 'integer')) {
+    return found
   }
 
   // everything else is an error
-  throw new CompilerError(`Type error: '${expectedType}' expected but '${foundExpression.type}' found.`, foundExpression.lexeme)
+  throw new CompilerError(`Type error: '${expectedType}' expected but '${found.type}' found.`, found.lexeme)
 }
 
 /** parses lexemes as an expression */
-export function expression (lexemes: Lexemes, routine: Program|Subroutine, level: number = 0): Expression {
+export function expression (lexemes: Lexemes, routine: Program|Subroutine, level = 0): Expression {
   // break out of recursion at level > 2
   if (level > 2) {
     return factor(lexemes, routine)
@@ -121,7 +167,7 @@ function factor (lexemes: Lexemes, routine: Program|Subroutine): Expression {
           exp = typeCheck(exp, 'boolint')
           return new CompoundExpression(lexeme, null, exp, 'not')
 
-        case 'and':
+        case 'and': {
           if (routine.language !== 'C') {
             throw new CompilerError('Expression cannot begin with {lex}.', lexemes.get())
           }
@@ -133,6 +179,7 @@ function factor (lexemes: Lexemes, routine: Program|Subroutine): Expression {
           const variableAddress = new VariableAddress(exp.lexeme, exp.variable)
           variableAddress.indexes.push(...exp.indexes)
           return variableAddress
+        }
 
         default:
           throw new CompilerError('Expression cannot begin with {lex}.', lexeme)
@@ -144,16 +191,17 @@ function factor (lexemes: Lexemes, routine: Program|Subroutine): Expression {
       return (lexeme.subtype === 'string') ? new StringValue(lexeme) : new IntegerValue(lexeme)
 
     // input codes
-    case 'input':
-      const input = find.input(routine, lexeme.value)
+    case 'input': {
+      const input = find.input(routine, lexeme.content)
       if (input) {
         lexemes.next()
         return new InputValue(lexeme, input)
       }
       throw new CompilerError('{lex} is not a valid input code.', lexeme)
+    }
 
     // identifiers
-    case 'identifier':
+    case 'identifier': {
       // look for a constant
       const constant = find.constant(routine, lexeme.value)
       if (constant) {
@@ -263,6 +311,7 @@ function factor (lexemes: Lexemes, routine: Program|Subroutine): Expression {
 
       // if none of those were found, throw an error
       throw new CompilerError('{lex} is not defined.', lexeme)
+    }
 
     // everything else
     default:

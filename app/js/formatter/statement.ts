@@ -9,7 +9,7 @@ export default function statement (stmt: Statement, language: Language): string 
     case 'variableAssignment':
       return `${stmt.variable.name} ${stmt.lexeme.content} ${expression(stmt.value, language)}`
 
-    case 'procedureCall':
+    case 'procedureCall': {
       const name = (stmt.command instanceof Command)
         ? stmt.command.names[language] as string
         : stmt.command.name
@@ -17,6 +17,7 @@ export default function statement (stmt: Statement, language: Language): string 
         return name
       }
       return `${name}(${stmt.arguments.map(x => expression(x, language)).join(', ')})`
+    }
 
     case 'returnStatement':
       return `${stmt.lexeme.content} ${expression(stmt.value, language)}`

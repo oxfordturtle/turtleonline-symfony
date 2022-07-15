@@ -6,7 +6,7 @@ import { Subroutine } from '../definitions/subroutine'
 import Variable from '../definitions/variable'
 import type Lexemes from '../definitions/lexemes'
 import { CompilerError } from '../../tools/error'
-import type { KeywordLexeme, Lexeme } from '../../lexer/lexeme'
+import type { KeywordLexeme } from '../../lexer/lexeme'
 
 /** parses lexemes as a subroutine definition */
 export default function subroutine (lexeme: KeywordLexeme, lexemes: Lexemes, program: Program): Subroutine {
@@ -15,18 +15,15 @@ export default function subroutine (lexeme: KeywordLexeme, lexemes: Lexemes, pro
 
   // create the subroutine and add it to the program's subroutines
   const subroutine = new Subroutine(lexeme, program, name)
-  subroutine.type = subroutineType
   subroutine.index = program.subroutines.length + 1
   if (subroutineType === 'function') {
     const returnVariable = new Variable('!result', subroutine)
     returnVariable.type = type
     returnVariable.stringLength = stringLength
-    subroutine.type = 'function'
-    subroutine.returns = type
     subroutine.variables.push(returnVariable)
   }
 
-  // parameters are permissable here
+  // parameters are permissible here
   if (lexemes.get()?.content === '(') {
     lexemes.next()
     subroutine.variables.push(...parameters(lexemes, subroutine))

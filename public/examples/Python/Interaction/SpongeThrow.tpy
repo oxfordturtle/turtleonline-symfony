@@ -1,7 +1,7 @@
-facesize: int = 100
-spongesize: int = 40
+facesize = 100
+spongesize = 40
 
-def face(size: int):
+def face(size):
   def eye():
     colour(white)
     ellblot(size * 3 / 20, size / 10)
@@ -29,10 +29,10 @@ def face(size: int):
   back(size * 4 / 5)
   eye()
 
-x: int = 300
-y: int = 700
-xvel: int = 8
-yvel: int = -4
+x = 300
+y = 700
+xvel = 8
+yvel = -4
 while 0 < 1:
   noupdate()
   colour(white)

@@ -1,11 +1,11 @@
-facex: int = -100
-facey: int = 625
-facexspeed: int = 5
-faceyspeed: int = 0
-targets: int = 10
-hits: int = 0
+facex = -100
+facey = 625
+facexspeed = 5
+faceyspeed = 0
+targets = 10
+hits = 0
 
-def bottle(x: int, y: int):
+def bottle(x, y):
   setxy(x, y)
   colour(cyan)
   movexy(0, -15)
@@ -109,7 +109,7 @@ while (hits < targets):
   background()
   setxy(facex,facey)
   face()
-  for i in range(0, hits, 1):
+  for i in range(hits):
     bottle(50 * i + 15, 740)
   colour(brown)
   thickness(272)
@@ -135,4 +135,4 @@ while (hits < targets):
 blank(black)
 setxy(200, 450)
 colour(green)
-print('  Well done!  ', 4, 75)
+display('  Well done!  ', 4, 75)

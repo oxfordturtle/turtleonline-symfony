@@ -1,5 +1,5 @@
 # draws a triangle of the given size
-def triangle(size: int):
+def triangle(size):
   # draw first side, and turn
   forward(256)
   right(120)

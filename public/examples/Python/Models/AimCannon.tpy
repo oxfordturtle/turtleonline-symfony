@@ -1,7 +1,7 @@
-gunlength: int = 1000
-distancecol: int = green
-timecol: int = red
-steps: int = 0
+gunlength = 1000
+distancecol = green
+timecol = red
+steps = 0
 
 def graphaxes():
   thickness(5)
@@ -9,26 +9,26 @@ def graphaxes():
   drawxy(0, 3900)
   drawxy(-9000, 0) # x axis 700 to 9700
   drawxy(0, -3900) # y axis 4500 to 600
-  for n in range(0, 91, 1):
+  for n in range(91):
     if (n % 5 == 0):
       setxy(650 + n * 100, 4600)
-      print(str(n), 2, 16)
-  for n in range(0, 10, 1):
+      display(str(n), 2, 16)
+  for n in range(10):
     setxy(100, 4350 - n * 400)
-    print(str(n * 1000), 2, 16)
-  for n in range(0, 10, 1):
+    display(str(n * 1000), 2, 16)
+  for n in range(10):
     setxy(9900, 4380 - n * 400)
-    print(str(n * 20), 2, 16)
+    display(str(n * 20), 2, 16)
   setxy(4000, 4900)
-  print('Angle of elevation', 2, 24)
+  display('Angle of elevation', 2, 24)
   colour(distancecol)
   setxy(0, 100)
-  print('Distance', 2, 24)
+  display('Distance', 2, 24)
   colour(timecol)
   setxy(9600, 100)
-  print('Time', 2, 24)
+  display('Time', 2, 24)
 
-def plot(x: int, y: int, col: int):
+def plot(x, y, col):
   setxy(700 + x * 100, 4500 - y * 2 / 5)
   colour(col)
   blot(40)
@@ -54,7 +54,7 @@ def aim():
     if (pixcol(?mousex, ?mousey) == cream):
       turnxy(?mousex - 250, ?mousey - 9750)
 
-def fire(xvel: int, yvel: int, gravity: int, floor: int):
+def fire(xvel, yvel, gravity, floor):
   global steps, turty
   setxy(250, 9750)
   steps = 0
@@ -80,9 +80,9 @@ turtd = 45
 thickness(20)
 while (1 == 1):
   aim()
-  write('Elevation: ' + str(90 - turtd))
+  print('Elevation: ' + str(90 - turtd))
   fire(cos(90 - turtd, 1, 96), sin(90 - turtd, 1, -96), 1, 9950)
-  write('  Distance: ' + str(turtx))
-  writeline('  Time: ' + str(steps))
+  print('  Distance: ' + str(turtx))
+  print('  Time: ' + str(steps))
   plot(90 - turtd, turtx, distancecol)
   plot(90 - turtd, steps * 50, timecol)

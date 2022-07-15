@@ -50,7 +50,7 @@ export default function type (lexemes: Lexemes, routine: Program|Subroutine): [T
   }
 
   // possibly expecting brackets (for arrays)
-  let arrayDimensions: [number, number][] = []
+  const arrayDimensions: [number, number][] = []
   while (lexemes.get()?.content === '[') {
     lexemes.next()
 

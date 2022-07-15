@@ -4,6 +4,7 @@ import type Program from './definitions/program'
 import { Subroutine } from './definitions/subroutine'
 import { ProcedureCall } from './definitions/statement'
 import { FunctionCall, VariableValue } from './definitions/expression'
+import Variable from './definitions/variable'
 import { Command } from '../constants/commands'
 import { CompilerError } from '../tools/error'
 import type Lexemes from './definitions/lexemes'
@@ -11,9 +12,17 @@ import type { IdentifierLexeme } from '../lexer/lexeme'
 
 /** parses lexemes as a procedure call */
 export function procedureCall (lexeme: IdentifierLexeme, lexemes: Lexemes, routine: Program|Subroutine, command: Command|Subroutine): ProcedureCall {
-  if (command.returns) {
+  // check it's not a function
+  if (command.type === 'function') {
     throw new CompilerError('{lex} is a function, not a procedure.', lexeme)
   }
+
+  // for Python, establish that it's definitely not a function
+  // (so subsequent attempts to call it as such will throw an error)
+  if (command instanceof Subroutine) {
+    command.typeIsCertain = true
+  }
+
   const procedureCall = new ProcedureCall(lexeme, command)
   brackets(lexeme, lexemes, routine, procedureCall)
   if (procedureCall.command instanceof Subroutine && procedureCall.command !== routine) {
@@ -23,16 +32,25 @@ export function procedureCall (lexeme: IdentifierLexeme, lexemes: Lexemes, routi
       lexemes.index = previousLexemeIndex
     }
   }
+
   return procedureCall
 }
 
 /** parses lexemes as a function call */
 export function functionCall (lexeme: IdentifierLexeme, lexemes: Lexemes, routine: Program|Subroutine, command: Command|Subroutine): FunctionCall {
-  if (!command.returns) {
+  // infer type
+  if (command instanceof Subroutine && !command.typeIsCertain) {
+    command.typeIsCertain = true
+    command.variables.unshift(new Variable('!result', command))
+  }
+
+  if (command.type === 'procedure') {
     throw new CompilerError('{lex} is a procedure, not a function.', lexemes.get(-1))
   }
+
   const functionCall = new FunctionCall(lexeme, command)
   brackets(lexeme, lexemes, routine, functionCall)
+
   if (functionCall.command instanceof Subroutine && functionCall.command !== routine) {
     if (routine.language === 'BASIC' && functionCall.command.statements.length === 0) {
       const previousLexemeIndex = lexemes.index
@@ -40,6 +58,7 @@ export function functionCall (lexeme: IdentifierLexeme, lexemes: Lexemes, routin
       lexemes.index = previousLexemeIndex
     }
   }
+
   return functionCall
 }
 
@@ -114,17 +133,17 @@ function _arguments (lexemes: Lexemes, routine: Program|Subroutine, commandCall:
         case 'length':
           // length command allows string or array arguments
           if (!(argument instanceof VariableValue) || !argument.variable.isArray) {
-            argument = typeCheck(argument, parameter.type)
+            argument = typeCheck(argument, parameter)
           }
           break
 
         default:
           // standard type check by default
-          argument = typeCheck(argument, parameter.type)
+          argument = typeCheck(argument, parameter)
           break
       }
     } else {
-      argument = typeCheck(argument, parameter.type)
+      argument = typeCheck(argument, parameter)
     }
     commandCall.arguments.push(argument)
     argsGiven += 1
@@ -136,7 +155,6 @@ function _arguments (lexemes: Lexemes, routine: Program|Subroutine, commandCall:
         throw new CompilerError(`Not enough arguments given for command "${commandName}".`, commandCall.lexeme)
       }
       if (lexemes.get()?.content !== ',') {
-        console.log(lexemes.lexemes.slice(lexemes.index - 10, lexemes.index + 10))
         throw new CompilerError('Comma needed after parameter.', argument.lexeme)
       }
       lexemes.next()

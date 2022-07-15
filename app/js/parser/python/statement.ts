@@ -3,8 +3,9 @@ import { procedureCall } from '../call'
 import { expression, typeCheck } from '../expression'
 import evaluate from '../evaluate'
 import * as find from '../find'
+import { IntegerLexeme } from '../../lexer/lexeme'
 import Lexemes from '../definitions/lexemes'
-import { CompoundExpression, VariableValue, IntegerValue, Expression } from '../definitions/expression'
+import { CompoundExpression, VariableValue, Expression, IntegerValue } from '../definitions/expression'
 import Program from '../definitions/program'
 import { Subroutine } from '../definitions/subroutine'
 import Variable from '../definitions/variable'
@@ -17,10 +18,10 @@ import {
   VariableAssignment,
   ReturnStatement
 } from '../definitions/statement'
-import { IdentifierLexeme, KeywordLexeme, Lexeme, OperatorLexeme, Type } from '../../lexer/lexeme'
+import { IdentifierLexeme, KeywordLexeme, Lexeme, OperatorLexeme } from '../../lexer/lexeme'
 import { CompilerError } from '../../tools/error'
 import variable from './variable'
-import { IntegerConstant, StringConstant } from '../definitions/constant'
+import { Constant } from '../definitions/constant'
 import { Token } from '../../lexer/token'
 
 /** checks for semi colon or new line at the end of a statement */
@@ -57,7 +58,7 @@ export function statement (lexeme: Lexeme, lexemes: Lexemes, routine: Program|Su
       break
 
     // identifiers (variable declaration, variable assignment, or procedure call)
-    case 'identifier':
+    case 'identifier': {
       const foo = find.variable(routine, lexemes.get()?.content as string)
       const bar = find.command(routine, lexemes.get()?.content as string)
       if (foo) {
@@ -71,12 +72,13 @@ export function statement (lexeme: Lexeme, lexemes: Lexemes, routine: Program|Su
       }
       eosCheck(lexemes)
       break
+    }
 
     // keywords
     case 'keyword':
       switch (lexeme.subtype) {
         // def
-        case 'def':
+        case 'def': {
           // the subroutine will have been defined in the first pass
           const sub = find.subroutine(routine, lexemes.get(1)?.content as string) as Subroutine
           // so here, just jump past its lexemes
@@ -85,6 +87,7 @@ export function statement (lexeme: Lexeme, lexemes: Lexemes, routine: Program|Su
           lexemes.index = sub.end + 1
           statement = new PassStatement()
           break
+        }
 
         // global/nonlocal statement
         case 'global':
@@ -166,7 +169,7 @@ export function variableAssignment (variableLexeme: IdentifierLexeme, lexemes: L
       while (lexemes.get() && lexemes.get()?.content !== ']') {
         // expecting integer expression for the element index
         let exp = expression(lexemes, routine)
-        exp = typeCheck(exp, 'integer')
+        exp = typeCheck(exp, variable)
         indexes.push(exp)
         // maybe move past "]["
         if (lexemes.get()?.content === ']' && lexemes.get(1)?.content === '[') {
@@ -184,7 +187,7 @@ export function variableAssignment (variableLexeme: IdentifierLexeme, lexemes: L
       lexemes.next()
       // expecting integer expression for the character index
       let exp = expression(lexemes, routine)
-      exp = typeCheck(exp, 'integer')
+      exp = typeCheck(exp, variable)
       indexes.push(exp)
       // expecting closing bracket
       if (!lexemes.get() || (lexemes.get()?.content !== ']')) {
@@ -213,7 +216,7 @@ export function variableAssignment (variableLexeme: IdentifierLexeme, lexemes: L
   }
   if (assignmentLexeme.content === ':') {
     if (variable.turtle) {
-      throw new CompilerError('{lex} is the name of a predefined Turtle attribute, and cannot be given a type specification.', lexemes.get(-1))
+      throw new CompilerError('{lex} is the name of a predefined Turtle attribute, and cannot be given a type hit.', lexemes.get(-1))
     }
     throw new CompilerError('Type of variable {lex} has already been given.', lexemes.get(-1))
   }
@@ -232,9 +235,9 @@ export function variableAssignment (variableLexeme: IdentifierLexeme, lexemes: L
   let value = expression(lexemes, routine)
   const variableValue = new VariableValue(variableLexeme, variable)
   variableValue.indexes.push(...indexes)
-  // check against variableValue.type rather than variableAssignment.variable.type
-  // in case string has indexes and should be a character
-  value = typeCheck(value, variableValue.type)
+
+  // type checking
+  value = typeCheck(value, variable)
 
   // create and return the variable assignment statement
   return new VariableAssignment(assignmentLexeme, variable, indexes, value)
@@ -246,7 +249,7 @@ export function variableDeclaration (variableLexeme: IdentifierLexeme, lexemes: 
   const foo = variable(lexemes, routine)
 
   // constants
-  if (foo instanceof IntegerConstant || foo instanceof StringConstant) {
+  if (foo instanceof Constant) {
     // expecting '='
     if (!lexemes.get()) {
       throw new CompilerError('Constant must be assigned a value.', lexemes.get(-1))
@@ -258,7 +261,6 @@ export function variableDeclaration (variableLexeme: IdentifierLexeme, lexemes: 
 
     // expecting an expression
     const exp = expression(lexemes, routine)
-    typeCheck(exp, foo.type)
     foo.value = evaluate(exp, 'Python', 'constant')
 
     // add the constant to the routine
@@ -286,13 +288,20 @@ function returnStatement (returnLexeme: KeywordLexeme, lexemes: Lexemes, routine
   if (routine instanceof Program) {
     throw new CompilerError('Programs cannot return a value.', lexemes.get())
   }
-  if (routine.type !== 'function') {
-    throw new CompilerError('Procedures cannot return a value.', lexemes.get())
-  }
 
   // expecting an expression of the right type, followed by end of statement
   let value = expression(lexemes, routine)
-  value = typeCheck(value, routine.returns as Type)
+  if (routine.returns !== null) {
+    // check against previous return statements
+    value = typeCheck(value, routine.returns)
+  } else {
+    // otherwise create a return variable
+    const result = new Variable('!result', routine)
+    result.type = value.type
+    result.typeIsCertain = true
+    routine.typeIsCertain = true
+    routine.variables.unshift(result)
+  }
   eosCheck(lexemes)
 
   // mark that this function has a return statement
@@ -402,7 +411,12 @@ function forStatement (forLexeme: KeywordLexeme, lexemes: Lexemes, routine: Prog
     // create the variable now
     variable = new Variable(lexemes.get()?.content as string, routine)
     variable.type = 'integer'
+    variable.typeIsCertain = true
     routine.variables.push(variable)
+  }
+  if (!variable.typeIsCertain) {
+    variable.type = 'integer'
+    variable.typeIsCertain = true
   }
   if (variable.type !== 'integer') {
     throw new CompilerError('Loop variable must be an integer.', lexemes.get())
@@ -436,57 +450,60 @@ function forStatement (forLexeme: KeywordLexeme, lexemes: Lexemes, routine: Prog
   }
   lexemes.next()
 
-  // expecting an integer expression (for the initial value)
+  // expecting an integer expression
   if (!lexemes.get()) {
     throw new CompilerError('Missing first argument to the "range" function.', lexemes.get(-1))
   }
-  let initialValue = expression(lexemes, routine)
-  initialValue = typeCheck(initialValue, 'integer')
+  const providedValues: [Expression, Expression?, Expression?] = [typeCheck(expression(lexemes, routine), 'integer')]
+
+  // expecting a comma or closing bracket
+  if (!lexemes.get()) {
+    throw new CompilerError('Argument must be followed by a comma.', lexemes.get(-1))
+  }
+  if (lexemes.get()?.content !== ')' && lexemes.get()?.content !== ',') {
+    throw new CompilerError('Argument must be followed by a comma or a closing bracket.', lexemes.get())
+  }
+
+  // second argument allowed here
+  if (lexemes.get()?.content === ',') {
+    lexemes.next()
+    if (!lexemes.get()) {
+      throw new CompilerError('Too few arguments for "range" function.', lexemes.get(-1))
+    }
+    providedValues.push(typeCheck(expression(lexemes, routine), 'integer'))
+  }
+
+  // expecting a comma or closing bracket
+  if (!lexemes.get()) {
+    throw new CompilerError('Argument must be followed by a comma.', lexemes.get(-1))
+  }
+  if (lexemes.get()?.content !== ')' && lexemes.get()?.content !== ',') {
+    throw new CompilerError('Argument must be followed by a comma or a closing bracket.', lexemes.get())
+  }
+
+  // third argument allowed here
+  if (lexemes.get()?.content === ',') {
+    lexemes.next()
+    if (!lexemes.get()) {
+      throw new CompilerError('Too few arguments for "range" function.', lexemes.get(-1))
+    }
+    providedValues.push(typeCheck(expression(lexemes, routine), 'integer'))
+  }
+
+  // the things we want to know
+  let initialisation: VariableAssignment
+  let condition: Expression
+  let change: VariableAssignment
+
+  // some dummy things we need to create the things we want to know
+  const zeroToken = new Token('decimal', '0', forLexeme.line, -1)
+  const zeroLexeme = new IntegerLexeme(zeroToken, 10)
+  const zero = new IntegerValue(zeroLexeme)
+  const oneToken = new Token('decimal', '1', forLexeme.line, -1)
+  const oneLexeme = new IntegerLexeme(oneToken, 10)
+  const one = new IntegerValue(oneLexeme)
   const assignmentToken = new Token('operator', '=', forLexeme.line, -1)
   const assignmentLexeme = new OperatorLexeme(assignmentToken, 'Python')
-  const initialisation = new VariableAssignment(assignmentLexeme, variable, [], initialValue)
-
-  // expecting a comma
-  if (!lexemes.get()) {
-    throw new CompilerError('Argument must be followed by a comma.', lexemes.get(-1))
-  }
-  if (lexemes.get()?.content === ')') {
-    throw new CompilerError('Too few arguments for "range" function.', lexemes.get())
-  }
-  if (lexemes.get()?.content !== ',') {
-    throw new CompilerError('Argument must be followed by a comma.', lexemes.get())
-  }
-  lexemes.next()
-
-  // expecting an integer expression (for the final value)
-  if (!lexemes.get()) {
-    throw new CompilerError('Too few arguments for "range" function.', lexemes.get(-1))
-  }
-  let finalValue = expression(lexemes, routine)
-  finalValue = typeCheck(finalValue, 'integer')
-
-  // now expecting another comma
-  if (!lexemes.get()) {
-    throw new CompilerError('Argument must be followed by a comma.', lexemes.get(-1))
-  }
-  if (lexemes.get()?.content === ')') {
-    throw new CompilerError('Too few arguments for "range" function.', lexemes.get())
-  }
-  if (lexemes.get()?.content !== ',') {
-    throw new CompilerError('Argument must be followed by a comma.', lexemes.get())
-  }
-  lexemes.next()
-
-  // expecting an integer expression (for the step value)
-  if (!lexemes.get()) {
-    throw new CompilerError('Too few arguments for "range" function.', lexemes.get(-1))
-  }
-  let stepValue = expression(lexemes, routine)
-  typeCheck(stepValue, 'integer')
-  const evaluatedStepValue = evaluate(stepValue, 'Python', 'step') as number
-  if (evaluatedStepValue === 0) {
-    throw new CompilerError('Step value cannot be zero.', stepValue.lexeme)
-  }
   const left = new VariableValue(variableLexeme, variable)
   const plusToken = new Token('operator', '+', forLexeme.line, -1)
   const lessToken = new Token('operator', '<', forLexeme.line, -1)
@@ -494,12 +511,40 @@ function forStatement (forLexeme: KeywordLexeme, lexemes: Lexemes, routine: Prog
   const plusLexeme = new OperatorLexeme(plusToken, 'Python')
   const lessLexeme = new OperatorLexeme(lessToken, 'Python')
   const moreLexeme = new OperatorLexeme(moreToken, 'Python')
-  let change = new VariableAssignment(assignmentLexeme, variable, [], new CompoundExpression(plusLexeme, left, stepValue, 'plus'))
-  let condition = (evaluatedStepValue < 0)
-    ? new CompoundExpression(moreLexeme, left, finalValue, 'more')
-    : new CompoundExpression(lessLexeme, left, finalValue, 'less')
 
-  // expecting a right bracket
+  // the values of the things we need to know depend on how many arguments were provided
+  switch (providedValues.length) {
+    case 1:
+      // initial value is zero
+      initialisation = new VariableAssignment(assignmentLexeme, variable, [], zero)
+      // change is +1
+      change = new VariableAssignment(assignmentLexeme, variable, [], new CompoundExpression(plusLexeme, left, one, 'plus'))
+      // termination condition is < providedValues[0]
+      condition = new CompoundExpression(lessLexeme, left, providedValues[0], 'less')
+      break
+    case 2:
+      // initial value is providedValues[0]
+      initialisation = new VariableAssignment(assignmentLexeme, variable, [], providedValues[0])
+      // change is +1
+      change = new VariableAssignment(assignmentLexeme, variable, [], new CompoundExpression(plusLexeme, left, one, 'plus'))
+      // termination condition is < providedValues[1]
+      condition = new CompoundExpression(lessLexeme, left, providedValues[1]!, 'less')
+      break
+    case 3: {
+      // initial value is providedValues[0]
+      initialisation = new VariableAssignment(assignmentLexeme, variable, [], providedValues[0])
+      // change is +/- providedValues[1]
+      const stepValue = evaluate(providedValues[2]!, 'Python', 'step') as number
+      change = new VariableAssignment(assignmentLexeme, variable, [], new CompoundExpression(plusLexeme, left, providedValues[2]!, 'plus'))
+      // termination condition is >/< providedValues[2]
+      condition = (stepValue < 0)
+        ? new CompoundExpression(moreLexeme, left, providedValues[1]!, 'more')
+        : new CompoundExpression(lessLexeme, left, providedValues[1]!, 'less')
+      break
+    }
+  }
+
+  // expecting a closing bracket
   if (!lexemes.get()) {
     throw new CompilerError('Closing bracket needed after "range" function arguments.', lexemes.get(-1))
   }

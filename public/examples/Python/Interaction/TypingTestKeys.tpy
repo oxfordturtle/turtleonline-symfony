@@ -1,17 +1,17 @@
 # show instructions
 blank(cream)
 setxy(15, 200)
-print('In this typing test, you will be shown the', 4, 36)
+display('In this typing test, you will be shown the', 4, 36)
 setxy(20, 270)
-print('letters of the alphabet in a random order,', 4, 36)
+display('letters of the alphabet in a random order,', 4, 36)
 setxy(20, 340)
-print('and in a mixture of upper- and lower-case.', 4, 36)
+display('and in a mixture of upper- and lower-case.', 4, 36)
 setxy(20, 410)
-print('Type them as fast as you can, and see how', 4, 36)
+display('Type them as fast as you can, and see how', 4, 36)
 setxy(20, 480)
-print('quickly you can finish the entire alphabet.', 4, 36)
+display('quickly you can finish the entire alphabet.', 4, 36)
 setxy(100, 620)
-print('Now press the "Esc" key to start ...', 4, 36)
+display('Now press the "Esc" key to start ...', 4, 36)
 # disable key echo in console
 keyecho(False)
 # wait for escape key to be pressed
@@ -19,24 +19,24 @@ while (abs(?key) != \escape):
   pass
 # create a String containing all letters of the alphabet
 letters: List[int, 26]
-for i in range(0, 26, 1):
+for i in range(26):
   letters[i] = i + 65
 # randomize the order of the letters
-for count in range(0, 50, 1):
-  m: int = randint(0, 25)
-  n: int = randint(0, 25)
+for count in range(50):
+  m = randint(0, 25)
+  n = randint(0, 25)
   if (m != n):
-    temp: int = letters[m]
+    temp = letters[m]
     letters[m] = letters[n]
     letters[n] = temp
 # set timer to zero
 timeset(0)
 # for each letter in turn...
-for count in range(0, 26, 1):
+for count in range(26):
   # read character code of that letter
-  c: int = letters[count]
+  c = letters[count]
   # select case at random
-  lowerCase: bool = (randint(0, 1) == 0)
+  lowerCase = (randint(0, 1) == 0)
   # rub out previous letter
   blank(black)
   # print letter at random coordinates
@@ -44,17 +44,17 @@ for count in range(0, 26, 1):
   colour(yellow)
   # print in either lowercase or uppercase
   if (lowerCase):
-    print(chr(c + 32), 3, 450)
+    display(chr(c + 32), 3, 450)
   else:
-    print(chr(c), 3, 450)
+    display(chr(c), 3, 450)
   # wait for user to type that letter, with shift down for uppercase
-  shiftOk: bool = False
+  shiftOk = False
   while ((abs(?key) != c) or not shiftOk):
     shiftOk = (((abs(?kshift) & 8) > 0) ^ lowerCase)
   # reset kshift value
-  reset(\kshift)
+  reset(?kshift)
 # show time taken
 blank(lightblue)
 setxy(60, 460)
 colour(lightred)
-print('Your time was ' + qstr(time(), 1000, 2) + ' seconds', 4, 50)
+display('Your time was ' + qstr(time(), 1000, 2) + ' seconds', 4, 50)

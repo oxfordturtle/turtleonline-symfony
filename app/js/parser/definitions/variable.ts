@@ -7,12 +7,13 @@ import type { Type } from '../../lexer/lexeme'
 export default class Variable {
   readonly name: string
   readonly routine: Program|Subroutine
-  isParameter: boolean = false
-  isReferenceParameter: boolean = false
-  isPointer: boolean = false
+  isParameter = false
+  isReferenceParameter = false
+  isPointer = false
   type: Type = 'boolint'
+  typeIsCertain: boolean
   turtle?: number // index of turtle variable (if this is one)
-  stringLength: number = 32
+  stringLength = 32
   arrayDimensions: [number, number][] = [] // for array variables
   private?: Subroutine // subroutine for private variables (BASIC only)
 
@@ -20,6 +21,8 @@ export default class Variable {
   constructor (name: string, routine: Program|Subroutine) {
     this.name = (routine.language === 'Pascal') ? name.toLowerCase() : name
     this.routine = routine
+    // TODO: make this false for TypeScript as well, once type inference works there
+    this.typeIsCertain = routine.language === 'Python' ? false : true
   }
 
   /** whether the variable is an array */

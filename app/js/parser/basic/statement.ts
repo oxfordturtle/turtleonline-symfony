@@ -82,7 +82,7 @@ export function statement (lexeme: Lexeme, lexemes: Lexemes, routine: Program|Su
           break
 
         // PRIVATE statement
-        case 'private':
+        case 'private': {
           if (routine instanceof Program) {
             throw new CompilerError('Main program cannot declare any PRIVATE variables.', lexemes.get())
           }
@@ -94,6 +94,7 @@ export function statement (lexeme: Lexeme, lexemes: Lexemes, routine: Program|Su
           routine.program.variables.push(...privateVariables)
           statement = new PassStatement()
           break
+        }
 
         // start of IF structure
         case 'if':
@@ -143,7 +144,6 @@ export function statement (lexeme: Lexeme, lexemes: Lexemes, routine: Program|Su
         lexemes.next()
       }
     } else {
-      console.log(lexemes)
       throw new CompilerError('Statements must be separated by a colon or placed on different lines.', lexemes.get())
     }
   }
@@ -392,8 +392,7 @@ function forStatement (lexeme: KeywordLexeme, lexemes: Lexemes, routine: Program
     if (!lexemes.get()) {
       throw new CompilerError('"STEP" instruction must be followed by an integer value.', lexemes.get(-1))
     }
-    let stepValue = expression(lexemes, routine)
-    typeCheck(stepValue, 'integer')
+    const stepValue = typeCheck(expression(lexemes, routine), 'integer')
     const evaluatedStepValue = evaluate(stepValue, 'BASIC', 'step') as number
     if (evaluatedStepValue === 0) {
       throw new CompilerError('Step value cannot be zero.', stepValue.lexeme)

@@ -1,6 +1,6 @@
 # set starting point
 setxy(100, 700)
-for count in range(0, 100, 1):
+for count in range(100):
   noupdate()
   # rub out previous ball
   colour(white)

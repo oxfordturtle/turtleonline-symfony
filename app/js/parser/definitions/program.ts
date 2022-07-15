@@ -25,6 +25,7 @@ export default class Program extends Routine {
     const fullname = (this.language === 'BASIC') ? `turt${name}%` : `turt${name}`
     const variable = new Variable(fullname, this)
     variable.type = 'integer'
+    variable.typeIsCertain = true
     variable.turtle = ['x', 'y', 'd', 'a', 't', 'c'].indexOf(name) + 1
     return variable
   }

@@ -9,7 +9,7 @@ blank(black)
 forward(15)
 # set line thickness and initial length
 thickness(27)
-lineLength: int = 20
+lineLength = 20
 # repeatedly, until lineLength gets to 510
 while lineLength < 510:
   # choose one of the first 40 Turtle colours

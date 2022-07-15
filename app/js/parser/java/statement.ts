@@ -111,7 +111,7 @@ export function simpleStatement (lexeme: KeywordLexeme|TypeLexeme|IdentifierLexe
       return new PassStatement()
   
     // type specification means a variable declaration
-    case 'type':
+    case 'type': {
       const variableLexeme = lexemes.get(1) as IdentifierLexeme // it will be if the next line doesn't throw an error
       const foo = variable(lexemes, routine)
       routine.variables.push(foo)
@@ -120,9 +120,10 @@ export function simpleStatement (lexeme: KeywordLexeme|TypeLexeme|IdentifierLexe
       } else {
         return new PassStatement()
       }
+    }
   
     // identifier means variable assignment or procedure call
-    case 'identifier':
+    case 'identifier': {
       const bar = find.variable(routine, lexeme.value)
       const baz = find.command(routine, lexeme.value)
       if (bar) {
@@ -135,6 +136,7 @@ export function simpleStatement (lexeme: KeywordLexeme|TypeLexeme|IdentifierLexe
       } else {
         throw new CompilerError('{lex} is not defined.', lexemes.get())
       }
+    }
   }
 }
 

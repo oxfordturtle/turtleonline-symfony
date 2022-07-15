@@ -7,7 +7,7 @@ import { Type } from '../../lexer/lexeme'
 import { CompilerError } from '../../tools/error'
 
 /** parses lexemes as a variable/parameter type specification */
-export default function type (lexemes: Lexemes, routine: Program|Subroutine, final: boolean = false): [boolean, Type, number, [number, number][]] {
+export default function type (lexemes: Lexemes, routine: Program|Subroutine): [boolean, Type, number, [number, number][]] {
   const lexeme = lexemes.get()
   let stringLength = 32
 
@@ -57,45 +57,13 @@ export default function type (lexemes: Lexemes, routine: Program|Subroutine, fin
       throw new CompilerError('"Final" must be written with a capital "F".', lexeme)
 
     case 'Final':
-      // constants cannot be constants
-      if (final) {
-        throw new CompilerError('Expecting base type ("bool", "int", or "str").', lexeme)
-      }
       lexemes.next()
-
-      // expecting opening square bracket
-      if (!lexemes.get()) {
-        throw new CompilerError('"List" must be followed by a type in square brackets.', lexemes.get(-1))
-      }
-      if (lexemes.get()?.content !== '[') {
-        throw new CompilerError('"List" must be followed by a type in square brackets.', lexemes.get())
-      }
-      lexemes.next()
-
-      // expecting constant type
-      const constantType = type(lexemes, routine, true)
-      constantType[0] = true
-
-      // expecting closing square bracket
-      if (!lexemes.get()) {
-        throw new CompilerError('Constant type must be followed by closing square brackets.', lexemes.get(-1))
-      }
-      if (lexemes.get()?.content !== ']') {
-        throw new CompilerError('Constant type must be followed by closing square brackets.', lexemes.get())
-      }
-      lexemes.next()
-      
-      // return the full type
-      return constantType
+      return [true, 'boolint', stringLength, []]
 
     case 'list':
       throw new CompilerError('"List" must be written with a capital "L".', lexeme)
 
-    case 'List':
-      // constants cannot be lists
-      if (final) {
-        throw new CompilerError('Expecting base type ("bool", "int", or "str").', lexeme)
-      }
+    case 'List': {
       lexemes.next()
 
       // expecting opening square bracket
@@ -147,6 +115,7 @@ export default function type (lexemes: Lexemes, routine: Program|Subroutine, fin
       
       // return the full type
       return arrayType
+    }
 
     default:
       throw new CompilerError('{lex} is not a valid type specification (expected "bool", "int", or "str")', lexemes.get())

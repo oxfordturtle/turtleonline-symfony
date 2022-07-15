@@ -4,6 +4,7 @@
 import type { Language } from './languages'
 import { PCode } from './pcodes'
 import type { Type } from '../lexer/lexeme'
+import type { SubroutineType } from '../parser/definitions/subroutine'
 
 /** command class definition */
 export class Command {
@@ -29,6 +30,10 @@ export class Command {
     this.category = category
     this.level = level
     this.description = description
+  }
+
+  get type (): SubroutineType {
+    return this.returns === null ? 'procedure' : 'function'
   }
 }
 
@@ -478,7 +483,7 @@ export const commands: Command[] = [
     'Returns a random integer between 1 and <code>n</code>.'
   ),
   new Command(
-    { BASIC: null, C: 'rand', Java: 'randInt', Pascal: 'random', Python: null, TypeScript: 'randInt' },
+    { BASIC: null, C: 'rand', Java: 'randInt', Pascal: 'random', Python: 'randrange', TypeScript: 'randInt' },
     [PCode.rand],
     [new Parameter('n', 'integer', false, 1)],
     'integer', 5, 1,
@@ -682,21 +687,22 @@ export const commands: Command[] = [
   ),
   // 7. String operations
   new Command(
-    { BASIC: 'WRITE', C: 'write', Java: 'write', Pascal: 'write', Python: 'write', TypeScript: 'write' },
+    { BASIC: 'WRITE', C: 'write', Java: 'write', Pascal: 'write', Python: null, TypeScript: null },
     [PCode.writ],
     [new Parameter('string', 'string', false, 1)],
     null, 7, 0,
     'Writes the input <code>string</code> to the console and textual output area of the System.'
   ),
+  // TODO: 'print' in Python should have an optional 'end' parameter (which defaults to a new line)
   new Command(
-    { BASIC: 'WRITELN', C: 'writeline', Java: 'writeLine', Pascal: 'writeln', Python: 'writeline', TypeScript: 'writeLine' },
+    { BASIC: 'WRITELN', C: 'writeline', Java: 'writeLine', Pascal: 'writeln', Python: 'print', TypeScript: 'log' },
     [PCode.writ, PCode.newl],
     [new Parameter('string', 'string', false, 1)],
     null, 7, 0,
     'Writes the input <code>string</code> to the console and textual output area of the System, followed by a line break.'
   ),
   new Command(
-    { BASIC: 'PRINT', C: 'print', Java: 'print', Pascal: 'print', Python: 'print', TypeScript: 'print' },
+    { BASIC: 'DISPLAY', C: 'display', Java: 'display', Pascal: 'display', Python: 'display', TypeScript: 'display' },
     [PCode.prnt],
     [
       new Parameter('string', 'string', false, 1),

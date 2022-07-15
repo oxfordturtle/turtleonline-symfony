@@ -1,43 +1,43 @@
-delay: Final[int] = 500
+delay: Final = 500
 output(True, cream, True)
 # set initial string
-s1: str = 'Turtle Python'
+s1 = 'Turtle Python'
 # illustrate use of COPY function
-s2: str = copy(s1, 0, 6)
-writeline(s2 + ' is the name of a small animal.')
+s2 = copy(s1, 0, 6)
+print(s2 + ' is the name of a small animal.')
 pause(delay)
-s3: str = copy(s1, 7, 6)
-writeline(s3 + ' is a large snake.')
+s3 = copy(s1, 7, 6)
+print(s3 + ' is a large snake.')
 pause(delay)
 # illustrate use of INSERT function
-s4: str = insert(s3, 'onty M', 1)
-writeline('\'' + s4 + '\' is a silly name.')
+s4 = insert(s3, 'onty M', 1)
+print('\'' + s4 + '\' is a silly name.')
 pause(delay)
 # illustrate use of LEN function
-writeline('"' + s1 + '" has ' + str(len(s1)) + ' characters.')
+print('"' + s1 + '" has ' + str(len(s1)) + ' characters.')
 pause(delay)
 ## illustrate use of LOWER and UPPER functions
-writeline('In lower case it is "' + lower(s1) + '".')
-writeline('In upper case it is "' + upper(s1) + '".')
+print('In lower case it is "' + lower(s1) + '".')
+print('In upper case it is "' + upper(s1) + '".')
 pause(delay)
 # illustrate use of FIND function
-posn: int = find(s1, s3)
+posn = find(s1, s3)
 if posn > 0:
-  writeline('"' + s3 + '" occurs within "' + s1 + '" at position ' + str(posn) + '.')
+  print('"' + s3 + '" occurs within "' + s1 + '" at position ' + str(posn) + '.')
 pause(delay)
 # illustrate use of QINT function, converting a decimal string to an integer ...
-s5: str = '3.14159'
-writeline(s5 + ' times 100000 = ' + str(qint(s5, 100000, -1)) + '.')
+s5 = '3.14159'
+print(s5 + ' times 100000 = ' + str(qint(s5, 100000, -1)) + '.')
 pause(delay)
-n: int = qint(s5, 100000, -1)
-writeline(str(n) + ' divided by 100000 = ' + qstr(n, 100000, 5) + '.')
-writeline('')
+n = qint(s5, 100000, -1)
+print(str(n) + ' divided by 100000 = ' + qstr(n, 100000, 5) + '.')
+print('')
 pause(delay * 5)
 # illustrate use of OUTPUT and CONSOLE commands ...
-writeline('Now back to the Canvas and Console ...')
+print('Now back to the Canvas and Console ...')
 output(False, peach, True)
 pause(delay * 5)
 output(False, lightred, False)
 pause(delay * 5)
 console(True, lightblue)
-writeline('You will see this on a clear light blue Console')
+print('You will see this on a clear light blue Console')

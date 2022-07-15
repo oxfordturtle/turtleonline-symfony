@@ -3,7 +3,7 @@ colour(red)
 blot(20)
 # print violet text, font style 4, size 36
 colour(violet)
-print('You are here', 4, 36)
+display('You are here', 4, 36)
 # draw blue multi-part "curve"
 setxy(790, 530)
 colour(blue)

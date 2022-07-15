@@ -4,7 +4,7 @@ penup()
 blank(black)
 colour(orange)
 # counting from 0 to 35 ...
-for count in range(0, 36, 1):
+for count in range(36):
   # move 200 units from middle of canvas
   forward(200)
   # draw circle radius 200 centred there

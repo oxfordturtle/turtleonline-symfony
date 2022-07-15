@@ -1,5 +1,5 @@
 # draws hour and minute hands on a clock face
-def showhands(hours: int, minutes: int):
+def showhands(hours, minutes):
   # run out previous hands
   colour(white)
   blot(360)
@@ -19,8 +19,8 @@ def showhands(hours: int, minutes: int):
 thickness(10)
 circle(400)
 # initialise hours and minutes to zero
-hours: int = 0
-minutes: int = 0
+hours = 0
+minutes = 0
 # repeatedly through the hours ...
 while hours <= 12:
   # repeatedly through the minutes ...

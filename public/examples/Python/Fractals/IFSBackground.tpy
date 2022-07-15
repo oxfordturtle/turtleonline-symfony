@@ -1,22 +1,22 @@
-xleft : int = 0
-xright : int = 999
-ytop : int = 0
-ybottom : int = 999
-gridscale : int = 5
-gridthick : int = 64
+xleft  = 0
+xright  = 999
+ytop  = 0
+ybottom  = 999
+gridscale  = 5
+gridthick  = 64
 
-def background(rad: int):
-  cx: int
-  cy: int
-  r: int
-  g: int
-  b: int
+def background(rad):
+  cx
+  cy
+  r
+  g
+  b
   thickness(gridthick)
   colour(darkgrey)
-  for x in range(0, gridscale, 1):
+  for x in range(gridscale):
     setxy(xleft + divmult(xright - xleft, gridscale, x), ytop)
     drawxy(0, ybottom - ytop)
-  for y in range(0, gridscale, 1):
+  for y in range(gridscale):
     setxy(xleft + gridthick / 2, ytop + divmult(ybottom - ytop, gridscale, y))
     drawxy(xright - xleft - gridthick, 0)
   colour(black)
@@ -25,8 +25,8 @@ def background(rad: int):
   drawxy(0, ybottom - ytop)
   drawxy(xleft - xright, 0)
   drawxy(0, ytop - ybottom)
-  for x in range(0, gridscale, 1):
-    for y in range(0, gridscale, 1):
+  for x in range(gridscale):
+    for y in range(gridscale):
       cx = xleft + divmult(xright - xleft, gridscale, x) + gridthick
       cy = ytop + divmult(ybottom - ytop, gridscale, y) + gridthick
       r = divmult(255, gridscale - 1, x)

@@ -28,9 +28,7 @@ export default function subroutine (lexeme: TypeLexeme, lexemes: Lexemes, progra
     const variable = new Variable('!result', subroutine)
     variable.type = subroutineType
     variable.stringLength = stringLength
-    subroutine.variables.push(variable);
-    subroutine.type = 'function'
-    subroutine.returns = subroutineType
+    subroutine.variables.push(variable)
   }
 
   // parse the parameters

@@ -1,12 +1,12 @@
-snakecolour: int = purple
-applecolour: int = green
-boardsize: int = 30
-snakelength: int = 2
-crash: bool = False
+snakecolour = purple
+applecolour = green
+boardsize = 30
+snakelength = 2
+crash = False
 
 def newapple():
-  x: int = randint(0, boardsize - 1)
-  y: int = randint(0, boardsize - 1)
+  x = randint(0, boardsize - 1)
+  y = randint(0, boardsize - 1)
   while pixcol(x, y) == snakecolour:
     x = randint(0, boardsize - 1)
     y = randint(0, boardsize - 1)
@@ -50,4 +50,4 @@ while not crash:
 resolution(1000, 1000)
 blank(lilac)
 setxy(boardsize // 4, 2 * boardsize // 5)
-print('Score ' + str(snakelength - 2), 20, 100)
+display('Score ' + str(snakelength - 2), 20, 100)

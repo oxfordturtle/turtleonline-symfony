@@ -112,18 +112,18 @@ export function inputcodeFromKey (key: string): number {
       return 187
     case ',':
       return 188
-    case '-':
-      return 189
-    case '.':
-      return 190
-    case '/':
-      return 191
+    //case '-':
+    //  return 189
+    //case '.':
+    //  return 190
+    //case '/':
+    //  return 191
     case '\'':
       return 192
     case '[':
       return 219
-    case '/':
-      return 220
+    //case '/':
+    //  return 220
     case ']':
       return 221
     case '#':

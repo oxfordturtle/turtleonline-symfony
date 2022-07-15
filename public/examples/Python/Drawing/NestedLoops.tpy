@@ -1,7 +1,7 @@
 thickness(4)
 penup()
 # counting from 0 to 29 ...
-for blotCount in range(0, 30, 1):
+for blotCount in range(30):
   # set direction, multiple of 36 degrees
   direction(blotCount * 36)
   # move 260 units from middle of canvas
@@ -14,7 +14,7 @@ for blotCount in range(0, 30, 1):
   # set standard Turtle colour blotCount+1
   colour(rgb(blotCount + 1))
   # draw 19 circles, radius 56 up to 200
-  for circleCount in range(7, 26, 1):
+  for circleCount in range(7, 26):
     circle(circleCount * 8)
   # reposition Turtle to canvas middle
   back(260)

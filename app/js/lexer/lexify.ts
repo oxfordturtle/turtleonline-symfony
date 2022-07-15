@@ -100,7 +100,7 @@ export default function lexify (code: string|Token[], language: Language): Lexem
         lexemes.push(new DelimiterLexeme(tokens[index]))
         break
 
-      case 'string':
+      case 'string': {
         const stringLexeme = new StringLexeme(tokens[index], language)
         const isCharacter = stringLexeme.value.length === 1
         if (isCharacter && (language === 'C' || language === 'Java' || language === 'Pascal')) {
@@ -109,6 +109,7 @@ export default function lexify (code: string|Token[], language: Language): Lexem
           lexemes.push(stringLexeme)
         }
         break
+      }
 
       case 'boolean':
         lexemes.push(new BooleanLexeme(tokens[index], language))

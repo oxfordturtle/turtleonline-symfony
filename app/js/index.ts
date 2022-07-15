@@ -19,7 +19,7 @@ import './components/reference/colours'
 import './components/reference/commands'
 import './components/reference/cursors'
 import './components/reference/fonts'
-import './components/reference/inputcodes'
+import './components/reference/keycodes'
 
 // load system components
 import './components/system/canvas'
@@ -79,9 +79,8 @@ window.addEventListener('beforeunload', function () {
 
 // register to handle state and machine errors
 on('error', function (error: Error): void {
-  let message = error.message
   console.error(error)
-  window.alert(message)
+  window.alert(error.message)
 })
 
 // initialise the page

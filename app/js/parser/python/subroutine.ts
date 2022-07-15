@@ -4,7 +4,7 @@ import variable from './variable'
 import Lexemes from '../definitions/lexemes'
 import Program from '../definitions/program'
 import { Subroutine } from '../definitions/subroutine'
-import { IntegerConstant, StringConstant } from '../definitions/constant'
+import { Constant } from '../definitions/constant'
 import Variable from '../definitions/variable'
 import { CompilerError } from '../../tools/error'
 import { KeywordLexeme } from '../../lexer/lexeme'
@@ -24,7 +24,6 @@ export default function subroutine (lexeme: KeywordLexeme, lexemes: Lexemes, par
 
   // return type is permissible here
   if (lexemes.get()?.content === '->') {
-    subroutine.type = 'function'
     lexemes.next()
 
     // expecting return type specification
@@ -43,9 +42,10 @@ export default function subroutine (lexeme: KeywordLexeme, lexemes: Lexemes, par
     // set the return type and unshift the result variable for functions
     const variable = new Variable('!result', subroutine)
     variable.type = returnType
+    variable.typeIsCertain = true
     variable.stringLength = stringLength
-    subroutine.returns = variable.type
     subroutine.variables.unshift(variable)
+    subroutine.typeIsCertain = true
   }
 
   // expecting a colon
@@ -110,7 +110,7 @@ function parameters (lexemes: Lexemes, routine: Subroutine): Variable[] {
   const parameters: Variable[] = []
   while (lexemes.get()?.content !== ')') {
     const parameter = variable(lexemes, routine)
-    if (parameter instanceof IntegerConstant || parameter instanceof StringConstant) {
+    if (parameter instanceof Constant) {
       throw new CompilerError('Subroutine parameters cannot be constants.', lexemes.get(-1))
     }
     parameter.isParameter = true

@@ -1,6 +1,6 @@
-minSize: Final[int] = 70
-maxSize: Final[int] = 130
-shapes: Final[int] = 6
+minSize: Final = 70
+maxSize: Final = 130
+shapes: Final = 6
 x: List[int, shapes]
 y: List[int, shapes]
 d: List[int, shapes]
@@ -10,16 +10,16 @@ dVelocity: List[int, shapes]
 sides: List[int, shapes]
 size: List[int, shapes]
 colr: List[int, shapes]
-xEdge: bool
-yEdge: bool
+xEdge
+yEdge
 
 # draws a polygon, and checks whether it meets the edge of the canvas
-def drawShape (sides: int, size: int, colr: int):
+def drawShape (sides, size, colr):
   global xEdge, yEdge
   xEdge = False
   yEdge = False
   colour(colr)
-  for count in range(0, sides, 1):
+  for count in range(sides):
     forward(size)
     if abs(turtx - 500) > 495:
       xEdge = True
@@ -31,7 +31,7 @@ def drawShape (sides: int, size: int, colr: int):
   polygon(sides)
 
 # set initial properties for each shape
-for n in range(0, shapes, 1):
+for n in range(shapes):
   sides[n] = n + 2
   size[n] = randint(minSize, maxSize)
   colr[n] = rgb(n + 1)
@@ -46,7 +46,7 @@ while 0 < 1:
   # rub out previous shapes
   blank(white)
   # draw each shape in its next position
-  for n in range(1, shapes, 1):
+  for n in range(1, shapes):
     # move to next position
     x[n] = x[n] + xVelocity[n]
     y[n] = y[n] + yVelocity[n]

@@ -91,7 +91,7 @@ function literalStringValue (exp: StringValue, options: Options): number[] {
 
 /** generates the pcode for loading an input value onto the stack */
 function inputValue (exp: InputValue, options: Options): number[] {
-  return (exp.lexeme.subtype === 'querycode')
+  return (exp.input.value < 0)
     ? [PCode.ldin, exp.input.value, PCode.stat]
     : [PCode.ldin, exp.input.value]
 }
@@ -107,7 +107,8 @@ function constantValue (exp: ConstantValue, program: Program, options: Options):
 
   // string constant
   if (exp.constant.type === 'string') {
-    pcode.push([PCode.lstr, exp.constant.value.length].concat(Array.from(exp.constant.value).map(x => x.charCodeAt(0))))
+    const value = exp.constant.value as string
+    pcode.push([PCode.lstr, value.length].concat(Array.from(value).map(x => x.charCodeAt(0))))
     if (exp.indexes.length > 0) {
       const indexExp = expression(exp.indexes[0], program, options)
       merge(pcode, indexExp)
@@ -119,7 +120,7 @@ function constantValue (exp: ConstantValue, program: Program, options: Options):
 
   // integer or boolean constant
   } else {
-    pcode.push([PCode.ldin, exp.constant.value])
+    pcode.push([PCode.ldin, exp.constant.value as number])
   }
 
   // return the pcode

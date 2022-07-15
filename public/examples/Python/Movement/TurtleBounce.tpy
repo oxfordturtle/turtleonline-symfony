@@ -1,7 +1,7 @@
 # set starting point and velocity
 setxy(100, 700)
-xVelocity: int = 8
-yVelocity: int = -4
+xVelocity = 8
+yVelocity = -4
 while (0 < 1):
   noupdate()
   # rub out existing ball

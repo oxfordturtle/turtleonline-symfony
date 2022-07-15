@@ -1,33 +1,33 @@
-brushwidth: int
-brushcolour: int
+brushwidth
+brushcolour
 
-def setbrushwidth(wdth: int):
+def setbrushwidth(wdth):
   global brushwidth
   brushwidth = 0
   colour(black)
-  for count in range(0, 5, 1):
+  for count in range(5):
     setxy(625 + count * 50, 875)
     blot(8 + count * 2)
   colour(brushcolour)
   brushwidth = wdth
   recolour(((brushwidth + 16) * 25) + 25, 875, lightred)
 
-def setbrushcolour(clr: int):
+def setbrushcolour(clr):
   global brushcolour
   brushcolour = clr
   colour(clr)
   setxy(975, 875)
   blot(16)
 
-def paintbrush(x: int, y: int):
+def paintbrush(x, y):
   setxy(x, y)
   blot(brushwidth)
 
-def paintcan(x: int, y: int):
+def paintcan(x, y):
   recolour(x, y, brushcolour)
 
 def setup():
-  def square(col: int):
+  def square(col):
     movexy(50, 0)
     movexy(0, 50)
     movexy(-50, 0)
@@ -46,13 +46,13 @@ def setup():
   drawxy(0, 50)
   setxy(10, 858)
   colour(black)
-  print('Left-click to draw, right-click to fill', 0, 20)
+  display('Left-click to draw, right-click to fill', 0, 20)
   setxy(450 + 10, 858)
-  print('Brush width:', 0, 20)
+  display('Brush width:', 0, 20)
   setxy(850 + 10, 858)
-  print('Colour:', 0, 20)
+  display('Colour:', 0, 20)
   setxy(0, 900)
-  for count in range(1, 21, 1):
+  for count in range(1, 21):
     square(rgb(count))
     movexy(0, 50)
     square(rgb(count + 30))

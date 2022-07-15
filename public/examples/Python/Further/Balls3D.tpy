@@ -1,5 +1,5 @@
 # draw a 3d-style coloured ball
-def ball3d(colr: int, step: int):
+def ball3d(colr, step):
   # start with specified colour code
   colour(colr)
   # draw 40 progressively smaller blots

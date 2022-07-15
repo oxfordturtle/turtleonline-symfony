@@ -5,7 +5,7 @@ import type { Turtle } from './turtle'
 // module imports
 import * as memory from './memory'
 import { defaultOptions } from './options'
-import { inputcodeFromKey, mixBytes } from './misc'
+import { mixBytes } from './misc'
 import { colours } from '../constants/colours'
 import { PCode } from '../constants/pcodes'
 import { MachineError } from '../tools/error'

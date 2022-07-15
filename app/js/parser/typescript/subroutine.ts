@@ -34,9 +34,7 @@ export default function subroutine (lexeme: KeywordLexeme, lexemes: Lexemes, par
     const variable = new Variable('!result', subroutine)
     variable.type = subroutineType
     variable.stringLength = stringLength
-    subroutine.variables.unshift(variable);
-    subroutine.type = 'function'
-    subroutine.returns = subroutineType
+    subroutine.variables.unshift(variable)
   }
 
   // expecting opening bracket "{"

@@ -1,8 +1,8 @@
 # set starting point and velocity
-x: int = 100
-y: int = 700
-xVelocity: int = 8
-yVelocity: int = -4
+x = 100
+y = 700
+xVelocity = 8
+yVelocity = -4
 while 0 < 1:
   noupdate()
   # rub out existing ball

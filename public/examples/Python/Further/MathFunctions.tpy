@@ -1,65 +1,65 @@
-decimals: Final[int] = 4 # decimal places for display of values
-denominator: Final[int] = 1000000 # denominator gives level of precision
+decimals: Final = 4 # decimal places for display of values
+denominator: Final = 1000000 # denominator gives level of precision
 
 # Writes to the output the value of a mathematical function of a/b,
 # or - in the case of HYPOT (where OP is "," not "/") - of a and b;
 # chr(176) is the degree symbol for sin/cos/tan and their inverses.
-def show(fn: str, op: str, value: int, degrees: int):
+def show(fn, op, value, degrees):
   if degrees == 1:
-    writeline(fn + '(' + str(a) + op + str(b) + chr(176) + ') = ' + qstr(value, denominator, decimals))
+    print(fn + '(' + str(a) + op + str(b) + chr(176) + ') = ' + qstr(value, denominator, decimals))
   else:
     if degrees == 2:
-      writeline(fn + '(' + str(a) + op + str(b) + ') = ' + qstr(value, denominator, decimals) + chr(176))
+      print(fn + '(' + str(a) + op + str(b) + ') = ' + qstr(value, denominator, decimals) + chr(176))
     else:
-      writeline(fn + '(' + str(a) + op + str(b) + ') = ' + qstr(value, denominator, decimals))
+      print(fn + '(' + str(a) + op + str(b) + ') = ' + qstr(value, denominator, decimals))
 
 # show output and display information about the program
 output(True, white, True)
-writeline('This program selects two random numbers a and b, in the range')
-writeline('100-999, and then outputs various mathematical functions of the')
-writeline('fraction a/b. The results are expressed to ' + str(decimals) + ' decimal places, and a')
-writeline('denominator of ' + str(denominator) + ' is used in the calculations to provide')
-writeline('precision, even though the Turtle functions strictly operate only')
-writeline('on integers and produce integer results.')
-writeline('')
+print('This program selects two random numbers a and b, in the range')
+print('100-999, and then outputs various mathematical functions of the')
+print('fraction a/b. The results are expressed to ' + str(decimals) + ' decimal places, and a')
+print('denominator of ' + str(denominator) + ' is used in the calculations to provide')
+print('precision, even though the Turtle functions strictly operate only')
+print('on integers and produce integer results.')
+print('')
 # set a and b to random values, and display their values and quotient
-a: int = randint(100, 999)
-b: int = randint(100, 999)
-writeline('a = ' + str(a) + ' b = ' + str(b))
-writeline('a / b = ' + str(a) + ' / ' + str(b) + ' = ' + qstr(a, b, decimals))
-writeline('')
+a = randint(100, 999)
+b = randint(100, 999)
+print('a = ' + str(a) + ' b = ' + str(b))
+print('a / b = ' + str(a) + ' / ' + str(b) + ' = ' + qstr(a, b, decimals))
+print('')
 # display square, square root, cube, and cube root of a/b
 show('square', '/', power(a, b, 2, denominator), 0)
 show('square root', '/', root(a, b, 2, denominator), 0)
 show('cube', '/', power(a, b, 3, denominator), 0)
 show('cube root', '/', root(a, b, 3, denominator), 0)
-writeline('')
+print('')
 # display hypotenuse of right-angled triangle with shorter sides a and b
 show('hypot', ',', hypot(a, b, denominator), 0)
 show('calculated hypot', ',', sqrt(a * a + b * b, denominator), 0)
-writeline('')
+print('')
 # display sin, cos, and tan of a/b, interpreted in degrees
 show('sin', '/', sin(a, b, denominator), 1)
 show('cos', '/', cos(a, b, denominator), 1)
 show('tan', '/', tan(a, b, denominator), 1)
-writeline('')
+print('')
 # display ln, exp, log10, and antilog of a/b
 show('ln', '/', log(a, b, denominator), 0)
 if divmult(a, b, 1000) + log(denominator, 1, 1000) > log(maxint(), 1, 1000):
-  writeline('EXP(' + str(a) + '/' + str(b) + ') would give numerical overflow, because')
-  writeline('the result*' + str(denominator) + ' would be greater than ' + str(maxint()))
+  print('EXP(' + str(a) + '/' + str(b) + ') would give numerical overflow, because')
+  print('the result*' + str(denominator) + ' would be greater than ' + str(maxint()))
 else:
   show('exp', '/', exp(a, b, denominator), 0)
 show('log10', '/', log10(a, b, denominator), 0)
 if divmult(a, b, 1000) + log10(denominator, 1, 1000) > log10(maxint(), 1, 1000):
-  writeline('ANTILOG(' + str(a) + '/' + str(b) + ') would give numerical overflow, because')
-  writeline('the result*' + str(denominator) + ' would be greater than ' + str(maxint()))
+  print('ANTILOG(' + str(a) + '/' + str(b) + ') would give numerical overflow, because')
+  print('the result*' + str(denominator) + ' would be greater than ' + str(maxint()))
 else:
   show('antilog', '/', antilog(a, b, denominator), 0)
-writeline('')
+print('')
 # display arccos, arcsin, and arctan of a/b, in degrees
 if a > b:
-  writeline('ARCCOS and ARCSIN are not defined for ' + str(a) + '/' + str(b) + ' = ' + qstr(a, b, decimals))
+  print('ARCCOS and ARCSIN are not defined for ' + str(a) + '/' + str(b) + ' = ' + qstr(a, b, decimals))
 else:
   show('arccos', '/', acos(a, b, denominator), 2)
   show('arcsin', '/', asin(a, b, denominator), 2)

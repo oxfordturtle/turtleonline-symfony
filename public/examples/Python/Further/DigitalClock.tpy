@@ -1,11 +1,11 @@
 # prints the specified time inside a white box in the canvas
-def showtime(hours: int, minutes: int):
+def showtime(hours, minutes):
   # draw white box, erasing previous time
   setxy(300, 450)
   box(400, 100, white, False)
   # print specified time
-  timeString: str = pad(str(hours), '0', 2) + ':' + pad(str(minutes), '0', 2)
-  print(timeString, 21, 100)
+  timeString = pad(str(hours), '0', 2) + ':' + pad(str(minutes), '0', 2)
+  display(timeString, 21, 100)
 
 # set up canvas with box for displaying time
 blank(lightgreen)
@@ -17,8 +17,8 @@ thickness(10)
 box(500, 200, lightbrown, True)
 colour(black)
 # initialise hours and minutes to zero
-hours: int = 0
-minutes: int = 0
+hours = 0
+minutes = 0
 # repeatedly through the hours
 while hours < 12:
   # display the current time

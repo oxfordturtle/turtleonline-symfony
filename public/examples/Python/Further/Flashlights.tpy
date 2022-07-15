@@ -1,5 +1,5 @@
 # draws circle or blot at Turtle position
-def drawit(doblot: bool):
+def drawit(doblot):
   if doblot:
     # draw a randomly coloured blot
     # without erasing any circle

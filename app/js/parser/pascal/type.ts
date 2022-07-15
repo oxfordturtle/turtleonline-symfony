@@ -18,7 +18,7 @@ export default function type (lexemes: Lexemes, routine: Program|Subroutine, isP
   lexemes.next()
 
   // possibly expecting array dimensions
-  let arrayDimensions: [number, number][] = []
+  const arrayDimensions: [number, number][] = []
   if (lexemes.get()?.content === 'array') {
     if (isParameter) {
       while (lexemes.get()?.content === 'array') {

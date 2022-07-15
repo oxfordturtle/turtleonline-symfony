@@ -53,7 +53,7 @@ export const examples: Example[] = [
   new Example('CSAC', 'DragonColour', 'Dragon colour'),
   new Example('CSAC', 'DragonIFS', 'Dragon IFS'),
   new Example('CSAC', 'TreeIFS', 'Tree IFS'),
-  new Example('CSAC', 'WaveSuperposer', 'Hugh Wallis’s wave superposer'),
+  new Example('CASC', 'WaveSuperposer', 'Hugh Wallis’s wave superposer'),
   // examples 1 - Drawing
   new Example('Drawing', 'DrawPause', 'Simple drawing with pauses'),
   new Example('Drawing', 'SmileyFace', 'Smiley face (using PENUP and ELLBLOT)'),
@@ -109,7 +109,6 @@ export const examples: Example[] = [
   new Example('Interaction', 'IterationGame', 'Iteration game (Collatz sequence)'),
   new Example('Interaction', 'SpongeThrow', 'Throwing sponges at a moving face'),
   new Example('Interaction', 'Arcade', 'Arcade shooting game'),
-  new Example('Interaction', 'ColourCells', 'Colouring cells'),
   new Example('Interaction', 'SnakeGame', 'Snake (classic game)'),
   new Example('Interaction', 'SimpleDraw', 'Drawing to the mouse'),
   new Example('Interaction', 'PaintApp', 'Painting application'),
@@ -124,10 +123,9 @@ export const examples: Example[] = [
   new Example('Files', 'FileCommands', 'File commands'),
   new Example('Files', 'DirectoryCommands', 'Directory commands'),
   // examples 7 - Cellular
-  new Example('Cellular', 'TippingPoint', 'Tipping point (city epidemic)'),
   new Example('Cellular', 'Disease', 'Spread of disease'),
+  new Example('Cellular', 'TippingPoint', 'Tipping point (city epidemic)'),
   new Example('Cellular', 'GameOfLife', 'Conway’s Game of Life'),
-  new Example('Cellular', 'GameOfLifeSetup', 'Game of Life with setup'),
   new Example('Cellular', 'LifeArrays', 'Game of Life, using arrays'),
   new Example('Cellular', 'Automata', 'One-dimensional cellular automata'),
   new Example('Cellular', 'Diffusion', 'A model of diffusion'),
